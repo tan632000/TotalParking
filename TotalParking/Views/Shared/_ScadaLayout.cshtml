@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TotalParking SCADA</title>
+    <!-- Use extracted scada.css from C# Content folder -->
+    <link rel="stylesheet" href="~/Content/scada.css" />
+    <!-- Lucide CDN for static SVG icons integration -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      html, body { height: 100%; margin: 0; }
+      /* Customize scrollbars */
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #1E293B; }
+      ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #64748B; }
+    </style>
+</head>
+<body style="background: #0F172A; color: #F8FAFC; font-family: 'Inter', 'Segoe UI', sans-serif;">
+    <div class="flex flex-col h-screen overflow-hidden">
+        <!-- Header -->
+        <header class="h-14 flex items-center px-4 gap-4 border-b border-[#334155]" style="background: rgb(30, 41, 59);"><div class="flex items-center gap-3 min-w-0"><div class="w-8 h-8 rounded flex items-center justify-center shrink-0" style="background: rgb(37, 99, 235);"><span style="color: rgb(248, 250, 252); font-size: 13px; font-weight: 700;">TP</span></div><div class="hidden md:block"><div style="color: rgb(248, 250, 252); font-size: 13px; font-weight: 700; line-height: 1.2;">TotalParking</div><div style="color: rgb(148, 163, 184); font-size: 11px; line-height: 1.2;">LUMI Automated Parking SCADA</div></div></div><div class="h-6 w-px bg-[#334155] mx-1 hidden md:block"></div><div class="flex items-center gap-2 px-3 py-1 rounded bg-[#DC2626]"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background: white;"></span><span class="relative inline-flex rounded-full h-2 w-2" style="background: white;"></span></span><span style="color: white; font-size: 12px; font-weight: 600;">Lỗi hệ thống</span></div><div class="flex items-center gap-1.5 px-2 py-1 rounded animate-pulse" style="background: rgb(220, 38, 38);"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg><span style="color: white; font-size: 12px; font-weight: 600;">3 Alarm</span></div><div class="flex-1"></div><div class="hidden lg:flex items-center gap-3"><div class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg><span style="font-size: 11px; color: rgb(134, 239, 172);">PLC</span></div><div class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg><span style="font-size: 11px; color: rgb(134, 239, 172);">HMI</span></div><div class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg><span style="font-size: 11px; color: rgb(134, 239, 172);">AI-VDS</span></div><div class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg><span style="font-size: 11px; color: rgb(134, 239, 172);">LED/PGS</span></div><div class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg><span style="font-size: 11px; color: rgb(134, 239, 172);">SCADA</span></div></div><div class="h-6 w-px bg-[#334155] mx-1 hidden lg:block"></div><div class="text-right hidden sm:block"><div style="color: rgb(248, 250, 252); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums;">00:48:06</div><div style="color: rgb(148, 163, 184); font-size: 11px;">Thứ 4, 10/06/2026</div></div><div class="h-6 w-px bg-[#334155] mx-1 hidden sm:block"></div><div class="hidden sm:flex items-center gap-2"><div class="w-7 h-7 rounded-full flex items-center justify-center" style="background: rgb(37, 99, 235);"><span style="color: white; font-size: 11px; font-weight: 700;">NV</span></div><div><div style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Nguyễn Văn A</div><div style="color: rgb(148, 163, 184); font-size: 10px;">Operator</div></div></div><button class="flex items-center gap-1 px-2 py-1 rounded hover:bg-[#334155] transition-colors" style="color: rgb(148, 163, 184); font-size: 12px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg><span>EN</span></button><button class="flex items-center gap-1 px-2 py-1 rounded hover:bg-[#334155] transition-colors" style="color: rgb(148, 163, 184); font-size: 12px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg><span class="hidden sm:inline">Đăng xuất</span></button></header>
+
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar -->
+            
+@{
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString().ToLower() ?? "index";
+}
+<aside class="w-14 lg:w-52 flex flex-col border-r border-[#334155] shrink-0" style="background: #1E293B">
+  <nav class="flex-1 py-2 overflow-y-auto">
+    <a href="@Url.Action("Index", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "index" ? "#0F172A" : "transparent"); border-left: @(currentAction == "index" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="layout-dashboard" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "index" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "index" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "index" ? "600" : "400")">Tổng quan</span>
+      @if (currentAction == "index") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+    <a href="@Url.Action("FloorPlan", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "floorplan" ? "#0F172A" : "transparent"); border-left: @(currentAction == "floorplan" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="map" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "floorplan" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "floorplan" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "floorplan" ? "600" : "400")">Mặt bằng</span>
+      @if (currentAction == "floorplan") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+    <a href="@Url.Action("Zones", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "zones" ? "#0F172A" : "transparent"); border-left: @(currentAction == "zones" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="grid-3x3" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "zones" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "zones" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "zones" ? "600" : "400")">Zone / Block</span>
+      @if (currentAction == "zones") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+    <a href="@Url.Action("Routing", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "routing" ? "#0F172A" : "transparent"); border-left: @(currentAction == "routing" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="navigation" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "routing" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "routing" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "routing" ? "600" : "400")">Điều hướng xe</span>
+      @if (currentAction == "routing") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+    <a href="@Url.Action("Alarms", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "alarms" ? "#0F172A" : "transparent"); border-left: @(currentAction == "alarms" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="bell-ring" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "alarms" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "alarms" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "alarms" ? "600" : "400")">Alarm & Event</span>
+      @if (currentAction == "alarms") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+    <a href="@Url.Action("Maintenance", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "maintenance" ? "#0F172A" : "transparent"); border-left: @(currentAction == "maintenance" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="wrench" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "maintenance" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "maintenance" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "maintenance" ? "600" : "400")">Bảo trì</span>
+      @if (currentAction == "maintenance") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+    <a href="@Url.Action("Reports", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "reports" ? "#0F172A" : "transparent"); border-left: @(currentAction == "reports" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="file-bar-chart-2" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "reports" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "reports" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "reports" ? "600" : "400")">Báo cáo</span>
+      @if (currentAction == "reports") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+    <a href="@Url.Action("Cards", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "cards" ? "#0F172A" : "transparent"); border-left: @(currentAction == "cards" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="credit-card" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "cards" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "cards" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "cards" ? "600" : "400")">Quản lý thẻ</span>
+      @if (currentAction == "cards") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+    <a href="@Url.Action("Settings", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "settings" ? "#0F172A" : "transparent"); border-left: @(currentAction == "settings" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="settings" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "settings" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "settings" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "settings" ? "600" : "400")">Cài đặt</span>
+      @if (currentAction == "settings") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+    <a href="@Url.Action("Remote", "Home")" class="w-full flex items-center gap-3 px-3 py-2.5 mx-0 transition-colors hover:bg-[#0F172A] group" style="background: @(currentAction == "remote" ? "#0F172A" : "transparent"); border-left: @(currentAction == "remote" ? "3px solid #2563EB" : "3px solid transparent"); display: flex; text-decoration: none;">
+      <i data-lucide="headphones" class="shrink-0 group-hover:text-[#60A5FA] transition-colors" style="color: @(currentAction == "remote" ? "#60A5FA" : "#94A3B8")"></i>
+      <span class="hidden lg:block truncate" style="color: @(currentAction == "remote" ? "#F8FAFC" : "#94A3B8"); font-size: 13px; font-weight: @(currentAction == "remote" ? "600" : "400")">Remote Support</span>
+      @if (currentAction == "remote") { <i data-lucide="chevron-right" class="hidden lg:block ml-auto shrink-0" style="color: #2563EB"></i> }
+    </a>
+  </nav>
+  <div class="p-3 border-t border-[#334155] hidden lg:block">
+    <div style="color: #475569; font-size: 10px; text-align: center">SCADA v2.4.1 | © TotalParking</div>
+  </div>
+</aside>
+
+
+            <!-- Main Content Area -->
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+      lucide.createIcons();
+    </script>
+</body>
+</html>

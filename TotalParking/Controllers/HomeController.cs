@@ -8,64 +8,54 @@ namespace TotalParking.Controllers
 {
     public class HomeController : Controller
     {
-        private ActionResult GetScadaView()
-        {
-            string filePath = Server.MapPath("~/SCADALayout/index.html");
-            if (!System.IO.File.Exists(filePath))
-            {
-                return HttpNotFound("SCADA Layout index.html file is missing.");
-            }
-            return File(filePath, "text/html");
-        }
-
         public ActionResult Index()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult FloorPlan()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult Zones()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult Routing()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult Alarms()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult Maintenance()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult Reports()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult Cards()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult Settings()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult Remote()
         {
-            return GetScadaView();
+            return View();
         }
 
         public ActionResult About()
