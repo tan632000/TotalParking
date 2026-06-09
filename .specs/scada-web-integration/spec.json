@@ -1,0 +1,184 @@
+{
+  "feature_name": "scada-web-integration",
+  "created_at": "2026-06-09T22:35:03+07:00",
+  "updated_at": "2026-06-09T22:38:50+07:00",
+  "language": "vi",
+  "status": "in_progress",
+  "phase": "tasks-generated",
+  "current_phase": "tasks",
+  "priority": "P2",
+  "effort": "11.5h",
+  "tags": [],
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": false
+    }
+  },
+  "scope_lock": {
+    "source": "Tích hợp bản thiết kế Web từ TotalParkingLayout vào dự án C# TotalParking: build tĩnh ứng dụng React thành HTML/JS/CSS và host qua ASP.NET MVC, quản lý routing bởi backend, chưa cần dữ liệu API thực tế, và cho phép xóa code nguồn React sau khi hoàn tất.",
+    "in_scope": [
+      "Build tĩnh ứng dụng React trong TotalParkingLayout thành HTML/JS/CSS",
+      "Copy các file tĩnh (assets, index.html) vào dự án TotalParking C#",
+      "Cấu hình ASP.NET MVC (RouteConfig, Controllers) để định tuyến toàn bộ URL phụ về view chính",
+      "Đảm bảo website chạy tốt phần UI/UX tĩnh và định tuyến hoạt động mà không cần code React nguyên bản"
+    ],
+    "out_of_scope": [
+      "Kết nối API động với database hoặc backend C#",
+      "Chuyển đổi React thành Vanilla JS thuần thủ công ở runtime"
+    ],
+    "expansion_policy": "requires-user-approval"
+  },
+  "dependencies": {
+    "blockedBy": [],
+    "blocks": []
+  },
+  "task_files": [
+    "tasks/task-R1-01-vite-config-and-build-script.md",
+    "tasks/task-R1-02-mvc-static-files.md",
+    "tasks/task-R2-01-react-pathname-initialization.md",
+    "tasks/task-R2-02-react-sidebar-redirection.md",
+    "tasks/task-R2-03-mvc-controller-routing.md",
+    "tasks/task-R3-01-localization-header.md",
+    "tasks/task-R4-01-performance-benchmarking.md",
+    "tasks/task-R5-01-verification-and-deletion.md"
+  ],
+  "task_registry": {
+    "tasks/task-R1-01-vite-config-and-build-script.md": {
+      "id": "R1-01",
+      "title": "(P) Cấu hình Vite base path và viết script build tự động",
+      "status": "pending",
+      "dependencies": [],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R1-02-mvc-static-files.md": {
+      "id": "R1-02",
+      "title": "(P) Cấu hình MVC HomeController để phục vụ file HTML tĩnh trực tiếp",
+      "status": "pending",
+      "dependencies": [
+        "tasks/task-R1-01-vite-config-and-build-script.md"
+      ],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R2-01-react-pathname-initialization.md": {
+      "id": "R2-01",
+      "title": "(P) Sửa đổi React App.tsx để khởi tạo màn hình từ pathname",
+      "status": "pending",
+      "dependencies": [],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R2-02-react-sidebar-redirection.md": {
+      "id": "R2-02",
+      "title": "(P) Sửa đổi Sidebar.tsx để chuyển hướng trình duyệt bằng href",
+      "status": "pending",
+      "dependencies": [],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R2-03-mvc-controller-routing.md": {
+      "id": "R2-03",
+      "title": "(P) Cập nhật HomeController.cs để định tuyến mọi URL SCADA về index.html",
+      "status": "pending",
+      "dependencies": [
+        "tasks/task-R1-02-mvc-static-files.md"
+      ],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R3-01-localization-header.md": {
+      "id": "R3-01",
+      "title": "(P) Kiểm tra và điều chỉnh tích hợp đa ngôn ngữ ở Header và lưu trữ trạng thái",
+      "status": "pending",
+      "dependencies": [
+        "tasks/task-R2-01-react-pathname-initialization.md",
+        "tasks/task-R2-02-react-sidebar-redirection.md"
+      ],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R4-01-performance-benchmarking.md": {
+      "id": "R4-01",
+      "title": "Kiểm tra tốc độ tải trang tĩnh SCADA dưới 1.5 giây",
+      "status": "pending",
+      "dependencies": [
+        "tasks/task-R1-02-mvc-static-files.md",
+        "tasks/task-R2-03-mvc-controller-routing.md"
+      ],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R5-01-verification-and-deletion.md": {
+      "id": "R5-01",
+      "title": "Kiểm tra vận hành độc lập và xóa thư mục React",
+      "status": "pending",
+      "dependencies": [
+        "tasks/task-R1-02-mvc-static-files.md",
+        "tasks/task-R2-03-mvc-controller-routing.md",
+        "tasks/task-R3-01-localization-header.md"
+      ],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    }
+  },
+  "blocker": null,
+  "progress": {
+    "init": "done",
+    "requirements": "done",
+    "research": "done",
+    "design": "done",
+    "tasks": "done",
+    "code": "pending",
+    "test": "pending",
+    "review": "pending"
+  },
+  "timestamps": {
+    "init": "2026-06-09T22:35:03+07:00",
+    "requirements_done": "2026-06-09T22:36:38+07:00",
+    "research_done": "2026-06-09T22:37:27+07:00",
+    "design_done": "2026-06-09T22:37:37+07:00",
+    "tasks_done": "2026-06-09T22:38:50+07:00",
+    "code_done": null,
+    "test_done": null,
+    "review_done": null,
+    "validation_done": null
+  },
+  "design_context": {
+    "discovery_mode": "light",
+    "discovery_reason": "Tích hợp giao diện React tĩnh vào ASP.NET MVC, chủ yếu thay đổi cấu hình Routing và quy trình đóng gói tài nguyên tĩnh mà không tác động tới cơ sở dữ liệu hay API phức tạp.",
+    "validation_recommended": false
+  },
+  "validation": {
+    "status": "not-run",
+    "session_count": 0,
+    "questions_asked": 0,
+    "last_validated_at": null
+  },
+  "ready_for_implementation": false
+}

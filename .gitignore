@@ -1,0 +1,72 @@
+# =========================================================================
+# Visual Studio / .NET Framework / C#
+# =========================================================================
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Log]s/
+[Tt]est[Rr]esults/
+
+# Visual Studio 2015/2017/2019/2022 cache and settings
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet Packages
+packages/
+# Re-enable NuGet packages folder if needed, but standard practice is to restore them
+# !packages/
+
+# Rider / IntelliJ
+.idea/
+
+# =========================================================================
+# Node.js / React / Vite (TotalParkingLayout)
+# =========================================================================
+
+# Dependency directories
+TotalParkingLayout/node_modules/
+
+# Production outputs (Vite dist)
+TotalParkingLayout/dist/
+
+# Local env files
+TotalParkingLayout/.env
+TotalParkingLayout/.env.local
+TotalParkingLayout/.env.development.local
+TotalParkingLayout/.env.test.local
+TotalParkingLayout/.env.production.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# =========================================================================
+# Explicit rules to keep SCADALayout tracked
+# =========================================================================
+!/TotalParking/SCADALayout/
