@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
 
@@ -21,32 +21,32 @@
             <svg class="absolute top-0 left-0 w-full h-full pointer-events-auto" viewBox="0 0 1016 781" xmlns="http://www.w3.org/2000/svg">
                 <!-- Zone 3 (Top Left, Orange) -->
                 <a href="@Url.Action("Zones", "Home", new { id = 3 })" class="zone-link">
-                    <polygon points="15,150 150,15 315,15 280,250 250,250 220,365" class="zone-polygon zone-3" />
+                    <polygon points="57,152 185,46 343,45 308,248 278,293 308,390" class="zone-polygon zone-3" />
                 </a>
 
                 <!-- Zone 4 (Top Middle, Purple) -->
                 <a href="@Url.Action("Zones", "Home", new { id = 4 })" class="zone-link">
-                    <polygon points="315,15 520,15 520,470 350,470 350,480 280,480 280,365 220,365 250,250 280,250" class="zone-polygon zone-4" />
+                    <polygon points="343,45 526,45 526,390 412,390 412,390 372,390 372,390 308,390 278,293 308,248" class="zone-polygon zone-4" />
                 </a>
 
                 <!-- Zone 5 (Top Right, Cyan/Blue) -->
                 <a href="@Url.Action("Zones", "Home", new { id = 5 })" class="zone-link">
-                    <polygon points="520,15 950,15 950,235 720,235 630,185 520,185" class="zone-polygon zone-5" />
+                    <polygon points="526,45 923,46 923,235 718,223 632,198 526,211" class="zone-polygon zone-5" />
                 </a>
 
                 <!-- Zone 6 (Middle Right, Green) -->
                 <a href="@Url.Action("Zones", "Home", new { id = 6 })" class="zone-link">
-                    <polygon points="520,185 630,185 720,235 950,235 950,540 590,575 590,485 520,485" class="zone-polygon zone-6" />
+                    <polygon points="526,211 632,198 718,223 923,235 923,410 602,410 602,380 573,380" class="zone-polygon zone-6" />
                 </a>
 
                 <!-- Zone 2 (Bottom Middle, Grey) -->
                 <a href="@Url.Action("Zones", "Home", new { id = 2 })" class="zone-link">
-                    <polygon points="220,365 280,365 280,480 350,480 350,470 520,470 590,470 590,575 565,575 565,780 560,780" class="zone-polygon zone-2" />
+                    <polygon points="308,390 602,390 602,510 573,510 573,630" class="zone-polygon zone-2" />
                 </a>
 
                 <!-- Zone 1 (Bottom Right, Yellow) -->
                 <a href="@Url.Action("Zones", "Home", new { id = 1 })" class="zone-link">
-                    <polygon points="565,575 590,575 950,540 950,730 670,770 565,780" class="zone-polygon zone-1" />
+                    <polygon points="602,410 923,410 923,582 688,748 573,630 573,510 602,510" class="zone-polygon zone-1" />
                 </a>
             </svg>
         </div>
@@ -75,11 +75,12 @@
         filter: drop-shadow(0 0 8px rgba(234, 179, 8, 0.5));
     }
 
-    /* Zone 2: Grey */
+    /* Zone 2: Deep Pink / Magenta */
     .zone-2:hover {
-        fill: rgba(148, 163, 184, 0.18);
-        stroke: rgb(203, 213, 225);
-        filter: drop-shadow(0 0 8px rgba(203, 213, 225, 0.5));
+        fill: rgba(236, 72, 153, 0.35);
+        stroke: rgb(236, 72, 153);
+        stroke-width: 3.5;
+        filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.65));
     }
 
     /* Zone 3: Orange */
