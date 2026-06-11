@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,9 +18,19 @@ namespace TotalParking.Controllers
             return View();
         }
 
-        public ActionResult Zones()
+        public ActionResult Zones(int? id)
         {
+            if (id.HasValue)
+            {
+                ViewBag.ZoneId = id.Value;
+                return View("ZoneDetail");
+            }
             return View();
+        }
+
+        public ActionResult ZoneDetail(int? id)
+        {
+            return RedirectToAction("Zones", new { id = id ?? 1 });
         }
 
         public ActionResult Routing()

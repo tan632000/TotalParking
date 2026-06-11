@@ -1,0 +1,750 @@
+﻿@{ Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+    int zoneId = ViewBag.ZoneId ?? 1;
+    string zoneName = "Zone " + zoneId;
+    string zoneLocation = "";
+    string zoneColor = "rgb(37, 99, 235)"; // default blue
+    string zoneColorMuted = "rgba(37, 99, 235, 0.15)";
+    int totalSlots = 0;
+    int occupiedSlots = 0;
+    int availableSlots = 0;
+    int errorSlots = 0;
+
+    switch (zoneId)
+    {
+        case 1:
+            zoneName = "Zone A";
+            zoneLocation = "Hầm B1";
+            zoneColor = "rgb(234, 179, 8)"; // yellow
+            zoneColorMuted = "rgba(234, 179, 8, 0.15)";
+            totalSlots = 44; occupiedSlots = 28; availableSlots = 16; errorSlots = 3;
+            break;
+        case 2:
+            zoneName = "Zone B";
+            zoneLocation = "Hầm B2";
+            zoneColor = "rgb(148, 163, 184)"; // grey
+            zoneColorMuted = "rgba(148, 163, 184, 0.15)";
+            totalSlots = 48; occupiedSlots = 30; availableSlots = 18; errorSlots = 2;
+            break;
+        case 3:
+            zoneName = "Zone C";
+            zoneLocation = "Tầng trệt";
+            zoneColor = "rgb(249, 115, 22)"; // orange
+            zoneColorMuted = "rgba(249, 115, 22, 0.15)";
+            totalSlots = 40; occupiedSlots = 25; availableSlots = 15; errorSlots = 1;
+            break;
+        case 4:
+            zoneName = "Zone D";
+            zoneLocation = "Tầng 1";
+            zoneColor = "rgb(168, 85, 247)"; // purple
+            zoneColorMuted = "rgba(168, 85, 247, 0.15)";
+            totalSlots = 50; occupiedSlots = 35; availableSlots = 15; errorSlots = 2;
+            break;
+        case 5:
+            zoneName = "Zone E";
+            zoneLocation = "Tầng 2";
+            zoneColor = "rgb(6, 182, 212)"; // cyan
+            zoneColorMuted = "rgba(6, 182, 212, 0.15)";
+            totalSlots = 44; occupiedSlots = 28; availableSlots = 16; errorSlots = 2;
+            break;
+        case 6:
+            zoneName = "Zone F";
+            zoneLocation = "Tầng hầm B3";
+            zoneColor = "rgb(34, 197, 94)"; // green
+            zoneColorMuted = "rgba(34, 197, 94, 0.15)";
+            totalSlots = 44; occupiedSlots = 28; availableSlots = 16; errorSlots = 1;
+            break;
+    }
+
+    int occupancyRate = (int)Math.Round((double)occupiedSlots / totalSlots * 100);
+
+    // Create the blocks array representing the 4 blocks as shown in the user's image
+    var blocks = new List<dynamic>
+{
+        new { Name = "Block " + (char)('A' + zoneId - 1) + "-01", Status = "Running", StatusText = "Đang chạy", Capacity = 12, Parked = 9, Suv = 4, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(249, 115, 22)", ProgressRate = 75, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" },
+        new { Name = "Block " + (char)('A' + zoneId - 1) + "-02", Status = "Normal", StatusText = "Bình thường", Capacity = 12, Parked = 6, Suv = 2, Sedan = 4, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" },
+        new { Name = "Block " + (char)('A' + zoneId - 1) + "-03", Status = "Warning", StatusText = "Cảnh báo", Capacity = 10, Parked = 8, Suv = 3, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(249, 115, 22)", ProgressRate = 80, Dot1 = "bg-emerald-500", Dot2 = "bg-rose-500" },
+        new { Name = "Block " + (char)('A' + zoneId - 1) + "-04", Status = "Error", StatusText = "Lỗi", Capacity = 10, Parked = 5, Suv = 2, Sedan = 3, Mode = "Bằng tay", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" }
+    }; }
+
+<div class="p-5 pb-10 min-h-[calc(100vh-3.5rem)]">
+    <div class="space-y-4">
+        <!-- Top Navigation and Page Title (matches mockup header) -->
+        <div class="flex justify-between items-center pb-2">
+            <div>
+                <div style="color: rgb(248, 250, 252); font-size: 16px; font-weight: 700;">Zone / Block Monitoring</div>
+                <a href="@Url.Action("Zones", "Home", new { id = "" })" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors mt-1.5 text-xs" style="text-decoration: none; white-space: nowrap;">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; flex-shrink: 0; display: inline-block;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Quay lại bản đồ Zone
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-card rounded border border-slate-700/50">
+            <!-- Main Zone Header Card (Standalone box styled with background rgb(30, 41, 59) and border 1px solid rgb(51, 65, 85)) -->
+            <div class="rounded-lg p-4 flex flex-row justify-between items-center shadow-lg" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); font-family: Consolas, Monaco, monospace, sans-serif;">
+                <div class="flex items-center gap-2 min-w-0">
+                    <!-- Chevron down icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; flex-shrink: 0; display: inline-block;" class="text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    <span class="text-sm font-bold text-white shrink-0">@zoneName – @zoneLocation</span>
+                    <span class="text-slate-500 shrink-0">|</span>
+                    <span class="text-xs text-slate-300 font-medium shrink-0">4 blocks · @occupiedSlots/@totalSlots pallets · @occupancyRate%</span>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                    <div class="w-24 bg-slate-800 h-1.5 rounded-full overflow-hidden" style="border-radius: 9999px; height: 6px;">
+                        <div class="h-full rounded-full transition-all duration-500" style="width: @occupancyRate%; background-color: rgb(245, 158, 11); border-radius: 9999px; height: 6px;"></div>
+                    </div>
+                    <span class="text-xs font-bold text-amber-500">@occupancyRate%</span>
+                </div>
+            </div>
+
+            <!-- 4 Blocks Grid (Matches mockup layout & styling) -->
+            <div class="px-4 pb-4 border-t border-slate-700/40">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mt-3">
+                    @foreach (var block in blocks)
+                    {
+                        string cardClass = "";
+                        string badgeStyle = "";
+                        string modeStyle = "color: rgb(96, 165, 250);"; // blue for Tự động
+
+                        switch ((string)block.Status)
+                        {
+                            case "Running":
+                                cardClass = "status-running";
+                                badgeStyle = "border: 1px solid rgba(37, 99, 235, 0.4); background: rgba(37, 99, 235, 0.1); color: rgb(96, 165, 250);";
+                                break;
+                            case "Normal":
+                                cardClass = "status-normal";
+                                badgeStyle = "border: 1px solid rgba(22, 163, 74, 0.4); background: rgba(22, 163, 74, 0.1); color: rgb(74, 222, 128);";
+                                break;
+                            case "Warning":
+                                cardClass = "status-warning";
+                                badgeStyle = "border: 1px solid rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.1); color: rgb(251, 146, 60);";
+                                break;
+                            case "Error":
+                                cardClass = "status-error";
+                                badgeStyle = "border: 1px solid rgba(220, 38, 38, 0.4); background: rgba(220, 38, 38, 0.1); color: rgb(252, 165, 165);";
+                                modeStyle = "color: rgb(148, 163, 184);"; // grey for Bằng tay
+                                break;
+                        }
+
+        <button onclick="openBlockModal('@block.Name', '@block.StatusText', '@block.Status', @block.Capacity, @block.Parked, @block.Suv, @block.Sedan, '@block.Mode', @block.ProgressRate, '@block.ProgressColor')"
+                class="block-card-btn @cardClass">
+            <div>
+                <!-- Card Header (Block name & status badge) -->
+                <div class="flex items-center justify-between mb-3.5">
+                    <span class="font-bold text-white text-xs">@block.Name</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold" style="@badgeStyle">@block.StatusText</span>
+                </div>
+
+                <!-- Inner telemetry fields (Sức chứa, Có xe, SUV/Sedan, Chế độ) -->
+                <div class="space-y-2 text-[11px]">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">Sức chứa</span>
+                        <span class="font-semibold" style="color: rgb(248, 250, 252);">@block.Capacity</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">Có xe</span>
+                        <span class="font-bold" style="color: rgb(34, 197, 94);">@block.Parked</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">SUV / Sedan</span>
+                        <span class="font-semibold" style="color: rgb(248, 250, 252);">@block.Suv / @block.Sedan</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">Chế độ</span>
+                        <span style="@modeStyle" class="font-bold">@block.Mode</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar & Ratio/Percent (matches mockup details exactly) -->
+            <div class="mt-4 pt-2 border-t border-[#23354E]/30">
+                <div class="w-full bg-[#1E293B] h-1.5 rounded-full overflow-hidden" style="border-radius: 9999px; height: 6px;">
+                    <div class="h-full rounded-full" style="width: @(block.ProgressRate)%; background-color: @block.ProgressColor; border-radius: 9999px; height: 6px;"></div>
+                </div>
+                <div class="flex justify-between text-[10px] font-semibold mt-1">
+                    <span class="text-slate-500">@block.Parked/@block.Capacity</span>
+                    <span style="color: @block.ProgressColor">@block.ProgressRate%</span>
+                </div>
+
+                <!-- PLC & HMI Status Dots -->
+                <div class="flex gap-1.5 mt-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full inline-block" style="border-radius: 9999px; width: 8px; height: 8px; background-color: rgb(34, 197, 94);"></span>
+                    <span class="w-2.5 h-2.5 rounded-full inline-block" style="border-radius: 9999px; width: 8px; height: 8px; background-color: rgb(34, 197, 94);"></span>
+                </div>
+            </div>
+        </button>}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Block Details Modal Overlay (using custom CSS classes for absolute stability) -->
+<div id="blockDetailModal" class="custom-modal-overlay">
+    <!-- Modal Box -->
+    <div class="custom-modal-box">
+        <!-- Close Button -->
+        <button onclick="closeBlockModal()" class="absolute-close-btn" aria-label="Close modal">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Header -->
+        <div class="flex items-center gap-3 pb-3 border-b border-[#23354E]/55">
+            <h2 id="modalBlockName" class="text-base font-bold text-white">Block A-01</h2>
+            <span id="modalBlockStatus" class="px-2 py-0.5 rounded text-[10px] font-semibold border flex items-center gap-1">
+                <!-- Populated dynamically -->
+            </span>
+        </div>
+
+        <!-- 8 Stats Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-4">
+            <div class="modal-stat-card">
+                <span class="text-slate-500 text-[10px] font-mono uppercase">ZONE</span>
+                <span id="modalZoneVal" class="block text-xs font-bold text-white mt-0.5">Zone A</span>
+            </div>
+            <div class="modal-stat-card">
+                <span class="text-slate-500 text-[10px] font-mono uppercase">CHẾ ĐỘ</span>
+                <span id="modalModeVal" class="block text-xs font-bold text-white mt-0.5">Tự động</span>
+            </div>
+            <div class="modal-stat-card">
+                <span class="text-slate-500 text-[10px] font-mono uppercase">SỨC CHỨA</span>
+                <span id="modalCapacityVal" class="block text-xs font-bold text-white mt-0.5">12 pallet</span>
+            </div>
+            <div class="modal-stat-card">
+                <span class="text-slate-500 text-[10px] font-mono uppercase">CÓ XE</span>
+                <span id="modalParkedVal" class="block text-xs font-bold text-white mt-0.5">9 (75%)</span>
+            </div>
+            <div class="modal-stat-card">
+                <span class="text-slate-500 text-[10px] font-mono uppercase">SUV</span>
+                <span id="modalSuvVal" class="block text-xs font-bold text-white mt-0.5">4</span>
+            </div>
+            <div class="modal-stat-card">
+                <span class="text-slate-500 text-[10px] font-mono uppercase">SEDAN</span>
+                <span id="modalSedanVal" class="block text-xs font-bold text-white mt-0.5">5</span>
+            </div>
+            <div class="modal-stat-card">
+                <span class="text-slate-500 text-[10px] font-mono uppercase">CHU KỲ</span>
+                <span id="modalCycleVal" class="block text-xs font-bold text-white mt-0.5">3,820</span>
+            </div>
+            <div class="modal-stat-card">
+                <span class="text-slate-500 text-[10px] font-mono uppercase">RUNTIME MOTOR</span>
+                <span id="modalRuntimeVal" class="block text-xs font-bold text-white mt-0.5">1240h</span>
+            </div>
+        </div>
+
+        <!-- Pallets Grid Container -->
+        <div class="space-y-2.5">
+            <div class="flex items-center gap-2 pt-4 pb-4">
+                <svg style="width: 16px; height: 16px; flex-shrink: 0;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7h4a3 3 0 0 1 0 6H9" />
+                </svg>
+                <span class="text-xs font-bold text-slate-300">Trạng thái Pallet (<span id="modalPalletCount">12 pallet</span>)</span>
+            </div>
+
+            <!-- Grid of Pallets (Using CSS Grid for perfect layout and alignment) -->
+            <div id="modalPalletsGrid">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex flex-wrap gap-4 text-[10px] mt-4 pt-2 border-t border-[#23354E]/40 font-semibold">
+            <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(22, 163, 74);"></span>
+                <span class="text-slate-300">Có xe</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(226, 232, 240); border: 1px solid rgb(203, 213, 225);"></span>
+                <span class="text-slate-300">Trống</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(220, 38, 38);"></span>
+                <span class="text-slate-300">Lỗi</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(124, 58, 237);"></span>
+                <span class="text-slate-300">Khóa</span>
+            </div>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="mt-4 pt-2 border-t border-[#23354E]/30">
+            <div class="flex items-center gap-1.5 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                </svg>
+                <span class="text-xs font-bold text-slate-300">Trạng thái kết nối</span>
+            </div>
+            <div class="flex gap-4 text-xs font-bold">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: rgb(34, 197, 94); box-shadow: rgba(34, 197, 94, 0.4) 0px 0px 6px;"></span>
+                    <span class="text-slate-300">PLC</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: rgb(34, 197, 94); box-shadow: rgba(34, 197, 94, 0.4) 0px 0px 6px;"></span>
+                    <span class="text-slate-300">HMI</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Buttons (Uses white-space nowrap and shrink-0 to prevent layout wrapping and huge SVGs) -->
+        <div class="flex flex-wrap gap-2 mt-5 pt-3 border-t border-[#23354E]/40">
+            <!-- Lịch sử (slate grey) -->
+            <button class="modal-footer-btn text-slate-300 bg-slate-800 hover:bg-slate-700 border border-slate-700">
+                <svg style="width: 14px; height: 14px; flex-shrink: 0;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Lịch sử
+            </button>
+            <!-- Bảo trì (purple) -->
+            <button class="modal-footer-btn text-white bg-purple-600 hover:bg-purple-700 border border-purple-500">
+                <svg style="width: 14px; height: 14px; flex-shrink: 0;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Bảo trì
+            </button>
+            <!-- Chi tiết Alarm (orange with black text) -->
+            <button class="modal-footer-btn text-slate-900 bg-amber-500 hover:bg-amber-600 border border-amber-400">
+                <svg style="width: 14px; height: 14px; flex-shrink: 0;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                Chi tiết Alarm
+            </button>
+            <!-- Cưỡng bức (red) -->
+            <button class="modal-footer-btn text-white bg-rose-600 hover:bg-rose-700 border border-rose-500">
+                <svg style="width: 14px; height: 14px; flex-shrink: 0;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Cưỡng bức (Admin)
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Modal Overlay & Box styling for absolute layout stability */
+    .custom-modal-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 9999 !important; /* sits above everything */
+        display: none !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 16px !important;
+        background-color: rgba(15, 23, 42, 0.8) !important;
+        backdrop-filter: blur(6px) !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+
+        .custom-modal-overlay.active {
+            display: flex !important;
+        }
+
+    .custom-modal-box {
+        width: 100% !important;
+        max-width: 680px !important;
+        background-color: rgb(21, 32, 51) !important;
+        border: 1px solid rgb(35, 53, 78) !important;
+        border-radius: 12px !important;
+        padding: 24px !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+        animation: modalFadeIn 0.2s ease-out !important;
+    }
+
+    @@keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Premium Block Card Button CSS Styles */
+    .block-card-btn {
+        background-color: #111C2E !important;
+        border-radius: 6px !important;
+        padding: 16px !important;
+        text-align: left !important;
+        width: 100% !important;
+        cursor: pointer !important;
+        outline: none !important;
+        transition: all 0.2s ease-in-out !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 180px;
+    }
+
+        /* Specific borders for status types */
+        .block-card-btn.status-running {
+            border: 1px solid rgba(37, 99, 235, 0.22) !important;
+        }
+
+        .block-card-btn.status-normal {
+            border: 1px solid rgba(22, 163, 74, 0.22) !important;
+        }
+
+        .block-card-btn.status-warning {
+            border: 1px solid rgba(245, 158, 11, 0.22) !important;
+        }
+
+        .block-card-btn.status-error {
+            border: 1px solid rgba(220, 38, 38, 0.22) !important;
+        }
+
+        /* Hover effects - colorful borders and light backgrounds with glow shadow (matching Overview page scale transition) */
+        .block-card-btn:hover {
+            transform: scale(1.02) !important;
+        }
+
+        .block-card-btn.status-running:hover {
+            border-color: rgb(37, 99, 235) !important;
+            background-color: rgba(37, 99, 235, 0.08) !important;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3), 0 4px 6px -4px rgba(37, 99, 235, 0.3), 0 0 12px rgba(37, 99, 235, 0.2) !important;
+        }
+
+        .block-card-btn.status-normal:hover {
+            border-color: rgb(22, 163, 74) !important;
+            background-color: rgba(22, 163, 74, 0.08) !important;
+            box-shadow: 0 10px 15px -3px rgba(22, 163, 74, 0.3), 0 4px 6px -4px rgba(22, 163, 74, 0.3), 0 0 12px rgba(22, 163, 74, 0.2) !important;
+        }
+
+        .block-card-btn.status-warning:hover {
+            border-color: rgb(245, 158, 11) !important;
+            background-color: rgba(245, 158, 11, 0.08) !important;
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3), 0 4px 6px -4px rgba(245, 158, 11, 0.3), 0 0 12px rgba(245, 158, 11, 0.2) !important;
+        }
+
+        .block-card-btn.status-error:hover {
+            border-color: rgb(220, 38, 38) !important;
+            background-color: rgba(220, 38, 38, 0.08) !important;
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3), 0 4px 6px -4px rgba(220, 38, 38, 0.3), 0 0 12px rgba(220, 38, 38, 0.2) !important;
+        }
+
+    .absolute-close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: color 0.15s, background-color 0.15s;
+    }
+
+        .absolute-close-btn:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+    /* Modal Stat Cards */
+    .modal-stat-card {
+        background-color: rgb(21, 32, 51) !important;
+        border: 1px solid rgb(35, 53, 78) !important;
+        border-radius: 6px !important;
+        padding: 10px 14px !important;
+    }
+
+    /* Pallet Grid Layout */
+    #modalPalletsGrid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    @@media (min-width: 480px) {
+        #modalPalletsGrid {
+            grid-template-columns: repeat(4, 1fr) !important;
+        }
+    }
+
+    @@media (min-width: 640px) {
+        #modalPalletsGrid {
+            grid-template-columns: repeat(6, 1fr) !important;
+        }
+    }
+
+    /* Pallet Lot Cards (Fixed dimensions and flex layout to guarantee zero layout breaking) */
+    .pallet-card {
+        width: 100% !important;
+        height: 96px !important;
+        padding: 8px 6px !important;
+        box-sizing: border-box !important;
+        border-radius: 6px !important;
+        user-select: none !important;
+        transition: all 0.15s ease-in-out !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-shrink: 0 !important;
+    }
+
+        .pallet-card.occupied {
+            border: 1px solid rgb(22, 163, 74) !important;
+            background-color: rgba(22, 163, 74, 0.08) !important;
+            color: rgb(74, 222, 128) !important;
+        }
+
+            .pallet-card.occupied:hover {
+                background-color: rgba(22, 163, 74, 0.15) !important;
+            }
+
+        .pallet-card.empty {
+            border: 1px solid rgb(203, 213, 225) !important;
+            background-color: rgba(255, 255, 255, 0.03) !important;
+            color: rgb(241, 245, 249) !important;
+        }
+
+            .pallet-card.empty:hover {
+                background-color: rgba(255, 255, 255, 0.08) !important;
+            }
+
+        .pallet-card.error {
+            border: 1px solid rgb(220, 38, 38) !important;
+            background-color: rgba(220, 38, 38, 0.12) !important;
+            color: rgb(248, 113, 113) !important;
+        }
+
+            .pallet-card.error:hover {
+                background-color: rgba(220, 38, 38, 0.2) !important;
+            }
+
+        .pallet-card.locked {
+            border: 1px solid rgb(124, 58, 237) !important;
+            background-color: rgba(124, 58, 237, 0.12) !important;
+            color: rgb(192, 132, 252) !important;
+        }
+
+            .pallet-card.locked:hover {
+                background-color: rgba(124, 58, 237, 0.2) !important;
+            }
+
+        /* Lot Card Inner Elements */
+        .pallet-card .pallet-header {
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 4px !important;
+            width: 100% !important;
+            margin-bottom: 2px !important;
+        }
+
+        .pallet-card .pallet-type {
+            font-size: 9px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            color: rgb(148, 163, 184) !important;
+            width: 100% !important;
+            text-align: center !important;
+            margin-bottom: 2px !important;
+        }
+
+        .pallet-card .pallet-plate {
+            font-size: 9px !important;
+            font-weight: 700 !important;
+            font-family: Consolas, Monaco, monospace !important;
+            width: 100% !important;
+            text-align: center !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            margin-bottom: 2px !important;
+        }
+
+        .pallet-card .pallet-time {
+            font-size: 8px !important;
+            font-weight: 600 !important;
+            width: 100% !important;
+            text-align: center !important;
+        }
+
+    /* Modal Footer Buttons Style */
+    .modal-footer-btn {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        border-radius: 4px !important;
+        transition: all 0.15s ease-in-out !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+</style>
+
+<script>
+    function openBlockModal(blockName, statusText, statusType, capacity, parked, suv, sedan, mode, progressRate, progressColor) {
+        // 1. Set text values
+        document.getElementById("modalBlockName").innerText = blockName;
+
+        // 2. Set status badge
+        var statusBadge = document.getElementById("modalBlockStatus");
+        statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-semibold border flex items-center gap-1";
+
+        // Pulse/Activity zig-zag SVG line icon
+        var pulseIcon = `<svg class="h-3 w-3 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`;
+
+        if (statusType === "Running") {
+            statusBadge.innerHTML = pulseIcon + " " + statusText;
+            statusBadge.className += " border-[#2563eb]/40 bg-[#2563eb]/10 text-[#60a5fa]";
+        } else if (statusType === "Normal") {
+            statusBadge.innerHTML = "● " + statusText;
+            statusBadge.className += " border-[#16a34a]/40 bg-[#16a34a]/10 text-[#4ade80]";
+        } else if (statusType === "Warning") {
+            statusBadge.innerHTML = "▲ " + statusText;
+            statusBadge.className += " border-[#d97706]/40 bg-[#d97706]/10 text-[#fb923c]";
+        } else if (statusType === "Error") {
+            statusBadge.innerHTML = "⚠ " + statusText;
+            statusBadge.className += " border-[#dc2626]/40 bg-[#dc2626]/10 text-[#fca5a5]";
+        }
+
+        // 3. Stats Grid
+        document.getElementById("modalZoneVal").innerText = "@zoneName";
+        document.getElementById("modalModeVal").innerText = mode;
+        document.getElementById("modalCapacityVal").innerText = capacity + " pallet";
+        document.getElementById("modalParkedVal").innerText = parked + " (" + progressRate + "%)";
+        document.getElementById("modalSuvVal").innerText = suv;
+        document.getElementById("modalSedanVal").innerText = sedan;
+
+        // Cycles & Runtime simulation
+        var isBlock1 = blockName.endsWith("-01");
+        var isBlock2 = blockName.endsWith("-02");
+        var isBlock3 = blockName.endsWith("-03");
+
+        var cycleVal = isBlock1 ? "3,820" : (isBlock2 ? "2,450" : (isBlock3 ? "1,980" : "890"));
+        var runtimeVal = isBlock1 ? "1240h" : (isBlock2 ? "850h" : (isBlock3 ? "640h" : "310h"));
+
+        document.getElementById("modalCycleVal").innerText = cycleVal;
+        document.getElementById("modalRuntimeVal").innerText = runtimeVal;
+        document.getElementById("modalPalletCount").innerText = capacity + " pallet";
+
+        // 4. Generate Pallets Grid
+        var grid = document.getElementById("modalPalletsGrid");
+        grid.innerHTML = "";
+
+        // Standard plate lists to display beautiful Vietnamese licenses
+        var plates = ["51G-12345", "30H-88877", "43A-56789", "92B-11223", "79C-44556", "51K-99001", "51G-12345", "30H-88877", "43A-56789"];
+        var times = ["06:00", "08:13", "10:26", "12:39", "14:52", "16:05", "06:18", "08:31", "10:44"];
+
+        for (var i = 1; i <= capacity; i++) {
+            var numStr = i < 10 ? "0" + i : i;
+            var pCode = "P" + numStr;
+
+            var type = "";
+            var plate = "";
+            var time = "";
+
+            var isOccupied = false;
+            var isError = false;
+            var isLocked = false;
+
+            if (i <= parked) {
+                isOccupied = true;
+                type = (i % 2 === 0) ? "Sedan" : "SUV";
+                plate = plates[(i - 1) % plates.length];
+                time = times[(i - 1) % times.length];
+            } else if (i === parked + 1 && statusType !== "Normal") {
+                isError = true;
+            } else if (i === capacity) {
+                isLocked = true;
+            }
+
+            var card = document.createElement("div");
+
+            if (isOccupied) {
+                card.className = "pallet-card occupied";
+                card.innerHTML = `
+                    <div class="pallet-header">
+                        <svg style="width: 12px; height: 12px; flex-shrink: 0; display: inline-block; color: rgb(74, 222, 128);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+                            <circle cx="7" cy="17" r="2" />
+                            <circle cx="17" cy="17" r="2" />
+                        </svg>
+                        <span>${pCode}</span>
+                    </div>
+                    <div class="pallet-type">${type}</div>
+                    <div class="pallet-plate" style="color: rgb(74, 222, 128);">${plate}</div>
+                    <div class="pallet-time" style="color: rgb(22, 163, 74);">${time}</div>
+                `;
+            } else if (isError) {
+                card.className = "pallet-card error";
+                card.innerHTML = `
+                    <div class="pallet-header" style="height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
+                        <svg style="width: 14px; height: 14px; flex-shrink: 0; display: inline-block; color: rgb(248, 113, 113);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>${pCode}</span>
+                    </div>
+                `;
+            } else if (isLocked) {
+                card.className = "pallet-card locked";
+                card.innerHTML = `
+                    <div class="pallet-header" style="height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
+                        <svg style="width: 14px; height: 14px; flex-shrink: 0; display: inline-block; color: rgb(192, 132, 252);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z" />
+                        </svg>
+                        <span>${pCode}</span>
+                    </div>
+                `;
+            } else {
+                card.className = "pallet-card empty";
+                card.innerHTML = `
+                    <div class="pallet-header" style="height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
+                        <svg style="width: 12px; height: 12px; flex-shrink: 0; display: inline-block; color: rgb(203, 213, 225);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7h4a3 3 0 0 1 0 6H9" />
+                        </svg>
+                        <span>${pCode}</span>
+                    </div>
+                `;
+            }
+            grid.appendChild(card);
+        }
+
+        // 5. Open modal
+        var modal = document.getElementById("blockDetailModal");
+        modal.classList.add("active");
+    }
+
+    function closeBlockModal() {
+        var modal = document.getElementById("blockDetailModal");
+        modal.classList.remove("active");
+    }
+
+    // Close on click outside modal content
+    document.getElementById("blockDetailModal").addEventListener("click", function(event) {
+        if (event.target === this) {
+            closeBlockModal();
+        }
+    });
+</script>
