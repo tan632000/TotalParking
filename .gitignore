@@ -60,7 +60,7 @@ pnpm-debug.log*
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
+
 
 # OS metadata
 .DS_Store
