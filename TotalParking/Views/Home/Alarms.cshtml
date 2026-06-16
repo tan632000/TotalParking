@@ -1,5 +1,278 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
 
-<div class="p-5 pb-10 min-h-[calc(100vh-3.5rem)]"><div class="space-y-4"><div class="flex items-center justify-between"><h1 class="text-slate-100 text-lg font-semibold">Alarm &amp; Event</h1><button class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-700/60 hover:bg-slate-600 text-slate-300 border border-slate-600/50 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>Làm mới</button></div><div class="grid grid-cols-3 gap-3"><div class="bg-red-950/40 border border-red-700/50 rounded p-3"><div class="text-red-400 text-xs font-mono uppercase">Alarm Active</div><div class="text-red-300 text-2xl font-mono font-bold">4</div></div><div class="bg-orange-950/40 border border-orange-700/50 rounded p-3"><div class="text-orange-400 text-xs font-mono uppercase">Nghiêm trọng</div><div class="text-orange-300 text-2xl font-mono font-bold">2</div></div><div class="bg-amber-950/40 border border-amber-700/50 rounded p-3"><div class="text-amber-400 text-xs font-mono uppercase">Đã xác nhận</div><div class="text-amber-300 text-2xl font-mono font-bold">2</div></div></div><div class="flex flex-wrap gap-2 items-center"><div class="flex items-center gap-2 flex-1 min-w-48 bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search text-slate-500"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input class="bg-transparent text-xs text-slate-200 placeholder-slate-500 outline-none flex-1 font-mono" placeholder="Tìm kiếm mã lỗi, mô tả..." value=""></div><select class="bg-slate-800/60 border border-slate-700/50 rounded px-2 py-1.5 text-xs text-slate-300 font-mono outline-none"><option value="all">Tất cả trạng thái</option><option value="active">Đang hoạt động</option><option value="acknowledged">Đã xác nhận</option><option value="resolved">Đã giải quyết</option></select><select class="bg-slate-800/60 border border-slate-700/50 rounded px-2 py-1.5 text-xs text-slate-300 font-mono outline-none"><option value="all">Tất cả mức độ</option><option value="critical">Nghiêm trọng</option><option value="high">Cao</option><option value="medium">Trung bình</option><option value="low">Thấp</option></select><button class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-700/60 hover:bg-slate-600 text-slate-300 border border-slate-600/50 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>Xuất Excel</button></div><div class="bg-card rounded border border-slate-700/50 overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-xs font-mono"><thead class="border-b border-slate-700/60 bg-slate-800/60"><tr><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Thời gian</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Mức độ</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Zone</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Block</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Thiết bị</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Mã lỗi</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Mô tả</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Trạng thái</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Người ACK</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Hành động</th></tr></thead><tbody><tr class="border-b border-slate-800/60 hover:bg-slate-800/30 cursor-pointer transition-colors bg-red-950/20"><td class="px-3 py-2.5 text-slate-300 whitespace-nowrap">08:42:15</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>Nghiêm trọng</span></td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">A</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">A-04</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">Motor-Lift-01</td><td class="px-3 py-2.5 font-semibold whitespace-nowrap text-red-400">E-0401</td><td class="px-3 py-2.5 text-slate-300 max-w-xs">Lỗi motor nâng hạ – quá tải dòng điện</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>Đang hoạt động</span></td><td class="px-3 py-2.5 text-slate-500">—</td><td class="px-3 py-2.5"><button class="flex items-center gap-1 px-2 py-0.5 rounded border border-slate-600/40 hover:border-blue-500/50 text-slate-400 hover:text-blue-300 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>Xem</button></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30 cursor-pointer transition-colors bg-red-950/20"><td class="px-3 py-2.5 text-slate-300 whitespace-nowrap">06:12:33</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>Nghiêm trọng</span></td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">A</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">A-04</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">Safety-Relay</td><td class="px-3 py-2.5 font-semibold whitespace-nowrap text-red-400">E-0408</td><td class="px-3 py-2.5 text-slate-300 max-w-xs">E-Stop đang được nhấn – Block A-04 dừng khẩn cấp</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>Đang hoạt động</span></td><td class="px-3 py-2.5 text-slate-500">—</td><td class="px-3 py-2.5"><button class="flex items-center gap-1 px-2 py-0.5 rounded border border-slate-600/40 hover:border-blue-500/50 text-slate-400 hover:text-blue-300 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>Xem</button></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30 cursor-pointer transition-colors "><td class="px-3 py-2.5 text-slate-300 whitespace-nowrap">08:38:02</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-orange-950/70 text-orange-400 border-orange-700/50"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>Cao</span></td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">A</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">A-03</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">HMI-Panel</td><td class="px-3 py-2.5 font-semibold whitespace-nowrap text-amber-400">W-0302</td><td class="px-3 py-2.5 text-slate-300 max-w-xs">Cửa tủ điều khiển mở – Block A-03</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>Đang hoạt động</span></td><td class="px-3 py-2.5 text-slate-500">—</td><td class="px-3 py-2.5"><button class="flex items-center gap-1 px-2 py-0.5 rounded border border-slate-600/40 hover:border-blue-500/50 text-slate-400 hover:text-blue-300 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>Xem</button></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30 cursor-pointer transition-colors "><td class="px-3 py-2.5 text-slate-300 whitespace-nowrap">07:55:10</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-orange-950/70 text-orange-400 border-orange-700/50"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>Cao</span></td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">A</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">A-04</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">Sensor-LS-03</td><td class="px-3 py-2.5 font-semibold whitespace-nowrap text-amber-400">E-0405</td><td class="px-3 py-2.5 text-slate-300 max-w-xs">Công tắc hành trình dưới không về vị trí – Pallet P05</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>Đang hoạt động</span></td><td class="px-3 py-2.5 text-slate-500">—</td><td class="px-3 py-2.5"><button class="flex items-center gap-1 px-2 py-0.5 rounded border border-slate-600/40 hover:border-blue-500/50 text-slate-400 hover:text-blue-300 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>Xem</button></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30 cursor-pointer transition-colors "><td class="px-3 py-2.5 text-slate-300 whitespace-nowrap">08:15:44</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-amber-950/60 text-amber-400 border-amber-700/50"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>Trung bình</span></td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">B</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">B-03</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">AI-VDS</td><td class="px-3 py-2.5 font-semibold whitespace-nowrap text-amber-400">W-0701</td><td class="px-3 py-2.5 text-slate-300 max-w-xs">AI-VDS mất kết nối – chuyển sang Fallback Mode</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-amber-950/60 text-amber-400 border-amber-700/50"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>Đã xác nhận</span></td><td class="px-3 py-2.5 text-slate-500">operator01</td><td class="px-3 py-2.5"><button class="flex items-center gap-1 px-2 py-0.5 rounded border border-slate-600/40 hover:border-blue-500/50 text-slate-400 hover:text-blue-300 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>Xem</button></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30 cursor-pointer transition-colors "><td class="px-3 py-2.5 text-slate-300 whitespace-nowrap">05:44:21</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-amber-950/60 text-amber-400 border-amber-700/50"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>Trung bình</span></td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">C</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">C-03</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">PLC-C03</td><td class="px-3 py-2.5 font-semibold whitespace-nowrap text-amber-400">W-1101</td><td class="px-3 py-2.5 text-slate-300 max-w-xs">Mất kết nối PLC – Block C-03 offline</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-green-950/60 text-green-400 border-green-700/50"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Đã giải quyết</span></td><td class="px-3 py-2.5 text-slate-500">supervisor01</td><td class="px-3 py-2.5"><button class="flex items-center gap-1 px-2 py-0.5 rounded border border-slate-600/40 hover:border-blue-500/50 text-slate-400 hover:text-blue-300 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>Xem</button></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30 cursor-pointer transition-colors "><td class="px-3 py-2.5 text-slate-300 whitespace-nowrap">07:30:00</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-sky-950/60 text-sky-400 border-sky-700/50"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Thấp</span></td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">B</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">B-01</td><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">Motor-Slide-02</td><td class="px-3 py-2.5 font-semibold whitespace-nowrap text-amber-400">M-0501</td><td class="px-3 py-2.5 text-slate-300 max-w-xs">Motor trượt ngang gần đến hạn bảo trì (85% vòng đời)</td><td class="px-3 py-2.5"><span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-1.5 py-0.5 text-[10px] bg-amber-950/60 text-amber-400 border-amber-700/50"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>Đã xác nhận</span></td><td class="px-3 py-2.5 text-slate-500">maintenance01</td><td class="px-3 py-2.5"><button class="flex items-center gap-1 px-2 py-0.5 rounded border border-slate-600/40 hover:border-blue-500/50 text-slate-400 hover:text-blue-300 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>Xem</button></td></tr></tbody></table></div></div></div></div>
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Nhật ký Cảnh báo & Sự cố (Alarms & Events)</h1>
+                <p class="text-slate-400 text-sm mt-1">Giám sát toàn bộ sự cố thời gian thực, lỗi vận hành và cảnh báo bảo trì thiết bị nâng trượt.</p>
+            </div>
+            <button onclick="window.location.reload();" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+                Làm mới
+            </button>
+        </div>
+
+        <!-- Alarm KPI Widgets -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-red-950/30 border border-red-500/30 rounded-xl p-4 shadow-md">
+                <div class="text-red-400 text-[10px] font-mono uppercase tracking-wider">LỖI THIẾT BỊ / HỆ THỐNG</div>
+                <div class="text-red-300 text-2xl font-mono font-bold mt-1">4 hoạt động</div>
+                <div class="text-[10px] text-red-500 font-mono mt-1">Yêu cầu can thiệp kỹ thuật</div>
+            </div>
+            <div class="bg-blue-950/30 border border-blue-500/30 rounded-xl p-4 shadow-md">
+                <div class="text-blue-400 text-[10px] font-mono uppercase tracking-wider">LỖI THAO TÁC VẬN HÀNH</div>
+                <div class="text-blue-300 text-2xl font-mono font-bold mt-1">2 hoạt động</div>
+                <div class="text-[10px] text-blue-500 font-mono mt-1">Nhấn E-Stop hoặc mở cửa tủ</div>
+            </div>
+            <div class="bg-purple-950/30 border border-purple-500/30 rounded-xl p-4 shadow-md">
+                <div class="text-purple-400 text-[10px] font-mono uppercase tracking-wider">THIẾT BỊ ĐẾN HẠN BẢO TRÌ</div>
+                <div class="text-purple-300 text-2xl font-mono font-bold mt-1">1 cảnh báo</div>
+                <div class="text-[10px] text-purple-500 font-mono mt-1">Dựa trên chu kỳ và giờ chạy</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
+                <div class="text-slate-400 text-[10px] font-mono uppercase tracking-wider">ĐÃ XÁC NHẬN (ACKNOWLEDGED)</div>
+                <div class="text-slate-300 text-2xl font-mono font-bold mt-1">3 sự cố</div>
+                <div class="text-[10px] text-emerald-400 font-mono mt-1">Nhân viên đang xử lý</div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="flex flex-wrap gap-3 items-center bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-lg">
+            <div class="flex items-center gap-2 flex-1 min-w-[240px] bg-slate-800/40 border border-slate-700/50 rounded px-3 py-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                <input id="alarmSearchInput" onkeyup="filterAlarms()" class="bg-transparent text-xs text-slate-200 placeholder-slate-500 outline-none flex-1 font-mono" placeholder="Tìm kiếm theo mã lỗi, thiết bị, mô tả...">
+            </div>
+
+            <select id="filterType" onchange="filterAlarms()" class="bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500">
+                <option value="all">Tất cả Phân loại lỗi</option>
+                <option value="hardware">Lỗi Thiết bị / Hệ thống</option>
+                <option value="operation">Lỗi Thao tác vận hành</option>
+                <option value="maintenance">Đến hạn bảo trì</option>
+            </select>
+
+            <select id="filterSeverity" onchange="filterAlarms()" class="bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500">
+                <option value="all">Tất cả Mức độ</option>
+                <option value="critical">Nghiêm trọng</option>
+                <option value="high">Cao</option>
+                <option value="medium">Trung bình</option>
+                <option value="low">Thấp</option>
+            </select>
+
+            <button onclick="alert('Đã xuất lịch sử cảnh báo thành công!')" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+                Xuất Excel
+            </button>
+        </div>
+
+        <!-- Alarms Table -->
+        <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs font-mono">
+                    <thead class="border-b border-slate-800 bg-slate-850">
+                        <tr>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Thời gian</th>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Phân loại lỗi</th>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Mức độ</th>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Zone</th>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Block</th>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Thiết bị</th>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Mã lỗi</th>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold">Mô tả sự cố</th>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Trạng thái</th>
+                            <th class="text-left text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Người ACK</th>
+                            <th class="text-center text-slate-400 px-3 py-3 font-bold whitespace-nowrap">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alarmsTableBody">
+                        <!-- Alarm 1: E-0401 (System Error) -->
+                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors bg-red-950/15" data-type="hardware" data-severity="critical">
+                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">08:42:15</td>
+                            <td class="px-3 py-3">
+                                <span class="px-2 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-[10px] font-bold">Lỗi thiết bị</span>
+                            </td>
+                            <td class="px-3 py-3">
+                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600">Nghiêm trọng</span>
+                            </td>
+                            <td class="px-3 py-3 text-slate-400 font-bold">A</td>
+                            <td class="px-3 py-3 text-slate-300 font-bold">A-04</td>
+                            <td class="px-3 py-3 text-slate-300">Motor-Lift-01</td>
+                            <td class="px-3 py-3 font-bold text-red-400">E-0401</td>
+                            <td class="px-3 py-3 text-slate-200">Motor nâng hạ quá dòng - quá tải nhiệt cơ cấu truyền động</td>
+                            <td class="px-3 py-3">
+                                <span class="status-badge text-[10px] font-bold text-red-500">Đang hoạt động</span>
+                            </td>
+                            <td class="ack-operator px-3 py-3 text-slate-500">—</td>
+                            <td class="px-3 py-3 text-center">
+                                <button onclick="acknowledgeAlarm(this, 'operator01')" class="ack-btn px-2 py-1 rounded bg-blue-700/60 hover:bg-blue-600/70 border border-blue-500/50 text-blue-200 font-bold transition-all">ACK</button>
+                            </td>
+                        </tr>
+
+                        <!-- Alarm 2: E-0408 (Operation Error) -->
+                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors bg-blue-950/10" data-type="operation" data-severity="critical">
+                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">06:12:33</td>
+                            <td class="px-3 py-3">
+                                <span class="px-2 py-0.5 rounded border border-blue-500/40 bg-blue-500/10 text-blue-400 text-[10px] font-bold">Lỗi thao tác</span>
+                            </td>
+                            <td class="px-3 py-3">
+                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600">Nghiêm trọng</span>
+                            </td>
+                            <td class="px-3 py-3 text-slate-400 font-bold">A</td>
+                            <td class="px-3 py-3 text-slate-300 font-bold">A-04</td>
+                            <td class="px-3 py-3 text-slate-300">Safety-Relay</td>
+                            <td class="px-3 py-3 font-bold text-red-400">E-0408</td>
+                            <td class="px-3 py-3 text-slate-200">Nút nhấn khẩn cấp E-Stop đang được kích hoạt cơ học</td>
+                            <td class="px-3 py-3">
+                                <span class="status-badge text-[10px] font-bold text-red-500">Đang hoạt động</span>
+                            </td>
+                            <td class="ack-operator px-3 py-3 text-slate-500">—</td>
+                            <td class="px-3 py-3 text-center">
+                                <button onclick="acknowledgeAlarm(this, 'supervisor01')" class="ack-btn px-2 py-1 rounded bg-blue-700/60 hover:bg-blue-600/70 border border-blue-500/50 text-blue-200 font-bold transition-all">ACK</button>
+                            </td>
+                        </tr>
+
+                        <!-- Alarm 3: W-0302 (Operation Warning) -->
+                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors bg-blue-950/10" data-type="operation" data-severity="high">
+                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">08:38:02</td>
+                            <td class="px-3 py-3">
+                                <span class="px-2 py-0.5 rounded border border-blue-500/40 bg-blue-500/10 text-blue-400 text-[10px] font-bold">Lỗi thao tác</span>
+                            </td>
+                            <td class="px-3 py-3">
+                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-orange-950/70 text-orange-400 border-orange-700/50">Cao</span>
+                            </td>
+                            <td class="px-3 py-3 text-slate-400 font-bold">A</td>
+                            <td class="px-3 py-3 text-slate-300 font-bold">A-03</td>
+                            <td class="px-3 py-3 text-slate-300">HMI-Panel</td>
+                            <td class="px-3 py-3 font-bold text-amber-400">W-0302</td>
+                            <td class="px-3 py-3 text-slate-200">Cửa tủ điều khiển tại trạm đang mở - Cảnh báo an ninh</td>
+                            <td class="px-3 py-3">
+                                <span class="status-badge text-[10px] font-bold text-red-500">Đang hoạt động</span>
+                            </td>
+                            <td class="ack-operator px-3 py-3 text-slate-500">—</td>
+                            <td class="px-3 py-3 text-center">
+                                <button onclick="acknowledgeAlarm(this, 'operator01')" class="ack-btn px-2 py-1 rounded bg-blue-700/60 hover:bg-blue-600/70 border border-blue-500/50 text-blue-200 font-bold transition-all">ACK</button>
+                            </td>
+                        </tr>
+
+                        <!-- Alarm 4: E-0405 (System Error) -->
+                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors" data-type="hardware" data-severity="high">
+                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">07:55:10</td>
+                            <td class="px-3 py-3">
+                                <span class="px-2 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-[10px] font-bold">Lỗi thiết bị</span>
+                            </td>
+                            <td class="px-3 py-3">
+                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-orange-950/70 text-orange-400 border-orange-700/50">Cao</span>
+                            </td>
+                            <td class="px-3 py-3 text-slate-400 font-bold">A</td>
+                            <td class="px-3 py-3 text-slate-300 font-bold">A-04</td>
+                            <td class="px-3 py-3 text-slate-300">Sensor-LS-03</td>
+                            <td class="px-3 py-3 font-bold text-amber-400">E-0405</td>
+                            <td class="px-3 py-3 text-slate-200">Công tắc giới hạn hành trình dưới không phản hồi - Khay P05</td>
+                            <td class="px-3 py-3">
+                                <span class="status-badge text-[10px] font-bold text-slate-400">Đã xác nhận</span>
+                            </td>
+                            <td class="ack-operator px-3 py-3 text-slate-300">operator02</td>
+                            <td class="px-3 py-3 text-center">
+                                <span class="text-slate-500 text-[10px] font-bold">—</span>
+                            </td>
+                        </tr>
+
+                        <!-- Alarm 5: W-0701 (System Warning) -->
+                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors" data-type="hardware" data-severity="medium">
+                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">08:15:44</td>
+                            <td class="px-3 py-3">
+                                <span class="px-2 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-[10px] font-bold">Lỗi thiết bị</span>
+                            </td>
+                            <td class="px-3 py-3">
+                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-amber-950/60 text-amber-400 border-amber-700/50">Trung bình</span>
+                            </td>
+                            <td class="px-3 py-3 text-slate-400 font-bold">B</td>
+                            <td class="px-3 py-3 text-slate-300 font-bold">B-03</td>
+                            <td class="px-3 py-3 text-slate-300">AI-VDS</td>
+                            <td class="px-3 py-3 font-bold text-amber-400">W-0701</td>
+                            <td class="px-3 py-3 text-slate-200">Camera AI-VDS cổng vào mất kết nối - Hệ thống chuyển Fallback</td>
+                            <td class="px-3 py-3">
+                                <span class="status-badge text-[10px] font-bold text-slate-400">Đã xác nhận</span>
+                            </td>
+                            <td class="ack-operator px-3 py-3 text-slate-300">operator01</td>
+                            <td class="px-3 py-3 text-center">
+                                <span class="text-slate-500 text-[10px] font-bold">—</span>
+                            </td>
+                        </tr>
+
+                        <!-- Alarm 6: M-0501 (Maintenance Warning) -->
+                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors" data-type="maintenance" data-severity="low">
+                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">07:30:00</td>
+                            <td class="px-3 py-3">
+                                <span class="px-2 py-0.5 rounded border border-purple-500/40 bg-purple-500/10 text-purple-400 text-[10px] font-bold">Đến hạn bảo trì</span>
+                            </td>
+                            <td class="px-3 py-3">
+                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-sky-950/60 text-sky-400 border-sky-700/50">Thấp</span>
+                            </td>
+                            <td class="px-3 py-3 text-slate-400 font-bold">B</td>
+                            <td class="px-3 py-3 text-slate-300 font-bold">B-01</td>
+                            <td class="px-3 py-3 text-slate-300">Motor-Slide-02</td>
+                            <td class="px-3 py-3 font-bold text-purple-400">M-0501</td>
+                            <td class="px-3 py-3 text-slate-200">Số chu kỳ chạy nâng trượt đạt ngưỡng mài mòn cao (85% giới hạn)</td>
+                            <td class="px-3 py-3">
+                                <span class="status-badge text-[10px] font-bold text-slate-400">Đã xác nhận</span>
+                            </td>
+                            <td class="ack-operator px-3 py-3 text-slate-300">maintenance01</td>
+                            <td class="px-3 py-3 text-center">
+                                <span class="text-slate-500 text-[10px] font-bold">—</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Live filter alarm list
+    function filterAlarms() {
+        const query = document.getElementById("alarmSearchInput").value.toLowerCase();
+        const type = document.getElementById("filterType").value;
+        const severity = document.getElementById("filterSeverity").value;
+        
+        const rows = document.querySelectorAll(".alarm-row");
+        
+        rows.forEach(row => {
+            const textMatch = row.innerText.toLowerCase().includes(query);
+            const typeMatch = (type === "all") || (row.getAttribute("data-type") === type);
+            const severityMatch = (severity === "all") || (row.getAttribute("data-severity") === severity);
+            
+            if (textMatch && typeMatch && severityMatch) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    // Acknowledge alarm action
+    function acknowledgeAlarm(btn, operatorName) {
+        const row = btn.closest("tr");
+        
+        // 1. Update text/style for Acknowledge column
+        const statusBadge = row.querySelector(".status-badge");
+        statusBadge.innerText = "Đã xác nhận";
+        statusBadge.className = "status-badge text-[10px] font-bold text-slate-400";
+        
+        // 2. Set operator name
+        const operatorCell = row.querySelector(".ack-operator");
+        operatorCell.innerText = operatorName;
+        operatorCell.className = "ack-operator px-3 py-3 text-slate-300";
+        
+        // 3. Remove action button
+        const actionCell = btn.parentNode;
+        actionCell.innerHTML = '<span class="text-slate-500 text-[10px] font-bold">—</span>';
+        
+        // 4. Toast notification
+        alert("Đã xác nhận xử lý cảnh báo thành công cho tài khoản " + operatorName + "!");
+    }
+</script>

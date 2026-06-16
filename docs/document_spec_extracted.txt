@@ -1,0 +1,110 @@
+4.2 Danh mục chức năng chi tiết
+#
+Chức năng
+Mô tả chi tiết
+Phạm vi
+1
+Bản đồ layout tổng mặt bằng
+Màn hình trung tâm hiển thị bản đồ toàn bộ tầng hầm. Từng block được vẽ theo vị trí thực tế trên layout
+Phòng điều hành
+2
+Bản đồ chi tiết 4 khu vực (zone)
+Zoom vào từng trong 4 zone lớn: hiển thị trạng thái từng slot (có xe / trống / lỗi / bảo trì)
+Phòng điều hành
+3
+Trạng thái real-time từng slot
+Cập nhật liên tục: Có xe / Trống / Lỗi / Bảo trì. Màu sắc phân biệt trực quan theo trạng thái
+Toàn bộ bãi
+4
+Mật độ xe theo zone
+Hiển thị mật độ % từng zone. Cảnh báo tự động khi zone bị khai thác quá tải so với các zone khác
+Toàn bộ bãi
+5
+Điều hướng giao thông thông minh
+Xuất tín hiệu cân bằng tải sang: màn hình 55" trạm phân loại, LED báo chỗ trống trong hầm, API cho hệ kiểm soát ra vào. Hướng xe sang zone ít được sử dụng
+Toàn bộ bãi
+6
+Cập nhật trạng thái cơ khí real-time
+Polling liên tục từ tất cả PLC block qua mạng LAN nội bộ. Phát hiện ngay khi block mất kết nối hoặc có lỗi
+Toàn bộ block
+7
+Tra cứu lịch sử và tìm xe
+Tìm xe theo thẻ từ hoặc biển số trong toàn bộ bãi cơ khí. Tra cứu lịch sử gửi xe theo thời gian, số thẻ, biển số
+Toàn bộ block
+8
+Chuẩn đoán lỗi từ xa
+Remote fault diagnosis: xem chi tiết lỗi từng thiết bị trong block mà không cần đến hiện trường. Rút ngắn thời gian sửa chữa
+Toàn bộ block
+9
+Thống kê tần suất hoạt động
+Đếm số lần hoạt động từng pallet/vị trí. Phục vụ lên lịch bảo trì theo tần suất (thay vì thời gian cố định)
+Toàn bộ block
+10
+Cảnh báo 3 loại
+1) Lỗi thao tác vận hành. 2) Lỗi hệ thống / thiết bị. 3) Thiết bị đến hạn bảo trì. Hiển thị real-time trên dashboard
+Toàn bộ block
+11
+Quản lý thẻ từ (đồng bộ HMI)
+Cài đặt / xóa thẻ vé tháng từ SCADA, đồng bộ sang HMI tại block. Hiển thị biển số xe gắn với từng thẻ
+Toàn bộ block
+12
+Đèn báo chỗ trống per block
+Điều khiển tín hiệu đèn 3 màu xanh/vàng/đỏ tại từng block. Nhận dữ liệu từ ZCU qua TCP/IP, tần suất 2.5s
+Toàn bộ block
+13
+Bảng LED tổng đầu hầm
+Hiển thị số chỗ trống phân biệt: Cơ khí SUV / Cơ khí SEDAN / Đỗ thường. Cập nhật real-time. Hỗ trợ phân vùng vé tháng / vé lượt nếu cần
+Cửa hầm
+14
+Bảng LED chỉ dẫn trong hầm
+LED trong hầm thể hiện số chỗ trống từng khu vực + hướng di chuyển. Cập nhật real-time từ SCADA server
+Trong hầm
+15
+Màn hình LED ngoài trời
+3 ô LED Matrix outdoor tại cửa hầm. Hiển thị: số chỗ trống cơ khí, số chỗ đỗ thường, hướng di chuyển. Giao tiếp TCP/IP
+Cửa hầm ngoài trời
+16
+Tích hợp AI-VDS (trạm phân loại)
+Nhận dữ liệu từ AI-VDS: loại xe (SEDAN/SUV/Quá khổ), chiều cao, chiều dài → thông báo cho bảo vệ loại thẻ cần phát (Xanh/Vàng/Cam)
+Trạm phân loại
+17
+Màn hình trạm phân loại
+Hiển thị: loại xe, loại thẻ, block phù hợp, sơ đồ chỉ đường trên tổng mặt bằng. Màn hình chờ: thông tin tổng quan hệ thống hoặc quảng cáo
+Trạm phân loại
+18
+Tích hợp máy phát hành thẻ tự động
+Kết nối trực tiếp với máy phát thẻ tự động (nếu có): tự động phát đúng loại thẻ theo kết quả phân loại xe của AI-VDS
+Trạm phân loại
+19
+Báo cáo tần suất / lưu lượng
+Báo cáo tần suất hoạt động, lưu lượng xe, mật độ đỗ của toàn bãi và từng khu vực. Form báo cáo tùy chỉnh theo yêu cầu CĐT
+Toàn bộ bãi
+20
+Báo cáo lịch sử lỗi
+Lịch sử lỗi của tất cả block và từng thiết bị chính trong block: thời gian phát sinh, thời gian reset, tần suất lỗi
+Toàn bộ block
+21
+Giám sát từ xa (web-based)
+Remote monitoring account qua trình duyệt internet. Cập nhật trạng thái real-time. Cung cấp cho operator tại trạm kiểm soát và kỹ sư nhà thầu
+Remote
+22
+Báo cáo doanh thu từ xa
+Tổng hợp báo cáo doanh thu qua internet. Tích hợp với hệ thống kiểm soát ra vào nếu có
+Remote
+23
+Vận hành từ xa (remote operation)
+Kỹ sư nhà thầu có thể can thiệp vận hành block qua internet từ Support Center khi cần thiết
+Remote
+24
+API tích hợp bên thứ 3
+Chuẩn hóa hệ thống qua RESTful API. Sẵn sàng kết nối với: phần mềm quản lý tòa nhà, hệ thống kiểm soát ra vào, ứng dụng di động
+Toàn bộ hệ thống
+4.3 Yêu cầu kỹ thuật bổ sung
+Yêu cầu kỹ thuật đặc thù cho SCADA:
+Database: lưu trữ đầy đủ lịch sử sự kiện, lỗi, thẻ — tối thiểu 2 năm dữ liệu
+API: RESTful, có documentation (Swagger), hỗ trợ webhook cho cảnh báo real-time
+Remote access: bảo mật bằng VPN hoặc HTTPS + authentication — không dùng cổng mở trực tiếp
+LED boards: giao tiếp TCP/IP, hỗ trợ tự phát hiện mất kết nối và cảnh báo operator
+Báo cáo: export được Excel/PDF, form report tùy chỉnh được theo yêu cầu CĐT
+ZCU spec: hỗ trợ quản lý tối đa 20 block/ZCU (vượt trội so với yêu cầu cơ bản 6 block)
+Điều hướng cân bằng tải: logic tự động khi mật độ zone lệch > ngưỡng cấu hình được, xuất tín hiệu đến 3 điểm đầu ra (màn hình 55", API kiểm soát ra vào, LED boards)

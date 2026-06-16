@@ -1,5 +1,1437 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
+<div class="p-5 pb-10 min-h-[calc(100vh-3.5rem)]">
+    <div class="space-y-5">
+        <div class="flex items-center justify-between">
+            <h1 class="text-slate-100 text-lg font-semibold">
+                Bảo trì hệ thống
+            </h1>
+            <button class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-700/60 hover:bg-slate-600 text-slate-300 border border-slate-600/50 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4">
+                    </path>
+                    <polyline points="7 10 12 15 17 10">
+                    </polyline>
+                    <line x1="12" x2="12" y1="15" y2="3">
+                    </line>
+                </svg>
+                Xuất Work Order
+        </div>
 
-<div class="p-5 pb-10 min-h-[calc(100vh-3.5rem)]"><div class="space-y-5"><div class="flex items-center justify-between"><h1 class="text-slate-100 text-lg font-semibold">Bảo trì hệ thống</h1><button class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-700/60 hover:bg-slate-600 text-slate-300 border border-slate-600/50 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>Xuất Work Order</button></div><div class="grid grid-cols-2 md:grid-cols-4 gap-3"><div class="bg-red-950/40 border border-red-700/50 rounded p-3"><div class="text-red-400 text-xs font-mono">Khẩn cấp</div><div class="text-red-300 text-2xl font-mono font-bold">1</div><div class="text-red-500 text-[10px] font-mono">thiết bị</div></div><div class="bg-orange-950/40 border border-orange-700/50 rounded p-3"><div class="text-orange-400 text-xs font-mono">Ưu tiên cao</div><div class="text-orange-300 text-2xl font-mono font-bold">2</div><div class="text-orange-500 text-[10px] font-mono">thiết bị</div></div><div class="bg-card border border-slate-700/50 rounded p-3"><div class="text-slate-400 text-xs font-mono">Tổng work order</div><div class="text-slate-200 text-2xl font-mono font-bold">5</div><div class="text-slate-500 text-[10px] font-mono">trong 30 ngày</div></div><div class="bg-card border border-slate-700/50 rounded p-3"><div class="text-slate-400 text-xs font-mono">Block đang bảo trì</div><div class="text-violet-300 text-2xl font-mono font-bold">1</div><div class="text-slate-500 text-[10px] font-mono">block</div></div></div><div class="bg-card rounded border border-slate-700/50 p-4"><h3 class="text-slate-300 text-sm font-semibold mb-3">Tần suất hoạt động theo Block</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B01</div><div class="text-slate-500 text-[9px] font-mono">Zone A</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 3,820</span><span>Runtime: 1240h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 38%;"></div></div><span class="text-[10px] font-mono text-green-400">38%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B02</div><div class="text-slate-500 text-[9px] font-mono">Zone A</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 2,910</span><span>Runtime: 980h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 29%;"></div></div><span class="text-[10px] font-mono text-green-400">29%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B03</div><div class="text-slate-500 text-[9px] font-mono">Zone A</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 4,110</span><span>Runtime: 1540h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 41%;"></div></div><span class="text-[10px] font-mono text-green-400">41%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B04</div><div class="text-slate-500 text-[9px] font-mono">Zone A</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 5,640</span><span>Runtime: 2100h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 56%;"></div></div><span class="text-[10px] font-mono text-green-400">56%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B05</div><div class="text-slate-500 text-[9px] font-mono">Zone B</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 2,100</span><span>Runtime: 760h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 21%;"></div></div><span class="text-[10px] font-mono text-green-400">21%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B06</div><div class="text-slate-500 text-[9px] font-mono">Zone B</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 2,450</span><span>Runtime: 890h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 25%;"></div></div><span class="text-[10px] font-mono text-green-400">25%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B07</div><div class="text-slate-500 text-[9px] font-mono">Zone B</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 8,900</span><span>Runtime: 3200h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500 transition-all" style="width: 89%;"></div></div><span class="text-[10px] font-mono text-amber-400">89%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B08</div><div class="text-slate-500 text-[9px] font-mono">Zone B</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 1,780</span><span>Runtime: 540h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 18%;"></div></div><span class="text-[10px] font-mono text-green-400">18%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B09</div><div class="text-slate-500 text-[9px] font-mono">Zone C</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 1,200</span><span>Runtime: 420h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 12%;"></div></div><span class="text-[10px] font-mono text-green-400">12%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B10</div><div class="text-slate-500 text-[9px] font-mono">Zone C</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 1,050</span><span>Runtime: 380h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 11%;"></div></div><span class="text-[10px] font-mono text-green-400">11%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B11</div><div class="text-slate-500 text-[9px] font-mono">Zone C</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 0</span><span>Runtime: 0h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 0%;"></div></div><span class="text-[10px] font-mono text-green-400">0%</span></div></div></div><div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40"><div class="w-20 shrink-0"><div class="text-slate-200 text-xs font-mono">B12</div><div class="text-slate-500 text-[9px] font-mono">Zone C</div></div><div class="flex-1 space-y-1"><div class="flex justify-between text-[9px] font-mono text-slate-500"><span>Chu kỳ: 880</span><span>Runtime: 290h</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: 9%;"></div></div><span class="text-[10px] font-mono text-green-400">9%</span></div></div></div></div></div><div class="flex gap-2"><select class="bg-slate-800/60 border border-slate-700/50 rounded px-2 py-1.5 text-xs text-slate-300 font-mono outline-none"><option value="all">Tất cả Zone</option><option value="Zone A – Hầm B1">Zone A – Hầm B1</option><option value="Zone B – Hầm B2">Zone B – Hầm B2</option><option value="Zone C – Hầm B3">Zone C – Hầm B3</option></select><select class="bg-slate-800/60 border border-slate-700/50 rounded px-2 py-1.5 text-xs text-slate-300 font-mono outline-none"><option value="all">Tất cả mức độ</option><option value="urgent">Khẩn cấp</option><option value="high">Cao</option><option value="medium">Trung bình</option><option value="low">Thấp</option></select></div><div class="bg-card rounded border border-slate-700/50 overflow-hidden"><div class="px-4 py-2.5 border-b border-slate-700/50 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench text-violet-400"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg><span class="text-slate-300 text-xs font-semibold">Danh sách Work Order đề xuất</span></div><div class="overflow-x-auto"><table class="w-full text-xs font-mono"><thead class="border-b border-slate-700/60 bg-slate-800/50"><tr><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Zone</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Block</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Thiết bị</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Loại</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Chu kỳ hiện tại</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Giới hạn</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Runtime (h)</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Ngày dự kiến</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Ưu tiên</th></tr></thead><tbody><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400">A</td><td class="px-3 py-2.5 text-slate-300">Block A-04</td><td class="px-3 py-2.5 text-slate-200 font-medium">Motor Nâng Hạ</td><td class="px-3 py-2.5 text-slate-400">Motor lift</td><td class="px-3 py-2.5"><div class="flex items-center gap-2"><span class="text-red-400">5,640</span><div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-red-500" style="width: 94%;"></div></div></div></td><td class="px-3 py-2.5 text-slate-500">6,000</td><td class="px-3 py-2.5"><div class="flex items-center gap-1"><span class="text-amber-400">2100</span><span class="text-slate-600">/2400</span></div></td><td class="px-3 py-2.5"><div class="flex items-center gap-1 text-red-400"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>2026-06-15</div></td><td class="px-3 py-2.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-red-950/70 border-red-700/60 text-red-300">Khẩn cấp</span></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400">B</td><td class="px-3 py-2.5 text-slate-300">Block B-01</td><td class="px-3 py-2.5 text-slate-200 font-medium">Motor Trượt Ngang</td><td class="px-3 py-2.5 text-slate-400">Motor slide</td><td class="px-3 py-2.5"><div class="flex items-center gap-2"><span class="text-slate-300">2,100</span><div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 84%;"></div></div></div></td><td class="px-3 py-2.5 text-slate-500">2,500</td><td class="px-3 py-2.5"><div class="flex items-center gap-1"><span class="text-slate-300">760</span><span class="text-slate-600">/1000</span></div></td><td class="px-3 py-2.5"><div class="flex items-center gap-1 text-slate-300">2026-06-22</div></td><td class="px-3 py-2.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-orange-950/60 border-orange-700/50 text-orange-300">Cao</span></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400">A</td><td class="px-3 py-2.5 text-slate-300">Block A-03</td><td class="px-3 py-2.5 text-slate-200 font-medium">Xích nâng</td><td class="px-3 py-2.5 text-slate-400">Chain</td><td class="px-3 py-2.5"><div class="flex items-center gap-2"><span class="text-slate-300">4,110</span><div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 82.2%;"></div></div></div></td><td class="px-3 py-2.5 text-slate-500">5,000</td><td class="px-3 py-2.5"><div class="flex items-center gap-1"><span class="text-slate-300">1540</span><span class="text-slate-600">/2000</span></div></td><td class="px-3 py-2.5"><div class="flex items-center gap-1 text-slate-300">2026-06-30</div></td><td class="px-3 py-2.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-orange-950/60 border-orange-700/50 text-orange-300">Cao</span></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400">B</td><td class="px-3 py-2.5 text-slate-300">Block B-03</td><td class="px-3 py-2.5 text-slate-200 font-medium">Dầu hộp số</td><td class="px-3 py-2.5 text-slate-400">Lubricant</td><td class="px-3 py-2.5"><div class="flex items-center gap-2"><span class="text-slate-300">8,900</span><div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 89%;"></div></div></div></td><td class="px-3 py-2.5 text-slate-500">10,000</td><td class="px-3 py-2.5"><div class="flex items-center gap-1"><span class="text-slate-300">3200</span><span class="text-slate-600">/4000</span></div></td><td class="px-3 py-2.5"><div class="flex items-center gap-1 text-slate-300">2026-07-10</div></td><td class="px-3 py-2.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-amber-950/60 border-amber-700/50 text-amber-300">Trung bình</span></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400">A</td><td class="px-3 py-2.5 text-slate-300">Block A-02</td><td class="px-3 py-2.5 text-slate-200 font-medium">Cảm biến kích thước</td><td class="px-3 py-2.5 text-slate-400">Sensor</td><td class="px-3 py-2.5"><div class="flex items-center gap-2"><span class="text-slate-300">2,910</span><div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 58.2%;"></div></div></div></td><td class="px-3 py-2.5 text-slate-500">5,000</td><td class="px-3 py-2.5"><div class="flex items-center gap-1"><span class="text-slate-300">980</span><span class="text-slate-600">/2000</span></div></td><td class="px-3 py-2.5"><div class="flex items-center gap-1 text-slate-300">2026-07-20</div></td><td class="px-3 py-2.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-sky-950/60 border-sky-700/50 text-sky-300">Thấp</span></td></tr></tbody></table></div></div></div></div>
+        <!-- Horizontal Tabs -->
+        <div class="flex border-b border-slate-800 gap-1 mt-2">
+            <button id="tab-btn-schedule" onclick="switchMaintenanceTab('schedule')" class="px-4 py-2 border-b-2 font-bold text-xs tracking-wide transition-all duration-200 border-blue-500 text-blue-400 bg-transparent outline-none">
+                TỔNG QUAN &amp; LỊCH BẢO TRÌ
+            </button>
+            <button id="tab-btn-diagnostics" onclick="switchMaintenanceTab('diagnostics')" class="px-4 py-2 border-b-2 font-bold text-xs tracking-wide transition-all duration-200 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 bg-transparent outline-none">
+                CHẨN ĐOÁN LỖI TỪ XA (REMOTE DIAGNOSTICS)
+            </button>
+        </div>
+
+        <!-- Panel 1: Overview & Schedule -->
+        <div id="panel-maintenance-schedule" class="maintenance-panel space-y-5">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-red-950/40 border border-red-700/50 rounded p-3">
+                <div class="text-red-400 text-xs font-mono">
+                    Khẩn cấp
+                </div>
+                <div class="text-red-300 text-2xl font-mono font-bold">
+                    1
+                </div>
+                <div class="text-red-500 text-[10px] font-mono">
+                    thiết bị
+                </div>
+            </div>
+            <div class="bg-orange-950/40 border border-orange-700/50 rounded p-3">
+                <div class="text-orange-400 text-xs font-mono">
+                    Ưu tiên cao
+                </div>
+                <div class="text-orange-300 text-2xl font-mono font-bold">
+                    2
+                </div>
+                <div class="text-orange-500 text-[10px] font-mono">
+                    thiết bị
+                </div>
+            </div>
+            <div class="bg-card border border-slate-700/50 rounded p-3">
+                <div class="text-slate-400 text-xs font-mono">
+                    Tổng work order
+                </div>
+                <div class="text-slate-200 text-2xl font-mono font-bold">
+                    5
+                </div>
+                <div class="text-slate-500 text-[10px] font-mono">
+                    trong 30 ngày
+                </div>
+            </div>
+            <div class="bg-card border border-slate-700/50 rounded p-3">
+                <div class="text-slate-400 text-xs font-mono">
+                    Block đang bảo trì
+                </div>
+                <div class="text-violet-300 text-2xl font-mono font-bold">
+                    1
+                </div>
+                <div class="text-slate-500 text-[10px] font-mono">
+                    block
+                </div>
+            </div>
+        </div>
+        <div class="bg-card rounded border border-slate-700/50 p-4">
+            <h3 class="text-slate-300 text-sm font-semibold mb-3">
+                Tần suất hoạt động theo Block
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B01
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone A
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 3,820
+                            </span>
+                            <span>
+                                Runtime: 1240h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 38%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                38%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B02
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone A
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 2,910
+                            </span>
+                            <span>
+                                Runtime: 980h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 29%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                29%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B03
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone A
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 4,110
+                            </span>
+                            <span>
+                                Runtime: 1540h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 41%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                41%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B04
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone A
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 5,640
+                            </span>
+                            <span>
+                                Runtime: 2100h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 56%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                56%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B05
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone B
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 2,100
+                            </span>
+                            <span>
+                                Runtime: 760h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 21%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                21%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B06
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone B
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 2,450
+                            </span>
+                            <span>
+                                Runtime: 890h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 25%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                25%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B07
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone B
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 8,900
+                            </span>
+                            <span>
+                                Runtime: 3200h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-amber-500 transition-all" style="width: 89%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-amber-400">
+                                89%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B08
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone B
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 1,780
+                            </span>
+                            <span>
+                                Runtime: 540h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 18%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                18%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B09
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone C
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 1,200
+                            </span>
+                            <span>
+                                Runtime: 420h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 12%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                12%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B10
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone C
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 1,050
+                            </span>
+                            <span>
+                                Runtime: 380h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 11%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                11%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B11
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone C
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 0
+                            </span>
+                            <span>
+                                Runtime: 0h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 0%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                0%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
+                    <div class="w-20 shrink-0">
+                        <div class="text-slate-200 text-xs font-mono">
+                            B12
+                        </div>
+                        <div class="text-slate-500 text-[9px] font-mono">
+                            Zone C
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                            <span>
+                                Chu kỳ: 880
+                            </span>
+                            <span>
+                                Runtime: 290h
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 transition-all" style="width: 9%;">
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono text-green-400">
+                                9%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <select class="bg-slate-800/60 border border-slate-700/50 rounded px-2 py-1.5 text-xs text-slate-300 font-mono outline-none">
+                <option value="all">
+                    Tất cả Zone
+                </option>
+                <option value="Zone A – Hầm B1">
+                    Zone A – Hầm B1
+                </option>
+                <option value="Zone B – Hầm B2">
+                    Zone B – Hầm B2
+                </option>
+                <option value="Zone C – Hầm B3">
+                    Zone C – Hầm B3
+                </option>
+            </select>
+            <select class="bg-slate-800/60 border border-slate-700/50 rounded px-2 py-1.5 text-xs text-slate-300 font-mono outline-none">
+                <option value="all">
+                    Tất cả mức độ
+                </option>
+                <option value="urgent">
+                    Khẩn cấp
+                </option>
+                <option value="high">
+                    Cao
+                </option>
+                <option value="medium">
+                    Trung bình
+                </option>
+                <option value="low">
+                    Thấp
+                </option>
+            </select>
+        </div>
+        <div class="bg-card rounded border border-slate-700/50 overflow-hidden">
+            <div class="px-4 py-2.5 border-b border-slate-700/50 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench text-violet-400">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
+                    </path>
+                </svg>
+                <span class="text-slate-300 text-xs font-semibold">
+                    Danh sách Work Order đề xuất
+                </span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs font-mono">
+                    <thead class="border-b border-slate-700/60 bg-slate-800/50">
+                        <tr>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
+                                Zone
+                            </th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
+                                Block
+                            </th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
+                                Thiết bị
+                            </th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
+                                Loại
+                            </th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
+                                Chu kỳ hiện tại
+                            </th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
+                                Giới hạn
+                            </th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
+                                Runtime (h)
+                            </th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
+                                Ngày dự kiến
+                            </th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
+                                Ưu tiên
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
+                            <td class="px-3 py-2.5 text-slate-400">
+                                A
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-300">
+                                Block A-04
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-200 font-medium">
+                                Motor Nâng Hạ
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-400">
+                                Motor lift
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-red-400">
+                                        5,640
+                                    </span>
+                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
+                                        <div class="h-full bg-red-500" style="width: 94%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-500">
+                                6,000
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1">
+                                    <span class="text-amber-400">
+                                        2100
+                                    </span>
+                                    <span class="text-slate-600">
+                                        /2400
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1 text-red-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert">
+                                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3">
+                                        </path>
+                                        <path d="M12 9v4">
+                                        </path>
+                                        <path d="M12 17h.01">
+                                        </path>
+                                    </svg>
+                                    2026-06-15
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-red-950/70 border-red-700/60 text-red-300">
+                                    Khẩn cấp
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
+                            <td class="px-3 py-2.5 text-slate-400">
+                                B
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-300">
+                                Block B-01
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-200 font-medium">
+                                Motor Trượt Ngang
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-400">
+                                Motor slide
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-300">
+                                        2,100
+                                    </span>
+                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
+                                        <div class="h-full bg-amber-500" style="width: 84%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-500">
+                                2,500
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1">
+                                    <span class="text-slate-300">
+                                        760
+                                    </span>
+                                    <span class="text-slate-600">
+                                        /1000
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1 text-slate-300">
+                                    2026-06-22
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-orange-950/60 border-orange-700/50 text-orange-300">
+                                    Cao
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
+                            <td class="px-3 py-2.5 text-slate-400">
+                                A
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-300">
+                                Block A-03
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-200 font-medium">
+                                Xích nâng
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-400">
+                                Chain
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-300">
+                                        4,110
+                                    </span>
+                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
+                                        <div class="h-full bg-amber-500" style="width: 82.2%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-500">
+                                5,000
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1">
+                                    <span class="text-slate-300">
+                                        1540
+                                    </span>
+                                    <span class="text-slate-600">
+                                        /2000
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1 text-slate-300">
+                                    2026-06-30
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-orange-950/60 border-orange-700/50 text-orange-300">
+                                    Cao
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
+                            <td class="px-3 py-2.5 text-slate-400">
+                                B
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-300">
+                                Block B-03
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-200 font-medium">
+                                Dầu hộp số
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-400">
+                                Lubricant
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-300">
+                                        8,900
+                                    </span>
+                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
+                                        <div class="h-full bg-amber-500" style="width: 89%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-500">
+                                10,000
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1">
+                                    <span class="text-slate-300">
+                                        3200
+                                    </span>
+                                    <span class="text-slate-600">
+                                        /4000
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1 text-slate-300">
+                                    2026-07-10
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-amber-950/60 border-amber-700/50 text-amber-300">
+                                    Trung bình
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
+                            <td class="px-3 py-2.5 text-slate-400">
+                                A
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-300">
+                                Block A-02
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-200 font-medium">
+                                Cảm biến kích thước
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-400">
+                                Sensor
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-300">
+                                        2,910
+                                    </span>
+                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
+                                        <div class="h-full bg-amber-500" style="width: 58.2%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5 text-slate-500">
+                                5,000
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1">
+                                    <span class="text-slate-300">
+                                        980
+                                    </span>
+                                    <span class="text-slate-600">
+                                        /2000
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <div class="flex items-center gap-1 text-slate-300">
+                                    2026-07-20
+                                </div>
+                            </td>
+                            <td class="px-3 py-2.5">
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-sky-950/60 border-sky-700/50 text-sky-300">
+                                    Thấp
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div> <!-- End of panel-maintenance-schedule -->
+
+        <!-- Panel 2: Diagnostics (Remote Fault Diagnosis) -->
+        <div id="panel-maintenance-diagnostics" class="hidden space-y-5">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+                <!-- Selector and Diagram (Col-span 2) -->
+                <div class="xl:col-span-2 bg-slate-900/50 rounded-xl border border-slate-800 p-5 space-y-4 shadow-xl">
+                    <!-- Header Selectors -->
+                    <div class="flex flex-wrap justify-between items-center gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-semibold text-slate-300 font-mono">Chọn Block chẩn đoán:</span>
+                            <select id="diag-zone" onchange="updateDiagBlockOptions()" class="bg-slate-800 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-slate-200 outline-none focus:border-blue-500 font-mono">
+                                <option value="A">Zone A (Hầm B1)</option>
+                                <option value="B">Zone B (Hầm B2)</option>
+                                <option value="C">Zone C (Hầm B3)</option>
+                                <option value="D">Zone D (Tầng 1)</option>
+                            </select>
+                            <select id="diag-block" onchange="loadDiagBlock()" class="bg-slate-800 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-slate-200 outline-none focus:border-blue-500 font-mono">
+                                <!-- Options generated dynamically -->
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono bg-blue-950/60 border border-blue-800 text-blue-300">
+                                PLC IP: 192.168.10.51
+                            </span>
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse" id="plc-status-dot"></span>
+                            <span class="text-[10px] text-green-400 font-mono font-bold" id="plc-status-text">PLC Connected</span>
+                        </div>
+                    </div>
+
+                    <!-- Mechanical Diagram Workspace -->
+                    <div class="relative min-h-[380px] bg-slate-950/80 rounded-lg border border-slate-850 p-4 flex items-center justify-center overflow-hidden">
+                        <!-- Background grid design typical of CAD SCADA screen -->
+                        <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle, #ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <!-- Dynamic Diagram Layout -->
+                        <div class="w-full max-w-lg relative h-[320px] flex items-center justify-between border border-slate-800/40 rounded-xl p-4 bg-slate-900/30">
+                            
+                            <!-- Left: Elevator Tower/Mechanical Frame -->
+                            <div class="w-2/5 h-full border-r border-dashed border-slate-850 pr-4 flex flex-col justify-between relative py-2">
+                                <div class="absolute top-0 right-0 h-full w-[1px] bg-slate-800"></div>
+
+                                <!-- Lift Tower levels -->
+                                <div class="h-1/3 border-b border-slate-850/60 flex items-center justify-between relative">
+                                    <span class="text-[9px] font-mono text-slate-500">Level 3 (Top)</span>
+                                    <!-- Limit switch T3 -->
+                                    <button id="diag-device-limitsw-3" onclick="clickDiagDevice('limitSwitch', 3)" class="device-node diag-ok" title="Cảm biến hành trình Tầng 3">
+                                        LS-T3
+                                    </button>
+                                </div>
+                                <div class="h-1/3 border-b border-slate-850/60 flex items-center justify-between relative">
+                                    <span class="text-[9px] font-mono text-slate-500">Level 2 (Mid)</span>
+                                    <!-- Limit switch T2 -->
+                                    <button id="diag-device-limitsw-2" onclick="clickDiagDevice('limitSwitch', 2)" class="device-node diag-ok" title="Cảm biến hành trình Tầng 2">
+                                        LS-T2
+                                    </button>
+                                </div>
+                                <div class="h-1/3 flex items-center justify-between relative">
+                                    <span class="text-[9px] font-mono text-slate-500">Level 1 (Base)</span>
+                                    <!-- Limit switch T1 -->
+                                    <button id="diag-device-limitsw-1" onclick="clickDiagDevice('limitSwitch', 1)" class="device-node diag-ok" title="Cảm biến hành trình Tầng 1">
+                                        LS-T1
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Right: Shuttle & Drive Systems -->
+                            <div class="w-3/5 h-full pl-6 flex flex-col justify-between relative py-2">
+                                <!-- Top Drive Motor (Lift Motor) -->
+                                <div class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 flex items-center gap-3 relative cursor-pointer hover:border-slate-700 transition-all" id="diag-device-motor" onclick="clickDiagDevice('motor')">
+                                    <div class="p-1.5 rounded bg-blue-500/10 border border-blue-500/25" id="diag-device-motor-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-[10px] text-slate-400 font-mono font-bold uppercase">Động cơ nâng (Lift Motor)</div>
+                                        <div class="text-[9px] text-green-400 font-mono" id="diag-device-motor-state">Normal - 54°C</div>
+                                    </div>
+                                    <span class="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] bg-green-600 border border-slate-950 text-white" id="diag-device-motor-status">✓</span>
+                                </div>
+
+                                <!-- Middle: Shuttle Platform (Moves vertically) -->
+                                <div class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 flex items-center gap-3 relative cursor-pointer hover:border-slate-700 transition-all" id="diag-device-shuttle" onclick="clickDiagDevice('shuttle')">
+                                    <div class="p-1.5 rounded bg-purple-500/10 border border-purple-500/25" id="diag-device-shuttle-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-purple-400"><rect width="20" height="8" x="2" y="8" rx="2"></rect><circle cx="6" cy="16" r="2"></circle><circle cx="18" cy="16" r="2"></circle></svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-[10px] text-slate-400 font-mono font-bold uppercase">Bàn nâng / Shuttle</div>
+                                        <div class="text-[9px] text-green-400 font-mono" id="diag-device-shuttle-state">Tầng 1 - Sẵn sàng</div>
+                                    </div>
+                                    <span class="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] bg-green-600 border border-slate-950 text-white" id="diag-device-shuttle-status">✓</span>
+                                </div>
+
+                                <!-- Bottom: Safety Photogates at Entry Area -->
+                                <div class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 flex items-center gap-3 relative cursor-pointer hover:border-slate-700 transition-all" id="diag-device-photogate" onclick="clickDiagDevice('photogate')">
+                                    <div class="p-1.5 rounded bg-emerald-500/10 border border-emerald-500/25" id="diag-device-photogate-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400"><path d="M2 20h20M12 4v16M8 8l4-4 4 4"></path></svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-[10px] text-slate-400 font-mono font-bold uppercase">Cảm biến an toàn (Photogate)</div>
+                                        <div class="text-[9px] text-green-400 font-mono" id="diag-device-photogate-state">Đường truyền thông suốt</div>
+                                    </div>
+                                    <span class="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] bg-green-600 border border-slate-950 text-white" id="diag-device-photogate-status">✓</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail Control Panel (Col-span 1) -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 space-y-4 shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <!-- Panel Header -->
+                        <div class="border-b border-slate-800 pb-3">
+                            <h4 class="text-slate-100 text-xs font-bold uppercase tracking-wider font-mono" id="diag-panel-title">Chi tiết: Động cơ nâng</h4>
+                            <p class="text-slate-550 text-[10px] font-mono mt-0.5" id="diag-panel-subtitle">Thiết bị: LIFT_MOTOR_04</p>
+                        </div>
+
+                        <!-- Live Telemetry Stats -->
+                        <div class="space-y-2.5">
+                            <div class="text-[10px] text-slate-400 font-mono font-bold uppercase tracking-wider">Thông số kỹ thuật:</div>
+                            <div class="grid grid-cols-2 gap-2 text-xs font-mono" id="diag-panel-telemetry">
+                                <!-- Generated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- PLC I/O Registers -->
+                        <div class="space-y-2">
+                            <div class="text-[10px] text-slate-400 font-mono font-bold uppercase tracking-wider">Trạng thái ghi nhận PLC I/O:</div>
+                            <div class="p-3 bg-slate-950/60 rounded border border-slate-850 space-y-1.5 text-[11px] font-mono" id="diag-panel-plc">
+                                <!-- Generated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Troubleshooting Instructions -->
+                        <div class="space-y-2" id="diag-panel-trouble-box">
+                            <div class="text-[10px] text-amber-500 font-mono font-bold uppercase tracking-wider flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-500"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+                                Hướng dẫn sửa chữa nhanh:
+                            </div>
+                            <div class="p-3 bg-amber-950/15 border border-amber-900/30 rounded text-[11px] text-amber-300 font-mono space-y-1" id="diag-panel-instructions">
+                                <!-- Generated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Remote Operation Buttons -->
+                    <div class="space-y-2 pt-4 border-t border-slate-800">
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="btn-diag-reset" onclick="execDiagReset()" class="px-2.5 py-1.5 bg-green-700 hover:bg-green-600 text-white text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1 shadow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                                Reset PLC
+                            </button>
+                            <button id="btn-diag-bypass" onclick="execDiagBypass()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-750 text-amber-400 border border-slate-700 text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                                Bypass Sensor
+                            </button>
+                        </div>
+                        <button onclick="createDiagWorkOrder()" class="w-full px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+                            Tạo lệnh bảo trì khẩn cấp (Work Order)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* Styling for device nodes and diagnosis classes */
+    .device-node {
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: bold;
+        font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    .diag-ok {
+        background-color: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: rgb(52, 211, 153);
+    }
+    .diag-ok:hover {
+        background-color: rgba(16, 185, 129, 0.25);
+        border-color: rgb(52, 211, 153);
+    }
+    .diag-warning {
+        background-color: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        color: rgb(251, 191, 36);
+        animation: pulse-warn 1.5s infinite alternate;
+    }
+    .diag-warning:hover {
+        background-color: rgba(245, 158, 11, 0.25);
+        border-color: rgb(251, 191, 36);
+    }
+    .diag-fault {
+        background-color: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        color: rgb(248, 113, 113);
+        animation: pulse-danger 1.5s infinite alternate;
+    }
+    .diag-fault:hover {
+        background-color: rgba(239, 68, 68, 0.25);
+        border-color: rgb(239, 68, 68);
+    }
+    
+    @@keyframes pulse-warn {
+        0% { box-shadow: 0 0 4px rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.4); }
+        100% { box-shadow: 0 0 12px rgba(245, 158, 11, 0.6); border-color: rgb(245, 158, 11); }
+    }
+    @@keyframes pulse-danger {
+        0% { box-shadow: 0 0 4px rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); }
+        100% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.6); border-color: rgb(239, 68, 68); }
+    }
+</style>
+
+<script>
+    // Tab switching for Maintenance page
+    function switchMaintenanceTab(tabId) {
+        const panels = document.querySelectorAll('.maintenance-panel');
+        panels.forEach(p => p.classList.add('hidden'));
+        
+        document.getElementById('panel-maintenance-' + tabId).classList.remove('hidden');
+        
+        // Update tab buttons style
+        const btnSchedule = document.getElementById('tab-btn-schedule');
+        const btnDiag = document.getElementById('tab-btn-diagnostics');
+        
+        if (tabId === 'schedule') {
+            btnSchedule.className = "px-4 py-2 border-b-2 font-bold text-xs tracking-wide transition-all duration-200 border-blue-500 text-blue-400 bg-transparent outline-none";
+            btnDiag.className = "px-4 py-2 border-b-2 font-bold text-xs tracking-wide transition-all duration-200 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 bg-transparent outline-none";
+        } else {
+            btnDiag.className = "px-4 py-2 border-b-2 font-bold text-xs tracking-wide transition-all duration-200 border-blue-500 text-blue-400 bg-transparent outline-none";
+            btnSchedule.className = "px-4 py-2 border-b-2 font-bold text-xs tracking-wide transition-all duration-200 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 bg-transparent outline-none";
+            
+            // Trigger block loading when switching to diagnostics first time
+            if (!document.getElementById('diag-block').options.length) {
+                updateDiagBlockOptions();
+            }
+        }
+    }
+
+    // Diagnostics Mock Database
+    const blockDiagData = {
+        'B01': {
+            status: 'Normal',
+            motor: { status: 'OK', name: 'ĐỘNG CƠ NÂNG HẠ B01', code: 'MTR-LIFT-B01', temp: 54, current: 12.4, voltage: 382, speed: 1450, error: 'Không có lỗi', plc: { 'I:0/2 (LIFT_RUN)': 'ON', 'I:0/3 (LIFT_DIR)': 'UP', 'O:1/2 (RUN_CMD)': 'ON', 'O:1/3 (BRAKE_REL)': 'ON' } },
+            shuttle: { status: 'OK', name: 'BÀN NÂNG & DI CHUYỂN B01', code: 'SHT-RUN-B01', pos: 'Tầng 1 (Slot 03)', error: 'Không có lỗi', plc: { 'I:0/4 (SHT_POS)': 'ON', 'I:0/5 (SHT_HOME)': 'ON', 'O:1/4 (MOVE_FWD)': 'OFF', 'O:1/5 (MOVE_REV)': 'OFF' } },
+            limitSwitch: { status: 'OK', name: 'CẢM BIẾN HÀNH TRÌNH TẦNG 1', code: 'LS-L1-B01', value: 'Đã định vị chính xác', error: 'Không có lỗi', plc: { 'I:0/6 (LS_L1_ACT)': 'ON', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'OFF' } },
+            photogate: { status: 'OK', name: 'CẢM BIẾN QUANG AN TOÀN', code: 'SAFE-PH-B01', state: 'Thông suốt (Clear)', error: 'Không có lỗi', plc: { 'I:1/0 (PH_RX_OK)': 'ON', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'OFF' } }
+        },
+        'B04': {
+            status: 'Fault',
+            motor: { status: 'FAULT', name: 'ĐỘNG CƠ NÂNG HẠ B04', code: 'MTR-LIFT-B04', temp: 115, current: 45.2, voltage: 378, speed: 0, error: 'ERR-MTR-04 - Quá nhiệt cuộn dây động cơ (Thermal Overload)', plc: { 'I:0/2 (LIFT_RUN)': 'OFF', 'I:0/3 (LIFT_DIR)': 'OFF', 'O:1/2 (RUN_CMD)': 'OFF', 'O:1/3 (BRAKE_REL)': 'OFF' } },
+            shuttle: { status: 'OK', name: 'BÀN NÂNG & DI CHUYỂN B04', code: 'SHT-RUN-B04', pos: 'Tầng 2 (Lơ lửng)', error: 'Không có lỗi', plc: { 'I:0/4 (SHT_POS)': 'ON', 'I:0/5 (SHT_HOME)': 'OFF', 'O:1/4 (MOVE_FWD)': 'OFF', 'O:1/5 (MOVE_REV)': 'OFF' } },
+            limitSwitch: { status: 'OK', name: 'CẢM BIẾN HÀNH TRÌNH TẦNG 2', code: 'LS-L2-B04', value: 'Đã định vị chính xác', error: 'Không có lỗi', plc: { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'ON', 'I:0/8 (LS_L3_ACT)': 'OFF' } },
+            photogate: { status: 'OK', name: 'CẢM BIẾN QUANG AN TOÀN', code: 'SAFE-PH-B04', state: 'Thông suốt (Clear)', error: 'Không có lỗi', plc: { 'I:1/0 (PH_RX_OK)': 'ON', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'OFF' } }
+        },
+        'B02': {
+            status: 'Warning',
+            motor: { status: 'OK', name: 'ĐỘNG CƠ NÂNG HẠ B02', code: 'MTR-LIFT-B02', temp: 62, current: 13.1, voltage: 380, speed: 1445, error: 'Không có lỗi', plc: { 'I:0/2 (LIFT_RUN)': 'ON', 'I:0/3 (LIFT_DIR)': 'UP', 'O:1/2 (RUN_CMD)': 'ON', 'O:1/3 (BRAKE_REL)': 'ON' } },
+            shuttle: { status: 'OK', name: 'BÀN NÂNG & DI CHUYỂN B02', code: 'SHT-RUN-B02', pos: 'Tầng 1 (Slot 01)', error: 'Không có lỗi', plc: { 'I:0/4 (SHT_POS)': 'ON', 'I:0/5 (SHT_HOME)': 'ON', 'O:1/4 (MOVE_FWD)': 'OFF', 'O:1/5 (MOVE_REV)': 'OFF' } },
+            limitSwitch: { status: 'WARNING', name: 'CẢM BIẾN HÀNH TRÌNH TẦNG 3', code: 'LS-L3-B02', value: 'Trễ phản hồi / Lệch vị trí nhẹ', error: 'WARN-LMT-08 - Tín hiệu hành trình Tầng 3 bị trễ cơ khí (> 500ms)', plc: { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'ON/OFF (Chập chờn)' } },
+            photogate: { status: 'OK', name: 'CẢM BIẾN QUANG AN TOÀN', code: 'SAFE-PH-B02', state: 'Thông suốt (Clear)', error: 'Không có lỗi', plc: { 'I:1/0 (PH_RX_OK)': 'ON', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'OFF' } }
+        },
+        'B03': {
+            status: 'Alarm',
+            motor: { status: 'OK', name: 'ĐỘNG CƠ NÂNG HẠ B03', code: 'MTR-LIFT-B03', temp: 48, current: 0.0, voltage: 380, speed: 0, error: 'Không có lỗi', plc: { 'I:0/2 (LIFT_RUN)': 'OFF', 'I:0/3 (LIFT_DIR)': 'OFF', 'O:1/2 (RUN_CMD)': 'OFF', 'O:1/3 (BRAKE_REL)': 'OFF' } },
+            shuttle: { status: 'OK', name: 'BÀN NÂNG & DI CHUYỂN B03', code: 'SHT-RUN-B03', pos: 'Tầng 3 (Slot 09)', error: 'Không có lỗi', plc: { 'I:0/4 (SHT_POS)': 'ON', 'I:0/5 (SHT_HOME)': 'ON', 'O:1/4 (MOVE_FWD)': 'OFF', 'O:1/5 (MOVE_REV)': 'OFF' } },
+            limitSwitch: { status: 'OK', name: 'CẢM BIẾN HÀNH TRÌNH TẦNG 3', code: 'LS-L3-B03', value: 'Đã định vị chính xác', error: 'Không có lỗi', plc: { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'ON' } },
+            photogate: { status: 'FAULT', name: 'CẢM BIẾN QUANG AN TOÀN', code: 'SAFE-PH-B03', state: 'Bị vật cản / Lệch trục thu phát', error: 'ERR-SAFE-02 - Luồng quang học bị ngắt quãng tại cửa an toàn', plc: { 'I:1/0 (PH_RX_OK)': 'OFF', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'ON (Kích hoạt còi)' } }
+        }
+    };
+
+    let selectedDiagDevice = 'motor';
+
+    function updateDiagBlockOptions() {
+        const zone = document.getElementById('diag-zone').value;
+        const blockSelect = document.getElementById('diag-block');
+        blockSelect.innerHTML = '';
+        
+        let startNum = 1;
+        if (zone === 'A') startNum = 1; // B01-B03
+        else if (zone === 'B') startNum = 4; // B04-B06
+        else if (zone === 'C') startNum = 7; // B07-B09
+        else if (zone === 'D') startNum = 10; // B10-B12
+        
+        for (let i = 0; i < 3; i++) {
+            const num = startNum + i;
+            const blockId = 'B' + String(num).padStart(2, '0');
+            const opt = document.createElement('option');
+            opt.value = blockId;
+            
+            // Add label matching faults
+            if (blockId === 'B01') opt.innerText = 'Block ' + blockId + ' (Hoạt động tốt)';
+            else if (blockId === 'B04') opt.innerText = 'Block ' + blockId + ' (Lỗi Động Cơ)';
+            else if (blockId === 'B02') opt.innerText = 'Block ' + blockId + ' (Cảnh báo Cảm biến HT)';
+            else if (blockId === 'B03') opt.innerText = 'Block ' + blockId + ' (Lỗi Cửa An Toàn)';
+            else opt.innerText = 'Block ' + blockId + ' (Hoạt động tốt)';
+            
+            blockSelect.appendChild(opt);
+        }
+        
+        loadDiagBlock();
+    }
+
+    function getSelectedBlockData() {
+        const blockId = document.getElementById('diag-block').value;
+        if (blockDiagData[blockId]) {
+            return blockDiagData[blockId];
+        }
+        // Fallback generator for normal blocks
+        return {
+            status: 'Normal',
+            motor: { status: 'OK', name: 'ĐỘNG CƠ NÂNG HẠ ' + blockId, code: 'MTR-LIFT-' + blockId, temp: 52 + Math.floor(Math.random() * 8), current: 12.1, voltage: 380, speed: 1450, error: 'Không có lỗi', plc: { 'I:0/2 (LIFT_RUN)': 'ON', 'I:0/3 (LIFT_DIR)': 'UP', 'O:1/2 (RUN_CMD)': 'ON', 'O:1/3 (BRAKE_REL)': 'ON' } },
+            shuttle: { status: 'OK', name: 'BÀN NÂNG & DI CHUYỂN ' + blockId, code: 'SHT-RUN-' + blockId, pos: 'Tầng 1 (Slot 02)', error: 'Không có lỗi', plc: { 'I:0/4 (SHT_POS)': 'ON', 'I:0/5 (SHT_HOME)': 'ON', 'O:1/4 (MOVE_FWD)': 'OFF', 'O:1/5 (MOVE_REV)': 'OFF' } },
+            limitSwitch: { status: 'OK', name: 'CẢM BIẾN HÀNH TRÌNH TẦNG 1', code: 'LS-L1-' + blockId, value: 'Đã định vị chính xác', error: 'Không có lỗi', plc: { 'I:0/6 (LS_L1_ACT)': 'ON', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'OFF' } },
+            photogate: { status: 'OK', name: 'CẢM BIẾN QUANG AN TOÀN', code: 'SAFE-PH-' + blockId, state: 'Thông suốt (Clear)', error: 'Không có lỗi', plc: { 'I:1/0 (PH_RX_OK)': 'ON', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'OFF' } }
+        };
+    }
+
+    function loadDiagBlock() {
+        const blockId = document.getElementById('diag-block').value;
+        const data = getSelectedBlockData();
+        
+        // Update PLC status indicator
+        const plcDot = document.getElementById('plc-status-dot');
+        const plcText = document.getElementById('plc-status-text');
+        
+        if (data.status === 'Fault') {
+            plcDot.className = 'w-2 h-2 rounded-full bg-red-500 animate-pulse';
+            plcText.innerText = 'PLC Alert - Lỗi kích hoạt';
+            plcText.className = 'text-red-400 font-mono text-[10px] font-bold';
+        } else if (data.status === 'Warning') {
+            plcDot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-pulse';
+            plcText.innerText = 'PLC Warning - Cảnh báo nhẹ';
+            plcText.className = 'text-amber-400 font-mono text-[10px] font-bold';
+        } else {
+            plcDot.className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
+            plcText.innerText = 'PLC Connected - Sẵn sàng';
+            plcText.className = 'text-green-400 font-mono text-[10px] font-bold';
+        }
+        
+        // Render device status on diagram
+        updateDiagDiagramNodeStatus('motor', data.motor.status, data.motor.temp + '°C');
+        updateDiagDiagramNodeStatus('shuttle', data.shuttle.status, data.shuttle.pos);
+        updateDiagDiagramNodeStatus('photogate', data.photogate.status, data.photogate.state.substring(0, 16) + '...');
+        
+        // Render limit switches nodes (3 nodes)
+        updateDiagramLimitSwNodes(data.limitSwitch.status, blockId);
+        
+        // Refresh details panel
+        clickDiagDevice(selectedDiagDevice);
+    }
+
+    function updateDiagDiagramNodeStatus(deviceId, status, valueText) {
+        const node = document.getElementById('diag-device-' + deviceId);
+        const stateText = document.getElementById('diag-device-' + deviceId + '-state');
+        const statusSpan = document.getElementById('diag-device-' + deviceId + '-status');
+        
+        // Reset classes
+        node.className = "bg-slate-900 border rounded-lg p-2.5 flex items-center gap-3 relative cursor-pointer transition-all hover:border-slate-700 w-full";
+        
+        if (status === 'FAULT') {
+            node.classList.add('border-red-600/60', 'bg-red-950/10', 'shadow-[0_0_8px_rgba(239,68,68,0.25)]', 'animate-pulse');
+            stateText.innerText = 'LỖI - ' + valueText;
+            stateText.className = 'text-[9px] text-red-400 font-mono font-bold';
+            statusSpan.innerText = '✗';
+            statusSpan.className = 'absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] bg-red-600 border border-slate-950 text-white';
+        } else if (status === 'WARNING') {
+            node.classList.add('border-amber-600/60', 'bg-amber-950/10', 'shadow-[0_0_8px_rgba(245,158,11,0.25)]', 'animate-pulse');
+            stateText.innerText = 'CẢNH BÁO - ' + valueText;
+            stateText.className = 'text-[9px] text-amber-400 font-mono font-bold';
+            statusSpan.innerText = '!';
+            statusSpan.className = 'absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] bg-amber-500 border border-slate-950 text-slate-950 font-bold';
+        } else {
+            node.classList.add('border-slate-800');
+            stateText.innerText = 'Bình thường - ' + valueText;
+            stateText.className = 'text-[9px] text-green-400 font-mono';
+            statusSpan.innerText = '✓';
+            statusSpan.className = 'absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] bg-green-600 border border-slate-950 text-white';
+        }
+    }
+
+    function updateDiagramLimitSwNodes(status, blockId) {
+        const sw1 = document.getElementById('diag-device-limitsw-1');
+        const sw2 = document.getElementById('diag-device-limitsw-2');
+        const sw3 = document.getElementById('diag-device-limitsw-3');
+        
+        // Reset all to normal green
+        sw1.className = 'device-node diag-ok';
+        sw2.className = 'device-node diag-ok';
+        sw3.className = 'device-node diag-ok';
+        
+        if (blockId === 'B02') {
+            sw3.className = 'device-node diag-warning';
+        } else if (blockId === 'B03') {
+            // Normal
+        }
+    }
+
+    function clickDiagDevice(deviceId, limitLevel = null) {
+        selectedDiagDevice = deviceId;
+        const data = getSelectedBlockData();
+        
+        // Remove selection outline from all nodes
+        const nodes = ['motor', 'shuttle', 'photogate'];
+        nodes.forEach(n => {
+            document.getElementById('diag-device-' + n).style.outline = 'none';
+        });
+        document.getElementById('diag-device-limitsw-1').style.outline = 'none';
+        document.getElementById('diag-device-limitsw-2').style.outline = 'none';
+        document.getElementById('diag-device-limitsw-3').style.outline = 'none';
+        
+        // Highlight active node
+        if (limitLevel) {
+            document.getElementById('diag-device-limitsw-' + limitLevel).style.outline = '2px solid rgb(96, 165, 250)';
+            selectedDiagDevice = 'limitSwitch';
+        } else {
+            document.getElementById('diag-device-' + deviceId).style.outline = '2px solid rgb(96, 165, 250)';
+        }
+        
+        const panelTitle = document.getElementById('diag-panel-title');
+        const panelSubtitle = document.getElementById('diag-panel-subtitle');
+        const telemetryBox = document.getElementById('diag-panel-telemetry');
+        const plcBox = document.getElementById('diag-panel-plc');
+        const instructionBox = document.getElementById('diag-panel-instructions');
+        const troubleBox = document.getElementById('diag-panel-trouble-box');
+        
+        let deviceData = null;
+        if (selectedDiagDevice === 'motor') {
+            deviceData = data.motor;
+            panelTitle.innerText = 'Chi tiết: Động cơ nâng';
+            panelSubtitle.innerText = 'Thiết bị: ' + deviceData.code + ' (Motor Lift)';
+            
+            telemetryBox.innerHTML = `
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850">
+                    <span class="text-slate-500 text-[8px] block">Nhiệt độ cuộn dây</span>
+                    <span class="${deviceData.temp > 100 ? 'text-red-400 font-bold' : 'text-slate-200'}">${deviceData.temp} °C</span>
+                </div>
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850">
+                    <span class="text-slate-500 text-[8px] block">Dòng điện Ampe</span>
+                    <span class="${deviceData.current > 30 ? 'text-red-400 font-bold' : 'text-slate-200'}">${deviceData.current} A</span>
+                </div>
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850">
+                    <span class="text-slate-500 text-[8px] block">Điện áp pha</span>
+                    <span class="text-slate-200">${deviceData.voltage} V</span>
+                </div>
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850">
+                    <span class="text-slate-500 text-[8px] block">Tốc độ vòng quay</span>
+                    <span class="text-slate-200">${deviceData.speed} RPM</span>
+                </div>
+            `;
+        } else if (selectedDiagDevice === 'shuttle') {
+            deviceData = data.shuttle;
+            panelTitle.innerText = 'Chi tiết: Bàn nâng / Shuttle';
+            panelSubtitle.innerText = 'Thiết bị: ' + deviceData.code + ' (Pallet Runner)';
+            
+            telemetryBox.innerHTML = `
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850 col-span-2">
+                    <span class="text-slate-500 text-[8px] block">Vị trí hiện tại</span>
+                    <span class="text-slate-200">${deviceData.pos}</span>
+                </div>
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850 col-span-2 mt-1">
+                    <span class="text-slate-500 text-[8px] block">Tải trọng Pallet</span>
+                    <span class="text-slate-200">1,820 kg (SUV/Sedan OK)</span>
+                </div>
+            `;
+        } else if (selectedDiagDevice === 'limitSwitch') {
+            deviceData = data.limitSwitch;
+            const lvl = limitLevel || 1;
+            panelTitle.innerText = 'Chi tiết: Cảm biến hành trình';
+            panelSubtitle.innerText = 'Thiết bị: LS-L' + lvl + ' (Limit Switch)';
+            
+            telemetryBox.innerHTML = `
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850 col-span-2">
+                    <span class="text-slate-500 text-[8px] block">Căn chỉnh hành trình</span>
+                    <span class="${deviceData.status === 'WARNING' && lvl === 3 ? 'text-amber-400 font-bold' : 'text-slate-200'}">${lvl === 3 ? deviceData.value : 'Đã định vị chính xác'}</span>
+                </div>
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850 col-span-2 mt-1">
+                    <span class="text-slate-500 text-[8px] block">Chu kỳ kích hoạt</span>
+                    <span class="text-slate-200">24,560 lượt đóng ngắt</span>
+                </div>
+            `;
+        } else if (selectedDiagDevice === 'photogate') {
+            deviceData = data.photogate;
+            panelTitle.innerText = 'Chi tiết: Cảm biến an toàn';
+            panelSubtitle.innerText = 'Thiết bị: ' + deviceData.code + ' (Safety Light Curtain)';
+            
+            telemetryBox.innerHTML = `
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850 col-span-2">
+                    <span class="text-slate-500 text-[8px] block">Trạng thái luồng quang</span>
+                    <span class="${deviceData.status === 'FAULT' ? 'text-red-400 font-bold' : 'text-slate-200'}">${deviceData.state}</span>
+                </div>
+                <div class="bg-slate-950/40 p-2 rounded border border-slate-850 col-span-2 mt-1">
+                    <span class="text-slate-500 text-[8px] block">Độ căn chỉnh đầu thu-phát</span>
+                    <span class="text-slate-200">${deviceData.status === 'FAULT' ? 'Lệch trục 4%' : 'Khớp 99.8%'}</span>
+                </div>
+            `;
+        }
+        
+        // Render PLC I/O Registers
+        let plcHtml = '';
+        for (const [reg, state] of Object.entries(deviceData.plc)) {
+            const isOff = state === 'OFF';
+            const stateColor = isOff ? 'text-slate-500' : (state.includes('ON') ? 'text-green-400 font-bold' : 'text-amber-400');
+            const stateDot = isOff ? 'bg-slate-700' : (state.includes('ON') ? 'bg-green-500 animate-pulse' : 'bg-amber-500');
+            
+            plcHtml += `
+                <div class="flex justify-between items-center py-0.5">
+                    <span class="text-slate-400">${reg}</span>
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full ${stateDot}"></span>
+                        <span class="${stateColor}">${state}</span>
+                    </span>
+                </div>
+            `;
+        }
+        plcBox.innerHTML = plcHtml;
+        
+        // Troubleshooting Guide
+        if (deviceData.status === 'FAULT' || deviceData.status === 'WARNING') {
+            troubleBox.classList.remove('hidden');
+            let guide = '';
+            
+            if (selectedDiagDevice === 'motor') {
+                guide = `
+                    <div class="text-[10px] text-red-400 font-bold mb-1">CẢNH BÁO LỖI: ${deviceData.error}</div>
+                    <div>1. Tạm dừng Block lập tức để tránh cháy động cơ.</div>
+                    <div>2. Điều hướng kỹ sư kiểm tra quạt làm mát động cơ nâng.</div>
+                    <div>3. Thực hiện Bypass cảm biến nhiệt nếu nhiệt độ đo thực tế bình thường (Lỗi cảm biến).</div>
+                    <div>4. Bấm "Reset PLC" sau khi đã kiểm tra an toàn.</div>
+                `;
+            } else if (selectedDiagDevice === 'limitSwitch') {
+                guide = `
+                    <div class="text-[10px] text-amber-400 font-bold mb-1">CẢNH BÁO LỆCH: ${deviceData.error}</div>
+                    <div>1. Sensor hành trình T3 trễ tín hiệu, nghi ngờ lỏng ốc định vị cơ khí.</div>
+                    <div>2. Bấm "Bypass Sensor" nếu cần vận hành khẩn cấp (cho phép PLC dùng Sensor hành trình dự phòng).</div>
+                    <div>3. Tạo Work Order lập lịch kỹ thuật căn chỉnh tay vị trí vật lý.</div>
+                `;
+            } else if (selectedDiagDevice === 'photogate') {
+                guide = `
+                    <div class="text-[10px] text-red-400 font-bold mb-1">CẢNH BÁO AN TOÀN: ${deviceData.error}</div>
+                    <div>1. Phát hiện vật cản (người, xe đỗ lệch khay hoặc rác).</div>
+                    <div>2. Kiểm tra camera an toàn Zone để giám sát trực quan cửa hầm.</div>
+                    <div>3. Sử dụng "Bypass Sensor" nếu cảm biến bị bám bụi và cần vận hành tạm thời.</div>
+                    <div>4. Nhấn còi cảnh báo để cảnh báo người dùng.</div>
+                `;
+            }
+            instructionBox.innerHTML = guide;
+        } else {
+            troubleBox.classList.add('hidden');
+        }
+    }
+
+    // Remote Actions simulation
+    function execDiagReset() {
+        const blockId = document.getElementById('diag-block').value;
+        const data = getSelectedBlockData();
+        
+        // Reset motor status
+        if (data.motor.status === 'FAULT') {
+            data.motor.status = 'OK';
+            data.motor.temp = 68;
+            data.motor.current = 14.1;
+            data.motor.voltage = 380;
+            data.motor.speed = 1450;
+            data.motor.error = 'Không có lỗi';
+            data.motor.plc = { 'I:0/2 (LIFT_RUN)': 'ON', 'I:0/3 (LIFT_DIR)': 'UP', 'O:1/2 (RUN_CMD)': 'ON', 'O:1/3 (BRAKE_REL)': 'ON' };
+        }
+        
+        // Reset photogate status
+        if (data.photogate.status === 'FAULT') {
+            data.photogate.status = 'OK';
+            data.photogate.state = 'Thông suốt (Clear)';
+            data.photogate.error = 'Không có lỗi';
+            data.photogate.plc = { 'I:1/0 (PH_RX_OK)': 'ON', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'OFF' };
+        }
+        
+        // Reset limit switch status
+        if (data.limitSwitch.status === 'WARNING') {
+            data.limitSwitch.status = 'OK';
+            data.limitSwitch.value = 'Đã định vị chính xác';
+            data.limitSwitch.error = 'Không có lỗi';
+            data.limitSwitch.plc = { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'ON' };
+        }
+        
+        data.status = 'Normal';
+        
+        alert('Đã gửi lệnh Reset PLC và ACK cảnh báo lỗi thành công cho ' + blockId + '! Thiết bị đang hoạt động bình thường trở lại.');
+        loadDiagBlock();
+    }
+
+    function execDiagBypass() {
+        const blockId = document.getElementById('diag-block').value;
+        const data = getSelectedBlockData();
+        
+        if (selectedDiagDevice === 'motor') {
+            alert('Đã Bypass chế độ bảo vệ động cơ cho ' + blockId + '! Vận hành khẩn cấp được kích hoạt.');
+        } else if (selectedDiagDevice === 'limitSwitch') {
+            data.limitSwitch.status = 'OK';
+            data.limitSwitch.value = 'Bypass Active (Forced)';
+            data.limitSwitch.plc = { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'ON (Forced)' };
+            alert('Đã gửi tín hiệu Bypass cảm biến hành trình T3. PLC chuyển sang chế độ cưỡng bức.');
+            loadDiagBlock();
+        } else if (selectedDiagDevice === 'photogate') {
+            data.photogate.status = 'OK';
+            data.photogate.state = 'Bypass Active (Forced)';
+            data.photogate.plc = { 'I:1/0 (PH_RX_OK)': 'ON (Forced)', 'I:1/1 (PH_MUTE)': 'ON', 'O:2/0 (ALARM_SIREN)': 'OFF' };
+            alert('Đã gửi tín hiệu Bypass cảm biến quang an toàn. PLC bỏ qua tín hiệu đứt luồng quang.');
+            loadDiagBlock();
+        }
+    }
+
+    function createDiagWorkOrder() {
+        const blockId = document.getElementById('diag-block').value;
+        const zone = document.getElementById('diag-zone').value;
+        const data = getSelectedBlockData();
+        
+        let deviceName = '';
+        let errorDesc = '';
+        let priority = 'high';
+        
+        if (selectedDiagDevice === 'motor') {
+            deviceName = 'Motor Nâng Hạ';
+            errorDesc = data.motor.error;
+            priority = 'urgent';
+        } else if (selectedDiagDevice === 'shuttle') {
+            deviceName = 'Bàn chuyển dịch / Shuttle';
+            errorDesc = 'Bảo trì định kỳ / Tra dầu xích truyền động';
+            priority = 'low';
+        } else if (selectedDiagDevice === 'limitSwitch') {
+            deviceName = 'Cảm biến hành trình';
+            errorDesc = data.limitSwitch.error;
+            priority = 'medium';
+        } else if (selectedDiagDevice === 'photogate') {
+            deviceName = 'Cảm biến an toàn';
+            errorDesc = data.photogate.error;
+            priority = 'high';
+        }
+        
+        // Pre-populate Work Order List below
+        const table = document.querySelector('table tbody');
+        const newRow = table.insertRow(0);
+        newRow.className = "border-b border-slate-800/60 hover:bg-slate-800/30";
+        newRow.innerHTML = `
+            <td class="px-3 py-2.5 text-slate-400">${zone}</td>
+            <td class="px-3 py-2.5 text-slate-300">Block ${blockId}</td>
+            <td class="px-3 py-2.5 text-slate-200 font-medium">${deviceName}</td>
+            <td class="px-3 py-2.5 text-slate-400">Diag Remote</td>
+            <td class="px-3 py-2.5"><span class="text-red-400">Active Fault</span></td>
+            <td class="px-3 py-2.5 text-slate-500">10,000</td>
+            <td class="px-3 py-2.5"><span class="text-slate-350">Diagnostics</span></td>
+            <td class="px-3 py-2.5"><div class="text-slate-300">Hôm nay</div></td>
+            <td class="px-3 py-2.5">
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium ${priority === 'urgent' ? 'bg-red-950/60 border-red-700/50 text-red-300' : (priority === 'high' ? 'bg-orange-950/60 border-orange-700/50 text-orange-300' : 'bg-slate-950/60 border-slate-700/50 text-slate-300')}">
+                    ${priority === 'urgent' ? 'Khẩn cấp' : (priority === 'high' ? 'Ưu tiên cao' : 'Thấp')}
+                </span>
+            </td>
+        `;
+        
+        alert('Đã lập lệnh bảo trì khẩn cấp (Work Order) thành công cho thiết bị ' + deviceName + ' thuộc Block ' + blockId + '! Lệnh đã được đưa vào bảng theo dõi bên dưới.');
+        
+        // Switch to Schedule tab to see the new work order
+        switchMaintenanceTab('schedule');
+    }
+</script>
+    </div>
+</div>

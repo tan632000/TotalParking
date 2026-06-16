@@ -1,173 +1,1403 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
 
-<div class="p-5 pb-10 min-h-[calc(100vh-3.5rem)]">
-    <div class="space-y-4">
-        <div class="flex items-center justify-between"><h1 class="text-slate-100 text-lg font-semibold">Báo cáo hệ thống</h1><div class="flex gap-2"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-green-900/50 hover:bg-green-800/50 text-green-300 border border-green-700/50 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-spreadsheet"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M8 13h2"></path><path d="M14 13h2"></path><path d="M8 17h2"></path><path d="M14 17h2"></path></svg>Xuất Excel</button><button class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-blue-900/50 hover:bg-blue-800/50 text-blue-300 border border-blue-700/50 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>Xuất PDF</button></div></div><div class="grid grid-cols-1 xl:grid-cols-4 gap-4">
-            <div class="bg-card rounded border border-slate-700/50 p-3 space-y-1"><div class="text-slate-500 text-[10px] font-mono uppercase mb-2">Loại báo cáo</div><button class="w-full flex items-center gap-2 px-3 py-2 rounded text-xs text-left transition-colors bg-blue-600/20 text-blue-300 border border-blue-600/40"><span class="text-blue-400"></span>Báo cáo mật độ / lưu lượng</button><button class="w-full flex items-center gap-2 px-3 py-2 rounded text-xs text-left transition-colors text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border border-transparent"><span class="text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg></span>Báo cáo lỗi</button><button class="w-full flex items-center gap-2 px-3 py-2 rounded text-xs text-left transition-colors text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border border-transparent"><span class="text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-spreadsheet"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M8 13h2"></path><path d="M14 13h2"></path><path d="M8 17h2"></path><path d="M14 17h2"></path></svg></span>Báo cáo bảo trì</button><button class="w-full flex items-center gap-2 px-3 py-2 rounded text-xs text-left transition-colors text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border border-transparent"><span class="text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg></span>Báo cáo thẻ / xe</button><button class="w-full flex items-center gap-2 px-3 py-2 rounded text-xs text-left transition-colors text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border border-transparent"><span class="text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg></span>Lịch sử gửi / lấy xe</button></div><div class="xl:col-span-3 space-y-4">
-                <div class="bg-card rounded border border-slate-700/50 p-3 flex flex-wrap gap-3 items-center"><div class="flex items-center gap-2"><span class="text-slate-500 text-xs font-mono">Từ</span><input type="date" class="bg-slate-800 border border-slate-700/50 rounded px-2 py-1 text-xs text-slate-300 font-mono outline-none" value="2026-06-01"></div><div class="flex items-center gap-2"><span class="text-slate-500 text-xs font-mono">Đến</span><input type="date" class="bg-slate-800 border border-slate-700/50 rounded px-2 py-1 text-xs text-slate-300 font-mono outline-none" value="2026-06-08"></div><select class="bg-slate-800 border border-slate-700/50 rounded px-2 py-1 text-xs text-slate-300 font-mono outline-none"><option value="all">Tất cả Zone</option><option value="A">Zone A</option><option value="B">Zone B</option><option value="C">Zone C</option></select><button class="px-3 py-1 rounded text-xs bg-blue-700/60 hover:bg-blue-600/60 text-blue-200 transition-colors">Tạo báo cáo</button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-card rounded border border-slate-700/50 p-4">
-                        <h3 class="text-slate-300 text-xs font-semibold mb-3">Mật độ theo ngày trong tuần (%)</h3><div class="recharts-responsive-container" style="width: 100%; height: 180px; min-width: 0px;">
-                            <div class="recharts-wrapper" style="position: relative; cursor: default; width: 100%; height: 100%; max-height: 180px; max-width: 415px;">
-                                <svg class="recharts-surface" width="415" height="180" viewBox="0 0 415 180" style="width: 100%; height: 100%;">
-                                    <title></title>
-                                    <desc></desc>
-                                    <defs><clipPath id="recharts18-clip"><rect x="44" y="4" height="146" width="367"></rect></clipPath></defs>
-                                    <g class="recharts-layer recharts-cartesian-axis recharts-xAxis xAxis"><g class="recharts-cartesian-axis-ticks"><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="367" height="30" stroke="none" font-size="11" x="70.21428571428572" y="158" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#64748b"><tspan x="70.21428571428572" dy="0.71em">T2</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="367" height="30" stroke="none" font-size="11" x="122.64285714285714" y="158" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#64748b"><tspan x="122.64285714285714" dy="0.71em">T3</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="367" height="30" stroke="none" font-size="11" x="175.07142857142858" y="158" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#64748b"><tspan x="175.07142857142858" dy="0.71em">T4</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="367" height="30" stroke="none" font-size="11" x="227.5" y="158" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#64748b"><tspan x="227.5" dy="0.71em">T5</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="367" height="30" stroke="none" font-size="11" x="279.92857142857144" y="158" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#64748b"><tspan x="279.92857142857144" dy="0.71em">T6</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="367" height="30" stroke="none" font-size="11" x="332.3571428571429" y="158" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#64748b"><tspan x="332.3571428571429" dy="0.71em">T7</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="367" height="30" stroke="none" font-size="11" x="384.7857142857143" y="158" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#64748b"><tspan x="384.7857142857143" dy="0.71em">CN</tspan></text></g></g></g>
-                                    <g class="recharts-layer recharts-cartesian-axis recharts-yAxis yAxis"><g class="recharts-cartesian-axis-ticks"><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="146" stroke="none" font-size="11" x="36" y="150" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#64748b"><tspan x="36" dy="0.355em">0</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="146" stroke="none" font-size="11" x="36" y="113.5" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#64748b"><tspan x="36" dy="0.355em">25</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="146" stroke="none" font-size="11" x="36" y="77" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#64748b"><tspan x="36" dy="0.355em">50</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="146" stroke="none" font-size="11" x="36" y="40.5" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#64748b"><tspan x="36" dy="0.355em">75</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="146" stroke="none" font-size="11" x="36" y="8.25" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#64748b"><tspan x="36" dy="0.355em">100</tspan></text></g></g></g>
-                                    <g class="recharts-layer recharts-bar">
-                                        <g class="recharts-layer recharts-bar-rectangles">
-                                            <g class="recharts-layer">
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="49.24285714285715" y="36.11999999999999" width="11" height="113.88000000000001" radius="2,2,0,0" name="Zone A" fill="#16A34A" class="recharts-rectangle" d="M49.24285714285715,38.11999999999999A 2,2,0,0,1,51.24285714285715,36.11999999999999L 58.24285714285715,36.11999999999999A 2,2,0,0,1,
-        60.24285714285715,38.11999999999999L 60.24285714285715,150L 49.24285714285715,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="101.67142857142858" y="30.28" width="11" height="119.72" radius="2,2,0,0" name="Zone A" fill="#16A34A" class="recharts-rectangle" d="M101.67142857142858,32.28A 2,2,0,0,1,103.67142857142858,30.28L 110.67142857142858,30.28A 2,2,0,0,1,
-        112.67142857142858,32.28L 112.67142857142858,150L 101.67142857142858,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="154.1" y="40.5" width="11" height="109.5" radius="2,2,0,0" name="Zone A" fill="#16A34A" class="recharts-rectangle" d="M154.1,42.5A 2,2,0,0,1,156.1,40.5L 163.1,40.5A 2,2,0,0,1,
-        165.1,42.5L 165.1,150L 154.1,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="206.5285714285714" y="21.52000000000001" width="11" height="128.48" radius="2,2,0,0" name="Zone A" fill="#16A34A" class="recharts-rectangle" d="M206.5285714285714,23.52000000000001A 2,2,0,0,1,208.5285714285714,21.52000000000001L 215.5285714285714,21.52000000000001A 2,2,0,0,1,
-        217.5285714285714,23.52000000000001L 217.5285714285714,150L 206.5285714285714,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="258.95714285714286" y="15.680000000000007" width="11" height="134.32" radius="2,2,0,0" name="Zone A" fill="#16A34A" class="recharts-rectangle" d="M258.95714285714286,17.680000000000007A 2,2,0,0,1,260.95714285714286,15.680000000000007L 267.95714285714286,15.680000000000007A 2,2,0,0,1,
-        269.95714285714286,17.680000000000007L 269.95714285714286,150L 258.95714285714286,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="311.3857142857143" y="55.099999999999994" width="11" height="94.9" radius="2,2,0,0" name="Zone A" fill="#16A34A" class="recharts-rectangle" d="M311.3857142857143,57.099999999999994A 2,2,0,0,1,313.3857142857143,55.099999999999994L 320.3857142857143,55.099999999999994A 2,2,0,0,1,
-        322.3857142857143,57.099999999999994L 322.3857142857143,150L 311.3857142857143,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="363.8142857142857" y="77" width="11" height="73" radius="2,2,0,0" name="Zone A" fill="#16A34A" class="recharts-rectangle" d="M363.8142857142857,79A 2,2,0,0,1,365.8142857142857,77L 372.8142857142857,77A 2,2,0,0,1,
-        374.8142857142857,79L 374.8142857142857,150L 363.8142857142857,150Z"></path>
-                                                </g>
-                                            </g>
-                                        </g>
-                                        <g class="recharts-layer"></g>
-                                    </g>
-                                    <g class="recharts-layer recharts-bar">
-                                        <g class="recharts-layer recharts-bar-rectangles">
-                                            <g class="recharts-layer">
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="64.24285714285715" y="69.7" width="11" height="80.3" radius="2,2,0,0" name="Zone B" fill="#2563EB" class="recharts-rectangle" d="M64.24285714285715,71.7A 2,2,0,0,1,66.24285714285715,69.7L 73.24285714285715,69.7A 2,2,0,0,1,
-        75.24285714285715,71.7L 75.24285714285715,150L 64.24285714285715,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="116.67142857142858" y="62.400000000000006" width="11" height="87.6" radius="2,2,0,0" name="Zone B" fill="#2563EB" class="recharts-rectangle" d="M116.67142857142858,64.4A 2,2,0,0,1,118.67142857142858,62.400000000000006L 125.67142857142858,62.400000000000006A 2,2,0,0,1,
-        127.67142857142858,64.4L 127.67142857142858,150L 116.67142857142858,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="169.1" y="74.08" width="11" height="75.92" radius="2,2,0,0" name="Zone B" fill="#2563EB" class="recharts-rectangle" d="M169.1,76.08A 2,2,0,0,1,171.1,74.08L 178.1,74.08A 2,2,0,0,1,
-        180.1,76.08L 180.1,150L 169.1,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="221.5285714285714" y="55.099999999999994" width="11" height="94.9" radius="2,2,0,0" name="Zone B" fill="#2563EB" class="recharts-rectangle" d="M221.5285714285714,57.099999999999994A 2,2,0,0,1,223.5285714285714,55.099999999999994L 230.5285714285714,55.099999999999994A 2,2,0,0,1,
-        232.5285714285714,57.099999999999994L 232.5285714285714,150L 221.5285714285714,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="273.95714285714286" y="47.80000000000001" width="11" height="102.19999999999999" radius="2,2,0,0" name="Zone B" fill="#2563EB" class="recharts-rectangle" d="M273.95714285714286,49.80000000000001A 2,2,0,0,1,275.95714285714286,47.80000000000001L 282.95714285714286,47.80000000000001A 2,2,0,0,1,
-        284.95714285714286,49.80000000000001L 284.95714285714286,150L 273.95714285714286,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="326.3857142857143" y="79.92" width="11" height="70.08" radius="2,2,0,0" name="Zone B" fill="#2563EB" class="recharts-rectangle" d="M326.3857142857143,81.92A 2,2,0,0,1,328.3857142857143,79.92L 335.3857142857143,79.92A 2,2,0,0,1,
-        337.3857142857143,81.92L 337.3857142857143,150L 326.3857142857143,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="378.8142857142857" y="98.9" width="11" height="51.099999999999994" radius="2,2,0,0" name="Zone B" fill="#2563EB" class="recharts-rectangle" d="M378.8142857142857,100.9A 2,2,0,0,1,380.8142857142857,98.9L 387.8142857142857,98.9A 2,2,0,0,1,
-        389.8142857142857,100.9L 389.8142857142857,150L 378.8142857142857,150Z"></path>
-                                                </g>
-                                            </g>
-                                        </g>
-                                        <g class="recharts-layer"></g>
-                                    </g>
-                                    <g class="recharts-layer recharts-bar">
-                                        <g class="recharts-layer recharts-bar-rectangles">
-                                            <g class="recharts-layer">
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="79.24285714285715" y="103.27999999999999" width="11" height="46.72000000000001" radius="2,2,0,0" name="Zone C" fill="#7C3AED" class="recharts-rectangle" d="M79.24285714285715,105.27999999999999A 2,2,0,0,1,81.24285714285715,103.27999999999999L 88.24285714285715,103.27999999999999A 2,2,0,0,1,
-        90.24285714285715,105.27999999999999L 90.24285714285715,150L 79.24285714285715,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="131.67142857142858" y="98.9" width="11" height="51.099999999999994" radius="2,2,0,0" name="Zone C" fill="#7C3AED" class="recharts-rectangle" d="M131.67142857142858,100.9A 2,2,0,0,1,133.67142857142858,98.9L 140.67142857142858,98.9A 2,2,0,0,1,
-        142.67142857142858,100.9L 142.67142857142858,150L 131.67142857142858,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="184.10000000000002" y="109.12" width="11" height="40.879999999999995" radius="2,2,0,0" name="Zone C" fill="#7C3AED" class="recharts-rectangle" d="M184.10000000000002,111.12A 2,2,0,0,1,186.10000000000002,109.12L 193.10000000000002,109.12A 2,2,0,0,1,
-        195.10000000000002,111.12L 195.10000000000002,150L 184.10000000000002,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="236.5285714285714" y="91.6" width="11" height="58.400000000000006" radius="2,2,0,0" name="Zone C" fill="#7C3AED" class="recharts-rectangle" d="M236.5285714285714,93.6A 2,2,0,0,1,238.5285714285714,91.6L 245.5285714285714,91.6A 2,2,0,0,1,
-        247.5285714285714,93.6L 247.5285714285714,150L 236.5285714285714,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="288.95714285714286" y="84.3" width="11" height="65.7" radius="2,2,0,0" name="Zone C" fill="#7C3AED" class="recharts-rectangle" d="M288.95714285714286,86.3A 2,2,0,0,1,290.95714285714286,84.3L 297.95714285714286,84.3A 2,2,0,0,1,
-        299.95714285714286,86.3L 299.95714285714286,150L 288.95714285714286,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="341.3857142857143" y="117.88" width="11" height="32.120000000000005" radius="2,2,0,0" name="Zone C" fill="#7C3AED" class="recharts-rectangle" d="M341.3857142857143,119.88A 2,2,0,0,1,343.3857142857143,117.88L 350.3857142857143,117.88A 2,2,0,0,1,
-        352.3857142857143,119.88L 352.3857142857143,150L 341.3857142857143,150Z"></path>
-                                                </g>
-                                                <g class="recharts-layer recharts-bar-rectangle">
-                                                    <path x="393.8142857142857" y="128.1" width="11" height="21.900000000000006" radius="2,2,0,0" name="Zone C" fill="#7C3AED" class="recharts-rectangle" d="M393.8142857142857,130.1A 2,2,0,0,1,395.8142857142857,128.1L 402.8142857142857,128.1A 2,2,0,0,1,
-        404.8142857142857,130.1L 404.8142857142857,150L 393.8142857142857,150Z"></path>
-                                                </g>
-                                            </g>
-                                        </g>
-                                        <g class="recharts-layer"></g>
-                                    </g>
-                                </svg><div tabindex="-1" class="recharts-tooltip-wrapper recharts-tooltip-wrapper-left recharts-tooltip-wrapper-top" style="visibility: hidden; pointer-events: none; position: absolute; top: 0px; left: 0px; transform: translate(292.348px, 17px);"><div class="recharts-default-tooltip" style="margin: 0px; padding: 10px; background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); white-space: nowrap; border-radius: 4px; font-size: 11px;"><p class="recharts-tooltip-label" style="margin: 0px;">CN</p></div></div>
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Title and Action Buttons -->
+        <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Báo cáo & Thống kê hệ thống</h1>
+                <p class="text-slate-400 text-sm mt-1">Truy xuất báo cáo hoạt động, mật độ, phân tích Pareto lỗi thiết bị và doanh thu bãi đỗ xe.</p>
+            </div>
+            <div class="flex gap-2 self-start md:self-auto">
+                <button onclick="alert('Đã xuất báo cáo thành công sang file Excel!')" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-green-900/50 hover:bg-green-800/50 text-green-300 border border-green-700/50 transition-colors font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-spreadsheet"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M8 13h2"></path><path d="M14 13h2"></path><path d="M8 17h2"></path><path d="M14 17h2"></path></svg>
+                    Xuất Excel
+                </button>
+                <button onclick="alert('Đã xuất báo cáo thành công sang file PDF!')" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-blue-900/50 hover:bg-blue-800/50 text-blue-300 border border-blue-700/50 transition-colors font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+                    Xuất PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Layout Split -->
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+            <!-- Sidebar: Report Options -->
+            <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 space-y-1.5 h-fit shadow-lg">
+                <div class="text-slate-500 text-[10px] font-mono uppercase mb-3 px-3 tracking-wider">Danh mục Báo cáo</div>
+                
+                <button id="btn-density" onclick="switchReportTab('density')" class="report-tab-btn active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity text-blue-400"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    Mật độ & Lưu lượng
+                </button>
+                
+                <button id="btn-alarms" onclick="switchReportTab('alarms')" class="report-tab-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle text-amber-500"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+                    Phân tích lỗi & Pareto
+                </button>
+                
+                <button id="btn-maintenance" onclick="switchReportTab('maintenance')" class="report-tab-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench text-purple-400"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    Lịch sử bảo trì
+                </button>
+                
+                <button id="btn-cards" onclick="switchReportTab('cards')" class="report-tab-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card text-emerald-400"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+                    Lịch sử thẻ xe
+                </button>
+                <button id="btn-revenue" onclick="switchReportTab('revenue')" class="report-tab-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote text-yellow-500"><rect width="20" height="12" x="2" y="6" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><line x1="6" x2="6" y1="12" y2="12"></line><line x1="18" x2="18" y1="12" y2="12"></line></svg>
+                    Báo cáo doanh thu từ xa
+                </button>
+                <button id="btn-pallet-frequency" onclick="switchReportTab('pallet-frequency')" class="report-tab-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    Tần suất hoạt động Pallet
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="xl:col-span-3 space-y-4">
+                <!-- Filter Bar -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 flex flex-wrap gap-4 items-center shadow-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="text-slate-500 text-xs font-mono">Từ ngày</span>
+                        <input type="date" class="bg-slate-800 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500" value="2026-06-01">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-slate-500 text-xs font-mono">Đến ngày</span>
+                        <input type="date" class="bg-slate-800 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500" value="2026-06-16">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-slate-500 text-xs font-mono">Phân khu</span>
+                        <select class="bg-slate-800 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500">
+                            <option value="all">Tất cả các Zone</option>
+                            <option value="A">Zone A (Hầm B1)</option>
+                            <option value="B">Zone B (Hầm B2)</option>
+                            <option value="C">Zone C (Hầm B3)</option>
+                            <option value="D">Zone D (Tầng 1)</option>
+                        </select>
+                    </div>
+                    <button onclick="alert('Đã cập nhật dữ liệu báo cáo mới!')" class="px-4 py-1.5 rounded text-xs bg-blue-600 hover:bg-blue-500 text-white font-bold transition-colors shadow">Tạo báo cáo</button>
+                </div>
+
+                <!-- Tab Panels -->
+
+                <!-- 1. Density Panel -->
+                <div id="panel-density" class="report-panel active space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
+                            <h3 class="text-white text-sm font-bold mb-3">Mật độ đỗ xe theo ngày trong tuần (%)</h3>
+                            <div class="space-y-3 pt-2">
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1 font-mono">
+                                        <span class="text-slate-300">Thứ Hai (T2)</span>
+                                        <span class="text-blue-400 font-bold">64%</span>
+                                    </div>
+                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 64%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1 font-mono">
+                                        <span class="text-slate-300">Thứ Ba (T3)</span>
+                                        <span class="text-blue-400 font-bold">78%</span>
+                                    </div>
+                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 78%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1 font-mono">
+                                        <span class="text-slate-300">Thứ Tư (T4)</span>
+                                        <span class="text-blue-400 font-bold">70%</span>
+                                    </div>
+                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 70%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1 font-mono">
+                                        <span class="text-slate-300">Thứ Năm (T5)</span>
+                                        <span class="text-blue-400 font-bold">85%</span>
+                                    </div>
+                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 85%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1 font-mono">
+                                        <span class="text-slate-300">Thứ Sáu (T6)</span>
+                                        <span class="text-blue-400 font-bold">92%</span>
+                                    </div>
+                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 92%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1 font-mono">
+                                        <span class="text-slate-300">Thứ Bảy (T7)</span>
+                                        <span class="text-amber-500 font-bold">55%</span>
+                                    </div>
+                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-amber-500 rounded-full" style="width: 55%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1 font-mono">
+                                        <span class="text-slate-300">Chủ Nhật (CN)</span>
+                                        <span class="text-emerald-400 font-bold">40%</span>
+                                    </div>
+                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width: 40%"></div></div>
+                                </div>
                             </div>
                         </div>
-                    </div><div class="bg-card rounded border border-slate-700/50 p-4">
-                        <h3 class="text-slate-300 text-xs font-semibold mb-3">Phân loại xe đỗ</h3><div class="recharts-responsive-container" style="width: 100%; height: 180px; min-width: 0px;">
-                            <div class="recharts-wrapper" style="position: relative; cursor: default; width: 100%; height: 100%; max-height: 180px; max-width: 415px;">
-                                <svg cx="50%" cy="50%" class="recharts-surface" width="415" height="180" viewBox="0 0 415 180" style="width: 100%; height: 100%;">
-                                    <title></title>
-                                    <desc></desc>
-                                    <defs><clipPath id="recharts25-clip"><rect x="5" y="5" height="170" width="405"></rect></clipPath></defs>
-                                    <g class="recharts-layer recharts-pie" tabindex="0">
-                                        <g class="recharts-layer recharts-pie-sector" tabindex="-1">
-                                            <path cx="207.5" cy="90" name="SUV" stroke="#fff" fill="#2563EB" font-size="10" color="#2563EB" tabindex="-1" class="recharts-sector" d="M 272.5,90
-    A 65,65,0,
-    0,0,
-    170.57579146247488,36.50604871691233
-  L 207.5,90 Z" role="img"></path>
-                                        </g>
-                                        <g class="recharts-layer recharts-pie-sector" tabindex="-1">
-                                            <path cx="207.5" cy="90" name="Sedan" stroke="#fff" fill="#16A34A" font-size="10" color="#16A34A" tabindex="-1" class="recharts-sector" d="M 170.57579146247488,36.50604871691233
-    A 65,65,0,
-    0,0,
-    215.33488421659595,154.52607681637352
-  L 207.5,90 Z" role="img"></path>
-                                        </g>
-                                        <g class="recharts-layer recharts-pie-sector" tabindex="-1">
-                                            <path cx="207.5" cy="90" name="Oversized" stroke="#fff" fill="#DC2626" font-size="10" color="#DC2626" tabindex="-1" class="recharts-sector" d="M 215.33488421659595,154.52607681637352
-    A 65,65,0,
-    0,0,
-    239.08892186076937,146.80792212072367
-  L 207.5,90 Z" role="img"></path>
-                                        </g>
-                                        <g class="recharts-layer recharts-pie-sector" tabindex="-1">
-                                            <path cx="207.5" cy="90" name="Standard" stroke="#fff" fill="#7C3AED" font-size="10" color="#7C3AED" tabindex="-1" class="recharts-sector" d="M 239.08892186076937,146.80792212072367
-    A 65,65,0,
-    0,0,
-    272.5,90.00000000000007
-  L 207.5,90 Z" role="img"></path>
-                                        </g>
-                                        <g class="recharts-layer recharts-pie-labels"><g class="recharts-layer"><text cx="207.5" cy="90" font-size="10" stroke="none" name="SUV" color="#2563EB" alignment-baseline="middle" x="247.00146962372034" y="14.736237819477154" class="recharts-text recharts-pie-label-text" text-anchor="start" fill="#2563EB"><tspan x="247.00146962372034" dy="0em">SUV 35%</tspan></text></g><g class="recharts-layer"><text cx="207.5" cy="90" font-size="10" stroke="none" name="Sedan" color="#16A34A" alignment-baseline="middle" x="128.02361937173976" y="120.14141539861552" class="recharts-text recharts-pie-label-text" text-anchor="end" fill="#16A34A"><tspan x="128.02361937173976" dy="0em">Sedan 42%</tspan></text></g><g class="recharts-layer"><text cx="207.5" cy="90" font-size="10" stroke="none" name="Oversized" color="#DC2626" alignment-baseline="middle" x="233.7664445218705" y="170.83980388508806" class="recharts-text recharts-pie-label-text" text-anchor="start" fill="#DC2626"><tspan x="233.7664445218705" dy="0em">Oversized 6%</tspan></text></g><g class="recharts-layer"><text cx="207.5" cy="90" font-size="10" stroke="none" name="Standard" color="#7C3AED" alignment-baseline="middle" x="280.76742168480416" y="133.09158757415526" class="recharts-text recharts-pie-label-text" text-anchor="start" fill="#7C3AED"><tspan x="280.76742168480416" dy="0em">Standard 17%</tspan></text></g></g>
-                                    </g>
-                                </svg><div tabindex="-1" class="recharts-tooltip-wrapper recharts-tooltip-wrapper-right recharts-tooltip-wrapper-bottom" style="visibility: hidden; pointer-events: none; position: absolute; top: 0px; left: 0px; transform: translate(245.514px, 116.476px);"><div class="recharts-default-tooltip" style="margin: 0px; padding: 10px; background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); white-space: nowrap; border-radius: 4px; font-size: 11px;"><p class="recharts-tooltip-label" style="margin: 0px;"></p></div></div>
+
+                        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
+                            <h3 class="text-white text-sm font-bold mb-3">Phân loại phương tiện đỗ thực tế</h3>
+                            <div class="flex flex-col justify-center h-full space-y-4 pt-2">
+                                <div class="flex items-center justify-between p-3 bg-slate-800/20 rounded-lg border border-slate-800">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-3 h-3 rounded bg-blue-500 inline-block"></span>
+                                        <span class="text-xs font-semibold text-slate-300">Xe SUV (Gầm cao)</span>
+                                    </div>
+                                    <span class="font-mono text-xs font-bold text-blue-400">47% (37 xe)</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-slate-800/20 rounded-lg border border-slate-800">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span>
+                                        <span class="text-xs font-semibold text-slate-300">Xe Sedan / Hatchback</span>
+                                    </div>
+                                    <span class="font-mono text-xs font-bold text-emerald-400">49% (54 xe)</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-slate-800/20 rounded-lg border border-slate-800">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-3 h-3 rounded bg-rose-500 inline-block"></span>
+                                        <span class="text-xs font-semibold text-slate-300">Xe quá khổ (Từ chối)</span>
+                                    </div>
+                                    <span class="font-mono text-xs font-bold text-rose-400">4% (3 xe)</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div><div class="bg-card rounded border border-slate-700/50 p-4"><h3 class="text-slate-300 text-xs font-semibold mb-3">Biểu đồ Pareto lỗi</h3><div class="overflow-x-auto"><table class="w-full text-xs font-mono"><thead class="border-b border-slate-700/60"><tr><th class="text-left text-slate-500 px-3 py-2 font-medium">Loại lỗi</th><th class="text-left text-slate-500 px-3 py-2 font-medium">Số lần</th><th class="text-left text-slate-500 px-3 py-2 font-medium">Tỉ lệ</th><th class="text-left text-slate-500 px-3 py-2 font-medium">Tích lũy</th></tr></thead><tbody><tr class="border-b border-slate-800/60"><td class="px-3 py-2 text-slate-200">Motor quá tải</td><td class="px-3 py-2 text-slate-300">12</td><td class="px-3 py-2"><div class="flex items-center gap-2"><div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 100%;"></div></div><span class="text-slate-400">30%</span></div></td><td class="px-3 py-2 text-slate-400">30%</td></tr><tr class="border-b border-slate-800/60"><td class="px-3 py-2 text-slate-200">Cảm biến HT</td><td class="px-3 py-2 text-slate-300">9</td><td class="px-3 py-2"><div class="flex items-center gap-2"><div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 75%;"></div></div><span class="text-slate-400">23%</span></div></td><td class="px-3 py-2 text-slate-400">52%</td></tr><tr class="border-b border-slate-800/60"><td class="px-3 py-2 text-slate-200">Mất kết nối</td><td class="px-3 py-2 text-slate-300">7</td><td class="px-3 py-2"><div class="flex items-center gap-2"><div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 58.3333%;"></div></div><span class="text-slate-400">18%</span></div></td><td class="px-3 py-2 text-slate-400">70%</td></tr><tr class="border-b border-slate-800/60"><td class="px-3 py-2 text-slate-200">E-Stop</td><td class="px-3 py-2 text-slate-300">5</td><td class="px-3 py-2"><div class="flex items-center gap-2"><div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 41.6667%;"></div></div><span class="text-slate-400">13%</span></div></td><td class="px-3 py-2 text-slate-400">82%</td></tr><tr class="border-b border-slate-800/60"><td class="px-3 py-2 text-slate-200">Nguồn điện</td><td class="px-3 py-2 text-slate-300">4</td><td class="px-3 py-2"><div class="flex items-center gap-2"><div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 33.3333%;"></div></div><span class="text-slate-400">10%</span></div></td><td class="px-3 py-2 text-slate-400">92%</td></tr><tr class="border-b border-slate-800/60"><td class="px-3 py-2 text-slate-200">Khác</td><td class="px-3 py-2 text-slate-300">3</td><td class="px-3 py-2"><div class="flex items-center gap-2"><div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width: 25%;"></div></div><span class="text-slate-400">8%</span></div></td><td class="px-3 py-2 text-slate-400">100%</td></tr></tbody></table></div></div>
+                </div>
+
+                <!-- 2. Alarms Panel (Pareto Details) -->
+                <div id="panel-alarms" class="report-panel space-y-4">
+                    <!-- Pareto Chart Mockup using pure HTML/CSS elements -->
+                    <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
+                        <h3 class="text-white text-sm font-bold mb-4">Biểu đồ Pareto lỗi thiết bị (Nguyên nhân lỗi & Tỷ lệ tích lũy)</h3>
+                        
+                        <div class="space-y-4">
+                            <!-- Visual Pareto Bars & Line -->
+                            <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 items-end min-h-[140px] pt-4 px-2 border-b border-slate-800">
+                                <!-- Bar 1: Motor quá tải -->
+                                <div class="text-center space-y-2">
+                                    <span class="text-[10px] font-mono text-slate-400">12 lần (30.0%)</span>
+                                    <div class="w-full bg-blue-600 rounded-t-md mx-auto" style="height: 120px; max-width: 60px;"></div>
+                                    <div class="text-[10px] font-bold text-slate-300 truncate">Motor quá tải</div>
+                                </div>
+                                <!-- Bar 2: Lỗi Cảm biến hành trình -->
+                                <div class="text-center space-y-2">
+                                    <span class="text-[10px] font-mono text-slate-400">9 lần (22.5%)</span>
+                                    <div class="w-full bg-blue-600/80 rounded-t-md mx-auto" style="height: 90px; max-width: 60px;"></div>
+                                    <div class="text-[10px] font-bold text-slate-300 truncate">Cảm biến HT</div>
+                                </div>
+                                <!-- Bar 3: Mất kết nối PLC -->
+                                <div class="text-center space-y-2">
+                                    <span class="text-[10px] font-mono text-slate-400">7 lần (17.5%)</span>
+                                    <div class="w-full bg-blue-600/70 rounded-t-md mx-auto" style="height: 70px; max-width: 60px;"></div>
+                                    <div class="text-[10px] font-bold text-slate-300 truncate">Mất kết nối</div>
+                                </div>
+                                <!-- Bar 4: Nút E-stop kích hoạt -->
+                                <div class="text-center space-y-2">
+                                    <span class="text-[10px] font-mono text-slate-400">5 lần (12.5%)</span>
+                                    <div class="w-full bg-blue-600/50 rounded-t-md mx-auto" style="height: 50px; max-width: 60px;"></div>
+                                    <div class="text-[10px] font-bold text-slate-300 truncate">Nút E-Stop</div>
+                                </div>
+                                <!-- Bar 5: Lỗi nguồn điện -->
+                                <div class="text-center space-y-2">
+                                    <span class="text-[10px] font-mono text-slate-400">4 lần (10.0%)</span>
+                                    <div class="w-full bg-blue-600/40 rounded-t-md mx-auto" style="height: 40px; max-width: 60px;"></div>
+                                    <div class="text-[10px] font-bold text-slate-300 truncate">Nguồn điện</div>
+                                </div>
+                                <!-- Bar 6: Các lỗi khác -->
+                                <div class="text-center space-y-2">
+                                    <span class="text-[10px] font-mono text-slate-400">3 lần (7.5%)</span>
+                                    <div class="w-full bg-blue-600/30 rounded-t-md mx-auto" style="height: 30px; max-width: 60px;"></div>
+                                    <div class="text-[10px] font-bold text-slate-300 truncate">Khác</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pareto Table -->
+                        <div class="overflow-x-auto mt-6">
+                            <table class="w-full text-xs font-mono">
+                                <thead class="border-b border-slate-700/60 bg-slate-800/30">
+                                    <tr>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Nguyên nhân lỗi</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Số lần xuất hiện</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Tỉ lệ (%)</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold text-amber-500">Tích lũy lũy kế (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
+                                        <td class="px-3 py-2 text-slate-200">Lỗi quá tải dòng Motor (Motor overload)</td>
+                                        <td class="px-3 py-2 text-slate-300 font-bold">12</td>
+                                        <td class="px-3 py-2 text-slate-400">30.0%</td>
+                                        <td class="px-3 py-2 text-amber-400 font-bold">30.0%</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
+                                        <td class="px-3 py-2 text-slate-200">Sai lệch cảm biến hành trình khay đỗ</td>
+                                        <td class="px-3 py-2 text-slate-300 font-bold">9</td>
+                                        <td class="px-3 py-2 text-slate-400">22.5%</td>
+                                        <td class="px-3 py-2 text-amber-400 font-bold">52.5%</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
+                                        <td class="px-3 py-2 text-slate-200">Mất tín hiệu kết nối Modbus TCP PLC</td>
+                                        <td class="px-3 py-2 text-slate-300 font-bold">7</td>
+                                        <td class="px-3 py-2 text-slate-400">17.5%</td>
+                                        <td class="px-3 py-2 text-amber-400 font-bold">70.0%</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
+                                        <td class="px-3 py-2 text-slate-200">Kích hoạt nút khẩn cấp E-Stop tại trạm</td>
+                                        <td class="px-3 py-2 text-slate-300 font-bold">5</td>
+                                        <td class="px-3 py-2 text-slate-400">12.5%</td>
+                                        <td class="px-3 py-2 text-amber-400 font-bold">82.5% <span class="text-[9px] text-emerald-400 font-semibold px-1 rounded bg-emerald-950/40">(Ngưỡng Pareto 80%)</span></td>
+                                    </tr>
+                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
+                                        <td class="px-3 py-2 text-slate-200">Sụt áp hoặc lỗi nguồn điện lưới đầu vào</td>
+                                        <td class="px-3 py-2 text-slate-300 font-bold">4</td>
+                                        <td class="px-3 py-2 text-slate-400">10.0%</td>
+                                        <td class="px-3 py-2 text-amber-400">92.5%</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
+                                        <td class="px-3 py-2 text-slate-200">Các lỗi truyền thông phụ khác</td>
+                                        <td class="px-3 py-2 text-slate-300 font-bold">3</td>
+                                        <td class="px-3 py-2 text-slate-400">7.5%</td>
+                                        <td class="px-3 py-2 text-slate-400">100.0%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Maintenance Panel -->
+                <div id="panel-maintenance" class="report-panel space-y-4">
+                    <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
+                        <h3 class="text-white text-sm font-bold mb-3">Lịch sử bảo trì thiết bị</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs font-mono">
+                                <thead class="border-b border-slate-700/60 bg-slate-800/30">
+                                    <tr>
+                                        <th class="text-left text-slate-400 px-3 py-2 font-bold">Thiết bị</th>
+                                        <th class="text-left text-slate-400 px-3 py-2 font-bold">Loại bảo trì</th>
+                                        <th class="text-left text-slate-400 px-3 py-2 font-bold">Ngày thực hiện</th>
+                                        <th class="text-left text-slate-400 px-3 py-2 font-bold">Kỹ thuật viên</th>
+                                        <th class="text-left text-slate-400 px-3 py-2 font-bold">Đánh giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-slate-850">
+                                        <td class="px-3 py-2 text-slate-200">Motor Nâng hạ Block A-04</td>
+                                        <td class="px-3 py-2 text-slate-400">Thay thế cuộn dây stator</td>
+                                        <td class="px-3 py-2 text-slate-400">2026-06-10</td>
+                                        <td class="px-3 py-2 text-slate-300">Nguyễn Văn Hùng</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-semibold">Tốt · Chạy êm</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-850">
+                                        <td class="px-3 py-2 text-slate-200">Xích truyền động Block B-02</td>
+                                        <td class="px-3 py-2 text-slate-400">Tra dầu mỡ bôi trơn & Căng xích</td>
+                                        <td class="px-3 py-2 text-slate-400">2026-06-08</td>
+                                        <td class="px-3 py-2 text-slate-300">Trần Minh Tâm</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-semibold">Đạt chuẩn</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-850">
+                                        <td class="px-3 py-2 text-slate-200">Cảm biến quang học Block A-01</td>
+                                        <td class="px-3 py-2 text-slate-400">Vệ sinh bụi bẩn bề mặt thấu kính</td>
+                                        <td class="px-3 py-2 text-slate-400">2026-06-05</td>
+                                        <td class="px-3 py-2 text-slate-300">Nguyễn Văn Hùng</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-semibold">Nhận diện tốt</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Cards Panel (Tra cứu lịch sử & Tìm xe) -->
+                <div id="panel-cards" class="report-panel space-y-4">
+                    <!-- Quick Car Finder -->
+                    <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
+                        <h3 class="text-white text-sm font-bold mb-3 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                            Tìm kiếm vị trí xe trong bãi cơ khí (Quick Vehicle Finder)
+                        </h3>
+                        
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <div class="flex-1 relative">
+                                <input type="text" id="search-query-input" placeholder="Nhập biển số xe hoặc mã thẻ từ (ví dụ: 30H-88877, 51G-12345...)" class="w-full bg-slate-950 border border-slate-750 rounded-lg px-3 py-2 text-xs text-slate-250 font-mono outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30">
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="runCarFinder()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-colors shadow-md flex items-center gap-1.5 shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                                    Tìm vị trí
+                                </button>
+                                <button onclick="clearCarFinder()" class="px-3 py-2 bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-bold rounded-lg border border-slate-700 transition-colors shrink-0">
+                                    Xóa
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Results Box -->
+                        <div id="finder-result-container" class="mt-4 p-4 rounded-lg border border-slate-800 bg-slate-950/40 min-h-[100px] flex items-center justify-center text-center">
+                            <div class="text-slate-550 space-y-2 py-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-slate-700"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                                <div class="text-xs font-mono">Nhập thông tin biển số hoặc số thẻ từ để dò vị trí pallet đỗ xe cơ khí thực tế.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- History lookup table -->
+                    <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
+                        <div class="border-b border-slate-800 pb-3 mb-4">
+                            <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                                Tra cứu lịch sử gửi xe &amp; Nhận diện biển số (History Log)
+                            </h3>
+                        </div>
+
+                        <!-- Advanced Filters Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4 p-4 rounded-lg bg-slate-950/60 border border-slate-800">
+                            <div>
+                                <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Từ ngày</label>
+                                <input type="date" id="history-date-from" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1 text-xs text-slate-200 font-mono outline-none focus:border-blue-500" value="2026-06-01">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Đến ngày</label>
+                                <input type="date" id="history-date-to" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1 text-xs text-slate-200 font-mono outline-none focus:border-blue-500" value="2026-06-16">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Số thẻ / Biển số</label>
+                                <input type="text" id="history-search-text" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono placeholder-slate-600 outline-none focus:border-blue-500" placeholder="VD: 30H-88877...">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Hành động</label>
+                                <select id="history-filter-action" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500">
+                                    <option value="all">Tất cả hành động</option>
+                                    <option value="in">Gửi xe vào</option>
+                                    <option value="out">Lấy xe ra</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Trạng thái đỗ</label>
+                                <select id="history-filter-status" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500">
+                                    <option value="all">Tất cả trạng thái</option>
+                                    <option value="parked">Đang gửi (trong bãi)</option>
+                                    <option value="retrieved">Đã lấy ra (xuất bãi)</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end gap-2">
+                                <button onclick="filterHistoryTable()" class="flex-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition-colors font-semibold flex items-center justify-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                                    Tra cứu
+                                </button>
+                                <button onclick="resetHistoryFilters()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-400 text-xs font-bold rounded border border-slate-700 transition-colors" title="Đặt lại bộ lọc">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Results count indicator -->
+                        <div class="text-[10px] font-mono text-slate-500 mb-2 flex justify-between items-center px-1">
+                            <span id="history-results-count">Tìm thấy 5 lượt gửi xe khớp với điều kiện</span>
+                            <span class="text-blue-400">● Thời gian cập nhật: Realtime</span>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table id="history-data-table" class="w-full text-xs font-mono">
+                                <thead class="border-b border-slate-700/60 bg-slate-800/30">
+                                    <tr>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thời gian</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Mã thẻ từ</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Biển số xe</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Loại xe</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Vị trí đỗ</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Loại hành động</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Phí thanh toán</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 08:42:10" data-card="0009124451" data-plate="30H-88877" data-action="in" data-status="parked" data-zone="B" data-block="Block B-01">
+                                        <td class="px-3 py-2 text-slate-400">16-06-2026 08:42:10</td>
+                                        <td class="px-3 py-2 text-slate-300">0009124451</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-bold">30H-88877</td>
+                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
+                                        <td class="px-3 py-2 text-blue-400 font-bold">Zone 2 (B) · Block B-01 (P03)</td>
+                                        <td class="px-3 py-2"><span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Gửi xe vào</span></td>
+                                        <td class="px-3 py-2 text-slate-300">25,000 đ</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 08:41:55" data-card="0009124458" data-plate="51G-12345" data-action="in" data-status="parked" data-zone="A" data-block="Block A-02">
+                                        <td class="px-3 py-2 text-slate-400">16-06-2026 08:41:55</td>
+                                        <td class="px-3 py-2 text-slate-300">0009124458</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-bold">51G-12345</td>
+                                        <td class="px-3 py-2 text-slate-400">SUV</td>
+                                        <td class="px-3 py-2 text-blue-400 font-bold">Zone 1 (A) · Block A-02 (P02)</td>
+                                        <td class="px-3 py-2"><span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Gửi xe vào</span></td>
+                                        <td class="px-3 py-2 text-slate-300">40,000 đ</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 08:35:12" data-card="0009121102" data-plate="29A-99999" data-action="out" data-status="retrieved" data-zone="A" data-block="Block A-01">
+                                        <td class="px-3 py-2 text-slate-400">16-06-2026 08:35:12</td>
+                                        <td class="px-3 py-2 text-slate-300">0009121102</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-bold">29A-99999</td>
+                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
+                                        <td class="px-3 py-2 text-slate-400">Zone 1 (A) · Block A-01 (P01)</td>
+                                        <td class="px-3 py-2"><span class="text-amber-400 font-semibold bg-amber-950/20 border border-amber-800/30 px-1.5 py-0.5 rounded text-[10px]">Lấy xe ra</span></td>
+                                        <td class="px-3 py-2 text-slate-300">50,000 đ</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 07:15:30" data-card="0009123388" data-plate="92B-11223" data-action="in" data-status="parked" data-zone="C" data-block="Block B-04">
+                                        <td class="px-3 py-2 text-slate-400">16-06-2026 07:15:30</td>
+                                        <td class="px-3 py-2 text-slate-300">0009123388</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-bold">92B-11223</td>
+                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
+                                        <td class="px-3 py-2 text-blue-400 font-bold">Zone 3 (C) · Block B-04 (P05)</td>
+                                        <td class="px-3 py-2"><span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Gửi xe vào</span></td>
+                                        <td class="px-3 py-2 text-slate-300">25,000 đ</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 06:30:11" data-card="0009129944" data-plate="79C-44556" data-action="out" data-status="retrieved" data-zone="C" data-block="Block C-02">
+                                        <td class="px-3 py-2 text-slate-400">16-06-2026 06:30:11</td>
+                                        <td class="px-3 py-2 text-slate-300">0009129944</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-bold">79C-44556</td>
+                                        <td class="px-3 py-2 text-slate-400">SUV</td>
+                                        <td class="px-3 py-2 text-slate-400">Zone 3 (C) · Block C-02 (P04)</td>
+                                        <td class="px-3 py-2"><span class="text-amber-400 font-semibold bg-amber-950/20 border border-amber-800/30 px-1.5 py-0.5 rounded text-[10px]">Lấy xe ra</span></td>
+                                        <td class="px-3 py-2 text-slate-300">80,000 đ</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Revenue Panel (Remote Revenue Report Upgrade) -->
+                <div id="panel-revenue" class="report-panel space-y-4">
+                    <!-- Key Revenue Metrics Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 shadow-md">
+                            <span class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">TỔNG DOANH THU THÁNG</span>
+                            <span class="block text-lg font-bold text-yellow-400 font-mono mt-1">145,280,000 đ</span>
+                            <span class="text-[10px] text-emerald-400 font-mono mt-1 block">▲ +12% so với tháng trước</span>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 shadow-md">
+                            <span class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">PHÍ TRUNG BÌNH SUV</span>
+                            <span class="block text-lg font-bold text-blue-400 font-mono mt-1">40,000 đ / lượt</span>
+                            <span class="text-[10px] text-slate-400 font-mono mt-1 block">Áp dụng theo khung giờ</span>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 shadow-md">
+                            <span class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">PHÍ TRUNG BÌNH SEDAN</span>
+                            <span class="block text-lg font-bold text-emerald-400 font-mono mt-1">25,000 đ / lượt</span>
+                            <span class="text-[10px] text-slate-400 font-mono mt-1 block">Vé lượt tiêu chuẩn</span>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 shadow-md">
+                            <span class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">TỶ LỆ QR / KHÔNG TIỀN MẶT</span>
+                            <span class="block text-lg font-bold text-indigo-400 font-mono mt-1">84.5% lượt quét</span>
+                            <span class="text-[10px] text-emerald-400 font-mono mt-1 block">Tích hợp VNPay/Momo</span>
+                        </div>
+                    </div>
+
+                    <!-- CSS-Based Revenue Bar Chart -->
+                    <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
+                        <h3 class="text-white text-sm font-bold mb-4">Lưu lượng doanh thu theo ngày gần đây (Triệu VND)</h3>
+                        <div class="grid grid-cols-7 gap-3 items-end min-h-[150px] border-b border-slate-800 px-3 pb-2 pt-6">
+                            <!-- Mon -->
+                            <div class="text-center space-y-2">
+                                <span class="text-[9px] font-mono text-slate-400">8.4M</span>
+                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 84px; max-width: 45px;"></div>
+                                <span class="text-[10px] text-slate-300 block">T2</span>
+                            </div>
+                            <!-- Tue -->
+                            <div class="text-center space-y-2">
+                                <span class="text-[9px] font-mono text-slate-400">9.5M</span>
+                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 95px; max-width: 45px;"></div>
+                                <span class="text-[10px] text-slate-300 block">T3</span>
+                            </div>
+                            <!-- Wed -->
+                            <div class="text-center space-y-2">
+                                <span class="text-[9px] font-mono text-slate-400">10.2M</span>
+                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 102px; max-width: 45px;"></div>
+                                <span class="text-[10px] text-slate-300 block">T4</span>
+                            </div>
+                            <!-- Thu -->
+                            <div class="text-center space-y-2">
+                                <span class="text-[9px] font-mono text-slate-400">12.1M</span>
+                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 121px; max-width: 45px;"></div>
+                                <span class="text-[10px] text-slate-300 block">T5</span>
+                            </div>
+                            <!-- Fri -->
+                            <div class="text-center space-y-2">
+                                <span class="text-[9px] font-mono text-slate-400">14.5M</span>
+                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 145px; max-width: 45px;"></div>
+                                <span class="text-[10px] text-slate-300 block">T6</span>
+                            </div>
+                            <!-- Sat -->
+                            <div class="text-center space-y-2">
+                                <span class="text-[9px] font-mono text-slate-400">7.2M</span>
+                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 72px; max-width: 45px;"></div>
+                                <span class="text-[10px] text-slate-300 block">T7</span>
+                            </div>
+                            <!-- Sun -->
+                            <div class="text-center space-y-2">
+                                <span class="text-[9px] font-mono text-slate-400">5.8M</span>
+                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 58px; max-width: 45px;"></div>
+                                <span class="text-[10px] text-slate-300 block">CN</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transaction List -->
+                    <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
+                        <h3 class="text-white text-sm font-bold mb-3">Nhật ký giao dịch doanh thu (Gần nhất)</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs font-mono">
+                                <thead class="border-b border-slate-700/60 bg-slate-800/30">
+                                    <tr>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thời gian ra</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Mã thẻ từ</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Biển số</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Loại xe</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thời gian đỗ</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thành tiền (VND)</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thanh toán</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-slate-850 hover:bg-slate-800/10">
+                                        <td class="px-3 py-2 text-slate-400">08:35:12</td>
+                                        <td class="px-3 py-2 text-slate-300">0009121102</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-bold">29A-99999</td>
+                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
+                                        <td class="px-3 py-2 text-slate-300">2 giờ 15 phút</td>
+                                        <td class="px-3 py-2 text-yellow-400 font-bold">30,000</td>
+                                        <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">QR Momo</span></td>
+                                    </tr>
+                                    <tr class="border-b border-slate-850 hover:bg-slate-800/10">
+                                        <td class="px-3 py-2 text-slate-400">08:21:40</td>
+                                        <td class="px-3 py-2 text-slate-300">0009120894</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-bold">51F-77788</td>
+                                        <td class="px-3 py-2 text-slate-400">SUV</td>
+                                        <td class="px-3 py-2 text-slate-300">5 giờ 40 phút</td>
+                                        <td class="px-3 py-2 text-yellow-400 font-bold">60,000</td>
+                                        <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 border border-blue-500/30 text-blue-400">VNPay QR</span></td>
+                                    </tr>
+                                    <tr class="border-b border-slate-850 hover:bg-slate-800/10">
+                                        <td class="px-3 py-2 text-slate-400">07:55:01</td>
+                                        <td class="px-3 py-2 text-slate-300">0009110052</td>
+                                        <td class="px-3 py-2 text-emerald-400 font-bold">34A-65432</td>
+                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
+                                        <td class="px-3 py-2 text-slate-300">0 giờ 45 phút</td>
+                                        <td class="px-3 py-2 text-yellow-400 font-bold">15,000</td>
+                                        <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">Tiền mặt</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Pallet Frequency Panel (Sơ đồ nhiệt tần suất hoạt động) -->
+                <div id="panel-pallet-frequency" class="report-panel space-y-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                        <!-- Heatmap Grid (Col span 2) -->
+                        <div class="lg:col-span-2 bg-slate-900/50 rounded-xl border border-slate-800 p-5 space-y-4 shadow-xl">
+                            <div class="flex flex-wrap justify-between items-center gap-3 border-b border-slate-800 pb-3">
+                                <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    Bản đồ tần suất hoạt động khay đỗ Pallet
+                                </h3>
+                                <div class="flex items-center gap-2">
+                                    <select id="freq-zone" onchange="updateFreqBlockOptions()" class="bg-slate-800 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-slate-200 outline-none focus:border-blue-500 font-mono">
+                                        <option value="1">Zone 1 (Hầm B1)</option>
+                                        <option value="2">Zone 2 (Hầm B2)</option>
+                                        <option value="3">Zone 3 (Hầm B3)</option>
+                                        <option value="4">Zone 4 (Tầng 1)</option>
+                                        <option value="5">Zone 5 (Hầm B4)</option>
+                                        <option value="6">Zone 6 (Tầng 2)</option>
+                                    </select>
+                                    <select id="freq-block" onchange="loadFreqBlock()" class="bg-slate-800 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-slate-200 outline-none focus:border-blue-500 font-mono">
+                                        <!-- Options generated dynamically -->
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Heatmap Legend -->
+                            <div class="flex flex-wrap justify-between items-center gap-2 text-[10px] font-mono text-slate-405 p-2.5 bg-slate-950/45 rounded-lg border border-slate-850">
+                                <div class="flex items-center gap-4">
+                                    <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-red-950/60 border border-red-700 shadow-[0_0_8px_rgba(239,68,68,0.3)] animate-pulse inline-block"></span> Cần bảo trì (&gt;100 chu kỳ)</span>
+                                    <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-amber-950/60 border border-amber-700 inline-block"></span> Trung bình (50-99 chu kỳ)</span>
+                                    <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-green-950/60 border border-green-700 inline-block"></span> Tốt (&lt;50 chu kỳ)</span>
+                                </div>
+                                <span class="text-slate-500">Mốc giới hạn: 100 chu kỳ</span>
+                            </div>
+
+                            <!-- Heatmap Grid Container -->
+                            <div id="pallet-heatmap-grid" class="grid grid-cols-4 gap-3 py-3">
+                                <!-- Rendered dynamically by javascript -->
+                            </div>
+                        </div>
+
+                        <!-- Pallet Details Panel (Col span 1) -->
+                        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl flex flex-col justify-between min-h-[380px]">
+                            <div class="space-y-4">
+                                <div class="border-b border-slate-800 pb-3">
+                                    <h4 class="text-white text-xs font-bold uppercase tracking-wider font-mono" id="freq-panel-title">Chi tiết khay đỗ</h4>
+                                    <p class="text-slate-500 text-[10px] font-mono mt-0.5" id="freq-panel-subtitle">Vui lòng chọn một pallet trên sơ đồ</p>
+                                </div>
+
+                                <div class="space-y-3" id="freq-panel-detail-content">
+                                    <div class="text-slate-500 text-xs font-mono py-8 text-center">
+                                        Click chọn một khay đỗ Pallet trên sơ đồ nhiệt để xem thống kê chu kỳ hao mòn và thực hiện xử lý.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 border-t border-slate-800 space-y-2 hidden" id="freq-panel-actions">
+                                <button id="btn-reset-pallet" onclick="execResetPalletCycle()" class="w-full px-3 py-2 bg-green-700 hover:bg-green-600 text-white text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1.5 shadow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                                    Bảo trì &amp; Reset chu kỳ chạy
+                                </button>
+                                <button onclick="createPalletWorkOrder()" class="w-full px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1.5 shadow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+                                    Lập lịch bảo trì (Work Order)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Styling for premium report tabs */
+    .report-tab-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: left;
+        color: rgb(148, 163, 184);
+        background: transparent;
+        border: 1px solid transparent;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .report-tab-btn:hover {
+        color: #ffffff;
+        background-color: rgba(51, 65, 85, 0.3);
+    }
+
+    .report-tab-btn.active {
+        color: rgb(96, 165, 250);
+        background-color: rgba(37, 99, 235, 0.1);
+        border: 1px solid rgba(37, 99, 235, 0.25);
+    }
+
+    /* Tab panels control */
+    .report-panel {
+        display: none !important;
+    }
+
+    .report-panel.active {
+        display: block !important;
+    }
+
+    /* SCADA glowing animations for maintenance frequency heatmap */
+    @@keyframes heat-glow-red {
+        0%, 100% { 
+            box-shadow: 0 0 4px rgba(239, 68, 68, 0.15); 
+            border-color: rgba(239, 68, 68, 0.4); 
+            background-color: rgba(127, 29, 29, 0.2);
+        }
+        50% { 
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.45); 
+            border-color: rgba(239, 68, 68, 0.8); 
+            background-color: rgba(127, 29, 29, 0.35);
+        }
+    }
+    .pallet-glow-red {
+        animation: heat-glow-red 2s infinite ease-in-out;
+    }
+</style>
+
+<script>
+    // Tab switching controller
+    function switchReportTab(tabId) {
+        // 1. Hide all panels
+        const panels = document.querySelectorAll('.report-panel');
+        panels.forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // 2. Deactivate all buttons
+        const buttons = document.querySelectorAll('.report-tab-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // 3. Activate selected panel and button
+        document.getElementById('panel-' + tabId).classList.add('active');
+        document.getElementById('btn-' + tabId).classList.add('active');
+    }
+
+    // Dynamic mock database for car finder
+    const mockVehicles = {
+        '51G-12345': { plate: '51G-12345', card: '0009124458', type: 'SUV', zone: 'Zone 1 (Zone A)', block: 'Block A-02', slot: 'Pallet P02', checkIn: '16-06-2026 08:41:55', duration: '14 giờ 15 phút', status: 'ONLINE - Sẵn sàng' },
+        '51G12345': { plate: '51G-12345', card: '0009124458', type: 'SUV', zone: 'Zone 1 (Zone A)', block: 'Block A-02', slot: 'Pallet P02', checkIn: '16-06-2026 08:41:55', duration: '14 giờ 15 phút', status: 'ONLINE - Sẵn sàng' },
+        '0009124458': { plate: '51G-12345', card: '0009124458', type: 'SUV', zone: 'Zone 1 (Zone A)', block: 'Block A-02', slot: 'Pallet P02', checkIn: '16-06-2026 08:41:55', duration: '14 giờ 15 phút', status: 'ONLINE - Sẵn sàng' },
+        
+        '30H-88877': { plate: '30H-88877', card: '0009124451', type: 'Sedan', zone: 'Zone 2 (Zone B)', block: 'Block B-01', slot: 'Pallet P03', checkIn: '16-06-2026 08:42:10', duration: '14 giờ 14 phút', status: 'ONLINE - Sẵn sàng' },
+        '30H88877': { plate: '30H-88877', card: '0009124451', type: 'Sedan', zone: 'Zone 2 (Zone B)', block: 'Block B-01', slot: 'Pallet P03', checkIn: '16-06-2026 08:42:10', duration: '14 giờ 14 phút', status: 'ONLINE - Sẵn sàng' },
+        '0009124451': { plate: '30H-88877', card: '0009124451', type: 'Sedan', zone: 'Zone 2 (Zone B)', block: 'Block B-01', slot: 'Pallet P03', checkIn: '16-06-2026 08:42:10', duration: '14 giờ 14 phút', status: 'ONLINE - Sẵn sàng' },
+        
+        '92B-11223': { plate: '92B-11223', card: '0009123388', type: 'Sedan', zone: 'Zone 3 (Zone C)', block: 'Block B-04', slot: 'Pallet P05', checkIn: '16-06-2026 07:15:30', duration: '15 giờ 41 phút', status: 'ONLINE - Sẵn sàng' },
+        '92B11223': { plate: '92B-11223', card: '0009123388', type: 'Sedan', zone: 'Zone 3 (Zone C)', block: 'Block B-04', slot: 'Pallet P05', checkIn: '16-06-2026 07:15:30', duration: '15 giờ 41 phút', status: 'ONLINE - Sẵn sàng' },
+        '0009123388': { plate: '92B-11223', card: '0009123388', type: 'Sedan', zone: 'Zone 3 (Zone C)', block: 'Block B-04', slot: 'Pallet P05', checkIn: '16-06-2026 07:15:30', duration: '15 giờ 41 phút', status: 'ONLINE - Sẵn sàng' }
+    };
+
+    function runCarFinder() {
+        const query = document.getElementById('search-query-input').value.trim().toUpperCase();
+        const container = document.getElementById('finder-result-container');
+        
+        if (!query) {
+            alert('Vui lòng nhập biển số xe hoặc số thẻ từ!');
+            return;
+        }
+
+        let vehicle = mockVehicles[query] || mockVehicles[query.replace(/[-\s]/g, '')];
+
+        // Fallback mockup generator for other queries
+        if (!vehicle) {
+            const mockCard = "0009" + Math.floor(100000 + Math.random() * 900000);
+            vehicle = {
+                plate: query.includes('-') ? query : (query.length > 5 ? query.slice(0, 3) + '-' + query.slice(3) : query),
+                card: mockCard,
+                type: query.toLowerCase().includes('suv') ? 'SUV' : 'Sedan',
+                zone: 'Zone 1 (Zone A)',
+                block: 'Block A-01',
+                slot: 'Pallet P08',
+                checkIn: '16-06-2026 09:30:00',
+                duration: '12 giờ 28 phút',
+                status: 'ONLINE - Sẵn sàng'
+            };
+        }
+
+        // Generate mechanical grid: 3 levels, 4 columns
+        let gridHtml = `
+            <div class="mt-4 p-4 rounded-lg bg-slate-950 border border-slate-800">
+                <div class="text-[10px] text-slate-400 font-bold font-mono mb-2.5 uppercase flex items-center gap-1.5 justify-between">
+                    <span class="flex items-center gap-1.5 text-yellow-400">
+                        <span class="w-2 h-2 rounded-full bg-yellow-500 animate-ping"></span>
+                        VỊ TRÍ THỰC TẾ TRÊN PALLET: ${vehicle.slot} (${vehicle.block})
+                    </span>
+                    <span class="text-slate-500 text-[9px] font-normal font-mono normal-case">Nhấp nháy màu vàng là vị trí xe đỗ</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2 max-w-xl mx-auto py-2">
+        `;
+
+        for (let lvl = 3; lvl >= 1; lvl--) {
+            for (let col = 1; col <= 4; col++) {
+                const slotNum = (lvl - 1) * 4 + col;
+                const slotId = 'Pallet P' + String(slotNum).padStart(2, '0');
+                
+                // Compare slot name (e.g. "Pallet P03" vs "P03" or "Pallet P03")
+                const isTarget = (vehicle.slot === slotId || 
+                                  vehicle.slot.replace('Pallet ', '') === 'P' + String(slotNum).padStart(2, '0') || 
+                                  vehicle.slot.includes('P' + String(slotNum).padStart(2, '0')));
+                
+                let slotClass = '';
+                let slotContent = '';
+                
+                if (isTarget) {
+                    slotClass = 'bg-yellow-500/10 border-2 border-yellow-500 text-yellow-300 shadow-[0_0_15px_rgba(234,179,8,0.35)] animate-pulse';
+                    slotContent = `
+                        <div class="flex flex-col items-center justify-center h-16 p-1 relative">
+                            <span class="absolute top-1 left-1 text-[7px] font-mono text-yellow-500 font-bold bg-yellow-950/80 px-1 rounded border border-yellow-850/30">T${lvl}-C${col}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-yellow-400 mt-1.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+                            <span class="text-[9px] font-bold mt-1 text-yellow-400 font-mono tracking-tight">${slotId}</span>
+                        </div>
+                    `;
+                } else {
+                    // Mock occupied vs empty slots
+                    const isOccupied = (slotNum === 1 || slotNum === 4 || slotNum === 6 || slotNum === 7 || slotNum === 10 || slotNum === 11);
+                    if (isOccupied) {
+                        slotClass = 'bg-slate-900/40 border border-slate-800 text-slate-500';
+                        slotContent = `
+                            <div class="flex flex-col items-center justify-center h-16 p-1 relative opacity-40">
+                                <span class="absolute top-1 left-1 text-[7px] font-mono text-slate-655 bg-slate-950 px-1 rounded">T${lvl}-C${col}</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-slate-500 mt-1.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+                                <span class="text-[8px] mt-1 font-mono">${slotId}</span>
+                            </div>
+                        `;
+                    } else {
+                        slotClass = 'bg-slate-950 border border-dashed border-slate-800/80 text-slate-600 hover:border-slate-700/60 transition-colors';
+                        slotContent = `
+                            <div class="flex flex-col items-center justify-center h-16 p-1 relative">
+                                <span class="absolute top-1 left-1 text-[7px] font-mono text-slate-700">T${lvl}-C${col}</span>
+                                <span class="text-[8px] font-bold font-mono mt-1 text-slate-500">${slotId}</span>
+                                <span class="text-[7px] text-slate-700 font-mono font-bold mt-0.5">TRỐNG</span>
+                            </div>
+                        `;
+                    }
+                }
+                
+                gridHtml += `<div class="rounded-lg transition-all ${slotClass}">${slotContent}</div>`;
+            }
+        }
+
+        gridHtml += `
+                </div>
+                <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[9px] font-mono text-slate-550 mt-1 pt-2 border-t border-slate-900/60">
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-yellow-500/10 border border-yellow-500 animate-pulse inline-block"></span> Vị trí xe tìm thấy</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-slate-900/40 border border-slate-800 inline-block"></span> Pallet có xe khác</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded border border-dashed border-slate-800 inline-block"></span> Pallet trống</span>
+                </div>
+            </div>
+        `;
+
+        // Render found card with premium design and RELEASE trigger
+        container.innerHTML = `
+            <div class="w-full text-left p-4 bg-slate-900 rounded-lg border border-slate-800 space-y-4 shadow-2xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pb-3 border-b border-slate-800/60">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-500/10 text-blue-400 rounded-md border border-blue-500/25">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/15 border border-blue-500/30 text-blue-400 font-mono">${vehicle.type}</span>
+                                <h4 class="text-sm font-bold text-white tracking-wider font-mono">${vehicle.plate}</h4>
+                            </div>
+                            <div class="text-[10px] text-slate-500 font-mono mt-0.5">Mã thẻ RFID: ${vehicle.card}</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            ${vehicle.status}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Specs -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
+                    <div class="p-2.5 bg-slate-950/60 rounded border border-slate-850">
+                        <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Khu vực (Zone)</span>
+                        <span class="text-slate-200 font-bold block mt-0.5">${vehicle.zone}</span>
+                    </div>
+                    <div class="p-2.5 bg-slate-950/60 rounded border border-slate-850">
+                        <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Khối đỗ (Block)</span>
+                        <span class="text-blue-400 font-bold block mt-0.5">${vehicle.block}</span>
+                    </div>
+                    <div class="p-2.5 bg-slate-950/60 rounded border border-slate-850">
+                        <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Khay đỗ (Pallet)</span>
+                        <span class="text-yellow-400 font-bold block mt-0.5">${vehicle.slot}</span>
+                    </div>
+                    <div class="p-2.5 bg-slate-950/60 rounded border border-slate-850">
+                        <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Thời lượng đỗ</span>
+                        <span class="text-slate-200 font-bold block mt-0.5">${vehicle.duration}</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Mechanical Grid -->
+                ${gridHtml}
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-2">
+                    <div class="text-[10px] text-slate-500 font-mono">
+                        Thời gian vào: <span class="text-slate-400">${vehicle.checkIn}</span>
+                    </div>
+                    <button id="btn-release-car" onclick="simulateReleaseCar('${vehicle.slot}', '${vehicle.block}')" class="w-full sm:w-auto px-4 py-2 bg-amber-600 hover:bg-amber-500 text-slate-955 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+                        Yêu cầu trả xe từ xa (Retrieve)
+                    </button>
+                </div>
+
+                <!-- Simulation progress container -->
+                <div id="release-progress-box" class="hidden p-4 rounded-lg bg-slate-950 border border-slate-800 space-y-2 mt-4">
+                    <div class="flex justify-between items-center text-[10px] font-mono">
+                        <span id="release-status-text" class="text-amber-400 font-bold">Đang gửi lệnh PLC xoay mâm...</span>
+                        <span id="release-percent-text" class="text-slate-400">0%</span>
+                    </div>
+                    <div class="h-2 bg-slate-900 rounded-full overflow-hidden">
+                        <div id="release-progress-bar" class="h-full bg-amber-500 transition-all duration-300" style="width: 0%;"></div>
+                    </div>
+                    <div class="text-[9px] text-slate-500 font-mono flex justify-between">
+                        <span>Lệnh: release_pallet(${vehicle.slot})</span>
+                        <span id="release-timer-text">Dự kiến: 3s</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function clearCarFinder() {
+        document.getElementById('search-query-input').value = '';
+        const container = document.getElementById('finder-result-container');
+        container.innerHTML = `
+            <div class="text-slate-550 space-y-2 py-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-slate-700"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                <div class="text-xs font-mono">Nhập thông tin biển số hoặc số thẻ từ để dò vị trí pallet đỗ xe cơ khí thực tế.</div>
+            </div>
+        `;
+    }
+
+    function simulateReleaseCar(slot, block) {
+        const btn = document.getElementById('btn-release-car');
+        const progressBox = document.getElementById('release-progress-box');
+        const progressBar = document.getElementById('release-progress-bar');
+        const percentText = document.getElementById('release-percent-text');
+        const statusText = document.getElementById('release-status-text');
+        const timerText = document.getElementById('release-timer-text');
+        
+        btn.disabled = true;
+        btn.className = "w-full sm:w-auto px-4 py-2 bg-slate-800 text-slate-500 text-xs font-bold rounded-lg cursor-not-allowed flex items-center justify-center gap-1.5 border border-slate-750";
+        progressBox.classList.remove('hidden');
+
+        let percent = 0;
+        const interval = setInterval(() => {
+            percent += 10;
+            progressBar.style.width = percent + "%";
+            percentText.innerText = percent + "%";
+
+            if (percent === 30) {
+                statusText.innerText = "PLC phản hồi: Mâm xoay đang hạ...";
+                timerText.innerText = "Dự kiến: 2s";
+            } else if (percent === 70) {
+                statusText.innerText = "Cảm biến an toàn: Đường ra thông thoáng...";
+                timerText.innerText = "Dự kiến: 1s";
+            } else if (percent === 100) {
+                clearInterval(interval);
+                statusText.innerText = "Lấy xe thành công! Mâm đỗ đã hạ về mặt đất.";
+                statusText.className = "text-emerald-400 font-bold";
+                progressBar.className = "h-full bg-emerald-500 transition-all duration-300";
+                timerText.innerText = "Hoàn thành";
+                
+                // Add log entry to history table dynamically
+                const now = new Date();
+                const dateStr = now.getDate().toString().padStart(2, '0') + '-' + (now.getMonth() + 1).toString().padStart(2, '0') + '-' + now.getFullYear();
+                const timeStr = dateStr + " " + now.toLocaleTimeString('vi-VN', { hour12: false });
+                const table = document.getElementById('history-data-table').getElementsByTagName('tbody')[0];
+                const newRow = table.insertRow(0);
+                newRow.className = "border-b border-slate-850 hover:bg-slate-800/20";
+                
+                // Set data attributes on the newly inserted row for the advanced filters
+                newRow.setAttribute('data-time', timeStr);
+                newRow.setAttribute('data-card', 'RFID-Release');
+                newRow.setAttribute('data-plate', 'RELEASED');
+                newRow.setAttribute('data-action', 'out');
+                newRow.setAttribute('data-status', 'retrieved');
+                newRow.setAttribute('data-zone', block.includes('A-') ? 'A' : (block.includes('B-') ? 'B' : 'C'));
+                newRow.setAttribute('data-block', block.trim());
+
+                newRow.innerHTML = `
+                    <td class="px-3 py-2 text-slate-400">${timeStr}</td>
+                    <td class="px-3 py-2 text-slate-300">RFID-Release</td>
+                    <td class="px-3 py-2 text-emerald-400 font-bold">RELEASED</td>
+                    <td class="px-3 py-2 text-slate-400">Sedan/SUV</td>
+                    <td class="px-3 py-2 text-blue-400 font-bold">${block} (${slot})</td>
+                    <td class="px-3 py-2"><span class="text-amber-400 font-semibold bg-amber-950/20 border border-amber-800/30 px-1.5 py-0.5 rounded text-[10px]">Lấy xe ra</span></td>
+                    <td class="px-3 py-2 text-slate-300">0 đ (Remote)</td>
+                `;
+
+                // Recalculate count
+                filterHistoryTable();
+
+                setTimeout(() => {
+                    progressBox.classList.add('hidden');
+                    btn.disabled = false;
+                    btn.className = "w-full sm:w-auto px-4 py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/10";
+                    statusText.className = "text-amber-400 font-bold";
+                    statusText.innerText = "Đang gửi lệnh PLC xoay mâm...";
+                    progressBar.className = "h-full bg-amber-500 transition-all duration-300";
+                    progressBar.style.width = "0%";
+                    percentText.innerText = "0%";
+                }, 4000);
+            }
+        }, 300);
+    }
+
+    function filterHistoryTable() {
+        const dateFrom = document.getElementById('history-date-from').value;
+        const dateTo = document.getElementById('history-date-to').value;
+        const searchText = document.getElementById('history-search-text').value.toUpperCase().trim();
+        const action = document.getElementById('history-filter-action').value;
+        const status = document.getElementById('history-filter-status').value;
+        const zone = document.getElementById('history-filter-zone').value;
+
+        const table = document.getElementById('history-data-table');
+        const trs = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        let count = 0;
+
+        for (let i = 0; i < trs.length; i++) {
+            const tr = trs[i];
+            
+            // Get data attributes or fallback to parsing row
+            const rowTime = tr.getAttribute('data-time') || tr.cells[0].textContent.trim();
+            const rowCard = (tr.getAttribute('data-card') || tr.cells[1].textContent.trim()).toUpperCase();
+            const rowPlate = (tr.getAttribute('data-plate') || tr.cells[2].textContent.trim()).toUpperCase();
+            const rowAction = tr.getAttribute('data-action') || (tr.cells[5].textContent.includes('Gửi') ? 'in' : 'out');
+            const rowStatus = tr.getAttribute('data-status') || (tr.cells[5].textContent.includes('Gửi') ? 'parked' : 'retrieved');
+            const locationText = tr.cells[4].textContent.toUpperCase();
+            
+            // Extract Zone
+            let rowZone = tr.getAttribute('data-zone') || '';
+            if (!rowZone) {
+                if (locationText.includes('ZONE 1') || locationText.includes('(A)')) rowZone = 'A';
+                else if (locationText.includes('ZONE 2') || locationText.includes('(B)')) rowZone = 'B';
+                else if (locationText.includes('ZONE 3') || locationText.includes('(C)')) rowZone = 'C';
+                else if (locationText.includes('ZONE 4') || locationText.includes('(D)')) rowZone = 'D';
+            }
+
+            // Extract Date (from DD-MM-YYYY HH:mm:ss to YYYY-MM-DD)
+            let rowDate = '';
+            try {
+                const datePart = rowTime.split(' ')[0];
+                const parts = datePart.split('-');
+                rowDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            } catch (e) {
+                rowDate = '';
+            }
+
+            let match = true;
+
+            // 1. Date From filter
+            if (dateFrom && rowDate && rowDate < dateFrom) match = false;
+            
+            // 2. Date To filter
+            if (dateTo && rowDate && rowDate > dateTo) match = false;
+
+            // 3. Search text (Card or Plate)
+            if (searchText) {
+                if (rowCard.indexOf(searchText) === -1 && rowPlate.indexOf(searchText) === -1) {
+                    match = false;
+                }
+            }
+
+            // 4. Action type
+            if (action !== 'all' && rowAction !== action) match = false;
+
+            // 5. Status
+            if (status !== 'all' && rowStatus !== status) match = false;
+
+            // 6. Zone
+            if (zone !== 'all' && rowZone !== zone) match = false;
+
+            if (match) {
+                tr.style.display = "";
+                count++;
+            } else {
+                tr.style.display = "none";
+            }
+        }
+
+        document.getElementById('history-results-count').innerText = `Tìm thấy ${count} lượt gửi xe khớp với điều kiện`;
+    }
+
+    function resetHistoryFilters() {
+        document.getElementById('history-date-from').value = '2026-06-01';
+        document.getElementById('history-date-to').value = '2026-06-16';
+        document.getElementById('history-search-text').value = '';
+        document.getElementById('history-filter-action').value = 'all';
+        document.getElementById('history-filter-status').value = 'all';
+        document.getElementById('history-filter-zone').value = 'all';
+        filterHistoryTable();
+    }
+
+    // =========================================================================
+    // PALLET FREQUENCY HEATMAP & MAINTENANCE LOGIC
+    // =========================================================================
+
+    // Default mock data mapping block ID to array of 12 numbers representing cycles
+    const defaultPalletCycles = {
+        // Zone 1
+        "Block A-01": [12, 115, 34, 75, 45, 88, 120, 20, 15, 60, 95, 30],
+        "Block A-02": [25, 48, 102, 12, 55, 67, 10, 92, 110, 40, 15, 8],
+        "Block A-03": [85, 30, 42, 130, 90, 22, 60, 47, 12, 105, 50, 70],
+        // Zone 2
+        "Block A-04": [115, 102, 80, 40, 95, 125, 20, 15, 60, 30, 45, 90],
+        "Block B-01": [34, 52, 110, 75, 88, 15, 42, 130, 60, 25, 95, 10],
+        "Block B-02": [45, 85, 20, 65, 12, 105, 78, 30, 90, 115, 50, 40],
+        // Zone 3
+        "Block B-03": [90, 110, 35, 60, 80, 25, 125, 45, 15, 55, 95, 30],
+        "Block B-04": [12, 48, 135, 92, 55, 70, 8, 102, 65, 30, 115, 18],
+        "Block C-01": [85, 25, 60, 105, 40, 115, 75, 22, 50, 90, 10, 125],
+        // Zone 4
+        "Block C-02": [130, 45, 20, 95, 70, 15, 110, 88, 35, 60, 102, 25],
+        "Block C-03": [40, 80, 115, 10, 55, 90, 30, 125, 65, 105, 22, 50],
+        "Block C-04": [15, 102, 75, 120, 45, 60, 88, 25, 135, 30, 95, 8],
+        // Zone 5
+        "Block D-01": [95, 115, 20, 55, 10, 85, 125, 40, 60, 30, 102, 70],
+        "Block D-02": [50, 30, 110, 75, 120, 45, 15, 90, 88, 135, 65, 22],
+        "Block D-03": [105, 12, 80, 95, 25, 115, 60, 130, 42, 50, 78, 35],
+        // Zone 6
+        "Block E-01": [35, 90, 115, 20, 125, 55, 70, 10, 102, 65, 80, 45],
+        "Block E-02": [88, 110, 40, 135, 15, 95, 30, 120, 50, 75, 22, 60],
+        "Block E-03": [12, 65, 102, 80, 45, 115, 25, 90, 130, 35, 55, 105]
+    };
+
+    const zoneBlocksMap = {
+        "1": ["Block A-01", "Block A-02", "Block A-03"],
+        "2": ["Block A-04", "Block B-01", "Block B-02"],
+        "3": ["Block B-03", "Block B-04", "Block C-01"],
+        "4": ["Block C-02", "Block C-03", "Block C-04"],
+        "5": ["Block D-01", "Block D-02", "Block D-03"],
+        "6": ["Block E-01", "Block E-02", "Block E-03"]
+    };
+
+    let palletCycleData = {};
+    let selectedBlockId = null;
+    let selectedSlotIdx = null;
+
+    // Load data from localStorage or initialize defaults
+    function initPalletFrequencyData() {
+        const stored = localStorage.getItem('palletCycleData');
+        if (stored) {
+            try {
+                palletCycleData = JSON.parse(stored);
+            } catch (e) {
+                console.error("Lỗi parse dữ liệu từ localStorage:", e);
+                palletCycleData = JSON.parse(JSON.stringify(defaultPalletCycles));
+            }
+        } else {
+            palletCycleData = JSON.parse(JSON.stringify(defaultPalletCycles));
+            localStorage.setItem('palletCycleData', JSON.stringify(palletCycleData));
+        }
+    }
+
+    // Populate blocks selection dropdown based on chosen zone
+    function updateFreqBlockOptions() {
+        const zoneId = document.getElementById('freq-zone').value;
+        const blocksList = zoneBlocksMap[zoneId] || [];
+        const blockSelect = document.getElementById('freq-block');
+        
+        blockSelect.innerHTML = '';
+        blocksList.forEach(block => {
+            const opt = document.createElement('option');
+            opt.value = block;
+            opt.textContent = block;
+            blockSelect.appendChild(opt);
+        });
+
+        loadFreqBlock();
+    }
+
+    // Handle block change
+    function loadFreqBlock() {
+        const blockId = document.getElementById('freq-block').value;
+        if (!blockId) return;
+
+        // Reset details panel selection state
+        selectedBlockId = blockId;
+        selectedSlotIdx = null;
+        
+        // Render Heatmap
+        renderPalletHeatmap(blockId);
+
+        // Reset detail panel UI
+        document.getElementById('freq-panel-title').textContent = "Chi tiết khay đỗ";
+        document.getElementById('freq-panel-subtitle').textContent = "Vui lòng chọn một pallet trên sơ đồ";
+        document.getElementById('freq-panel-detail-content').innerHTML = `
+            <div class="text-slate-500 text-xs font-mono py-8 text-center">
+                Click chọn một khay đỗ Pallet trên sơ đồ nhiệt để xem thống kê chu kỳ hao mòn và thực hiện xử lý.
+            </div>
+        `;
+        document.getElementById('freq-panel-actions').classList.add('hidden');
+    }
+
+    // Render 12-pallet grid heatmap
+    function renderPalletHeatmap(blockId) {
+        const gridContainer = document.getElementById('pallet-heatmap-grid');
+        gridContainer.innerHTML = '';
+
+        const cyclesArray = palletCycleData[blockId] || Array(12).fill(0);
+
+        // Render levels 3 down to 1
+        for (let lvl = 3; lvl >= 1; lvl--) {
+            for (let col = 1; col <= 4; col++) {
+                const slotNum = (lvl - 1) * 4 + col;
+                const slotIdx = slotNum - 1;
+                const slotId = 'P' + String(slotNum).padStart(2, '0');
+                const cycles = cyclesArray[slotIdx] || 0;
+
+                // Color coding rules:
+                // Red (>100): pallet-glow-red, Yellow (50-99), Green (<50)
+                let cellClass = "";
+                let statusBadge = "";
+                
+                if (cycles >= 100) {
+                    cellClass = "pallet-glow-red border border-red-500/80 text-red-300";
+                    statusBadge = `<span class="px-1 py-0.5 rounded text-[8px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">CẦN BẢO TRÌ</span>`;
+                } else if (cycles >= 50) {
+                    cellClass = "bg-amber-950/20 border border-amber-500/40 text-amber-300";
+                    statusBadge = `<span class="px-1 py-0.5 rounded text-[8px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">CẢNH BÁO</span>`;
+                } else {
+                    cellClass = "bg-green-950/15 border border-green-500/30 text-green-300";
+                    statusBadge = `<span class="px-1 py-0.5 rounded text-[8px] font-bold bg-green-500/20 text-green-400 border border-green-500/30">TỐT</span>`;
+                }
+
+                // Check selection outline
+                const isSelected = (selectedSlotIdx === slotIdx);
+                const selectStyle = isSelected ? "ring-2 ring-blue-500 border-transparent shadow-[0_0_15px_rgba(59,130,246,0.5)] scale-[1.02] z-10" : "";
+
+                const cellHtml = `
+                    <div onclick="clickFreqPallet('${blockId}', ${slotIdx})" 
+                         class="rounded-lg p-2.5 transition-all duration-200 cursor-pointer flex flex-col justify-between h-20 font-mono select-none ${cellClass} ${selectStyle}">
+                        <div class="flex justify-between items-start">
+                            <span class="text-[9px] font-bold text-slate-400">T${lvl}-C${col}</span>
+                            ${statusBadge}
+                        </div>
+                        <div class="mt-1.5 flex justify-between items-end">
+                            <span class="text-xs font-bold font-mono tracking-wider">${slotId}</span>
+                            <span class="text-[10px] text-right font-semibold">${cycles} c.y</span>
+                        </div>
+                    </div>
+                `;
+                
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = cellHtml;
+                gridContainer.appendChild(wrapper.firstElementChild);
+            }
+        }
+    }
+
+    // Handle click on pallet
+    function clickFreqPallet(blockId, slotIdx) {
+        selectedBlockId = blockId;
+        selectedSlotIdx = slotIdx;
+        
+        // Re-render heatmap to show selection borders
+        renderPalletHeatmap(blockId);
+
+        const cyclesArray = palletCycleData[blockId] || Array(12).fill(0);
+        const cycles = cyclesArray[slotIdx] || 0;
+        
+        const lvl = Math.floor(slotIdx / 4) + 1;
+        const col = (slotIdx % 4) + 1;
+        const palletName = `Pallet P${String(slotIdx + 1).padStart(2, '0')}`;
+        
+        // Calculate wear percentage (cycles / 100 * 100)
+        const wearRate = Math.round((cycles / 100) * 100);
+
+        // Update detail panel elements
+        document.getElementById('freq-panel-title').textContent = `${palletName}`;
+        document.getElementById('freq-panel-subtitle').textContent = `${blockId} · Vị trí: Tầng ${lvl} - Cột ${col}`;
+
+        let statusClass = "";
+        let statusText = "";
+        let descText = "";
+
+        if (cycles >= 100) {
+            statusClass = "bg-red-500/10 border-red-500/30 text-red-400";
+            statusText = "CẦN BẢO TRÌ NGAY";
+            descText = `Pallet đã vượt quá giới hạn an toàn (${cycles}/100 chu kỳ). Có nguy cơ cao mài mòn bạc đạn và giãn xích kéo pallet. Yêu cầu cử kỹ thuật viên kiểm tra thực địa lập tức.`;
+        } else if (cycles >= 50) {
+            statusClass = "bg-amber-500/10 border-amber-500/30 text-amber-400";
+            statusText = "CẢNH BÁO BẢO TRÌ";
+            descText = `Tần suất hoạt động đạt mức trung bình cao (${cycles}/100 chu kỳ). Cần theo dõi sát hoặc có thể cân nhắc bảo trì sớm để phân bổ đều tải trọng cho hệ thống.`;
+        } else {
+            statusClass = "bg-emerald-500/10 border-emerald-500/30 text-emerald-400";
+            statusText = "HOẠT ĐỘNG TỐT";
+            descText = `Khay đỗ hoạt động dưới ngưỡng cảnh báo (${cycles}/100 chu kỳ). Thiết bị cơ khí đang ở trạng thái tối ưu, không cần bảo dưỡng đột xuất.`;
+        }
+
+        const detailsHtml = `
+            <div class="space-y-4 font-mono text-xs mt-2">
+                <!-- Status Row -->
+                <div class="flex justify-between items-center p-2 rounded-lg border ${statusClass}">
+                    <span class="font-bold">Trạng thái:</span>
+                    <span class="font-bold">${statusText}</span>
+                </div>
+
+                <!-- Specs -->
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                    <div class="bg-slate-950/60 p-2.5 rounded border border-slate-850">
+                        <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Chu kỳ đã chạy</span>
+                        <span class="text-slate-200 font-bold block mt-0.5">${cycles} / 100 chu kỳ</span>
+                    </div>
+                    <div class="bg-slate-950/60 p-2.5 rounded border border-slate-850">
+                        <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Mức hao mòn cơ khí</span>
+                        <span class="font-bold block mt-0.5 ${cycles >= 100 ? 'text-red-400' : (cycles >= 50 ? 'text-amber-400' : 'text-emerald-400')}">${wearRate}%</span>
+                    </div>
+                </div>
+
+                <!-- Wear level progress bar -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-[10px] text-slate-400">
+                        <span>Hao mòn hệ thống</span>
+                        <span>${wearRate}%</span>
+                    </div>
+                    <div class="h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                        <div class="h-full rounded-full transition-all duration-300 ${cycles >= 100 ? 'bg-red-500' : (cycles >= 50 ? 'bg-amber-500' : 'bg-green-500')}" style="width: ${Math.min(wearRate, 100)}%;"></div>
+                    </div>
+                </div>
+
+                <!-- Diagnosis Note -->
+                <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-850 space-y-1 text-slate-400 text-[11px] leading-relaxed">
+                    <span class="text-slate-200 font-bold block uppercase text-[10px]">Đánh giá thiết bị:</span>
+                    ${descText}
+                </div>
+            </div>
+        `;
+
+        document.getElementById('freq-panel-detail-content').innerHTML = detailsHtml;
+
+        // Show action buttons
+        document.getElementById('freq-panel-actions').classList.remove('hidden');
+    }
+
+    // Reset cycles of selected pallet to 0
+    function execResetPalletCycle() {
+        if (!selectedBlockId || selectedSlotIdx === null) {
+            alert("Vui lòng chọn một pallet trên sơ đồ trước!");
+            return;
+        }
+
+        const palletName = `Pallet P${String(selectedSlotIdx + 1).padStart(2, '0')}`;
+        
+        // Confirm action
+        if (confirm(`Bạn có chắc chắn muốn xác nhận đã hoàn tất bảo trì và Reset chu kỳ chạy của ${palletName} (${selectedBlockId}) về 0?`)) {
+            // Update data
+            palletCycleData[selectedBlockId][selectedSlotIdx] = 0;
+            
+            // Save to localStorage
+            localStorage.setItem('palletCycleData', JSON.stringify(palletCycleData));
+            
+            // Alert success
+            alert(`Bảo trì thành công! Đã reset chu kỳ chạy của ${palletName} về 0. Trạng thái Pallet đã cập nhật về HOẠT ĐỘNG TỐT.`);
+            
+            // Re-render
+            renderPalletHeatmap(selectedBlockId);
+            
+            // Refresh details panel
+            clickFreqPallet(selectedBlockId, selectedSlotIdx);
+        }
+    }
+
+    // Mock create Work Order
+    function createPalletWorkOrder() {
+        if (!selectedBlockId || selectedSlotIdx === null) {
+            alert("Vui lòng chọn một pallet trên sơ đồ trước!");
+            return;
+        }
+
+        const palletName = `Pallet P${String(selectedSlotIdx + 1).padStart(2, '0')}`;
+        const woId = "WO-" + Math.floor(100000 + Math.random() * 900000);
+        
+        alert(`Đã lập lịch Work Order bảo trì thành công!\nMã số: ${woId}\nThiết bị: ${palletName} - ${selectedBlockId}\nNội dung công việc: Kiểm tra bảo dưỡng cơ khí & xích tải.\nYêu cầu đã gửi tới kỹ thuật ca trực.`);
+    }
+
+    // Initialize on page load
+    document.addEventListener("DOMContentLoaded", () => {
+        initPalletFrequencyData();
+        updateFreqBlockOptions();
+    });
+</script>

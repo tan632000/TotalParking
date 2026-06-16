@@ -21,114 +21,92 @@
 
 
     switch (zoneId)
-
     {
-
         case 1:
-
-            zoneName = "Zone A";
-
+            zoneName = "Zone 1 (Zone A)";
             zoneLocation = "Hầm B1";
-
             zoneColor = "rgb(234, 179, 8)"; // yellow
-
             zoneColorMuted = "rgba(234, 179, 8, 0.15)";
-
-            totalSlots = 44; occupiedSlots = 28; availableSlots = 16; errorSlots = 3;
-
+            totalSlots = 34; occupiedSlots = 23; availableSlots = 11; errorSlots = 1;
             break;
-
         case 2:
-
-            zoneName = "Zone B";
-
+            zoneName = "Zone 2 (Zone B)";
             zoneLocation = "Hầm B2";
-
             zoneColor = "rgb(148, 163, 184)"; // grey
-
             zoneColorMuted = "rgba(148, 163, 184, 0.15)";
-
-            totalSlots = 48; occupiedSlots = 30; availableSlots = 18; errorSlots = 2;
-
+            totalSlots = 38; occupiedSlots = 20; availableSlots = 18; errorSlots = 2;
             break;
-
         case 3:
-
-            zoneName = "Zone C";
-
-            zoneLocation = "Tầng trệt";
-
+            zoneName = "Zone 3 (Zone C)";
+            zoneLocation = "Hầm B3";
             zoneColor = "rgb(249, 115, 22)"; // orange
-
             zoneColorMuted = "rgba(249, 115, 22, 0.15)";
-
-            totalSlots = 32; occupiedSlots = 7; availableSlots = 24; errorSlots = 1;
-
+            totalSlots = 40; occupiedSlots = 10; availableSlots = 30; errorSlots = 0;
             break;
-
         case 4:
-
-            zoneName = "Zone D";
-
+            zoneName = "Zone 4 (Zone D)";
             zoneLocation = "Tầng 1";
-
             zoneColor = "rgb(168, 85, 247)"; // purple
-
             zoneColorMuted = "rgba(168, 85, 247, 0.15)";
-
-            totalSlots = 50; occupiedSlots = 35; availableSlots = 15; errorSlots = 2;
-
+            totalSlots = 44; occupiedSlots = 10; availableSlots = 34; errorSlots = 1;
             break;
-
         case 5:
-
-            zoneName = "Zone E";
-
-            zoneLocation = "Tầng 2";
-
+            zoneName = "Zone 5 (Zone E)";
+            zoneLocation = "Hầm B4";
             zoneColor = "rgb(6, 182, 212)"; // cyan
-
             zoneColorMuted = "rgba(6, 182, 212, 0.15)";
-
-            totalSlots = 44; occupiedSlots = 28; availableSlots = 16; errorSlots = 2;
-
+            totalSlots = 30; occupiedSlots = 15; availableSlots = 15; errorSlots = 0;
             break;
-
         case 6:
-
-            zoneName = "Zone F";
-
-            zoneLocation = "Tầng hầm B3";
-
+        default:
+            zoneName = "Zone 6 (Zone F)";
+            zoneLocation = "Tầng 2";
             zoneColor = "rgb(34, 197, 94)"; // green
-
             zoneColorMuted = "rgba(34, 197, 94, 0.15)";
-
-            totalSlots = 44; occupiedSlots = 28; availableSlots = 16; errorSlots = 1;
-
+            totalSlots = 35; occupiedSlots = 25; availableSlots = 10; errorSlots = 1;
             break;
-
     }
-
-
 
     int occupancyRate = (int)Math.Round((double)occupiedSlots / totalSlots * 100);
 
-
-
-    var blocks = new List<dynamic>
-
-{
-
-        new { Name = "Block " + (char)('A' + zoneId - 1) + "-01", Status = "Running", StatusText = "Đang chạy", Capacity = (zoneId == 3 ? 8 : 12), Parked = (zoneId == 3 ? 1 : 9), Suv = (zoneId == 3 ? 0 : 4), Sedan = (zoneId == 3 ? 1 : 5), Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = (zoneId == 3 ? 13 : 75), Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" },
-
-        new { Name = "Block " + (char)('A' + zoneId - 1) + "-02", Status = "Warning", StatusText = "Cảnh báo", Capacity = (zoneId == 3 ? 8 : 12), Parked = (zoneId == 3 ? 6 : 6), Suv = (zoneId == 3 ? 6 : 2), Sedan = (zoneId == 3 ? 0 : 4), Mode = "Tự động", ProgressColor = "rgb(132, 204, 22)", ProgressRate = (zoneId == 3 ? 75 : 50), Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" },
-
-        new { Name = "Block " + (char)('A' + zoneId - 1) + "-03", Status = "Error", StatusText = "Lỗi", Capacity = (zoneId == 3 ? 8 : 10), Parked = (zoneId == 3 ? 0 : 8), Suv = (zoneId == 3 ? 0 : 3), Sedan = (zoneId == 3 ? 0 : 5), Mode = "Tự động", ProgressColor = "rgb(220, 38, 38)", ProgressRate = (zoneId == 3 ? 0 : 80), Dot1 = "bg-emerald-500", Dot2 = "bg-rose-500" },
-
-        new { Name = "Block " + (char)('A' + zoneId - 1) + "-04", Status = "Normal", StatusText = "Bình thường", Capacity = (zoneId == 3 ? 8 : 10), Parked = (zoneId == 3 ? 0 : 5), Suv = (zoneId == 3 ? 0 : 2), Sedan = (zoneId == 3 ? 0 : 3), Mode = "Bằng tay", ProgressColor = "rgb(6, 182, 212)", ProgressRate = (zoneId == 3 ? 0 : 50), Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" }
-
-    }; }
+    var blocks = new List<dynamic>();
+    if (zoneId == 1)
+    {
+        blocks.Add(new { Name = "Block A-01", Status = "Running", StatusText = "Đang chạy", Capacity = 12, Parked = 9, Suv = 4, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(37, 99, 235)", ProgressRate = 75, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block A-02", Status = "Normal", StatusText = "Bình thường", Capacity = 12, Parked = 6, Suv = 2, Sedan = 4, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block A-03", Status = "Warning", StatusText = "Cảnh báo", Capacity = 10, Parked = 8, Suv = 3, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(245, 158, 11)", ProgressRate = 80, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+    }
+    else if (zoneId == 2)
+    {
+        blocks.Add(new { Name = "Block A-04", Status = "Error", StatusText = "Lỗi", Capacity = 10, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(220, 38, 38)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-rose-500" });
+        blocks.Add(new { Name = "Block B-01", Status = "Normal", StatusText = "Bình thường", Capacity = 14, Parked = 7, Suv = 3, Sedan = 4, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block B-02", Status = "Normal", StatusText = "Bình thường", Capacity = 14, Parked = 8, Suv = 3, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 57, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+    }
+    else if (zoneId == 3)
+    {
+        blocks.Add(new { Name = "Block B-03", Status = "Maintenance", StatusText = "Bảo trì", Capacity = 12, Parked = 0, Suv = 0, Sedan = 0, Mode = "Bằng tay", ProgressColor = "rgb(124, 58, 237)", ProgressRate = 0, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block B-04", Status = "Normal", StatusText = "Bình thường", Capacity = 12, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 42, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block C-01", Status = "Normal", StatusText = "Bình thường", Capacity = 16, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 31, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+    }
+    else if (zoneId == 4)
+    {
+        blocks.Add(new { Name = "Block C-02", Status = "Normal", StatusText = "Bình thường", Capacity = 16, Parked = 6, Suv = 2, Sedan = 4, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 38, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block C-03", Status = "Offline", StatusText = "Offline", Capacity = 14, Parked = 0, Suv = 0, Sedan = 0, Mode = "Bằng tay", ProgressColor = "rgb(100, 116, 139)", ProgressRate = 0, Dot1 = "bg-slate-500", Dot2 = "bg-slate-500" });
+        blocks.Add(new { Name = "Block C-04", Status = "Normal", StatusText = "Bình thường", Capacity = 14, Parked = 4, Suv = 2, Sedan = 2, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 29, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+    }
+    else if (zoneId == 5)
+    {
+        blocks.Add(new { Name = "Block D-01", Status = "Normal", StatusText = "Bình thường", Capacity = 10, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block D-02", Status = "Normal", StatusText = "Bình thường", Capacity = 10, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block D-03", Status = "Normal", StatusText = "Bình thường", Capacity = 10, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+    }
+    else
+    {
+        blocks.Add(new { Name = "Block E-01", Status = "Normal", StatusText = "Bình thường", Capacity = 15, Parked = 10, Suv = 4, Sedan = 6, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 66, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block E-02", Status = "Normal", StatusText = "Bình thường", Capacity = 10, Parked = 8, Suv = 3, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 80, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+        blocks.Add(new { Name = "Block E-03", Status = "Warning", StatusText = "Cảnh báo", Capacity = 10, Parked = 7, Suv = 3, Sedan = 4, Mode = "Tự động", ProgressColor = "rgb(245, 158, 11)", ProgressRate = 70, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
+    }
+}
 
 
 
@@ -182,7 +160,7 @@
 
                     <span class="text-slate-500 shrink-0">|</span>
 
-                    <span class="text-xs text-slate-300 font-medium shrink-0">4 blocks · @occupiedSlots/@totalSlots pallets · @occupancyRate%</span>
+                    <span class="text-xs text-slate-300 font-medium shrink-0">3 blocks · @occupiedSlots/@totalSlots pallets · @occupancyRate%</span>
 
                 </div>
 
@@ -204,11 +182,11 @@
 
 
 
-            <!-- 4 Blocks Grid (Matches mockup layout & styling) -->
+            <!-- 3 Blocks Grid (Matches mockup layout & styling) -->
 
             <div class="px-4 pb-4 border-t border-slate-700/40">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mt-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-3">
 
                     @foreach (var block in blocks)
 
@@ -257,6 +235,26 @@
                                 badgeStyle = "border: 1px solid rgba(220, 38, 38, 0.4); background: rgba(220, 38, 38, 0.1); color: rgb(252, 165, 165);";
 
                                 modeStyle = "color: rgb(148, 163, 184);"; // grey for Bằng tay
+
+                                break;
+
+                            case "Maintenance":
+
+                                cardClass = "status-maintenance";
+
+                                badgeStyle = "border: 1px solid rgba(124, 58, 237, 0.4); background: rgba(124, 58, 237, 0.1); color: rgb(192, 132, 252);";
+
+                                modeStyle = "color: rgb(148, 163, 184);"; // grey for Bằng tay
+
+                                break;
+
+                            case "Offline":
+
+                                cardClass = "status-offline";
+
+                                badgeStyle = "border: 1px solid rgba(100, 116, 139, 0.4); background: rgba(100, 116, 139, 0.1); color: rgb(148, 163, 184);";
+
+                                modeStyle = "color: rgb(148, 163, 184);";
 
                                 break;
 
@@ -854,6 +852,18 @@
 
         }
 
+        .block-card-btn.status-maintenance {
+
+            border: 1px solid rgba(124, 58, 237, 0.22) !important;
+
+        }
+
+        .block-card-btn.status-offline {
+
+            border: 1px solid rgba(100, 116, 139, 0.22) !important;
+
+        }
+
 
 
         /* Hover effects - colorful borders and light backgrounds with glow shadow (matching Overview page scale transition) */
@@ -909,6 +919,26 @@
             background-color: rgba(220, 38, 38, 0.08) !important;
 
             box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3), 0 4px 6px -4px rgba(220, 38, 38, 0.3), 0 0 12px rgba(220, 38, 38, 0.2) !important;
+
+        }
+
+        .block-card-btn.status-maintenance:hover {
+
+            border-color: rgb(124, 58, 237) !important;
+
+            background-color: rgba(124, 58, 237, 0.08) !important;
+
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3), 0 4px 6px -4px rgba(124, 58, 237, 0.3), 0 0 12px rgba(124, 58, 237, 0.2) !important;
+
+        }
+
+        .block-card-btn.status-offline:hover {
+
+            border-color: rgb(100, 116, 139) !important;
+
+            background-color: rgba(100, 116, 139, 0.08) !important;
+
+            box-shadow: 0 10px 15px -3px rgba(100, 116, 139, 0.3), 0 4px 6px -4px rgba(100, 116, 139, 0.3), 0 0 12px rgba(100, 116, 139, 0.2) !important;
 
         }
 
@@ -1320,6 +1350,18 @@
 
             statusBadge.className += " border-[#dc2626]/40 bg-[#dc2626]/10 text-[#fca5a5]";
 
+        } else if (statusType === "Maintenance") {
+
+            statusBadge.innerHTML = "🔧 " + statusText;
+
+            statusBadge.className += " border-[#7c3aed]/40 bg-[#7c3aed]/10 text-[#c084fc]";
+
+        } else if (statusType === "Offline") {
+
+            statusBadge.innerHTML = "🔌 " + statusText;
+
+            statusBadge.className += " border-[#64748b]/40 bg-[#64748b]/10 text-[#94a3b8]";
+
         }
 
 
@@ -1374,19 +1416,15 @@
 
         // Standard plate lists to display beautiful Vietnamese licenses
 
-        var plates = ["51G-12345", "30H-88877", "43A-56789", "92B-11223", "79C-44556", "51K-99001", "51G-12345", "30H-88877", "43A-56789"];
+        var plates = ["51G-12345", "30H-88877", "43A-56789", "92B-11223", "79C-44556", "51K-99001", "34A-65432", "51F-77788", "29A-99999"];
 
         var times = ["06:00", "08:13", "10:26", "12:39", "14:52", "16:05", "06:18", "08:31", "10:44"];
 
 
 
-        var isZone3 = (document.getElementById("modalZoneVal").innerText === "Zone C");
-
-
-
         for (var i = 1; i <= capacity; i++) {
 
-            var slotNumber = isZone3 ? (39 + i) : i;
+            var slotNumber = i;
 
             var numStr = slotNumber < 10 ? "0" + slotNumber : slotNumber;
 
@@ -1408,77 +1446,35 @@
 
             var isLocked = false;
 
-            var isLime = false;
-
-            var isCyan = false;
 
 
+            if (i <= parked) {
 
-            if (isZone3) {
+                isOccupied = true;
 
-                if (blockName.endsWith("C-01")) {
+                // Distribute SUV and Sedan based on block stats
 
-                    if (slotNumber === 40) {
+                type = (i <= suv) ? "SUV" : "Sedan";
 
-                        isOccupied = true;
+                plate = plates[(i - 1) % plates.length];
 
-                        type = "Sedan";
+                time = times[(i - 1) % times.length];
 
-                        plate = plates[(slotNumber - 1) % plates.length];
+            } else if (statusType === "Error" && i === capacity) {
 
-                        time = times[(slotNumber - 1) % times.length];
+                isError = true;
 
-                    }
+            } else if (statusType === "Maintenance" || statusType === "Offline") {
 
-                } else if (blockName.endsWith("C-02")) {
+                isLocked = true;
 
-                    if (slotNumber >= 41 && slotNumber <= 47 && slotNumber !== 44) {
+            } else if (statusType === "Warning" && i === capacity - 1) {
 
-                        isLime = true;
+                isError = true;
 
-                        type = "SUV";
+            } else if (i === capacity) {
 
-                        plate = plates[(slotNumber - 1) % plates.length];
-
-                        time = times[(slotNumber - 1) % times.length];
-
-                    }
-
-                } else if (blockName.endsWith("C-03")) {
-
-                    if (slotNumber === 44) {
-
-                        isError = true;
-
-                    }
-
-                } else if (blockName.endsWith("C-04")) {
-
-                    // C-04 represents Cyan but has no cyan cars, so all remain Empty/white
-
-                }
-
-            } else {
-
-                if (i <= parked) {
-
-                    isOccupied = true;
-
-                    type = (i % 2 === 0) ? "Sedan" : "SUV";
-
-                    plate = plates[(i - 1) % plates.length];
-
-                    time = times[(i - 1) % times.length];
-
-                } else if (i === parked + 1 && statusType !== "Normal") {
-
-                    isError = true;
-
-                } else if (i === capacity) {
-
-                    isLocked = true;
-
-                }
+                isLocked = true;
 
             }
 
@@ -1515,66 +1511,6 @@
                     <div class="pallet-plate" style="color: rgb(74, 222, 128);">${plate}</div>
 
                     <div class="pallet-time" style="color: rgb(22, 163, 74);">${time}</div>
-
-                `;
-
-            } else if (isLime) {
-
-                card.className = "pallet-card lime";
-
-                card.innerHTML = `
-
-                    <div class="pallet-header">
-
-                        <svg style="width: 12px; height: 12px; flex-shrink: 0; display: inline-block; color: rgb(163, 230, 53);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
-
-                            <circle cx="7" cy="17" r="2" />
-
-                            <circle cx="17" cy="17" r="2" />
-
-                        </svg>
-
-                        <span>${pCode}</span>
-
-                    </div>
-
-                    <div class="pallet-type">${type}</div>
-
-                    <div class="pallet-plate" style="color: rgb(163, 230, 53);">${plate}</div>
-
-                    <div class="pallet-time" style="color: rgb(132, 204, 22);">${time}</div>
-
-                `;
-
-            } else if (isCyan) {
-
-                card.className = "pallet-card cyan";
-
-                card.innerHTML = `
-
-                    <div class="pallet-header">
-
-                        <svg style="width: 12px; height: 12px; flex-shrink: 0; display: inline-block; color: rgb(34, 211, 238);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
-
-                            <circle cx="7" cy="17" r="2" />
-
-                            <circle cx="17" cy="17" r="2" />
-
-                        </svg>
-
-                        <span>${pCode}</span>
-
-                    </div>
-
-                    <div class="pallet-type">${type}</div>
-
-                    <div class="pallet-plate" style="color: rgb(34, 211, 238);">${plate}</div>
-
-                    <div class="pallet-time" style="color: rgb(6, 182, 212);">${time}</div>
 
                 `;
 
@@ -1641,6 +1577,8 @@
                 `;
 
             }
+
+
 
             grid.appendChild(card);
 

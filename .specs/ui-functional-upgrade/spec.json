@@ -1,0 +1,107 @@
+{
+  "feature_name": "ui-functional-upgrade",
+  "created_at": "2026-06-16T20:13:00+07:00",
+  "updated_at": "2026-06-16T20:13:00+07:00",
+  "language": "vi",
+  "status": "in_progress",
+  "phase": "tasks-generated",
+  "current_phase": "tasks",
+  "priority": "P1",
+  "effort": "11.5h",
+  "tags": [],
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": false
+    }
+  },
+  "scope_lock": {
+    "source": "Nâng cấp giao diện SCADA hiện tại của bãi xe trên nền tảng ASP.NET MVC đáp ứng mục 4.2 của tài liệu document_spec.docx.",
+    "in_scope": [
+      "Nâng cấp FloorPlan.cshtml lên 4 phân khu (Zone A, B, C, D)",
+      "Định cấu hình Zones.cshtml và ZoneDetail.cshtml tương thích 4 phân khu và hiển thị sơ đồ khay Pallet",
+      "Nâng cấp Routing.cshtml hiển thị đầy đủ trạng thái kết nối trạm AI-VDS, LED đầu/trong hầm, PGS và máy phát thẻ tự động",
+      "Cập nhật Alarms.cshtml phân nhóm cảnh báo 3 loại",
+      "Cập nhật Reports.cshtml hiển thị báo cáo doanh thu từ xa, Pareto lỗi",
+      "Đồng bộ hóa Cards.cshtml, Settings.cshtml, Remote.cshtml theo đặc tả phân quyền người dùng"
+    ],
+    "out_of_scope": [
+      "Kết nối API thực với phần cứng PLC và camera AI-VDS",
+      "Triển khai cơ sở dữ liệu lưu trữ 2 năm thật sự (giai đoạn này chỉ cần thiết kế UI/UX tĩnh)"
+    ],
+    "expansion_policy": "requires-user-approval"
+  },
+  "dependencies": {
+    "blockedBy": [],
+    "blocks": []
+  },
+  "task_files": [
+    "tasks/task-R1-01-floorplan-four-zones.md",
+    "tasks/task-R1-02-zones-svg-detail.md",
+    "task-R2-01-routing-integration.md",
+    "task-R3-01-reports-revenue-and-pareto.md",
+    "task-R4-01-remote-and-settings.md"
+  ],
+  "task_registry": {
+    "tasks/task-R1-01-floorplan-four-zones.md": {
+      "id": "R1-01",
+      "title": "Cập nhật FloorPlan hiển thị 4 Zone đỗ xe chính và liên kết",
+      "status": "pending",
+      "dependencies": [],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R1-02-zones-svg-detail.md": {
+      "id": "R1-02",
+      "title": "Cấu hình bản đồ tương tác SVG 4 Zone lớn và Modal Pallet Grid",
+      "status": "pending",
+      "dependencies": [
+        "tasks/task-R1-01-floorplan-four-zones.md"
+      ],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R2-01-routing-integration.md": {
+      "id": "R2-01",
+      "title": "Cập nhật giao diện điều hướng xe, thêm trạng thái LED Matrix ngoài trời, PGS và máy phát thẻ tự động",
+      "status": "pending",
+      "dependencies": [],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R3-01-reports-revenue-and-pareto.md": {
+      "id": "R3-01",
+      "title": "Bổ sung báo cáo doanh thu từ xa, biểu đồ Pareto lỗi và phân cấp cảnh báo 3 loại",
+      "status": "pending",
+      "dependencies": [],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    },
+    "tasks/task-R4-01-remote-and-settings.md": {
+      "id": "R4-01",
+      "title": "Cập nhật phân quyền người dùng, Audit Log và đồng bộ thẻ từ",
+      "status": "pending",
+      "dependencies": [],
+      "blocker": null,
+      "started_at": null,
+      "completed_at": null,
+      "last_updated_at": null
+    }
+  }
+}

@@ -1,5 +1,381 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
 
-<div class="p-5 pb-10 min-h-[calc(100vh-3.5rem)]"><div class="space-y-4"><div class="flex items-center justify-between"><h1 class="text-slate-100 text-lg font-semibold">Điều hướng xe – AI-VDS</h1><div class="flex items-center gap-2 px-3 py-1.5 rounded border text-xs font-mono border-amber-700/50 bg-amber-950/40 text-amber-300 animate-pulse"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi-off"><path d="M12 20h.01"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path><path d="M5 12.859a10 10 0 0 1 5.17-2.69"></path><path d="M19 12.859a10 10 0 0 0-2.007-1.523"></path><path d="M2 8.82a15 15 0 0 1 4.177-2.643"></path><path d="M22 8.82a15 15 0 0 0-11.288-3.764"></path><path d="m2 2 20 20"></path></svg>AI-VDS – Fallback Mode</div></div><div class="flex items-start gap-3 p-3 rounded border border-amber-700/60 bg-amber-950/20"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert text-amber-400 mt-0.5 shrink-0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg><div><div class="text-amber-300 text-xs font-semibold">AI-VDS đang trong chế độ Fallback</div><div class="text-amber-500 text-[11px] font-mono mt-0.5">Dữ liệu cuối cùng nhận lúc: 08:15:44 – Hệ thống sẽ phân loại thủ công</div></div></div><div class="grid grid-cols-1 xl:grid-cols-3 gap-4"><div class="bg-card rounded border border-slate-700/50 p-4"><h3 class="text-slate-300 text-xs font-semibold mb-3 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-navigation"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>Mật độ Zone</h3><div class="space-y-3"><div class="bg-slate-800/40 rounded p-3 border border-slate-700/40"><div class="flex justify-between items-start mb-2"><div><div class="text-slate-200 text-xs font-medium">Zone A – Hầm B1</div><div class="text-slate-500 text-[10px] font-mono">16 chỗ trống</div></div><span class="text-xs font-mono font-bold text-amber-400">64%</span></div><div class="h-1.5 bg-slate-700 rounded-full overflow-hidden mb-1.5"><div class="h-full transition-all bg-amber-500" style="width: 64%;"></div></div><div class="text-[10px] font-mono text-slate-500">SUV: 4 chỗ</div></div><div class="bg-slate-800/40 rounded p-3 border border-slate-700/40"><div class="flex justify-between items-start mb-2"><div><div class="text-slate-200 text-xs font-medium">Zone B – Hầm B2</div><div class="text-slate-500 text-[10px] font-mono">32 chỗ trống</div></div><span class="text-xs font-mono font-bold text-green-400">38%</span></div><div class="h-1.5 bg-slate-700 rounded-full overflow-hidden mb-1.5"><div class="h-full transition-all bg-green-500" style="width: 38%;"></div></div><div class="text-[10px] font-mono text-slate-500">SUV: 24 chỗ</div></div><div class="bg-slate-800/40 rounded p-3 border border-slate-700/40"><div class="flex justify-between items-start mb-2"><div><div class="text-slate-200 text-xs font-medium">Zone C – Hầm B3</div><div class="text-slate-500 text-[10px] font-mono">45 chỗ trống</div></div><span class="text-xs font-mono font-bold text-green-400">25%</span></div><div class="h-1.5 bg-slate-700 rounded-full overflow-hidden mb-1.5"><div class="h-full transition-all bg-green-500" style="width: 25%;"></div></div><div class="text-[10px] font-mono text-slate-500">SUV: 25 chỗ</div></div></div></div><div class="xl:col-span-2 space-y-3"><div class="bg-card rounded border border-slate-700/50 p-4"><h3 class="text-slate-300 text-xs font-semibold mb-3 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera text-blue-400"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>Phân loại xe đang vào</h3><div class="space-y-2"><div class="flex items-center gap-3 p-3 rounded border transition-colors border-slate-700/40 bg-slate-800/30"><div class="shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car text-blue-400"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2"><span class="text-xs font-mono font-semibold text-blue-400">SUV</span><span class="text-slate-400 text-xs font-mono">51G-12345</span><span class="text-slate-500 text-[10px] font-mono">1.65m · 4.85m</span></div><div class="flex items-center gap-1 mt-0.5 text-[11px] font-mono text-slate-400"><span>Đề xuất:</span><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg><span class="text-blue-300">Block A-02</span><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg><span class="text-green-300">Thẻ: SUV-Card</span></div></div><div class="flex items-center gap-1 text-slate-500 text-[10px] font-mono shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>08:41:55</div><div><span class="text-[10px] font-mono px-2 py-0.5 rounded border border-green-700/50 bg-green-950/40 text-green-300">Đã phân loại</span></div></div><div class="flex items-center gap-3 p-3 rounded border transition-colors border-blue-600/50 bg-blue-950/20 animate-pulse"><div class="shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car text-green-400"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2"><span class="text-xs font-mono font-semibold text-green-400">Sedan</span><span class="text-slate-400 text-xs font-mono">30H-88877</span><span class="text-slate-500 text-[10px] font-mono">1.45m · 4.20m</span></div><div class="flex items-center gap-1 mt-0.5 text-[11px] font-mono text-slate-400"><span>Đề xuất:</span><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg><span class="text-blue-300">Block B-01</span><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg><span class="text-green-300">Thẻ: Sedan-Card</span></div></div><div class="flex items-center gap-1 text-slate-500 text-[10px] font-mono shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>08:42:10</div><div><span class="text-[10px] font-mono px-2 py-0.5 rounded border border-blue-600/50 bg-blue-950/40 text-blue-300">Đang dẫn đường</span></div></div><div class="flex items-center gap-3 p-3 rounded border transition-colors border-red-700/50 bg-red-950/20"><div class="shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car text-red-400"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2"><span class="text-xs font-mono font-semibold text-red-400">Oversized</span><span class="text-slate-400 text-xs font-mono">43A-56789</span><span class="text-slate-500 text-[10px] font-mono">1.85m · 5.20m</span></div><div class="text-red-400 text-[11px] font-mono mt-0.5">Xe quá khổ – Từ chối vào bãi</div></div><div class="flex items-center gap-1 text-slate-500 text-[10px] font-mono shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>08:42:30</div><div><span class="text-[10px] font-mono px-2 py-0.5 rounded border border-red-700/50 bg-red-950/40 text-red-300">Từ chối</span></div></div></div></div><div class="bg-card rounded border border-slate-700/50 p-4"><h3 class="text-slate-300 text-xs font-semibold mb-3">Trạng thái gửi LED/PGS</h3><div class="grid grid-cols-3 gap-3"><div class="bg-slate-800/40 rounded p-2.5 border border-slate-700/40"><div class="flex items-center gap-1.5 mb-1"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span><span class="text-slate-400 text-[10px] font-mono">Gửi AI-VDS</span></div><div class="text-slate-500 text-[9px] font-mono">Cập nhật: 08:15:44</div></div><div class="bg-slate-800/40 rounded p-2.5 border border-slate-700/40"><div class="flex items-center gap-1.5 mb-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400"></span><span class="text-slate-400 text-[10px] font-mono">Gửi LED Display</span></div><div class="text-slate-500 text-[9px] font-mono">Cập nhật: 08:42:25</div></div><div class="bg-slate-800/40 rounded p-2.5 border border-slate-700/40"><div class="flex items-center gap-1.5 mb-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400"></span><span class="text-slate-400 text-[10px] font-mono">Gửi PGS</span></div><div class="text-slate-500 text-[9px] font-mono">Cập nhật: 08:42:28</div></div></div></div></div></div></div></div>
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Page Title & Header -->
+        <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Điều hướng giao thông & Phân loại xe (AI-VDS)</h1>
+                <p class="text-slate-400 text-sm mt-1">Giám sát xe vào cổng, kích thước đo quét bằng camera AI-VDS và cân bằng tải các block đỗ.</p>
+            </div>
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded border text-xs font-mono border-amber-700/50 bg-amber-950/40 text-amber-300 animate-pulse self-start md:self-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi-off"><path d="M12 20h.01"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path><path d="M5 12.859a10 10 0 0 1 5.17-2.69"></path><path d="M19 12.859a10 10 0 0 0-2.007-1.523"></path><path d="M2 8.82a15 15 0 0 1 4.177-2.643"></path><path d="M22 8.82a15 15 0 0 0-11.288-3.764"></path><path d="m2 2 20 20"></path></svg>
+                AI-VDS – Fallback Mode
+            </div>
+        </div>
+
+        <!-- Fallback Mode Warning Alert -->
+        <div class="flex items-start gap-3 p-4 rounded-lg border border-amber-800/60 bg-amber-950/20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert text-amber-400 mt-0.5 shrink-0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+            <div>
+                <div class="text-amber-300 text-sm font-semibold">AI-VDS đang hoạt động ở chế độ Fallback (Dự phòng)</div>
+                <p class="text-amber-500 text-xs mt-1 font-mono">Mất tín hiệu heartbeat từ cổng đo quét chính. Dữ liệu kích thước đang được quét thủ công hoặc sử dụng cảm biến dự phòng ZCU tại cổng vào.</p>
+            </div>
+        </div>
+
+        <!-- Main Layout Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <!-- Left Column: Zone Balancer Info -->
+            <div class="space-y-6">
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl">
+                    <h3 class="text-white text-sm font-bold mb-4 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-navigation text-blue-500"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                        Mật độ & Cân bằng tải Zone
+                    </h3>
+                    <div class="space-y-4">
+                        <!-- Zone A -->
+                        <div class="bg-slate-800/30 rounded-lg p-3.5 border border-slate-700/30">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <div class="text-slate-200 text-xs font-semibold">Zone A – Hầm B1</div>
+                                    <div class="text-slate-500 text-[10px] mt-0.5 font-mono">11 khay trống (23/34 đỗ)</div>
+                                </div>
+                                <span class="text-xs font-mono font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">68%</span>
+                            </div>
+                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
+                                <div class="h-full bg-amber-500 rounded-full" style="width: 68%;"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                                <span>Khay chứa SUV: 9 khay</span>
+                                <span>Mức tải: Trung bình</span>
+                            </div>
+                        </div>
+
+                        <!-- Zone B -->
+                        <div class="bg-slate-800/30 rounded-lg p-3.5 border border-slate-700/30">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <div class="text-slate-200 text-xs font-semibold">Zone B – Hầm B2</div>
+                                    <div class="text-slate-500 text-[10px] mt-0.5 font-mono">18 khay trống (20/38 đỗ)</div>
+                                </div>
+                                <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">53%</span>
+                            </div>
+                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
+                                <div class="h-full bg-emerald-500 rounded-full" style="width: 53%;"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                                <span>Khay chứa SUV: 8 khay</span>
+                                <span>Mức tải: Bình thường</span>
+                            </div>
+                        </div>
+
+                        <!-- Zone C -->
+                        <div class="bg-slate-800/30 rounded-lg p-3.5 border border-slate-700/30">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <div class="text-slate-200 text-xs font-semibold">Zone C – Hầm B3</div>
+                                    <div class="text-slate-500 text-[10px] mt-0.5 font-mono">30 khay trống (10/40 đỗ)</div>
+                                </div>
+                                <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">25%</span>
+                            </div>
+                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
+                                <div class="h-full bg-emerald-500 rounded-full" style="width: 25%;"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                                <span>Khay chứa SUV: 4 khay</span>
+                                <span>Mức tải: Rảnh rỗi</span>
+                            </div>
+                        </div>
+
+                        <!-- Zone D -->
+                        <div class="bg-slate-800/30 rounded-lg p-3.5 border border-slate-700/30">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <div class="text-slate-200 text-xs font-semibold">Zone D – Tầng 1</div>
+                                    <div class="text-slate-500 text-[10px] mt-0.5 font-mono">34 khay trống (10/44 đỗ)</div>
+                                </div>
+                                <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">23%</span>
+                            </div>
+                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
+                                <div class="h-full bg-emerald-500 rounded-full" style="width: 23%;"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                                <span>Khay chứa SUV: 4 khay</span>
+                                <span>Mức tải: Rảnh rỗi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load Balancer Signal Dispatch Panel -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl">
+                    <h3 class="text-white text-sm font-bold mb-4 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu text-blue-500"><rect width="16" height="16" x="4" y="4" rx="2"></rect><rect width="6" height="6" x="9" y="9" rx="1"></rect><path d="M15 2v2"></path><path d="M15 20v2"></path><path d="M2 15h2"></path><path d="M2 9h2"></path><path d="M20 15h2"></path><path d="M20 9h2"></path><path d="M9 2v2"></path><path d="M9 20v2"></path></svg>
+                        Điều phối tín hiệu &amp; Cân bằng tải
+                    </h3>
+                    <div class="space-y-4 text-xs">
+                        <!-- Logic Cân bằng tải -->
+                        <div class="p-3 bg-slate-950/60 rounded border border-slate-800">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-slate-300 font-bold">Logic Cân bằng tải tự động</span>
+                                <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">ACTIVE</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono">
+                                Ngưỡng lệch mật độ kích hoạt: <span class="text-blue-400 font-bold">&gt;20%</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-1">
+                                Lệch tải hiện tại: Zone A (68%) vs Zone C (25%) = <span class="text-amber-400 font-bold">43%</span>
+                            </div>
+                            <div class="text-[11px] text-emerald-400 font-mono mt-1 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><path d="M20 6 9 17l-5-5"></path></svg>
+                                Đang tự động hướng xe sang Zone C (mật độ thấp nhất)
+                            </div>
+                        </div>
+
+                        <!-- Màn hình 55" Trạm phân loại -->
+                        <div class="p-3 bg-slate-950/60 rounded border border-slate-800">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-slate-300 font-bold">Màn hình 55" trạm phân loại</span>
+                                <span class="text-[10px] font-mono text-slate-500">Màn hình: Hoạt động</span>
+                            </div>
+                            <div class="p-2.5 bg-slate-900 rounded border border-slate-850 font-mono text-[11px] space-y-1">
+                                <div class="flex justify-between text-slate-200">
+                                    <span>Trạng thái hiển thị:</span>
+                                    <span class="text-blue-400 font-bold">HIỂN THỊ CHỈ ĐƯỜNG</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Loại thẻ đề xuất:</span>
+                                    <span class="text-emerald-400">Thẻ Sedan (Xanh lá)</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Vị trí khuyên dùng:</span>
+                                    <span class="text-slate-300">Zone B - Block B-01</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-end gap-2 mt-2">
+                                <button onclick="alert('Đã chuyển màn hình 55 inch sang chế độ Quảng cáo/Standby thành công!')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px] border border-slate-750 transition-colors">
+                                    Chuyển chế độ chờ (Ad Mode)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- LED Matrix & Bảng LED hầm -->
+                        <div class="p-3 bg-slate-950/60 rounded border border-slate-800">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-slate-300 font-bold">Bảng LED &amp; Chỉ dẫn hầm</span>
+                                <span class="text-[10px] font-mono text-emerald-400 font-semibold">Đã truyền tín hiệu</span>
+                            </div>
+                            <div class="space-y-1.5 text-[11px] font-mono text-slate-400">
+                                <div class="flex items-start gap-1.5">
+                                    <span class="text-blue-400 shrink-0">LED Matrix Ngoài trời:</span>
+                                    <span class="text-slate-300 bg-slate-900 px-1 py-0.5 rounded text-[10px]">SUV: 38 | Sedan: 55 | Đỗ thường: 24</span>
+                                </div>
+                                <div class="flex items-start gap-1.5">
+                                    <span class="text-blue-400 shrink-0">LED Chỉ dẫn hầm:</span>
+                                    <span class="text-slate-300 bg-slate-900 px-1 py-0.5 rounded text-[10px]">Zone B: Rẽ TRÁI (&lt;- 18) | Zone C: Đi THẲNG (↑ 30)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- API cho hệ kiểm soát ra vào -->
+                        <div class="p-3 bg-slate-950/60 rounded border border-slate-800">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-slate-300 font-bold">API Hệ thống kiểm soát ra vào</span>
+                                <span class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-blue-500/10 border border-blue-500/30 text-blue-400 font-bold">POST /api/v1/access-control/allow</span>
+                            </div>
+                            <div class="p-2 bg-slate-900 rounded border border-slate-850 font-mono text-[10px] text-slate-400 overflow-x-auto whitespace-nowrap">
+                                {"plate": "30H-88877", "type": "Sedan", "card_id": "RFID-09884", "recommended_zone": "Zone B", "status": "Allowed"}
+                            </div>
+                            <div class="flex items-center justify-between mt-2 text-[10px] font-mono">
+                                <span class="text-slate-500">Mã phản hồi từ server:</span>
+                                <span class="text-emerald-400 font-bold">200 OK (Allowed)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Vehicle Traffic & Connection status (Spans 2 columns) -->
+            <div class="xl:col-span-2 space-y-6">
+                <!-- Vehicle entries -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl">
+                    <h3 class="text-white text-sm font-bold mb-4 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car text-blue-500"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+                        Phân loại xe đang tiếp nhận (AI-VDS Camera)
+                    </h3>
+
+                    <!-- Operator notice banner for oversized vehicle -->
+                    <div class="mb-4 flex items-center justify-between p-3.5 bg-rose-950/40 border border-rose-500/50 rounded-lg text-rose-300 animate-pulse text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-2.5 w-2.5 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+                            </span>
+                            <span class="font-bold uppercase tracking-wide">CẢNH BÁO XE QUÁ KHỔ:</span>
+                            <span>Xe <strong>43A-56789</strong> kích thước vượt giới hạn bãi đỗ (>1.80m). Đã khóa máy phát thẻ tự động!</span>
+                        </div>
+                        <span class="font-mono text-[10px] bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/30 text-rose-400">HOLD CARD</span>
+                    </div>
+
+                    <!-- Entries List -->
+                    <div class="space-y-3">
+                        <!-- Vehicle 1: SUV (Plate 51G-12345) -->
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-lg border border-slate-800 bg-slate-900 hover:border-slate-700/80 transition-all">
+                            <div class="flex items-start gap-3.5">
+                                <div class="p-2 bg-blue-500/10 rounded border border-blue-500/20 text-blue-400 shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+                                </div>
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 border border-blue-500/35">SUV</span>
+                                        <span class="text-slate-100 text-sm font-bold font-mono tracking-wider">51G-12345</span>
+                                        <span class="text-slate-500 text-xs font-mono">Cao: 1.65m · Dài: 4.85m</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-2 text-xs font-mono text-slate-400">
+                                        <span>Đề xuất:</span>
+                                        <span class="text-blue-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded">Block A-02</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                        <span class="text-yellow-400 font-bold bg-yellow-500/10 px-1.5 py-0.5 rounded border border-yellow-500/20">SUV-Card (Yellow)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-2.5 md:pt-0 border-slate-850">
+                                <div class="flex items-center gap-1.5 text-slate-500 text-xs font-mono">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    08:41:55
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">Đã phân loại</span>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle 2: Sedan (Plate 30H-88877) -->
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-lg border border-slate-800 bg-slate-900 hover:border-slate-700/80 transition-all">
+                            <div class="flex items-start gap-3.5">
+                                <div class="p-2 bg-emerald-500/10 rounded border border-emerald-500/20 text-emerald-400 shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+                                </div>
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/35">Sedan</span>
+                                        <span class="text-slate-100 text-sm font-bold font-mono tracking-wider">30H-88877</span>
+                                        <span class="text-slate-500 text-xs font-mono">Cao: 1.45m · Dài: 4.20m</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-2 text-xs font-mono text-slate-400">
+                                        <span>Đề xuất:</span>
+                                        <span class="text-blue-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded">Block B-01</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                        <span class="text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">Sedan-Card (Green)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-2.5 md:pt-0 border-slate-850">
+                                <div class="flex items-center gap-1.5 text-slate-500 text-xs font-mono">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    08:42:10
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400">Đang dẫn đường</span>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle 3: Oversized Rejection (Plate 43A-56789) - Visual prominence -->
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-lg border border-rose-900/60 bg-rose-950/10 hover:border-rose-800/80 transition-all shadow-[0_0_15px_rgba(244,63,94,0.05)]">
+                            <div class="flex items-start gap-3.5">
+                                <div class="p-2 bg-rose-500/15 rounded border border-rose-500/30 text-rose-500 shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-alert"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+                                </div>
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/40">OVERSIZED</span>
+                                        <span class="text-slate-100 text-sm font-bold font-mono tracking-wider">43A-56789</span>
+                                        <span class="text-rose-400 text-xs font-bold font-mono bg-rose-950/50 px-1.5 py-0.5 rounded border border-rose-500/20">
+                                            Cao: 1.85m (> 1.80m) · Dài: 5.20m
+                                        </span>
+                                    </div>
+                                    <div class="text-rose-400/90 text-xs font-mono mt-2 flex items-center gap-1.5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-rose-500"><circle cx="12" cy="12" r="10"></circle><line x1="15" x2="9" y1="9" y2="15"></line></svg>
+                                        <span>Xe vượt giới hạn vật lý bãi đỗ – Hệ thống từ chối cấp phát thẻ đỗ xe!</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-2.5 md:pt-0 border-rose-950/50">
+                                <div class="flex items-center gap-1.5 text-slate-500 text-xs font-mono">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    08:42:30
+                                </div>
+                                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full border border-rose-500/50 bg-rose-500/10 text-rose-400">Từ chối / Rejected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Communication Status List (6 items) -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl">
+                    <h3 class="text-white text-sm font-bold mb-4">Trạng thái truyền thông & Thiết bị ngoại vi</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+                        <!-- Card 1: AI-VDS Connection -->
+                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></span>
+                                <span class="text-slate-200 text-[10px] font-bold font-mono">Gửi AI-VDS</span>
+                            </div>
+                            <div class="text-slate-400 text-[10px] font-mono">Mất kết nối</div>
+                            <div class="text-slate-600 text-[8px] font-mono mt-1">Lúc: 08:15:44</div>
+                        </div>
+
+                        <!-- Card 2: LED Matrix Outside -->
+                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                                <span class="text-slate-200 text-[10px] font-bold font-mono">LED Ngoài trời</span>
+                            </div>
+                            <div class="text-slate-400 text-[10px] font-mono">Hoạt động</div>
+                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:25</div>
+                        </div>
+
+                        <!-- Card 3: LED Tunnel Directional -->
+                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                                <span class="text-slate-200 text-[10px] font-bold font-mono">LED Trong hầm</span>
+                            </div>
+                            <div class="text-slate-400 text-[10px] font-mono">Hoạt động</div>
+                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:27</div>
+                        </div>
+
+                        <!-- Card 4: PGS System -->
+                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                                <span class="text-slate-200 text-[10px] font-bold font-mono">Hệ thống PGS</span>
+                            </div>
+                            <div class="text-slate-400 text-[10px] font-mono">Hoạt động</div>
+                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:28</div>
+                        </div>
+
+                        <!-- Card 5: Card Dispenser -->
+                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]"></span>
+                                <span class="text-slate-200 text-[10px] font-bold font-mono">Máy phát thẻ</span>
+                            </div>
+                            <div class="text-slate-400 text-[10px] font-mono">Giữ thẻ (Hold)</div>
+                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:30</div>
+                        </div>
+
+                        <!-- Card 6: ZCU Controllers -->
+                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                                <span class="text-slate-200 text-[10px] font-bold font-mono">Bộ điều khiển ZCU</span>
+                            </div>
+                            <div class="text-slate-400 text-[10px] font-mono">Hoạt động</div>
+                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:15</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

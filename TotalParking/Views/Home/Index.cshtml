@@ -1,14 +1,1259 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
+<div class="flex-1 overflow-y-auto p-4 space-y-4" style="background: rgb(15, 23, 42);">
+    <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+        <div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+            <div class="rounded-lg p-2 shrink-0" style="background: rgba(37, 99, 235, 0.133);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers">
+                    <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z">
+                    </path>
+                    <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12">
+                    </path>
+                    <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17">
+                    </path>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <div style="color: rgb(148, 163, 184); font-size: 12px;">
+                    Tổng Block
+                </div>
+                <div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
+                    9
+                </div>
+            </div>
+        </div>
+        <div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+            <div class="rounded-lg p-2 shrink-0" style="background: rgba(22, 163, 74, 0.133);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-parking">
+                    <circle cx="12" cy="12" r="10">
+                    </circle>
+                    <path d="M9 17V7h4a3 3 0 0 1 0 6H9">
+                    </path>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <div style="color: rgb(148, 163, 184); font-size: 12px;">
+                    Tổng Pallet
+                </div>
+                <div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
+                    184
+                </div>
+            </div>
+        </div>
+        <div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+            <div class="rounded-lg p-2 shrink-0" style="background: rgba(22, 163, 74, 0.133);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car">
+                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2">
+                    </path>
+                    <circle cx="7" cy="17" r="2">
+                    </circle>
+                    <path d="M9 17h6">
+                    </path>
+                    <circle cx="17" cy="17" r="2">
+                    </circle>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <div style="color: rgb(148, 163, 184); font-size: 12px;">
+                    Có xe
+                </div>
+                <div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
+                    91
+                </div>
+                <div style="color: rgb(100, 116, 139); font-size: 11px;">
+                    49%
+                </div>
+            </div>
+        </div>
+        <div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+            <div class="rounded-lg p-2 shrink-0" style="background: rgba(107, 114, 128, 0.133);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-parking">
+                    <circle cx="12" cy="12" r="10">
+                    </circle>
+                    <path d="M9 17V7h4a3 3 0 0 1 0 6H9">
+                    </path>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <div style="color: rgb(148, 163, 184); font-size: 12px;">
+                    Còn trống
+                </div>
+                <div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
+                    69
+                </div>
+            </div>
+        </div>
+        <div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+            <div class="rounded-lg p-2 shrink-0" style="background: rgba(124, 58, 237, 0.133);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car">
+                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2">
+                    </path>
+                    <circle cx="7" cy="17" r="2">
+                    </circle>
+                    <path d="M9 17h6">
+                    </path>
+                    <circle cx="17" cy="17" r="2">
+                    </circle>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <div style="color: rgb(148, 163, 184); font-size: 12px;">
+                    SUV
+                </div>
+                <div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
+                    37
+                </div>
+            </div>
+        </div>
+        <div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+            <div class="rounded-lg p-2 shrink-0" style="background: rgba(37, 99, 235, 0.133);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car">
+                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2">
+                    </path>
+                    <circle cx="7" cy="17" r="2">
+                    </circle>
+                    <path d="M9 17h6">
+                    </path>
+                    <circle cx="17" cy="17" r="2">
+                    </circle>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <div style="color: rgb(148, 163, 184); font-size: 12px;">
+                    Sedan
+                </div>
+                <div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
+                    54
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="global-alarm-banner" class="flex items-center gap-3 p-3 rounded-lg border animate-pulse hidden" style="background: rgba(220, 38, 38, 0.082); border-color: rgb(220, 38, 38);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
+            <path d="M12 9v4"></path>
+            <path d="M12 17h.01"></path>
+        </svg>
+        <span id="global-alarm-banner-count" style="color: rgb(252, 165, 165); font-size: 13px; font-weight: 600;">
+            0 cảnh báo đang hoạt động:
+        </span>
+        <span id="global-alarm-banner-detail" style="color: rgb(252, 165, 165); font-size: 12px;">
+            Không có cảnh báo hoạt động
+        </span>
+    </div>
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+        <div class="xl:col-span-2 rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+            <div class="flex items-center justify-between mb-4">
+                <div style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600;">
+                    Mật độ khai thác theo thời gian
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity">
+                    <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2">
+                    </path>
+                </svg>
+            </div>
+            <div class="recharts-responsive-container" style="width: 100%; height: 200px; min-width: 0px;">
+                <div class="recharts-wrapper" style="position: relative; cursor: default; width: 100%; height: 100%; max-height: 200px; max-width: 678px;">
+                    <svg class="recharts-surface" width="678" height="200" viewBox="0 0 678 200" style="width: 100%; height: 100%;">
+                        <title>
+                        </title>
+                        <desc>
+                        </desc>
+                        <defs>
+                            <clipPath id="recharts1-clip">
+                                <rect x="50" y="5" height="147" width="618">
+                                </rect>
+                            </clipPath>
+                        </defs>
+                        <defs>
+                            <linearGradient id="gZ1" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stop-color="#16A34A" stop-opacity="0.3">
+                                </stop>
+                                <stop offset="95%" stop-color="#16A34A" stop-opacity="0">
+                                </stop>
+                            </linearGradient>
+                            <linearGradient id="gZ2" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stop-color="#2563EB" stop-opacity="0.3">
+                                </stop>
+                                <stop offset="95%" stop-color="#2563EB" stop-opacity="0">
+                                </stop>
+                            </linearGradient>
+                            <linearGradient id="gZ3" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stop-color="#7C3AED" stop-opacity="0.3">
+                                </stop>
+                                <stop offset="95%" stop-color="#7C3AED" stop-opacity="0">
+                                </stop>
+                            </linearGradient>
+                        </defs>
+                        <g class="recharts-cartesian-grid">
+                            <g class="recharts-cartesian-grid-horizontal">
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="152" x2="668" y2="152">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="115.25" x2="668" y2="115.25">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="78.5" x2="668" y2="78.5">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="41.75" x2="668" y2="41.75">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="5" x2="668" y2="5">
+                                </line>
+                            </g>
+                            <g class="recharts-cartesian-grid-vertical">
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="5" x2="50" y2="152">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="153" y1="5" x2="153" y2="152">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="256" y1="5" x2="256" y2="152">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="359" y1="5" x2="359" y2="152">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="462" y1="5" x2="462" y2="152">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="565" y1="5" x2="565" y2="152">
+                                </line>
+                                <line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="668" y1="5" x2="668" y2="152">
+                                </line>
+                            </g>
+                        </g>
+                        <g class="recharts-layer recharts-cartesian-axis recharts-xAxis xAxis">
+                            <line orientation="bottom" width="618" height="30" x="50" y="152" class="recharts-cartesian-axis-line" stroke="#334155" fill="none" x1="50" y1="152" x2="668" y2="152">
+                            </line>
+                            <g class="recharts-cartesian-axis-ticks">
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="50" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8">
+                                        <tspan x="50" dy="0.71em">
+                                            06:00
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="153" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8">
+                                        <tspan x="153" dy="0.71em">
+                                            07:00
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="256" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8">
+                                        <tspan x="256" dy="0.71em">
+                                            08:00
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="359" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8">
+                                        <tspan x="359" dy="0.71em">
+                                            09:00
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="462" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8">
+                                        <tspan x="462" dy="0.71em">
+                                            10:00
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="565" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8">
+                                        <tspan x="565" dy="0.71em">
+                                            11:00
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="664.9453125" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8">
+                                        <tspan x="664.9453125" dy="0.71em">
+                                            12:00
+                                        </tspan>
+                                    </text>
+                                </g>
+                            </g>
+                        </g>
+                        <g class="recharts-layer recharts-cartesian-axis recharts-yAxis yAxis">
+                            <line orientation="left" width="60" height="147" x="-10" y="5" class="recharts-cartesian-axis-line" stroke="#334155" fill="none" x1="50" y1="5" x2="50" y2="152">
+                            </line>
+                            <g class="recharts-cartesian-axis-ticks">
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="152" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8">
+                                        <tspan x="42" dy="0.355em">
+                                            0
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="115.25" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8">
+                                        <tspan x="42" dy="0.355em">
+                                            25
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="78.5" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8">
+                                        <tspan x="42" dy="0.355em">
+                                            50
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="41.75" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8">
+                                        <tspan x="42" dy="0.355em">
+                                            75
+                                        </tspan>
+                                    </text>
+                                </g>
+                                <g class="recharts-layer recharts-cartesian-axis-tick">
+                                    <text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="8.25" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8">
+                                        <tspan x="42" dy="0.355em">
+                                            100
+                                        </tspan>
+                                    </text>
+                                </g>
+                            </g>
+                        </g>
+                        <g class="recharts-layer recharts-area">
+                            <g class="recharts-layer">
+                                <defs>
+                                    <clipPath id="animationClipPath-recharts-area-5">
+                                        <rect x="50" y="0" width="449.45686479893254" height="154">
+                                        </rect>
+                                    </clipPath>
+                                </defs>
+                                <g class="recharts-layer" clip-path="url(#animationClipPath-recharts-area-5)">
+                                    <g class="recharts-layer">
+                                        <path name="Zone A" fill="url(#gZ1)" stroke-width="2" fill-opacity="0.6" width="618" height="147" stroke="none" class="recharts-curve recharts-area-area" d="M50,85.85C84.333,79.358,118.667,72.865,153,66.74C187.333,60.615,221.667,54,256,49.1C290.333,44.2,324.667,40.28,359,37.34C393.333,34.4,427.667,33.175,462,31.46C496.333,29.745,530.667,27.05,565,27.05C599.333,27.05,633.667,30.725,668,34.4L668,152C633.667,152,599.333,152,565,152C530.667,152,496.333,152,462,152C427.667,152,393.333,152,359,152C324.667,152,290.333,152,256,152C221.667,152,187.333,152,153,152C118.667,152,84.333,152,50,152Z">
+                                        </path>
+                                        <path name="Zone A" stroke="#16A34A" fill="none" stroke-width="2" fill-opacity="0.6" width="618" height="147" class="recharts-curve recharts-area-curve" d="M50,85.85C84.333,79.358,118.667,72.865,153,66.74C187.333,60.615,221.667,54,256,49.1C290.333,44.2,324.667,40.28,359,37.34C393.333,34.4,427.667,33.175,462,31.46C496.333,29.745,530.667,27.05,565,27.05C599.333,27.05,633.667,30.725,668,34.4">
+                                        </path>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                        <g class="recharts-layer recharts-area">
+                            <g class="recharts-layer">
+                                <defs>
+                                    <clipPath id="animationClipPath-recharts-area-6">
+                                        <rect x="50" y="0" width="449.45686479893254" height="154">
+                                        </rect>
+                                    </clipPath>
+                                </defs>
+                                <g class="recharts-layer" clip-path="url(#animationClipPath-recharts-area-6)">
+                                    <g class="recharts-layer">
+                                        <path name="Zone B" fill="url(#gZ2)" stroke-width="2" fill-opacity="0.6" width="618" height="147" stroke="none" class="recharts-curve recharts-area-area" d="M50,107.9C84.333,101.775,118.667,95.65,153,90.26C187.333,84.87,221.667,78.5,256,75.56C290.333,72.62,324.667,73.11,359,71.15C393.333,69.19,427.667,66.25,462,63.8C496.333,61.35,530.667,58.9,565,56.45C599.333,54,633.667,51.55,668,49.1L668,152C633.667,152,599.333,152,565,152C530.667,152,496.333,152,462,152C427.667,152,393.333,152,359,152C324.667,152,290.333,152,256,152C221.667,152,187.333,152,153,152C118.667,152,84.333,152,50,152Z">
+                                        </path>
+                                        <path name="Zone B" stroke="#2563EB" fill="none" stroke-width="2" fill-opacity="0.6" width="618" height="147" class="recharts-curve recharts-area-curve" d="M50,107.9C84.333,101.775,118.667,95.65,153,90.26C187.333,84.87,221.667,78.5,256,75.56C290.333,72.62,324.667,73.11,359,71.15C393.333,69.19,427.667,66.25,462,63.8C496.333,61.35,530.667,58.9,565,56.45C599.333,54,633.667,51.55,668,49.1">
+                                        </path>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                        <g class="recharts-layer recharts-area">
+                            <g class="recharts-layer">
+                                <defs>
+                                    <clipPath id="animationClipPath-recharts-area-7">
+                                        <rect x="50" y="0" width="449.45686479893254" height="154">
+                                        </rect>
+                                    </clipPath>
+                                </defs>
+                                <g class="recharts-layer" clip-path="url(#animationClipPath-recharts-area-7)">
+                                    <g class="recharts-layer">
+                                        <path name="Zone C" fill="url(#gZ3)" stroke-width="2" fill-opacity="0.6" width="618" height="147" stroke="none" class="recharts-curve recharts-area-area" d="M50,137.3C84.333,135.83,118.667,134.36,153,129.95C187.333,125.54,221.667,114.76,256,110.84C290.333,106.92,324.667,106.675,359,104.96C393.333,103.245,427.667,102.51,462,100.55C496.333,98.59,530.667,95.65,565,93.2C599.333,90.75,633.667,88.3,668,85.85L668,152C633.667,152,599.333,152,565,152C530.667,152,496.333,152,462,152C427.667,152,393.333,152,359,152C324.667,152,290.333,152,256,152C221.667,152,187.333,152,153,152C118.667,152,84.333,152,50,152Z">
+                                        </path>
+                                        <path name="Zone C" stroke="#7C3AED" fill="none" stroke-width="2" fill-opacity="0.6" width="618" height="147" class="recharts-curve recharts-area-curve" d="M50,137.3C84.333,135.83,118.667,134.36,153,129.95C187.333,125.54,221.667,114.76,256,110.84C290.333,106.92,324.667,106.675,359,104.96C393.333,103.245,427.667,102.51,462,100.55C496.333,98.59,530.667,95.65,565,93.2C599.333,90.75,633.667,88.3,668,85.85">
+                                        </path>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="recharts-legend-wrapper" style="position: absolute; width: 678px; height: auto; left: -10px; bottom: 0px; font-size: 12px; color: rgb(148, 163, 184);">
+                        <ul class="recharts-default-legend" style="padding: 0px; margin: 0px; text-align: center;">
+                            <li class="recharts-legend-item legend-item-0" style="display: inline-block; margin-right: 10px;">
+                                <svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                                    <title>
+                                    </title>
+                                    <desc>
+                                    </desc>
+                                    <path stroke-width="4" fill="none" stroke="#16A34A" d="M0,16h10.666666666666666
+            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
+            H32M21.333333333333332,16
+            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon">
+                                    </path>
+                                </svg>
+                                <span class="recharts-legend-item-text" style="color: rgb(22, 163, 74);">
+                                    Zone A
+                                </span>
+                            </li>
+                            <li class="recharts-legend-item legend-item-1" style="display: inline-block; margin-right: 10px;">
+                                <svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                                    <title>
+                                    </title>
+                                    <desc>
+                                    </desc>
+                                    <path stroke-width="4" fill="none" stroke="#2563EB" d="M0,16h10.666666666666666
+            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
+            H32M21.333333333333332,16
+            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon">
+                                    </path>
+                                </svg>
+                                <span class="recharts-legend-item-text" style="color: rgb(37, 99, 235);">
+                                    Zone B
+                                </span>
+                            </li>
+                            <li class="recharts-legend-item legend-item-2" style="display: inline-block; margin-right: 10px;">
+                                <svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                                    <title>
+                                    </title>
+                                    <desc>
+                                    </desc>
+                                    <path stroke-width="4" fill="none" stroke="#7C3AED" d="M0,16h10.666666666666666
+            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
+            H32M21.333333333333332,16
+            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon">
+                                    </path>
+                                </svg>
+                                <span class="recharts-legend-item-text" style="color: rgb(124, 58, 237);">
+                                    Zone C
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div tabindex="-1" class="recharts-tooltip-wrapper recharts-tooltip-wrapper-right recharts-tooltip-wrapper-bottom" style="visibility: hidden; pointer-events: none; position: absolute; top: 0px; left: 0px; transform: translate(50px, 10px);">
+                        <div class="recharts-default-tooltip" style="margin: 0px; padding: 10px; background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); white-space: nowrap; border-radius: 6px;">
+                            <p class="recharts-tooltip-label" style="margin: 0px; color: rgb(248, 250, 252);">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-4">
+            <div class="rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+                <div style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+                    Mật độ theo Zone
+                </div>
+                <div class="mb-3">
+                    <div class="flex justify-between mb-1">
+                        <span style="color: rgb(203, 213, 225); font-size: 12px;">
+                            Zone A
+                        </span>
+                        <span style="color: rgb(245, 158, 11); font-size: 12px; font-weight: 600;">
+                            78%
+                        </span>
+                    </div>
+                    <div class="h-2 rounded-full" style="background: rgb(51, 65, 85);">
+                        <div class="h-2 rounded-full transition-all duration-500" style="width: 78%; background: rgb(245, 158, 11);">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="flex justify-between mb-1">
+                        <span style="color: rgb(203, 213, 225); font-size: 12px;">
+                            Zone B
+                        </span>
+                        <span style="color: rgb(22, 163, 74); font-size: 12px; font-weight: 600;">
+                            55%
+                        </span>
+                    </div>
+                    <div class="h-2 rounded-full" style="background: rgb(51, 65, 85);">
+                        <div class="h-2 rounded-full transition-all duration-500" style="width: 55%; background: rgb(22, 163, 74);">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="flex justify-between mb-1">
+                        <span style="color: rgb(203, 213, 225); font-size: 12px;">
+                            Zone C
+                        </span>
+                        <span style="color: rgb(22, 163, 74); font-size: 12px; font-weight: 600;">
+                            32%
+                        </span>
+                    </div>
+                    <div class="h-2 rounded-full" style="background: rgb(51, 65, 85);">
+                        <div class="h-2 rounded-full transition-all duration-500" style="width: 32%; background: rgb(22, 163, 74);">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+                <div class="flex items-center gap-2 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu">
+                        <rect width="16" height="16" x="4" y="4" rx="2">
+                        </rect>
+                        <rect width="6" height="6" x="9" y="9" rx="1">
+                        </rect>
+                        <path d="M15 2v2">
+                        </path>
+                        <path d="M15 20v2">
+                        </path>
+                        <path d="M2 15h2">
+                        </path>
+                        <path d="M2 9h2">
+                        </path>
+                        <path d="M20 15h2">
+                        </path>
+                        <path d="M20 9h2">
+                        </path>
+                        <path d="M9 2v2">
+                        </path>
+                        <path d="M9 20v2">
+                        </path>
+                    </svg>
+                    <span style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600;">
+                        Kết nối hệ thống
+                    </span>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
+                    <span style="color: rgb(203, 213, 225); font-size: 12px;">
+                        PLC Block
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;">
+                        </span>
+                        <span style="color: rgb(134, 239, 172); font-size: 11px;">
+                            Kết nối
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
+                    <span style="color: rgb(203, 213, 225); font-size: 12px;">
+                        HMI Block
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;">
+                        </span>
+                        <span style="color: rgb(134, 239, 172); font-size: 11px;">
+                            Kết nối
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
+                    <span style="color: rgb(203, 213, 225); font-size: 12px;">
+                        AI-VDS
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;">
+                        </span>
+                        <span style="color: rgb(134, 239, 172); font-size: 11px;">
+                            Kết nối
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
+                    <span style="color: rgb(203, 213, 225); font-size: 12px;">
+                        LED/PGS
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;">
+                        </span>
+                        <span style="color: rgb(134, 239, 172); font-size: 11px;">
+                            Kết nối
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
+                    <span style="color: rgb(203, 213, 225); font-size: 12px;">
+                        SCADA Server
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;">
+                        </span>
+                        <span style="color: rgb(134, 239, 172); font-size: 11px;">
+                            Kết nối
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+        <div class="flex items-center justify-between mb-3">
+            <span style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600;">
+                Trạng thái Block
+            </span>
+            <span style="color: rgb(252, 165, 165); font-size: 12px;">
+                2 block lỗi/offline
+            </span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
+            <button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(22, 163, 74, 0.267); cursor: pointer;">
+                <div class="flex items-center justify-between mb-1">
+                    <span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">
+                        Block A01
+                    </span>
+                    <span class="w-2 h-2 rounded-full" style="background: rgb(22, 163, 74);">
+                    </span>
+                </div>
+                <div style="color: rgb(148, 163, 184); font-size: 10px;">
+                    Z1
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span style="color: rgb(22, 163, 74); font-size: 13px; font-weight: 700;">
+                        80%
+                    </span>
+                    <span style="color: rgb(100, 116, 139); font-size: 10px;">
+                        16/20
+                    </span>
+                </div>
+                <div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);">
+                    <div class="h-1 rounded-full" style="width: 80%; background: rgb(22, 163, 74);">
+                    </div>
+                </div>
+                <div class="mt-1.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(22, 163, 74); color: white; font-size: 11px;">
+                        Bình thường
+                    </span>
+                </div>
+            </button>
+            <button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(37, 99, 235, 0.267); cursor: pointer;">
+                <div class="flex items-center justify-between mb-1">
+                    <span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">
+                        Block A02
+                    </span>
+                    <span class="w-2 h-2 rounded-full" style="background: rgb(37, 99, 235);">
+                    </span>
+                </div>
+                <div style="color: rgb(148, 163, 184); font-size: 10px;">
+                    Z1
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span style="color: rgb(37, 99, 235); font-size: 13px; font-weight: 700;">
+                        90%
+                    </span>
+                    <span style="color: rgb(100, 116, 139); font-size: 10px;">
+                        18/20
+                    </span>
+                </div>
+                <div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);">
+                    <div class="h-1 rounded-full" style="width: 90%; background: rgb(37, 99, 235);">
+                    </div>
+                </div>
+                <div class="mt-1.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(37, 99, 235); color: white; font-size: 11px;">
+                        Đang chạy
+                    </span>
+                </div>
+            </button>
+            <button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(245, 158, 11, 0.267); cursor: pointer;">
+                <div class="flex items-center justify-between mb-1">
+                    <span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">
+                        Block A03
+                    </span>
+                    <span class="w-2 h-2 rounded-full" style="background: rgb(245, 158, 11);">
+                    </span>
+                </div>
+                <div style="color: rgb(148, 163, 184); font-size: 10px;">
+                    Z1
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span style="color: rgb(245, 158, 11); font-size: 13px; font-weight: 700;">
+                        70%
+                    </span>
+                    <span style="color: rgb(100, 116, 139); font-size: 10px;">
+                        14/20
+                    </span>
+                </div>
+                <div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);">
+                    <div class="h-1 rounded-full" style="width: 70%; background: rgb(245, 158, 11);">
+                    </div>
+                </div>
+                <div class="mt-1.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(245, 158, 11); color: rgb(30, 41, 59); font-size: 11px;">
+                        Cảnh báo
+                    </span>
+                </div>
+            </button>
+            <button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(220, 38, 38, 0.267); cursor: pointer;">
+                <div class="flex items-center justify-between mb-1">
+                    <span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">
+                        Block A04
+                    </span>
+                    <span class="w-2 h-2 rounded-full" style="background: rgb(220, 38, 38);">
+                    </span>
+                </div>
+                <div style="color: rgb(148, 163, 184); font-size: 10px;">
+                    Z1
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span style="color: rgb(220, 38, 38); font-size: 13px; font-weight: 700;">
+                        50%
+                    </span>
+                    <span style="color: rgb(100, 116, 139); font-size: 10px;">
+                        10/20
+                    </span>
+                </div>
+                <div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);">
+                    <div class="h-1 rounded-full" style="width: 50%; background: rgb(220, 38, 38);">
+                    </div>
+                </div>
+                <div class="mt-1.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(220, 38, 38); color: white; font-size: 11px;">
+                        Lỗi
+                    </span>
+                </div>
+            </button>
+            <button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(22, 163, 74, 0.267); cursor: pointer;">
+                <div class="flex items-center justify-between mb-1">
+                    <span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">
+                        Block B01
+                    </span>
+                    <span class="w-2 h-2 rounded-full" style="background: rgb(22, 163, 74);">
+                    </span>
+                </div>
+                <div style="color: rgb(148, 163, 184); font-size: 10px;">
+                    Z2
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span style="color: rgb(22, 163, 74); font-size: 13px; font-weight: 700;">
+                        54%
+                    </span>
+                    <span style="color: rgb(100, 116, 139); font-size: 10px;">
+                        13/24
+                    </span>
+                </div>
+                <div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);">
+                    <div class="h-1 rounded-full" style="width: 54%; background: rgb(22, 163, 74);">
+                    </div>
+                </div>
+                <div class="mt-1.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(22, 163, 74); color: white; font-size: 11px;">
+                        Bình thường
+                    </span>
+                </div>
+            </button>
+            <button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(124, 58, 237, 0.267); cursor: pointer;">
+                <div class="flex items-center justify-between mb-1">
+                    <span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">
+                        Block B02
+                    </span>
+                    <span class="w-2 h-2 rounded-full" style="background: rgb(124, 58, 237);">
+                    </span>
+                </div>
+                <div style="color: rgb(148, 163, 184); font-size: 10px;">
+                    Z2
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span style="color: rgb(124, 58, 237); font-size: 13px; font-weight: 700;">
+                        0%
+                    </span>
+                    <span style="color: rgb(100, 116, 139); font-size: 10px;">
+                        0/24
+                    </span>
+                </div>
+                <div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);">
+                    <div class="h-1 rounded-full" style="width: 0%; background: rgb(124, 58, 237);">
+                    </div>
+                </div>
+                <div class="mt-1.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(124, 58, 237); color: white; font-size: 11px;">
+                        Bảo trì
+                    </span>
+                </div>
+            </button>
+            <button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(22, 163, 74, 0.267); cursor: pointer;">
+                <div class="flex items-center justify-between mb-1">
+                    <span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">
+                        Block B03
+                    </span>
+                    <span class="w-2 h-2 rounded-full" style="background: rgb(22, 163, 74);">
+                    </span>
+                </div>
+                <div style="color: rgb(148, 163, 184); font-size: 10px;">
+                    Z2
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span style="color: rgb(22, 163, 74); font-size: 13px; font-weight: 700;">
+                        63%
+                    </span>
+                    <span style="color: rgb(100, 116, 139); font-size: 10px;">
+                        15/24
+                    </span>
+                </div>
+                <div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);">
+                    <div class="h-1 rounded-full" style="width: 63%; background: rgb(22, 163, 74);">
+                    </div>
+                </div>
+                <div class="mt-1.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(22, 163, 74); color: white; font-size: 11px;">
+                        Bình thường
+                    </span>
+                </div>
+            </button>
+            <button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(107, 114, 128, 0.267); cursor: pointer;">
+                <div class="flex items-center justify-between mb-1">
+                    <span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">
+                        Block C01
+                    </span>
+                    <span class="w-2 h-2 rounded-full" style="background: rgb(107, 114, 128);">
+                    </span>
+                </div>
+                <div style="color: rgb(148, 163, 184); font-size: 10px;">
+                    Z3
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span style="color: rgb(107, 114, 128); font-size: 13px; font-weight: 700;">
+                        0%
+                    </span>
+                    <span style="color: rgb(100, 116, 139); font-size: 10px;">
+                        0/16
+                    </span>
+                </div>
+                <div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);">
+                    <div class="h-1 rounded-full" style="width: 0%; background: rgb(107, 114, 128);">
+                    </div>
+                </div>
+                <div class="mt-1.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(107, 114, 128); color: white; font-size: 11px;">
+                        Offline
+                    </span>
+                </div>
+            </button>
+            <button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(22, 163, 74, 0.267); cursor: pointer;">
+                <div class="flex items-center justify-between mb-1">
+                    <span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">
+                        Block C02
+                    </span>
+                    <span class="w-2 h-2 rounded-full" style="background: rgb(22, 163, 74);">
+                    </span>
+                </div>
+                <div style="color: rgb(148, 163, 184); font-size: 10px;">
+                    Z3
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span style="color: rgb(22, 163, 74); font-size: 13px; font-weight: 700;">
+                        31%
+                    </span>
+                    <span style="color: rgb(100, 116, 139); font-size: 10px;">
+                        5/16
+                    </span>
+                </div>
+                <div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);">
+                    <div class="h-1 rounded-full" style="width: 31%; background: rgb(22, 163, 74);">
+                    </div>
+                </div>
+                <div class="mt-1.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(22, 163, 74); color: white; font-size: 11px;">
+                        Bình thường
+                    </span>
+                </div>
+            </button>
+        </div>
+    </div>
+    <!-- Real-time Alarms Widget -->
+    <div class="rounded-lg p-5 space-y-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+        <div class="flex flex-wrap justify-between items-center gap-3 border-b border-slate-700 pb-3">
+            <div class="flex items-center gap-2">
+                <div class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </div>
+                <h3 class="text-white text-sm font-bold font-mono uppercase tracking-wider">
+                    Hệ thống Cảnh báo Thời gian thực (SCADA Alarms Live)
+                </h3>
+            </div>
+            <span class="text-slate-400 text-[10px] font-mono bg-slate-950/65 px-2 py-0.5 rounded border border-slate-800">
+                Chu kỳ cập nhật: 15s
+            </span>
+        </div>
 
-<div class="flex-1 overflow-y-auto p-4 space-y-4" style="background: rgb(15, 23, 42);"><div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-3"><div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div class="rounded-lg p-2 shrink-0" style="background: rgba(37, 99, 235, 0.133);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"></path><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"></path></svg></div><div class="min-w-0"><div style="color: rgb(148, 163, 184); font-size: 12px;">Tổng Block</div><div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">9</div></div></div><div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div class="rounded-lg p-2 shrink-0" style="background: rgba(22, 163, 74, 0.133);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-parking"><circle cx="12" cy="12" r="10"></circle><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg></div><div class="min-w-0"><div style="color: rgb(148, 163, 184); font-size: 12px;">Tổng Pallet</div><div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">184</div></div></div><div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div class="rounded-lg p-2 shrink-0" style="background: rgba(22, 163, 74, 0.133);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg></div><div class="min-w-0"><div style="color: rgb(148, 163, 184); font-size: 12px;">Có xe</div><div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">91</div><div style="color: rgb(100, 116, 139); font-size: 11px;">49%</div></div></div><div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div class="rounded-lg p-2 shrink-0" style="background: rgba(107, 114, 128, 0.133);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-parking"><circle cx="12" cy="12" r="10"></circle><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg></div><div class="min-w-0"><div style="color: rgb(148, 163, 184); font-size: 12px;">Còn trống</div><div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">69</div></div></div><div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div class="rounded-lg p-2 shrink-0" style="background: rgba(124, 58, 237, 0.133);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg></div><div class="min-w-0"><div style="color: rgb(148, 163, 184); font-size: 12px;">SUV</div><div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">37</div></div></div><div class="rounded-lg p-4 flex items-start gap-3" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div class="rounded-lg p-2 shrink-0" style="background: rgba(37, 99, 235, 0.133);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg></div><div class="min-w-0"><div style="color: rgb(148, 163, 184); font-size: 12px;">Sedan</div><div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">54</div></div></div></div><div class="flex items-center gap-3 p-3 rounded-lg border animate-pulse" style="background: rgba(220, 38, 38, 0.082); border-color: rgb(220, 38, 38);"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg><span style="color: rgb(252, 165, 165); font-size: 13px; font-weight: 600;">3 cảnh báo đang hoạt động:</span><span style="color: rgb(252, 165, 165); font-size: 12px;">Chùng xích nâng pallet P04 - Block A04</span></div><div class="grid grid-cols-1 xl:grid-cols-3 gap-4"><div class="xl:col-span-2 rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div class="flex items-center justify-between mb-4"><div style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600;">Mật độ khai thác theo thời gian</div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path></svg></div><div class="recharts-responsive-container" style="width: 100%; height: 200px; min-width: 0px;"><div class="recharts-wrapper" style="position: relative; cursor: default; width: 100%; height: 100%; max-height: 200px; max-width: 678px;"><svg class="recharts-surface" width="678" height="200" viewBox="0 0 678 200" style="width: 100%; height: 100%;"><title></title><desc></desc><defs><clipPath id="recharts1-clip"><rect x="50" y="5" height="147" width="618"></rect></clipPath></defs><defs><linearGradient id="gZ1" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stop-color="#16A34A" stop-opacity="0.3"></stop><stop offset="95%" stop-color="#16A34A" stop-opacity="0"></stop></linearGradient><linearGradient id="gZ2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stop-color="#2563EB" stop-opacity="0.3"></stop><stop offset="95%" stop-color="#2563EB" stop-opacity="0"></stop></linearGradient><linearGradient id="gZ3" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stop-color="#7C3AED" stop-opacity="0.3"></stop><stop offset="95%" stop-color="#7C3AED" stop-opacity="0"></stop></linearGradient></defs><g class="recharts-cartesian-grid"><g class="recharts-cartesian-grid-horizontal"><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="152" x2="668" y2="152"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="115.25" x2="668" y2="115.25"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="78.5" x2="668" y2="78.5"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="41.75" x2="668" y2="41.75"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="5" x2="668" y2="5"></line></g><g class="recharts-cartesian-grid-vertical"><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="50" y1="5" x2="50" y2="152"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="153" y1="5" x2="153" y2="152"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="256" y1="5" x2="256" y2="152"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="359" y1="5" x2="359" y2="152"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="462" y1="5" x2="462" y2="152"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="565" y1="5" x2="565" y2="152"></line><line stroke-dasharray="3 3" stroke="#334155" fill="none" x="50" y="5" width="618" height="147" x1="668" y1="5" x2="668" y2="152"></line></g></g><g class="recharts-layer recharts-cartesian-axis recharts-xAxis xAxis"><line orientation="bottom" width="618" height="30" x="50" y="152" class="recharts-cartesian-axis-line" stroke="#334155" fill="none" x1="50" y1="152" x2="668" y2="152"></line><g class="recharts-cartesian-axis-ticks"><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="50" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8"><tspan x="50" dy="0.71em">06:00</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="153" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8"><tspan x="153" dy="0.71em">07:00</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="256" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8"><tspan x="256" dy="0.71em">08:00</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="359" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8"><tspan x="359" dy="0.71em">09:00</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="462" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8"><tspan x="462" dy="0.71em">10:00</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="565" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8"><tspan x="565" dy="0.71em">11:00</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="bottom" width="618" height="30" stroke="none" font-size="11" x="664.9453125" y="160" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle" fill="#94A3B8"><tspan x="664.9453125" dy="0.71em">12:00</tspan></text></g></g></g><g class="recharts-layer recharts-cartesian-axis recharts-yAxis yAxis"><line orientation="left" width="60" height="147" x="-10" y="5" class="recharts-cartesian-axis-line" stroke="#334155" fill="none" x1="50" y1="5" x2="50" y2="152"></line><g class="recharts-cartesian-axis-ticks"><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="152" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8"><tspan x="42" dy="0.355em">0</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="115.25" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8"><tspan x="42" dy="0.355em">25</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="78.5" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8"><tspan x="42" dy="0.355em">50</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="41.75" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8"><tspan x="42" dy="0.355em">75</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><text orientation="left" width="60" height="147" stroke="none" font-size="11" x="42" y="8.25" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#94A3B8"><tspan x="42" dy="0.355em">100</tspan></text></g></g></g><g class="recharts-layer recharts-area"><g class="recharts-layer"><defs><clipPath id="animationClipPath-recharts-area-5"><rect x="50" y="0" width="449.45686479893254" height="154"></rect></clipPath></defs><g class="recharts-layer" clip-path="url(#animationClipPath-recharts-area-5)"><g class="recharts-layer"><path name="Zone A" fill="url(#gZ1)" stroke-width="2" fill-opacity="0.6" width="618" height="147" stroke="none" class="recharts-curve recharts-area-area" d="M50,85.85C84.333,79.358,118.667,72.865,153,66.74C187.333,60.615,221.667,54,256,49.1C290.333,44.2,324.667,40.28,359,37.34C393.333,34.4,427.667,33.175,462,31.46C496.333,29.745,530.667,27.05,565,27.05C599.333,27.05,633.667,30.725,668,34.4L668,152C633.667,152,599.333,152,565,152C530.667,152,496.333,152,462,152C427.667,152,393.333,152,359,152C324.667,152,290.333,152,256,152C221.667,152,187.333,152,153,152C118.667,152,84.333,152,50,152Z"></path><path name="Zone A" stroke="#16A34A" fill="none" stroke-width="2" fill-opacity="0.6" width="618" height="147" class="recharts-curve recharts-area-curve" d="M50,85.85C84.333,79.358,118.667,72.865,153,66.74C187.333,60.615,221.667,54,256,49.1C290.333,44.2,324.667,40.28,359,37.34C393.333,34.4,427.667,33.175,462,31.46C496.333,29.745,530.667,27.05,565,27.05C599.333,27.05,633.667,30.725,668,34.4"></path></g></g></g></g><g class="recharts-layer recharts-area"><g class="recharts-layer"><defs><clipPath id="animationClipPath-recharts-area-6"><rect x="50" y="0" width="449.45686479893254" height="154"></rect></clipPath></defs><g class="recharts-layer" clip-path="url(#animationClipPath-recharts-area-6)"><g class="recharts-layer"><path name="Zone B" fill="url(#gZ2)" stroke-width="2" fill-opacity="0.6" width="618" height="147" stroke="none" class="recharts-curve recharts-area-area" d="M50,107.9C84.333,101.775,118.667,95.65,153,90.26C187.333,84.87,221.667,78.5,256,75.56C290.333,72.62,324.667,73.11,359,71.15C393.333,69.19,427.667,66.25,462,63.8C496.333,61.35,530.667,58.9,565,56.45C599.333,54,633.667,51.55,668,49.1L668,152C633.667,152,599.333,152,565,152C530.667,152,496.333,152,462,152C427.667,152,393.333,152,359,152C324.667,152,290.333,152,256,152C221.667,152,187.333,152,153,152C118.667,152,84.333,152,50,152Z"></path><path name="Zone B" stroke="#2563EB" fill="none" stroke-width="2" fill-opacity="0.6" width="618" height="147" class="recharts-curve recharts-area-curve" d="M50,107.9C84.333,101.775,118.667,95.65,153,90.26C187.333,84.87,221.667,78.5,256,75.56C290.333,72.62,324.667,73.11,359,71.15C393.333,69.19,427.667,66.25,462,63.8C496.333,61.35,530.667,58.9,565,56.45C599.333,54,633.667,51.55,668,49.1"></path></g></g></g></g><g class="recharts-layer recharts-area"><g class="recharts-layer"><defs><clipPath id="animationClipPath-recharts-area-7"><rect x="50" y="0" width="449.45686479893254" height="154"></rect></clipPath></defs><g class="recharts-layer" clip-path="url(#animationClipPath-recharts-area-7)"><g class="recharts-layer"><path name="Zone C" fill="url(#gZ3)" stroke-width="2" fill-opacity="0.6" width="618" height="147" stroke="none" class="recharts-curve recharts-area-area" d="M50,137.3C84.333,135.83,118.667,134.36,153,129.95C187.333,125.54,221.667,114.76,256,110.84C290.333,106.92,324.667,106.675,359,104.96C393.333,103.245,427.667,102.51,462,100.55C496.333,98.59,530.667,95.65,565,93.2C599.333,90.75,633.667,88.3,668,85.85L668,152C633.667,152,599.333,152,565,152C530.667,152,496.333,152,462,152C427.667,152,393.333,152,359,152C324.667,152,290.333,152,256,152C221.667,152,187.333,152,153,152C118.667,152,84.333,152,50,152Z"></path><path name="Zone C" stroke="#7C3AED" fill="none" stroke-width="2" fill-opacity="0.6" width="618" height="147" class="recharts-curve recharts-area-curve" d="M50,137.3C84.333,135.83,118.667,134.36,153,129.95C187.333,125.54,221.667,114.76,256,110.84C290.333,106.92,324.667,106.675,359,104.96C393.333,103.245,427.667,102.51,462,100.55C496.333,98.59,530.667,95.65,565,93.2C599.333,90.75,633.667,88.3,668,85.85"></path></g></g></g></g></svg><div class="recharts-legend-wrapper" style="position: absolute; width: 678px; height: auto; left: -10px; bottom: 0px; font-size: 12px; color: rgb(148, 163, 184);"><ul class="recharts-default-legend" style="padding: 0px; margin: 0px; text-align: center;"><li class="recharts-legend-item legend-item-0" style="display: inline-block; margin-right: 10px;"><svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><title></title><desc></desc><path stroke-width="4" fill="none" stroke="#16A34A" d="M0,16h10.666666666666666
-            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
-            H32M21.333333333333332,16
-            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon"></path></svg><span class="recharts-legend-item-text" style="color: rgb(22, 163, 74);">Zone A</span></li><li class="recharts-legend-item legend-item-1" style="display: inline-block; margin-right: 10px;"><svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><title></title><desc></desc><path stroke-width="4" fill="none" stroke="#2563EB" d="M0,16h10.666666666666666
-            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
-            H32M21.333333333333332,16
-            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon"></path></svg><span class="recharts-legend-item-text" style="color: rgb(37, 99, 235);">Zone B</span></li><li class="recharts-legend-item legend-item-2" style="display: inline-block; margin-right: 10px;"><svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><title></title><desc></desc><path stroke-width="4" fill="none" stroke="#7C3AED" d="M0,16h10.666666666666666
-            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
-            H32M21.333333333333332,16
-            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon"></path></svg><span class="recharts-legend-item-text" style="color: rgb(124, 58, 237);">Zone C</span></li></ul></div><div tabindex="-1" class="recharts-tooltip-wrapper recharts-tooltip-wrapper-right recharts-tooltip-wrapper-bottom" style="visibility: hidden; pointer-events: none; position: absolute; top: 0px; left: 0px; transform: translate(50px, 10px);"><div class="recharts-default-tooltip" style="margin: 0px; padding: 10px; background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); white-space: nowrap; border-radius: 6px;"><p class="recharts-tooltip-label" style="margin: 0px; color: rgb(248, 250, 252);"></p></div></div></div></div></div><div class="space-y-4"><div class="rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600; margin-bottom: 12px;">Mật độ theo Zone</div><div class="mb-3"><div class="flex justify-between mb-1"><span style="color: rgb(203, 213, 225); font-size: 12px;">Zone A</span><span style="color: rgb(245, 158, 11); font-size: 12px; font-weight: 600;">78%</span></div><div class="h-2 rounded-full" style="background: rgb(51, 65, 85);"><div class="h-2 rounded-full transition-all duration-500" style="width: 78%; background: rgb(245, 158, 11);"></div></div></div><div class="mb-3"><div class="flex justify-between mb-1"><span style="color: rgb(203, 213, 225); font-size: 12px;">Zone B</span><span style="color: rgb(22, 163, 74); font-size: 12px; font-weight: 600;">55%</span></div><div class="h-2 rounded-full" style="background: rgb(51, 65, 85);"><div class="h-2 rounded-full transition-all duration-500" style="width: 55%; background: rgb(22, 163, 74);"></div></div></div><div class="mb-3"><div class="flex justify-between mb-1"><span style="color: rgb(203, 213, 225); font-size: 12px;">Zone C</span><span style="color: rgb(22, 163, 74); font-size: 12px; font-weight: 600;">32%</span></div><div class="h-2 rounded-full" style="background: rgb(51, 65, 85);"><div class="h-2 rounded-full transition-all duration-500" style="width: 32%; background: rgb(22, 163, 74);"></div></div></div></div><div class="rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div class="flex items-center gap-2 mb-3"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu"><rect width="16" height="16" x="4" y="4" rx="2"></rect><rect width="6" height="6" x="9" y="9" rx="1"></rect><path d="M15 2v2"></path><path d="M15 20v2"></path><path d="M2 15h2"></path><path d="M2 9h2"></path><path d="M20 15h2"></path><path d="M20 9h2"></path><path d="M9 2v2"></path><path d="M9 20v2"></path></svg><span style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600;">Kết nối hệ thống</span></div><div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);"><span style="color: rgb(203, 213, 225); font-size: 12px;">PLC Block</span><div class="flex items-center gap-2"><span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;"></span><span style="color: rgb(134, 239, 172); font-size: 11px;">Kết nối</span></div></div><div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);"><span style="color: rgb(203, 213, 225); font-size: 12px;">HMI Block</span><div class="flex items-center gap-2"><span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;"></span><span style="color: rgb(134, 239, 172); font-size: 11px;">Kết nối</span></div></div><div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);"><span style="color: rgb(203, 213, 225); font-size: 12px;">AI-VDS</span><div class="flex items-center gap-2"><span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;"></span><span style="color: rgb(134, 239, 172); font-size: 11px;">Kết nối</span></div></div><div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);"><span style="color: rgb(203, 213, 225); font-size: 12px;">LED/PGS</span><div class="flex items-center gap-2"><span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;"></span><span style="color: rgb(134, 239, 172); font-size: 11px;">Kết nối</span></div></div><div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);"><span style="color: rgb(203, 213, 225); font-size: 12px;">SCADA Server</span><div class="flex items-center gap-2"><span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;"></span><span style="color: rgb(134, 239, 172); font-size: 11px;">Kết nối</span></div></div></div></div></div><div class="rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div class="flex items-center justify-between mb-3"><span style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600;">Trạng thái Block</span><span style="color: rgb(252, 165, 165); font-size: 12px;">2 block lỗi/offline</span></div><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2"><button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(22, 163, 74, 0.267); cursor: pointer;"><div class="flex items-center justify-between mb-1"><span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Block A01</span><span class="w-2 h-2 rounded-full" style="background: rgb(22, 163, 74);"></span></div><div style="color: rgb(148, 163, 184); font-size: 10px;">Z1</div><div class="flex items-center justify-between mt-2"><span style="color: rgb(22, 163, 74); font-size: 13px; font-weight: 700;">80%</span><span style="color: rgb(100, 116, 139); font-size: 10px;">16/20</span></div><div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);"><div class="h-1 rounded-full" style="width: 80%; background: rgb(22, 163, 74);"></div></div><div class="mt-1.5"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(22, 163, 74); color: white; font-size: 11px;">Bình thường</span></div></button><button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(37, 99, 235, 0.267); cursor: pointer;"><div class="flex items-center justify-between mb-1"><span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Block A02</span><span class="w-2 h-2 rounded-full" style="background: rgb(37, 99, 235);"></span></div><div style="color: rgb(148, 163, 184); font-size: 10px;">Z1</div><div class="flex items-center justify-between mt-2"><span style="color: rgb(37, 99, 235); font-size: 13px; font-weight: 700;">90%</span><span style="color: rgb(100, 116, 139); font-size: 10px;">18/20</span></div><div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);"><div class="h-1 rounded-full" style="width: 90%; background: rgb(37, 99, 235);"></div></div><div class="mt-1.5"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(37, 99, 235); color: white; font-size: 11px;">Đang chạy</span></div></button><button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(245, 158, 11, 0.267); cursor: pointer;"><div class="flex items-center justify-between mb-1"><span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Block A03</span><span class="w-2 h-2 rounded-full" style="background: rgb(245, 158, 11);"></span></div><div style="color: rgb(148, 163, 184); font-size: 10px;">Z1</div><div class="flex items-center justify-between mt-2"><span style="color: rgb(245, 158, 11); font-size: 13px; font-weight: 700;">70%</span><span style="color: rgb(100, 116, 139); font-size: 10px;">14/20</span></div><div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);"><div class="h-1 rounded-full" style="width: 70%; background: rgb(245, 158, 11);"></div></div><div class="mt-1.5"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(245, 158, 11); color: rgb(30, 41, 59); font-size: 11px;">Cảnh báo</span></div></button><button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(220, 38, 38, 0.267); cursor: pointer;"><div class="flex items-center justify-between mb-1"><span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Block A04</span><span class="w-2 h-2 rounded-full" style="background: rgb(220, 38, 38);"></span></div><div style="color: rgb(148, 163, 184); font-size: 10px;">Z1</div><div class="flex items-center justify-between mt-2"><span style="color: rgb(220, 38, 38); font-size: 13px; font-weight: 700;">50%</span><span style="color: rgb(100, 116, 139); font-size: 10px;">10/20</span></div><div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);"><div class="h-1 rounded-full" style="width: 50%; background: rgb(220, 38, 38);"></div></div><div class="mt-1.5"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(220, 38, 38); color: white; font-size: 11px;">Lỗi</span></div></button><button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(22, 163, 74, 0.267); cursor: pointer;"><div class="flex items-center justify-between mb-1"><span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Block B01</span><span class="w-2 h-2 rounded-full" style="background: rgb(22, 163, 74);"></span></div><div style="color: rgb(148, 163, 184); font-size: 10px;">Z2</div><div class="flex items-center justify-between mt-2"><span style="color: rgb(22, 163, 74); font-size: 13px; font-weight: 700;">54%</span><span style="color: rgb(100, 116, 139); font-size: 10px;">13/24</span></div><div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);"><div class="h-1 rounded-full" style="width: 54%; background: rgb(22, 163, 74);"></div></div><div class="mt-1.5"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(22, 163, 74); color: white; font-size: 11px;">Bình thường</span></div></button><button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(124, 58, 237, 0.267); cursor: pointer;"><div class="flex items-center justify-between mb-1"><span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Block B02</span><span class="w-2 h-2 rounded-full" style="background: rgb(124, 58, 237);"></span></div><div style="color: rgb(148, 163, 184); font-size: 10px;">Z2</div><div class="flex items-center justify-between mt-2"><span style="color: rgb(124, 58, 237); font-size: 13px; font-weight: 700;">0%</span><span style="color: rgb(100, 116, 139); font-size: 10px;">0/24</span></div><div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);"><div class="h-1 rounded-full" style="width: 0%; background: rgb(124, 58, 237);"></div></div><div class="mt-1.5"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(124, 58, 237); color: white; font-size: 11px;">Bảo trì</span></div></button><button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(22, 163, 74, 0.267); cursor: pointer;"><div class="flex items-center justify-between mb-1"><span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Block B03</span><span class="w-2 h-2 rounded-full" style="background: rgb(22, 163, 74);"></span></div><div style="color: rgb(148, 163, 184); font-size: 10px;">Z2</div><div class="flex items-center justify-between mt-2"><span style="color: rgb(22, 163, 74); font-size: 13px; font-weight: 700;">63%</span><span style="color: rgb(100, 116, 139); font-size: 10px;">15/24</span></div><div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);"><div class="h-1 rounded-full" style="width: 63%; background: rgb(22, 163, 74);"></div></div><div class="mt-1.5"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(22, 163, 74); color: white; font-size: 11px;">Bình thường</span></div></button><button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(107, 114, 128, 0.267); cursor: pointer;"><div class="flex items-center justify-between mb-1"><span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Block C01</span><span class="w-2 h-2 rounded-full" style="background: rgb(107, 114, 128);"></span></div><div style="color: rgb(148, 163, 184); font-size: 10px;">Z3</div><div class="flex items-center justify-between mt-2"><span style="color: rgb(107, 114, 128); font-size: 13px; font-weight: 700;">0%</span><span style="color: rgb(100, 116, 139); font-size: 10px;">0/16</span></div><div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);"><div class="h-1 rounded-full" style="width: 0%; background: rgb(107, 114, 128);"></div></div><div class="mt-1.5"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(107, 114, 128); color: white; font-size: 11px;">Offline</span></div></button><button class="rounded-lg p-3 text-left transition-all hover:scale-[1.02] hover:shadow-lg" style="background: rgb(15, 23, 42); border: 1px solid rgba(22, 163, 74, 0.267); cursor: pointer;"><div class="flex items-center justify-between mb-1"><span style="color: rgb(248, 250, 252); font-size: 11px; font-weight: 600;">Block C02</span><span class="w-2 h-2 rounded-full" style="background: rgb(22, 163, 74);"></span></div><div style="color: rgb(148, 163, 184); font-size: 10px;">Z3</div><div class="flex items-center justify-between mt-2"><span style="color: rgb(22, 163, 74); font-size: 13px; font-weight: 700;">31%</span><span style="color: rgb(100, 116, 139); font-size: 10px;">5/16</span></div><div class="h-1 rounded-full mt-1" style="background: rgb(51, 65, 85);"><div class="h-1 rounded-full" style="width: 31%; background: rgb(22, 163, 74);"></div></div><div class="mt-1.5"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold" style="background: rgb(22, 163, 74); color: white; font-size: 11px;">Bình thường</span></div></button></div></div><div class="rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);"><div style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600; margin-bottom: 12px;">Cảnh báo gần nhất</div><div class="overflow-x-auto"><table class="w-full" style="border-collapse: collapse;"><thead><tr style="border-bottom: 1px solid rgb(51, 65, 85);"><th class="text-left py-2 px-2" style="color: rgb(100, 116, 139); font-size: 11px; font-weight: 600;">Thời gian</th><th class="text-left py-2 px-2" style="color: rgb(100, 116, 139); font-size: 11px; font-weight: 600;">Mức độ</th><th class="text-left py-2 px-2" style="color: rgb(100, 116, 139); font-size: 11px; font-weight: 600;">Zone</th><th class="text-left py-2 px-2" style="color: rgb(100, 116, 139); font-size: 11px; font-weight: 600;">Block</th><th class="text-left py-2 px-2" style="color: rgb(100, 116, 139); font-size: 11px; font-weight: 600;">Thông báo</th><th class="text-left py-2 px-2" style="color: rgb(100, 116, 139); font-size: 11px; font-weight: 600;">Trạng thái</th></tr></thead><tbody><tr class="border-b hover:bg-[#0F172A] transition-colors" style="border-color: rgb(30, 41, 59);"><td class="py-2 px-2" style="color: rgb(148, 163, 184); font-size: 12px; font-variant-numeric: tabular-nums;">09:14:22</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs font-semibold" style="background: rgb(220, 38, 38); color: white; font-size: 10px;">CRITICAL</span></td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">Z1</td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">B1A04</td><td class="py-2 px-2 max-w-xs truncate" style="color: rgb(248, 250, 252); font-size: 12px;">Chùng xích nâng pallet P04 - Block A04</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs" style="background: rgba(220, 38, 38, 0.133); color: rgb(252, 165, 165); font-size: 11px;">Đang lỗi</span></td></tr><tr class="border-b hover:bg-[#0F172A] transition-colors" style="border-color: rgb(30, 41, 59);"><td class="py-2 px-2" style="color: rgb(148, 163, 184); font-size: 12px; font-variant-numeric: tabular-nums;">09:12:05</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs font-semibold" style="background: rgb(245, 158, 11); color: rgb(30, 41, 59); font-size: 10px;">MAJOR</span></td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">Z1</td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">B1A03</td><td class="py-2 px-2 max-w-xs truncate" style="color: rgb(248, 250, 252); font-size: 12px;">Mất kết nối HMI Block A03</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs" style="background: rgba(245, 158, 11, 0.133); color: rgb(252, 211, 77); font-size: 11px;">Đã biết</span></td></tr><tr class="border-b hover:bg-[#0F172A] transition-colors" style="border-color: rgb(30, 41, 59);"><td class="py-2 px-2" style="color: rgb(148, 163, 184); font-size: 12px; font-variant-numeric: tabular-nums;">08:45:11</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs font-semibold" style="background: rgb(37, 99, 235); color: white; font-size: 10px;">MINOR</span></td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">Z2</td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">B2B01</td><td class="py-2 px-2 max-w-xs truncate" style="color: rgb(248, 250, 252); font-size: 12px;">Công tắc hành trình LS01 phản hồi chậm</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs" style="background: rgba(245, 158, 11, 0.133); color: rgb(252, 211, 77); font-size: 11px;">Đã biết</span></td></tr><tr class="border-b hover:bg-[#0F172A] transition-colors" style="border-color: rgb(30, 41, 59);"><td class="py-2 px-2" style="color: rgb(148, 163, 184); font-size: 12px; font-variant-numeric: tabular-nums;">07:30:01</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs font-semibold" style="background: rgb(220, 38, 38); color: white; font-size: 10px;">CRITICAL</span></td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">Z1</td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">B1A04</td><td class="py-2 px-2 max-w-xs truncate" style="color: rgb(248, 250, 252); font-size: 12px;">Lỗi công tắc hành trình cuối hành trình Block A04</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs" style="background: rgba(220, 38, 38, 0.133); color: rgb(252, 165, 165); font-size: 11px;">Đang lỗi</span></td></tr><tr class="border-b hover:bg-[#0F172A] transition-colors" style="border-color: rgb(30, 41, 59);"><td class="py-2 px-2" style="color: rgb(148, 163, 184); font-size: 12px; font-variant-numeric: tabular-nums;">06:10:33</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs font-semibold" style="background: rgb(245, 158, 11); color: rgb(30, 41, 59); font-size: 10px;">MAJOR</span></td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">Z3</td><td class="py-2 px-2" style="color: rgb(203, 213, 225); font-size: 12px;">B3C01</td><td class="py-2 px-2 max-w-xs truncate" style="color: rgb(248, 250, 252); font-size: 12px;">Mất kết nối PLC Block C01 - Zone C</td><td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-xs" style="background: rgba(220, 38, 38, 0.133); color: rgb(252, 165, 165); font-size: 11px;">Đang lỗi</span></td></tr></tbody></table></div></div></div>
+        <!-- Alarm Type Summary Counters -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <!-- Operator Errors -->
+            <div class="p-3 rounded-lg border bg-slate-950/40 border-amber-500/20 flex justify-between items-center">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 text-[10px] uppercase font-mono block">Lỗi thao tác vận hành</span>
+                        <span class="text-[9px] text-amber-400 font-mono">Operator Errors</span>
+                    </div>
+                </div>
+                <span id="active-operator-count" class="text-xl font-bold text-amber-400 font-mono">0</span>
+            </div>
+
+            <!-- System Faults -->
+            <div class="p-3 rounded-lg border bg-slate-950/40 border-red-500/20 flex justify-between items-center">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded bg-red-500/10 text-red-400 border border-red-500/20 animate-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 text-[10px] uppercase font-mono block">Lỗi hệ thống / Thiết bị</span>
+                        <span class="text-[9px] text-red-400 font-mono">System & Device Faults</span>
+                    </div>
+                </div>
+                <span id="active-system-count" class="text-xl font-bold text-red-400 font-mono animate-pulse">0</span>
+            </div>
+
+            <!-- Maintenance Due -->
+            <div class="p-3 rounded-lg border bg-slate-950/40 border-cyan-500/20 flex justify-between items-center">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 text-[10px] uppercase font-mono block">Thiết bị đến hạn bảo trì</span>
+                        <span class="text-[9px] text-cyan-400 font-mono">Maintenance Due</span>
+                    </div>
+                </div>
+                <span id="active-maint-count" class="text-xl font-bold text-cyan-400 font-mono">0</span>
+            </div>
+        </div>
+
+        <!-- Alarms Live Feed Table -->
+        <div class="overflow-x-auto bg-slate-950/20 rounded-lg border border-slate-800/80">
+            <table class="w-full text-left border-collapse font-mono text-xs">
+                <thead>
+                    <tr class="border-b border-slate-800 text-slate-500 text-[10px] uppercase bg-slate-950/45">
+                        <th class="py-2.5 px-3 font-semibold w-20">Thời gian</th>
+                        <th class="py-2.5 px-3 font-semibold w-24">Mã Lỗi</th>
+                        <th class="py-2.5 px-3 font-semibold w-40">Phân loại cảnh báo</th>
+                        <th class="py-2.5 px-3 font-semibold w-32">Nguồn phát</th>
+                        <th class="py-2.5 px-3 font-semibold">Nội dung chi tiết</th>
+                        <th class="py-2.5 px-3 font-semibold text-center w-24">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="alarms-live-tbody" class="divide-y divide-slate-900/65">
+                    <!-- Appended dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // CSS Keyframe styles for slide-down animation
+    if (!document.getElementById('alarm-animation-styles')) {
+        const style = document.createElement('style');
+        style.id = 'alarm-animation-styles';
+        style.innerHTML = `
+            @@keyframes alarm-slide-down {
+                from { opacity: 0; transform: translateY(-8px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .alarm-row-new {
+                animation: alarm-slide-down 0.4s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Active alarms state
+    let activeAlarms = [];
+
+    // Pre-configured alarms generator database
+    const operatorErrorsPool = [
+        { code: "OP-ERR-01", msg: "Biển số xe đỗ lệch tâm khay nâng giới hạn an toàn" },
+        { code: "OP-ERR-02", msg: "Nút bấm dừng khẩn cấp (E-Stop) kích hoạt đột ngột" },
+        { code: "OP-ERR-03", msg: "Yêu cầu xuất xe thất bại - Phát hiện vật thể chuyển động vùng quét" },
+        { code: "OP-ERR-04", msg: "Thẻ RFID không hợp lệ quẹt liên tiếp tại Barrier lối vào" },
+        { code: "OP-ERR-05", msg: "Cố ý nhấn hạ mâm khi xe chưa vào đúng vị trí cơ cấu khóa" }
+    ];
+
+    const systemFaultsPool = [
+        { code: "SYS-FLT-11", msg: "Mất kết nối truyền thông Modbus TCP với PLC chính" },
+        { code: "SYS-FLT-12", msg: "Quá dòng động cơ nâng chính tời cuộn (Đo được: 15.2A)" },
+        { code: "SYS-FLT-13", msg: "Cảm biến quang an toàn SafeGuard bị che khuất hoặc bụi bẩn" },
+        { code: "SYS-FLT-14", msg: "Lỗi phản hồi công tắc giới hạn hành trình cuối LS-T3" },
+        { code: "SYS-FLT-15", msg: "Điện áp nguồn cấp biến tần động cơ Shuttle vượt ngưỡng bảo vệ" }
+    ];
+
+    const maintenanceDuePool = [
+        { code: "MNT-DUE-21", msg: "Pallet đỗ cơ khí đạt mốc hoạt động tần suất cao - Cần bôi trơn xích" },
+        { code: "MNT-DUE-22", msg: "Cáp kéo tời nâng đạt giới hạn chu kỳ chạy - Đề xuất kiểm tra độ giãn" },
+        { code: "MNT-DUE-23", msg: "Chổi than động cơ Shuttle mài mòn quá mốc 80% - Cần thay thế" },
+        { code: "MNT-DUE-24", msg: "Ổ bi bạc đạn trục quay mâm xoay khô dầu - Yêu cầu bảo dưỡng" },
+        { code: "MNT-DUE-25", msg: "Cần kiểm tra định kỳ chất lượng dầu thủy lực trạm nguồn nâng hạ" }
+    ];
+
+    // Helper to generate a random item from array
+    function getRandomItem(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    // Format current time as HH:mm:ss
+    function formatCurrentTime() {
+        const now = new Date();
+        return now.toTimeString().split(' ')[0];
+    }
+
+    // Initialize initial alarms list (including reading localStorage for maintenance pallets)
+    function initAlarms() {
+        // 1. Check if there are pallets with cycles >= 100 in localStorage
+        const storedCycles = localStorage.getItem('palletCycleData');
+        let highCyclePallets = [];
+        if (storedCycles) {
+            try {
+                const cycleData = JSON.parse(storedCycles);
+                for (const [block, cyclesArray] of Object.entries(cycleData)) {
+                    cyclesArray.forEach((cycles, idx) => {
+                        if (cycles >= 100) {
+                            highCyclePallets.push({
+                                block: block,
+                                pallet: `Pallet P${String(idx + 1).padStart(2, '0')}`,
+                                cycles: cycles
+                            });
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error("Lỗi đọc dữ liệu chu kỳ để sinh cảnh báo:", e);
+            }
+        }
+
+        // Add any high cycle pallets as maintenance alarms
+        highCyclePallets.forEach((p, index) => {
+            const time = new Date();
+            time.setMinutes(time.getMinutes() - (index * 4 + 2)); // slight offset in past
+            const timeStr = time.toTimeString().split(' ')[0];
+            
+            // Extract Zone
+            let zoneId = "Z1";
+            if (p.block.includes("A-04") || p.block.includes("B-01") || p.block.includes("B-02")) zoneId = "Z2";
+            else if (p.block.includes("B-03") || p.block.includes("B-04") || p.block.includes("C-01")) zoneId = "Z3";
+            else if (p.block.includes("C-02") || p.block.includes("C-03") || p.block.includes("C-04")) zoneId = "Z4";
+            else if (p.block.includes("D-01") || p.block.includes("D-02") || p.block.includes("D-03")) zoneId = "Z5";
+            else if (p.block.includes("E-01") || p.block.includes("E-02") || p.block.includes("E-03")) zoneId = "Z6";
+
+            activeAlarms.push({
+                id: "ALM-" + Math.floor(100000 + Math.random() * 900000),
+                time: timeStr,
+                code: "MNT-DUE-100",
+                type: 3, // Maintenance Due
+                typeName: "Đến Hạn Bảo Trì",
+                source: `${zoneId} · ${p.block} · ${p.pallet}`,
+                msg: `${p.pallet} đã đạt ${p.cycles}/100 chu kỳ hoạt động - Yêu cầu bảo trì cơ học & reset`
+            });
+        });
+
+        // Add some initial mock alarms if the list is short
+        if (activeAlarms.length < 3) {
+            activeAlarms.push({
+                id: "ALM-382910",
+                time: "22:50:15",
+                code: "SYS-FLT-11",
+                type: 2, // System Fault
+                typeName: "Lỗi Hệ Thống",
+                source: "Z2 · Block B-04 · Động cơ nâng",
+                msg: "Lỗi chênh lệch nhiệt độ cuộn dây motor nâng hạ Block B04 quá tải (115°C)"
+            });
+            activeAlarms.push({
+                id: "ALM-481023",
+                time: "22:54:02",
+                code: "OP-ERR-03",
+                type: 1, // Operator Error
+                typeName: "Lỗi Thao Tác",
+                source: "Z1 · Block A-02 · Vùng an toàn",
+                msg: "Lệnh xuất xe từ xa bị ngắt - Cảm biến quang phát hiện vật cản chuyển động tại lối ra"
+            });
+            activeAlarms.push({
+                id: "ALM-582910",
+                time: "22:56:45",
+                code: "MNT-DUE-22",
+                type: 3, // Maintenance Due
+                typeName: "Đến Hạn Bảo Trì",
+                source: "Z3 · Block C-01 · Xích tải",
+                msg: "Pallet P08 đạt giới hạn chu kỳ bảo dưỡng định kỳ ổ bi đỡ ray dẫn hướng"
+            });
+        }
+
+        renderAlarmsTable();
+        updateCounters();
+        updateGlobalBanner();
+    }
+
+    // Render active alarms table
+    function renderAlarmsTable() {
+        const tbody = document.getElementById('alarms-live-tbody');
+        tbody.innerHTML = '';
+
+        if (activeAlarms.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="py-8 text-center text-slate-500 italic">
+                        Không có cảnh báo hoạt động. Hệ thống vận hành an toàn.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        // Sort descending by time
+        const sorted = [...activeAlarms].sort((a, b) => b.time.localeCompare(a.time));
+
+        sorted.forEach(alm => {
+            let typeBadge = "";
+            let rowClass = "";
+            let codeColor = "";
+
+            if (alm.type === 1) { // Operator Error
+                typeBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/10 border border-amber-500/30 text-amber-400">LỖI THAO TÁC</span>`;
+                rowClass = "bg-amber-955/5 hover:bg-amber-950/10 transition-colors";
+                codeColor = "text-amber-500";
+            } else if (alm.type === 2) { // System Fault
+                typeBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-500/15 border border-red-500/30 text-red-400 animate-pulse">LỖI THIẾT BỊ</span>`;
+                rowClass = "bg-red-955/5 hover:bg-red-955/10 transition-colors";
+                codeColor = "text-red-500 font-bold";
+            } else if (alm.type === 3) { // Maintenance Due
+                typeBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">ĐẾN HẠN BẢO TRÌ</span>`;
+                rowClass = "bg-cyan-955/5 hover:bg-cyan-950/10 transition-colors";
+                codeColor = "text-cyan-500";
+            }
+
+            const tr = document.createElement('tr');
+            tr.id = `alarm-tr-${alm.id}`;
+            tr.className = `${rowClass} border-b border-slate-900/60`;
+            tr.innerHTML = `
+                <td class="py-3 px-3 text-slate-400 text-[11px] font-mono">${alm.time}</td>
+                <td class="py-3 px-3 ${codeColor} font-bold font-mono">${alm.code}</td>
+                <td class="py-3 px-3">${typeBadge}</td>
+                <td class="py-3 px-3 text-slate-300 font-semibold font-mono">${alm.source}</td>
+                <td class="py-3 px-3 text-slate-200 max-w-sm truncate" title="${alm.msg}">${alm.msg}</td>
+                <td class="py-3 px-3 text-center">
+                    <button onclick="ackAlarm('${alm.id}')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded text-[10px] font-bold transition-all border border-slate-750 font-mono">
+                        Xác nhận
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Update the counter stats
+    function updateCounters() {
+        const opCount = activeAlarms.filter(a => a.type === 1).length;
+        const sysCount = activeAlarms.filter(a => a.type === 2).length;
+        const maintCount = activeAlarms.filter(a => a.type === 3).length;
+
+        document.getElementById('active-operator-count').textContent = opCount;
+        document.getElementById('active-system-count').textContent = sysCount;
+        document.getElementById('active-maint-count').textContent = maintCount;
+    }
+
+    // Update top dynamic banner
+    function updateGlobalBanner() {
+        const banner = document.getElementById('global-alarm-banner');
+        const countSpan = document.getElementById('global-alarm-banner-count');
+        const detailSpan = document.getElementById('global-alarm-banner-detail');
+
+        if (activeAlarms.length > 0) {
+            banner.classList.remove('hidden');
+            countSpan.textContent = `${activeAlarms.length} cảnh báo đang hoạt động:`;
+            
+            // Get the latest alarm
+            const sorted = [...activeAlarms].sort((a, b) => b.time.localeCompare(a.time));
+            const latest = sorted[0];
+            detailSpan.textContent = `[${latest.code}] ${latest.msg} (${latest.source})`;
+        } else {
+            banner.classList.add('hidden');
+        }
+    }
+
+    // Ack (Acknowledge) alarm - remove it from list
+    function ackAlarm(id) {
+        const row = document.getElementById(`alarm-tr-${id}`);
+        if (row) {
+            // Apply fade out animation
+            row.style.transition = 'all 0.3s ease';
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(20px)';
+            
+            setTimeout(() => {
+                activeAlarms = activeAlarms.filter(a => a.id !== id);
+                renderAlarmsTable();
+                updateCounters();
+                updateGlobalBanner();
+            }, 300);
+        }
+    }
+
+    // Add alarm dynamically (real-time generator)
+    function addRealtimeAlarm(type) {
+        let code = "";
+        let msg = "";
+        let source = "";
+        let typeName = "";
+
+        const zone = "Z" + Math.floor(1 + Math.random() * 6);
+        const block = "Block " + getRandomItem(["A-01", "A-02", "B-01", "B-04", "C-02", "D-01", "E-02"]);
+        const pallet = "Pallet P" + String(Math.floor(1 + Math.random() * 12)).padStart(2, '0');
+
+        if (type === 1) { // Operator Error
+            const item = getRandomItem(operatorErrorsPool);
+            code = item.code;
+            msg = item.msg;
+            source = `${zone} · ${block} · ${pallet}`;
+            typeName = "Lỗi Thao Tác";
+        } else if (type === 2) { // System Fault
+            const item = getRandomItem(systemFaultsPool);
+            code = item.code;
+            msg = item.msg;
+            source = `${zone} · ${block}`;
+            typeName = "Lỗi Thiết Bị";
+        } else { // Maintenance Due
+            const item = getRandomItem(maintenanceDuePool);
+            code = item.code;
+            msg = item.msg;
+            source = `${zone} · ${block} · ${pallet}`;
+            typeName = "Đến Hạn Bảo Trì";
+        }
+
+        const newAlarm = {
+            id: "ALM-" + Math.floor(100000 + Math.random() * 900000),
+            time: formatCurrentTime(),
+            code: code,
+            type: type,
+            typeName: typeName,
+            source: source,
+            msg: msg
+        };
+
+        // Add to active alarms
+        activeAlarms.unshift(newAlarm);
+
+        // Keep maximum of 8 alarms in live log list
+        if (activeAlarms.length > 8) {
+            activeAlarms.pop();
+        }
+
+        // Render & Update UI
+        renderAlarmsTable();
+        updateCounters();
+        updateGlobalBanner();
+
+        // Highlight the new row
+        setTimeout(() => {
+            const row = document.getElementById(`alarm-tr-${newAlarm.id}`);
+            if (row) {
+                row.classList.add('alarm-row-new');
+                // Apply a glowing border highlight temporarily
+                row.style.boxShadow = 'inset 0 0 10px rgba(59, 130, 246, 0.2)';
+                setTimeout(() => {
+                    row.style.boxShadow = 'none';
+                }, 2000);
+            }
+        }, 50);
+    }
+
+    // Schedule real-time alarm generator loop (every 15 seconds)
+    setInterval(() => {
+        // Choose type randomly: 1 (Operator), 2 (System), 3 (Maintenance)
+        // With weights: 40% System, 30% Operator, 30% Maintenance
+        const rand = Math.random();
+        let type = 2;
+        if (rand < 0.3) {
+            type = 1;
+        } else if (rand < 0.6) {
+            type = 3;
+        }
+        addRealtimeAlarm(type);
+    }, 15000);
+
+    // Initialize alarms on page load
+    document.addEventListener("DOMContentLoaded", () => {
+        initAlarms();
+    });
+</script>
+</div>

@@ -1,5 +1,290 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
 
-<div class="p-5 pb-10 min-h-[calc(100vh-3.5rem)]"><div class="space-y-5"><h1 class="text-slate-100 text-lg font-semibold">Remote Support &amp; Phân quyền</h1><div class="bg-card rounded border border-slate-700/50 p-4"><h3 class="text-slate-300 text-sm font-semibold mb-3 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>Phân quyền người dùng</h3><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"><div class="bg-slate-800/40 rounded border border-red-700/30 p-3"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-semibold bg-red-950/60 border-red-700/50 text-red-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Admin</div><ul class="space-y-1"><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Toàn quyền hệ thống</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Forced Mode</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Quản lý người dùng</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Cài đặt hệ thống</li></ul></div><div class="bg-slate-800/40 rounded border border-violet-700/30 p-3"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-semibold bg-violet-950/60 border-violet-700/50 text-violet-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Supervisor</div><ul class="space-y-1"><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Reset Alarm</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Xem tất cả module</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Báo cáo</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Approve lệnh nguy hiểm</li></ul></div><div class="bg-slate-800/40 rounded border border-amber-700/30 p-3"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-semibold bg-amber-950/60 border-amber-700/50 text-amber-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Maintenance</div><ul class="space-y-1"><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Maintenance Mode</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Bảo trì</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Xem Block Detail</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Work Order</li></ul></div><div class="bg-slate-800/40 rounded border border-blue-700/30 p-3"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-semibold bg-blue-950/60 border-blue-700/50 text-blue-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Operator</div><ul class="space-y-1"><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Dashboard</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Alarm – View only</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Điều hướng xe</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Quản lý thẻ (hạn chế)</li></ul></div><div class="bg-slate-800/40 rounded border border-teal-700/30 p-3"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-semibold bg-teal-950/60 border-teal-700/50 text-teal-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Remote Support</div><ul class="space-y-1"><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Xem trạng thái</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Không điều khiển</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Audit log (read)</li><li class="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-600 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>Session limited</li></ul></div></div></div><div class="bg-card rounded border border-slate-700/50 p-4"><h3 class="text-slate-300 text-sm font-semibold mb-3 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-headphones"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"></path></svg>Người dùng đang trực tuyến</h3><div class="grid grid-cols-2 md:grid-cols-4 gap-3"><div class="bg-slate-800/40 rounded border border-slate-700/40 p-3"><div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-mono bg-violet-950/60 border-violet-700/50 text-violet-300 mb-2">Supervisor</div><div class="text-slate-200 text-xs font-mono font-medium">supervisor01</div><div class="text-slate-600 text-[9px] font-mono mt-1">Login: 07:00:00</div><div class="text-slate-600 text-[9px] font-mono">192.168.1.10</div><div class="flex items-center gap-1 mt-1.5"><span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span><span class="text-green-500 text-[9px] font-mono">online</span></div></div><div class="bg-slate-800/40 rounded border border-slate-700/40 p-3"><div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-mono bg-blue-950/60 border-blue-700/50 text-blue-300 mb-2">Operator</div><div class="text-slate-200 text-xs font-mono font-medium">operator01</div><div class="text-slate-600 text-[9px] font-mono mt-1">Login: 07:30:00</div><div class="text-slate-600 text-[9px] font-mono">192.168.1.11</div><div class="flex items-center gap-1 mt-1.5"><span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span><span class="text-green-500 text-[9px] font-mono">online</span></div></div><div class="bg-slate-800/40 rounded border border-slate-700/40 p-3"><div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-mono bg-amber-950/60 border-amber-700/50 text-amber-300 mb-2">Maintenance</div><div class="text-slate-200 text-xs font-mono font-medium">maintenance01</div><div class="text-slate-600 text-[9px] font-mono mt-1">Login: 08:00:00</div><div class="text-slate-600 text-[9px] font-mono">192.168.1.15</div><div class="flex items-center gap-1 mt-1.5"><span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span><span class="text-green-500 text-[9px] font-mono">online</span></div></div><div class="bg-slate-800/40 rounded border border-slate-700/40 p-3"><div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-mono bg-teal-950/60 border-teal-700/50 text-teal-300 mb-2">Remote Support</div><div class="text-slate-200 text-xs font-mono font-medium">remote_eng01</div><div class="text-slate-600 text-[9px] font-mono mt-1">Login: 07:55:00</div><div class="text-slate-600 text-[9px] font-mono">203.162.x.x</div><div class="flex items-center gap-1 mt-1.5"><span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span><span class="text-green-500 text-[9px] font-mono">online</span></div></div></div></div><div class="bg-card rounded border border-slate-700/50 overflow-hidden"><div class="px-4 py-2.5 border-b border-slate-700/50 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock text-slate-400"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span class="text-slate-300 text-xs font-semibold">Audit Log – Lệnh quan trọng</span></div><div class="overflow-x-auto"><table class="w-full text-xs font-mono"><thead class="border-b border-slate-700/60 bg-slate-800/50"><tr><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Thời gian</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Người dùng</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Vai trò</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Block</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Lệnh</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Kết quả</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Lý do</th></tr></thead><tbody><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">08:40:22</td><td class="px-3 py-2.5 text-slate-200">supervisor01</td><td class="px-3 py-2.5"><span class="px-1.5 py-0.5 rounded border text-[10px] bg-violet-950/60 border-violet-700/50 text-violet-300">Supervisor</span></td><td class="px-3 py-2.5 text-slate-400">Block A-04</td><td class="px-3 py-2.5 text-slate-300">Reset Alarm E-0401</td><td class="px-3 py-2.5"><span class="flex items-center gap-1 text-green-400"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>OK</span></td><td class="px-3 py-2.5 text-slate-500 max-w-xs truncate">Đã xử lý lỗi motor, reset VFD</td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">08:35:10</td><td class="px-3 py-2.5 text-slate-200">maintenance01</td><td class="px-3 py-2.5"><span class="px-1.5 py-0.5 rounded border text-[10px] bg-amber-950/60 border-amber-700/50 text-amber-300">Maintenance</span></td><td class="px-3 py-2.5 text-slate-400">Block B-03</td><td class="px-3 py-2.5 text-slate-300">Chuyển Maintenance Mode</td><td class="px-3 py-2.5"><span class="flex items-center gap-1 text-green-400"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>OK</span></td><td class="px-3 py-2.5 text-slate-500 max-w-xs truncate">Bảo trì định kỳ motor trượt</td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">08:28:05</td><td class="px-3 py-2.5 text-slate-200">operator01</td><td class="px-3 py-2.5"><span class="px-1.5 py-0.5 rounded border text-[10px] bg-blue-950/60 border-blue-700/50 text-blue-300">Operator</span></td><td class="px-3 py-2.5 text-slate-400">Block A-03</td><td class="px-3 py-2.5 text-slate-300">Acknowledge Alarm W-0302</td><td class="px-3 py-2.5"><span class="flex items-center gap-1 text-green-400"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>OK</span></td><td class="px-3 py-2.5 text-slate-500 max-w-xs truncate">Đã đóng cửa tủ điện</td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">07:55:30</td><td class="px-3 py-2.5 text-slate-200">remote_eng01</td><td class="px-3 py-2.5"><span class="px-1.5 py-0.5 rounded border text-[10px] bg-teal-950/60 border-teal-700/50 text-teal-300">Remote Support</span></td><td class="px-3 py-2.5 text-slate-400">Block C-03</td><td class="px-3 py-2.5 text-slate-300">Xem trạng thái PLC</td><td class="px-3 py-2.5"><span class="flex items-center gap-1 text-green-400"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>OK</span></td><td class="px-3 py-2.5 text-slate-500 max-w-xs truncate">Chẩn đoán mất kết nối</td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-slate-400 whitespace-nowrap">07:30:00</td><td class="px-3 py-2.5 text-slate-200">admin01</td><td class="px-3 py-2.5"><span class="px-1.5 py-0.5 rounded border text-[10px] bg-red-950/60 border-red-700/50 text-red-300">Admin</span></td><td class="px-3 py-2.5 text-slate-400">Block A-04</td><td class="px-3 py-2.5 text-slate-300">Forced Mode – Bước 2/2 xác nhận</td><td class="px-3 py-2.5"><span class="flex items-center gap-1 text-red-400"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>Lỗi</span></td><td class="px-3 py-2.5 text-slate-500 max-w-xs truncate">Mật khẩu không đúng</td></tr></tbody></table></div></div></div></div>
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Hỗ trợ từ xa & Phân quyền người dùng</h1>
+                <p class="text-slate-400 text-sm mt-1">Quản lý ma trận quyền truy cập của người vận hành, giám sát phiên làm việc và tra cứu nhật ký Audit Log.</p>
+            </div>
+        </div>
+
+        <!-- User Roles Permission Matrix Section -->
+        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl">
+            <h3 class="text-white text-sm font-bold mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield text-blue-500"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
+                Ma trận phân quyền hệ thống (User Permission Matrix)
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+                <!-- Admin -->
+                <div class="bg-slate-900/80 rounded-lg border border-rose-500/20 p-4 hover:border-rose-500/40 transition-all">
+                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-bold bg-rose-950/60 border-rose-700/50 text-rose-300 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Administrator
+                    </div>
+                    <ul class="space-y-2 text-[11px] font-mono text-slate-400">
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Toàn quyền hệ thống</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Forced Mode (Admin)</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Quản lý người dùng</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Cấu hình cổng API</li>
+                    </ul>
+                </div>
+
+                <!-- Supervisor -->
+                <div class="bg-slate-900/80 rounded-lg border border-violet-500/20 p-4 hover:border-violet-500/40 transition-all">
+                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-bold bg-violet-950/60 border-violet-700/50 text-violet-300 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Supervisor
+                    </div>
+                    <ul class="space-y-2 text-[11px] font-mono text-slate-400">
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span>Reset / Ack Alarm</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span>Xem tất cả các phân khu</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span>Tạo & Xuất báo cáo</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span>Xác nhận điều khiển nguy hiểm</li>
+                    </ul>
+                </div>
+
+                <!-- Maintenance -->
+                <div class="bg-slate-900/80 rounded-lg border border-amber-500/20 p-4 hover:border-amber-500/40 transition-all">
+                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-bold bg-amber-950/60 border-amber-700/50 text-amber-300 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Maintenance
+                    </div>
+                    <ul class="space-y-2 text-[11px] font-mono text-slate-400">
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Maintenance Mode</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Kiểm tra cảm biến/VFD</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Xem chi tiết Block</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Xử lý Work Order</li>
+                    </ul>
+                </div>
+
+                <!-- Operator -->
+                <div class="bg-slate-900/80 rounded-lg border border-blue-500/20 p-4 hover:border-blue-500/40 transition-all">
+                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-bold bg-blue-950/60 border-blue-700/50 text-blue-300 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Operator
+                    </div>
+                    <ul class="space-y-2 text-[11px] font-mono text-slate-400">
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Dashboard Giám sát</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Đọc thông tin cảnh báo</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Điều hướng giao thông</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Quản lý quẹt thẻ</li>
+                    </ul>
+                </div>
+
+                <!-- Remote Support -->
+                <div class="bg-slate-900/80 rounded-lg border border-teal-500/20 p-4 hover:border-teal-500/40 transition-all">
+                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-mono font-bold bg-teal-950/60 border-teal-700/50 text-teal-300 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Remote Support
+                    </div>
+                    <ul class="space-y-2 text-[11px] font-mono text-slate-400">
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>Chỉ đọc (Read-Only)</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>Không được điều khiển</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>Đọc logs chẩn đoán</li>
+                        <li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>Giới hạn phiên 1 giờ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Users Online Section -->
+        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl">
+            <h3 class="text-white text-sm font-bold mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users text-blue-500"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                Tài khoản đang kết nối trực tuyến
+            </h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- User 1 -->
+                <div class="bg-slate-900/80 rounded-lg border border-slate-800 p-4">
+                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[9px] font-mono font-bold bg-violet-950/60 border-violet-700/50 text-violet-300 mb-2">Supervisor</div>
+                    <div class="text-slate-100 text-sm font-bold font-mono">supervisor01</div>
+                    <div class="text-slate-500 text-[10px] font-mono mt-1">Đăng nhập: 07:00:00</div>
+                    <div class="text-slate-500 text-[10px] font-mono">Địa chỉ IP: 192.168.1.10</div>
+                    <div class="flex items-center gap-1.5 mt-2.5">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-green-500 text-[10px] font-bold font-mono">Online</span>
+                    </div>
+                </div>
+
+                <!-- User 2 -->
+                <div class="bg-slate-900/80 rounded-lg border border-slate-800 p-4">
+                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[9px] font-mono font-bold bg-blue-950/60 border-blue-700/50 text-blue-300 mb-2">Operator</div>
+                    <div class="text-slate-100 text-sm font-bold font-mono">operator01</div>
+                    <div class="text-slate-500 text-[10px] font-mono mt-1">Đăng nhập: 07:30:00</div>
+                    <div class="text-slate-500 text-[10px] font-mono">Địa chỉ IP: 192.168.1.11</div>
+                    <div class="flex items-center gap-1.5 mt-2.5">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-green-500 text-[10px] font-bold font-mono">Online</span>
+                    </div>
+                </div>
+
+                <!-- User 3 -->
+                <div class="bg-slate-900/80 rounded-lg border border-slate-800 p-4">
+                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[9px] font-mono font-bold bg-amber-950/60 border-amber-700/50 text-amber-300 mb-2">Maintenance</div>
+                    <div class="text-slate-100 text-sm font-bold font-mono">maintenance01</div>
+                    <div class="text-slate-500 text-[10px] font-mono mt-1">Đăng nhập: 08:00:00</div>
+                    <div class="text-slate-500 text-[10px] font-mono">Địa chỉ IP: 192.168.1.15</div>
+                    <div class="flex items-center gap-1.5 mt-2.5">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-green-500 text-[10px] font-bold font-mono">Online</span>
+                    </div>
+                </div>
+
+                <!-- User 4 -->
+                <div class="bg-slate-900/80 rounded-lg border border-slate-800 p-4">
+                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[9px] font-mono font-bold bg-teal-950/60 border-teal-700/50 text-teal-300 mb-2">Remote Support</div>
+                    <div class="text-slate-100 text-sm font-bold font-mono">remote_eng01</div>
+                    <div class="text-slate-500 text-[10px] font-mono mt-1">Đăng nhập: 07:55:00</div>
+                    <div class="text-slate-500 text-[10px] font-mono">Địa chỉ IP: 203.162.x.x</div>
+                    <div class="flex items-center gap-1.5 mt-2.5">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-green-500 text-[10px] font-bold font-mono">Online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Log Section -->
+        <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
+            <div class="px-5 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/80">
+                <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <span class="text-white text-sm font-bold">Nhật ký Audit Log vận hành (Remote Audit History)</span>
+                </div>
+                <select id="auditRoleFilter" onchange="filterAuditLogs()" class="bg-slate-850 border border-slate-700/50 rounded px-2.5 py-1 text-xs text-slate-300 font-mono outline-none">
+                    <option value="all">Tất cả vai trò</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Supervisor">Supervisor</option>
+                    <option value="Maintenance">Maintenance</option>
+                    <option value="Operator">Operator</option>
+                    <option value="Remote Support">Remote Support</option>
+                </select>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs font-mono">
+                    <thead class="border-b border-slate-800 bg-slate-850">
+                        <tr>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Thời gian</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Người dùng</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Vai trò</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Vị trí ảnh hưởng</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Lệnh gửi</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Kết quả</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold">Lý do ghi nhận / Ghi chú</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTableBody">
+                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Supervisor">
+                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">08:40:22</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">supervisor01</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-violet-950/60 border-violet-700/50 text-violet-300">Supervisor</span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-400 font-bold">Block A-04</td>
+                            <td class="px-4 py-3 text-slate-300 font-bold">Reset Alarm E-0401</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                    THÀNH CÔNG
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-300">Đã xử lý xong quá nhiệt motor trượt, reset biến tần VFD chính.</td>
+                        </tr>
+
+                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Maintenance">
+                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">08:35:10</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">maintenance01</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-amber-950/60 border-amber-700/50 text-amber-300">Maintenance</span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-400 font-bold">Block B-03</td>
+                            <td class="px-4 py-3 text-slate-300 font-bold">Chuyển Maintenance Mode</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                    THÀNH CÔNG
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-300">Bảo trì định kỳ vòng xích truyền động và tra dầu khay nâng.</td>
+                        </tr>
+
+                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Operator">
+                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">08:28:05</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">operator01</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-blue-950/60 border-blue-700/50 text-blue-300">Operator</span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-400 font-bold">Block A-03</td>
+                            <td class="px-4 py-3 text-slate-300 font-bold">Acknowledge Alarm W-0302</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                    THÀNH CÔNG
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-300">Nhân viên đã đến kiểm tra và đóng kín cửa tủ điện điều khiển ngoài.</td>
+                        </tr>
+
+                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Remote Support">
+                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">07:55:30</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">remote_eng01</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-teal-950/60 border-teal-700/50 text-teal-300">Remote Support</span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-400 font-bold">Block C-03</td>
+                            <td class="px-4 py-3 text-slate-300 font-bold">Xem logs chẩn đoán kết nối</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                    THÀNH CÔNG
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-300">Đọc lịch sử truyền thông để chẩn đoán lỗi ngắt kết nối Modbus TCP.</td>
+                        </tr>
+
+                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Admin">
+                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">07:30:00</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">admin01</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-rose-950/60 border-rose-700/50 text-rose-300">Admin</span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-400 font-bold">Block A-04</td>
+                            <td class="px-4 py-3 text-slate-300 font-bold">Kích hoạt Forced Mode (Cưỡng bức)</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-rose-500 font-bold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="15" x2="9" y1="9" y2="15"></line></svg>
+                                    BỊ TỪ CHỐI
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-rose-400 font-semibold">Mật khẩu xác thực cấp 2 không trùng khớp - Hủy yêu cầu.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Filtering audit logs based on selected role
+    function filterAuditLogs() {
+        const selectedRole = document.getElementById("auditRoleFilter").value;
+        const rows = document.querySelectorAll(".audit-row");
+        
+        rows.forEach(row => {
+            const role = row.getAttribute("data-role");
+            if (selectedRole === "all" || role === selectedRole) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+</script>

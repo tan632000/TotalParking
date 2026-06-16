@@ -1,5 +1,550 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
 
-<div class="p-5 pb-10 min-h-[calc(100vh-3.5rem)]"><div class="space-y-4"><div class="flex items-center justify-between"><h1 class="text-slate-100 text-lg font-semibold">Quản lý thẻ xe</h1><button class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-blue-700/60 hover:bg-blue-600/60 text-blue-200 border border-blue-600/50 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Cài đặt thẻ mới</button></div><div class="grid grid-cols-3 gap-3"><div class="bg-card rounded border border-slate-700/50 p-3"><div class="text-slate-500 text-xs font-mono">Tổng thẻ</div><div class="text-slate-100 text-2xl font-mono font-bold">5</div></div><div class="bg-card rounded border border-slate-700/50 p-3"><div class="text-green-400 text-xs font-mono">Đang hoạt động</div><div class="text-green-300 text-2xl font-mono font-bold">4</div></div><div class="bg-card rounded border border-slate-700/50 p-3"><div class="text-red-400 text-xs font-mono">Khóa / Hết hạn</div><div class="text-red-300 text-2xl font-mono font-bold">1</div></div></div><div class="flex items-center gap-2 bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 max-w-sm"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search text-slate-500"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input class="bg-transparent text-xs text-slate-200 placeholder-slate-500 outline-none flex-1 font-mono" placeholder="Tìm thẻ, biển số, chủ xe..." value=""></div><div class="bg-card rounded border border-slate-700/50 overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-xs font-mono"><thead class="border-b border-slate-700/60 bg-slate-800/50"><tr><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Mã thẻ</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Biển số</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Chủ xe</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Loại xe</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Zone</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Block</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Trạng thái</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Sử dụng cuối</th><th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Hành động</th></tr></thead><tbody><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-blue-300 font-semibold">TH-00123</td><td class="px-3 py-2.5 text-slate-200">51G-12345</td><td class="px-3 py-2.5 text-slate-300">Nguyễn Văn An</td><td class="px-3 py-2.5 text-slate-400">SUV</td><td class="px-3 py-2.5 text-slate-400">Zone A</td><td class="px-3 py-2.5 text-slate-400">Block A-01</td><td class="px-3 py-2.5"><span class="inline-flex px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-green-950/60 border-green-700/50 text-green-300">Hoạt động</span></td><td class="px-3 py-2.5 text-slate-500">08:30:00</td><td class="px-3 py-2.5"><div class="flex gap-1"><button class="p-1 rounded hover:bg-slate-700/60 text-slate-400 hover:text-slate-200 transition-colors" title="Lịch sử"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg></button><button class="p-1 rounded hover:bg-red-900/50 text-slate-500 hover:text-red-400 transition-colors" title="Xóa thẻ"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 lucide-trash-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg></button></div></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-blue-300 font-semibold">TH-00456</td><td class="px-3 py-2.5 text-slate-200">30H-88877</td><td class="px-3 py-2.5 text-slate-300">Trần Thị Bình</td><td class="px-3 py-2.5 text-slate-400">Sedan</td><td class="px-3 py-2.5 text-slate-400">Zone B</td><td class="px-3 py-2.5 text-slate-400">Block B-02</td><td class="px-3 py-2.5"><span class="inline-flex px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-green-950/60 border-green-700/50 text-green-300">Hoạt động</span></td><td class="px-3 py-2.5 text-slate-500">07:45:20</td><td class="px-3 py-2.5"><div class="flex gap-1"><button class="p-1 rounded hover:bg-slate-700/60 text-slate-400 hover:text-slate-200 transition-colors" title="Lịch sử"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg></button><button class="p-1 rounded hover:bg-red-900/50 text-slate-500 hover:text-red-400 transition-colors" title="Xóa thẻ"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 lucide-trash-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg></button></div></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-blue-300 font-semibold">TH-00789</td><td class="px-3 py-2.5 text-slate-200">43A-56789</td><td class="px-3 py-2.5 text-slate-300">Lê Quốc Cường</td><td class="px-3 py-2.5 text-slate-400">SUV</td><td class="px-3 py-2.5 text-slate-400">Zone A</td><td class="px-3 py-2.5 text-slate-400">Block A-02</td><td class="px-3 py-2.5"><span class="inline-flex px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-green-950/60 border-green-700/50 text-green-300">Hoạt động</span></td><td class="px-3 py-2.5 text-slate-500">06:55:10</td><td class="px-3 py-2.5"><div class="flex gap-1"><button class="p-1 rounded hover:bg-slate-700/60 text-slate-400 hover:text-slate-200 transition-colors" title="Lịch sử"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg></button><button class="p-1 rounded hover:bg-red-900/50 text-slate-500 hover:text-red-400 transition-colors" title="Xóa thẻ"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 lucide-trash-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg></button></div></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-blue-300 font-semibold">TH-01011</td><td class="px-3 py-2.5 text-slate-200">92B-11223</td><td class="px-3 py-2.5 text-slate-300">Phạm Minh Dũng</td><td class="px-3 py-2.5 text-slate-400">Sedan</td><td class="px-3 py-2.5 text-slate-400">Zone C</td><td class="px-3 py-2.5 text-slate-400">Block C-02</td><td class="px-3 py-2.5"><span class="inline-flex px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-red-950/60 border-red-700/50 text-red-300">Khóa</span></td><td class="px-3 py-2.5 text-slate-500">2026-05-30</td><td class="px-3 py-2.5"><div class="flex gap-1"><button class="p-1 rounded hover:bg-slate-700/60 text-slate-400 hover:text-slate-200 transition-colors" title="Lịch sử"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg></button><button class="p-1 rounded hover:bg-red-900/50 text-slate-500 hover:text-red-400 transition-colors" title="Xóa thẻ"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 lucide-trash-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg></button></div></td></tr><tr class="border-b border-slate-800/60 hover:bg-slate-800/30"><td class="px-3 py-2.5 text-blue-300 font-semibold">TH-01213</td><td class="px-3 py-2.5 text-slate-200">79C-44556</td><td class="px-3 py-2.5 text-slate-300">Hoàng Thị Lan</td><td class="px-3 py-2.5 text-slate-400">SUV</td><td class="px-3 py-2.5 text-slate-400">Zone B</td><td class="px-3 py-2.5 text-slate-400">Block B-01</td><td class="px-3 py-2.5"><span class="inline-flex px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-green-950/60 border-green-700/50 text-green-300">Hoạt động</span></td><td class="px-3 py-2.5 text-slate-500">2026-06-07</td><td class="px-3 py-2.5"><div class="flex gap-1"><button class="p-1 rounded hover:bg-slate-700/60 text-slate-400 hover:text-slate-200 transition-colors" title="Lịch sử"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg></button><button class="p-1 rounded hover:bg-red-900/50 text-slate-500 hover:text-red-400 transition-colors" title="Xóa thẻ"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 lucide-trash-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg></button></div></td></tr></tbody></table></div></div></div></div>
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Quản lý thẻ từ bãi đỗ (RFID Card Management)</h1>
+                <p class="text-slate-400 text-sm mt-1">Đăng ký thẻ từ, thiết lập biển số xe định danh, giám sát trạng thái đồng bộ dữ liệu xuống HMI tại từng block vật lý.</p>
+            </div>
+            <button onclick="openNewCardModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/50 transition-colors font-bold shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                Cài đặt thẻ mới
+            </button>
+        </div>
+
+        <!-- KPI widgets -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Total Cards -->
+            <div class="bg-slate-900/50 rounded-xl border border-slate-800/80 p-4 shadow-md flex items-center justify-between transition-all duration-300 hover:scale-[1.01] hover:border-slate-700/60">
+                <div class="space-y-1">
+                    <div class="text-slate-500 text-xs font-mono uppercase tracking-wider">TỔNG SỐ THẺ ĐANG QUẢN LÝ</div>
+                    <div id="kpiTotalCards" class="text-slate-100 text-2xl font-mono font-bold leading-none">5</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg>
+                </div>
+            </div>
+
+            <!-- Active Cards -->
+            <div class="bg-slate-900/50 rounded-xl border border-emerald-500/15 p-4 shadow-md flex items-center justify-between transition-all duration-300 hover:scale-[1.01] hover:border-emerald-500/35 shadow-[0_0_8px_rgba(16,185,129,0.02)]">
+                <div class="space-y-1">
+                    <div class="text-emerald-400 text-xs font-mono uppercase tracking-wider">THẺ ĐANG HOẠT ĐỘNG</div>
+                    <div id="kpiActiveCards" class="text-emerald-300 text-2xl font-mono font-bold leading-none">4</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-square"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="m9 11 2 2 4-4"></path></svg>
+                </div>
+            </div>
+
+            <!-- Locked Cards -->
+            <div class="bg-slate-900/50 rounded-xl border border-rose-500/15 p-4 shadow-md flex items-center justify-between transition-all duration-300 hover:scale-[1.01] hover:border-rose-500/35 shadow-[0_0_8px_rgba(244,63,94,0.02)]">
+                <div class="space-y-1">
+                    <div class="text-rose-500 text-xs font-mono uppercase tracking-wider">THẺ ĐANG BỊ KHÓA / HẾT HẠN</div>
+                    <div id="kpiLockedCards" class="text-rose-400 text-2xl font-mono font-bold leading-none">1</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-alert"><path d="M20 13c0 5-3.5 7.5-7.66 9.7a1 1 0 0 1-.68 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 .76-.97l8-2a1 1 0 0 1 .48 0l8 2A1 1 0 0 1 20 6z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="flex items-center gap-2 bg-slate-900/50 border border-slate-800 rounded-xl px-3 py-2 max-w-sm shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+            <input id="cardSearchInput" onkeyup="filterCards()" class="bg-transparent text-xs text-slate-200 placeholder-slate-500 outline-none flex-1 font-mono" placeholder="Tìm kiếm mã thẻ, biển số, chủ xe...">
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs font-mono">
+                    <thead class="border-b border-slate-800 bg-slate-850">
+                        <tr>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Mã thẻ từ</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Biển số</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Chủ xe</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Loại xe đăng ký</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Zone</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Block chỉ định</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Trạng thái thẻ</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap text-indigo-400">Đồng bộ HMI</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Sử dụng cuối</th>
+                            <th class="text-center text-slate-500 px-4 py-3 font-bold whitespace-nowrap">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cardsTableBody">
+                        <tr class="card-row border-b border-slate-850 hover:bg-slate-800/10">
+                            <td class="px-4 py-3 text-blue-300 font-bold whitespace-nowrap">TH-00123</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">51G-12345</td>
+                            <td class="px-4 py-3 text-slate-300">Nguyễn Văn An</td>
+                            <td class="px-4 py-3 text-slate-400">SUV</td>
+                            <td class="px-4 py-3 text-slate-400">Zone 1</td>
+                            <td class="px-4 py-3 text-slate-400">Block A-01</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-green-950/60 border-green-700/50 text-green-400">Hoạt động</span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold text-[10px]">
+                                    ● ĐÃ ĐỒNG BỘ
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-500">08:30:00</td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center gap-2">
+                                    <button onclick="toggleCardStatus(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-amber-500 hover:text-amber-400 text-slate-400 transition-colors">Khóa</button>
+                                    <button onclick="deleteCardRow(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-red-500 hover:text-red-400 text-slate-400 transition-colors">Xóa</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="card-row border-b border-slate-850 hover:bg-slate-800/10">
+                            <td class="px-4 py-3 text-blue-300 font-bold whitespace-nowrap">TH-00456</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">30H-88877</td>
+                            <td class="px-4 py-3 text-slate-300">Trần Thị Bình</td>
+                            <td class="px-4 py-3 text-slate-400">Sedan</td>
+                            <td class="px-4 py-3 text-slate-400">Zone 2</td>
+                            <td class="px-4 py-3 text-slate-400">Block B-02</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-green-950/60 border-green-700/50 text-green-400">Hoạt động</span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold text-[10px]">
+                                    ● ĐÃ ĐỒNG BỘ
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-500">07:45:20</td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center gap-2">
+                                    <button onclick="toggleCardStatus(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-amber-500 hover:text-amber-400 text-slate-400 transition-colors">Khóa</button>
+                                    <button onclick="deleteCardRow(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-red-500 hover:text-red-400 text-slate-400 transition-colors">Xóa</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="card-row border-b border-slate-850 hover:bg-slate-800/10">
+                            <td class="px-4 py-3 text-blue-300 font-bold whitespace-nowrap">TH-00789</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">43A-56789</td>
+                            <td class="px-4 py-3 text-slate-300">Lê Quốc Cường</td>
+                            <td class="px-4 py-3 text-slate-400">SUV</td>
+                            <td class="px-4 py-3 text-slate-400">Zone 1</td>
+                            <td class="px-4 py-3 text-slate-400">Block A-02</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-green-950/60 border-green-700/50 text-green-400">Hoạt động</span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold text-[10px]">
+                                    ● ĐÃ ĐỒNG BỘ
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-500">06:55:10</td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center gap-2">
+                                    <button onclick="toggleCardStatus(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-amber-500 hover:text-amber-400 text-slate-400 transition-colors">Khóa</button>
+                                    <button onclick="deleteCardRow(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-red-500 hover:text-red-400 text-slate-400 transition-colors">Xóa</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="card-row border-b border-slate-850 hover:bg-slate-800/10 bg-red-950/5">
+                            <td class="px-4 py-3 text-blue-300 font-bold whitespace-nowrap">TH-01011</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">92B-11223</td>
+                            <td class="px-4 py-3 text-slate-300">Phạm Minh Dũng</td>
+                            <td class="px-4 py-3 text-slate-400">Sedan</td>
+                            <td class="px-4 py-3 text-slate-400">Zone 4</td>
+                            <td class="px-4 py-3 text-slate-400">Block C-02</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-red-950/60 border-red-700/50 text-red-400">Đã khóa</span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-red-500 font-bold text-[10px]">
+                                    ⚠ CHƯA ĐỒNG BỘ
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-500">2026-05-30</td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center gap-2">
+                                    <button onclick="toggleCardStatus(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-emerald-500 hover:text-emerald-400 text-slate-400 transition-colors">Mở khóa</button>
+                                    <button onclick="deleteCardRow(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-red-500 hover:text-red-400 text-slate-400 transition-colors">Xóa</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="card-row border-b border-slate-850 hover:bg-slate-800/10">
+                            <td class="px-4 py-3 text-blue-300 font-bold whitespace-nowrap">TH-01213</td>
+                            <td class="px-4 py-3 text-slate-200 font-bold">79C-44556</td>
+                            <td class="px-4 py-3 text-slate-300">Hoàng Thị Lan</td>
+                            <td class="px-4 py-3 text-slate-400">SUV</td>
+                            <td class="px-4 py-3 text-slate-400">Zone 2</td>
+                            <td class="px-4 py-3 text-slate-400">Block B-01</td>
+                            <td class="px-4 py-3">
+                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-green-950/60 border-green-700/50 text-green-400">Hoạt động</span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold text-[10px]">
+                                    ● ĐÃ ĐỒNG BỘ
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-500">2026-06-07</td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center gap-2">
+                                    <button onclick="toggleCardStatus(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-amber-500 hover:text-amber-400 text-slate-400 transition-colors">Khóa</button>
+                                    <button onclick="deleteCardRow(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-red-500 hover:text-red-400 text-slate-400 transition-colors">Xóa</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add New Card Modal Overlay -->
+<div id="newCardModal" class="card-modal-overlay">
+    <div class="card-modal-box">
+        <!-- Close Button -->
+        <button onclick="closeNewCardModal()" class="absolute-close-btn" aria-label="Close modal">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <h3 class="text-white text-base font-bold pb-3 border-b border-slate-800 mb-4">Cài đặt đăng ký thẻ từ mới</h3>
+        
+        <!-- Registration Form -->
+        <form id="newCardForm" onsubmit="submitNewCard(event)" class="space-y-4 text-xs">
+            <div class="space-y-1.5">
+                <label class="text-slate-400 font-semibold block">Mã thẻ từ (RFID Card ID)</label>
+                <input id="inputCardId" type="text" placeholder="Ví dụ: TH-01300" required class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-slate-200 outline-none focus:border-blue-500 font-mono">
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-slate-400 font-semibold block">Biển số xe định danh</label>
+                <input id="inputPlate" type="text" placeholder="Ví dụ: 30K-99999" required class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-slate-200 outline-none focus:border-blue-500 font-mono">
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-slate-400 font-semibold block">Họ và tên chủ xe</label>
+                <input id="inputOwner" type="text" placeholder="Ví dụ: Nguyễn Văn Cường" required class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-slate-200 outline-none focus:border-blue-500">
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-slate-400 font-semibold block">Loại xe đăng ký</label>
+                <select id="selectVehicleType" required class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-slate-200 outline-none focus:border-blue-500 font-mono">
+                    <option value="Sedan">Sedan (Gầm thấp)</option>
+                    <option value="SUV">SUV (Gầm cao)</option>
+                </select>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-slate-400 font-semibold block">Phân khu (Zone)</label>
+                <select id="selectZone" onchange="updateModalBlockOptions()" required class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-slate-200 outline-none focus:border-blue-500 font-mono">
+                    <option value="1">Zone 1 (Hầm B1)</option>
+                    <option value="2">Zone 2 (Hầm B2)</option>
+                    <option value="3">Zone 3 (Hầm B3)</option>
+                    <option value="4">Zone 4 (Tầng 1)</option>
+                    <option value="5">Zone 5 (Hầm B4)</option>
+                    <option value="6">Zone 6 (Tầng 2)</option>
+                </select>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-slate-400 font-semibold block">Block HMI đích để đồng bộ</label>
+                <select id="selectBlock" required class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-slate-200 outline-none focus:border-blue-500 font-mono">
+                    <!-- Options generated dynamically -->
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-3 flex justify-end gap-2 border-t border-slate-800">
+                <button type="button" onclick="closeNewCardModal()" class="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-all">Hủy bỏ</button>
+                <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-md">Đăng ký & Đồng bộ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Premium Modal overlay rules */
+    .card-modal-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 9999 !important;
+        display: none !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 16px !important;
+        background-color: rgba(15, 23, 42, 0.85) !important;
+        backdrop-filter: blur(5px) !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+
+    .card-modal-overlay.active {
+        display: flex !important;
+    }
+
+    .card-modal-box {
+        width: 100% !important;
+        max-width: 440px !important;
+        background-color: rgb(21, 32, 51) !important;
+        border: 1px solid rgb(35, 53, 78) !important;
+        border-radius: 12px !important;
+        padding: 24px !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+        animation: modalSlideUp 0.2s ease-out !important;
+    }
+
+    @@keyframes modalSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .absolute-close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: color 0.15s, background-color 0.15s;
+    }
+
+    .absolute-close-btn:hover {
+        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+</style>
+
+<script>
+    const zoneBlocksMap = {
+        "1": ["Block A-01", "Block A-02", "Block A-03"],
+        "2": ["Block A-04", "Block B-01", "Block B-02"],
+        "3": ["Block B-03", "Block B-04", "Block C-01"],
+        "4": ["Block C-02", "Block C-03", "Block C-04"],
+        "5": ["Block D-01", "Block D-02", "Block D-03"],
+        "6": ["Block E-01", "Block E-02", "Block E-03"]
+    };
+
+    // Populate modal blocks dropdown dynamically
+    function updateModalBlockOptions() {
+        const zoneId = document.getElementById("selectZone").value;
+        const blocksList = zoneBlocksMap[zoneId] || [];
+        const blockSelect = document.getElementById("selectBlock");
+        
+        blockSelect.innerHTML = '';
+        blocksList.forEach(block => {
+            const opt = document.createElement("option");
+            opt.value = block;
+            opt.textContent = block;
+            blockSelect.appendChild(opt);
+        });
+    }
+
+    // Live filter card list
+    function filterCards() {
+        const query = document.getElementById("cardSearchInput").value.toLowerCase().trim();
+        const rows = document.querySelectorAll(".card-row");
+        
+        rows.forEach(row => {
+            if (row.innerText.toLowerCase().includes(query)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    // Toggle card block/unblock status
+    function toggleCardStatus(btn) {
+        const row = btn.closest("tr");
+        const cardId = row.cells[0].innerText;
+        const blockName = row.cells[5].innerText;
+        const statusSpan = row.cells[6].querySelector("span");
+        const syncSpan = row.cells[7].querySelector("span");
+        
+        btn.disabled = true;
+        const siblingBtn = btn.nextElementSibling || btn.previousElementSibling;
+        if (siblingBtn) siblingBtn.disabled = true;
+
+        let progress = 0;
+        const isLocking = (btn.innerText.includes("Khóa"));
+        
+        syncSpan.className = "inline-flex items-center gap-1 text-amber-500 font-bold text-[10px] animate-pulse";
+        
+        const interval = setInterval(() => {
+            progress += 25;
+            syncSpan.innerText = `⟳ HMI SYNC: ${progress}%`;
+            
+            if (progress >= 100) {
+                clearInterval(interval);
+                btn.disabled = false;
+                if (siblingBtn) siblingBtn.disabled = false;
+
+                if (isLocking) {
+                    statusSpan.innerText = "Đã khóa";
+                    statusSpan.className = "px-1.5 py-0.5 rounded border text-[9px] font-bold bg-red-950/60 border-red-700/50 text-red-400";
+                    syncSpan.innerText = "⚠ ĐÃ KHÓA HMI";
+                    syncSpan.className = "inline-flex items-center gap-1 text-red-500 font-bold text-[10px]";
+                    btn.innerText = "Mở khóa";
+                    row.classList.add("bg-red-950/5");
+                    alert(`Đã hoàn tất đồng bộ lệnh KHÓA thẻ ${cardId} tới HMI Block ${blockName}.`);
+                } else {
+                    statusSpan.innerText = "Hoạt động";
+                    statusSpan.className = "px-1.5 py-0.5 rounded border text-[9px] font-bold bg-green-950/60 border-green-700/50 text-green-400";
+                    syncSpan.innerText = "● ĐÃ ĐỒNG BỘ";
+                    syncSpan.className = "inline-flex items-center gap-1 text-emerald-400 font-bold text-[10px]";
+                    btn.innerText = "Khóa";
+                    row.classList.remove("bg-red-950/5");
+                    alert(`Đã hoàn tất đồng bộ lệnh MỞ KHÓA thẻ ${cardId} tới HMI Block ${blockName}.`);
+                }
+                updateKPIs();
+            }
+        }, 400);
+    }
+
+    // Delete card row
+    function deleteCardRow(btn) {
+        const row = btn.closest("tr");
+        const cardId = row.cells[0].innerText;
+        const blockName = row.cells[5].innerText;
+
+        if (confirm(`Bạn có chắc chắn muốn xóa thẻ ${cardId} và đồng bộ thu hồi thẻ này khỏi HMI Block ${blockName}?`)) {
+            // Disable buttons
+            const actionBtns = row.querySelectorAll("button");
+            actionBtns.forEach(b => b.disabled = true);
+            
+            const syncSpan = row.cells[7].querySelector("span");
+            syncSpan.className = "inline-flex items-center gap-1 text-amber-500 font-bold text-[10px] animate-pulse";
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 20;
+                syncSpan.innerText = `⟳ XÓA HMI: ${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    alert(`Đã thu hồi thành công thẻ từ ${cardId} khỏi HMI Block ${blockName} và xóa khỏi cơ sở dữ liệu SCADA.`);
+                    row.remove();
+                    updateKPIs();
+                }
+            }, 400);
+        }
+    }
+
+    // Open/Close dialog new card
+    function openNewCardModal() {
+        document.getElementById("newCardModal").classList.add("active");
+        updateModalBlockOptions();
+    }
+
+    // Close dialog new card
+    function closeNewCardModal() {
+        document.getElementById("newCardModal").classList.remove("active");
+        document.getElementById("newCardForm").reset();
+    }
+
+    // Submit new card
+    function submitNewCard(e) {
+        e.preventDefault();
+        
+        const cardId = document.getElementById("inputCardId").value.trim().toUpperCase();
+        const plate = document.getElementById("inputPlate").value.trim().toUpperCase();
+        const owner = document.getElementById("inputOwner").value.trim();
+        const vehicleType = document.getElementById("selectVehicleType").value;
+        const zoneVal = document.getElementById("selectZone").value;
+        const blockVal = document.getElementById("selectBlock").value;
+        
+        // Append new row to table
+        const tbody = document.getElementById("cardsTableBody");
+        const newRow = document.createElement("tr");
+        newRow.className = "card-row border-b border-slate-850 hover:bg-slate-800/10";
+        newRow.innerHTML = `
+            <td class="px-4 py-3 text-blue-300 font-bold whitespace-nowrap">${cardId}</td>
+            <td class="px-4 py-3 text-slate-200 font-bold">${plate}</td>
+            <td class="px-4 py-3 text-slate-300">${owner}</td>
+            <td class="px-4 py-3 text-slate-400">${vehicleType}</td>
+            <td class="px-4 py-3 text-slate-400">Zone ${zoneVal}</td>
+            <td class="px-4 py-3 text-slate-400">${blockVal}</td>
+            <td class="px-4 py-3">
+                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-green-950/60 border-green-700/50 text-green-400">Hoạt động</span>
+            </td>
+            <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1 text-amber-500 font-bold text-[10px] animate-pulse">
+                    ⟳ HMI SYNC: 0%
+                </span>
+            </td>
+            <td class="px-4 py-3 text-slate-500">—</td>
+            <td class="px-4 py-3 text-center">
+                <div class="flex justify-center gap-2">
+                    <button onclick="toggleCardStatus(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-amber-500 hover:text-amber-400 text-slate-400 transition-colors" disabled>Khóa</button>
+                    <button onclick="deleteCardRow(this)" class="px-2 py-0.5 rounded border border-slate-700 hover:border-red-500 hover:text-red-400 text-slate-400 transition-colors" disabled>Xóa</button>
+                </div>
+            </td>
+        `;
+        
+        tbody.appendChild(newRow);
+        closeNewCardModal();
+        updateKPIs();
+        
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 20;
+            const syncSpan = newRow.cells[7].querySelector("span");
+            if (syncSpan) {
+                syncSpan.innerText = `⟳ HMI SYNC: ${progress}%`;
+            }
+            
+            if (progress >= 100) {
+                clearInterval(interval);
+                if (syncSpan) {
+                    syncSpan.innerText = "● ĐÃ ĐỒNG BỘ";
+                    syncSpan.className = "inline-flex items-center gap-1 text-emerald-400 font-bold text-[10px]";
+                }
+                const actionBtns = newRow.querySelectorAll("button");
+                actionBtns.forEach(btn => btn.disabled = false);
+            }
+        }, 500);
+        
+        alert(`Đã khởi tạo đăng ký thẻ ${cardId} gắn với xe ${plate}. Bắt đầu đồng bộ HMI tới ${blockVal}...`);
+    }
+
+    // Update KPIs count
+    function updateKPIs() {
+        const rows = document.querySelectorAll(".card-row");
+        let activeCount = 0;
+        let lockedCount = 0;
+        
+        rows.forEach(row => {
+            const statusSpan = row.cells[6].querySelector("span");
+            if (statusSpan) {
+                const status = statusSpan.innerText;
+                if (status === "Hoạt động") {
+                    activeCount++;
+                } else {
+                    lockedCount++;
+                }
+            }
+        });
+        
+        document.getElementById("kpiTotalCards").innerText = rows.length;
+        document.getElementById("kpiActiveCards").innerText = activeCount;
+        document.getElementById("kpiLockedCards").innerText = lockedCount;
+    }
+</script>
