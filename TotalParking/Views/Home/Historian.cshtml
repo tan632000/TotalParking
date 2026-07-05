@@ -1,0 +1,195 @@
+@{
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+}
+
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Biểu Đồ Xu Hướng Kỹ Thuật (Historian &amp; Trends)</h1>
+                <p class="text-slate-400 text-sm mt-1">Giám sát đồ thị xu hướng thời gian thực của dòng điện motor, nhiệt độ cuộn dây và tần số biến tần VFD.</p>
+            </div>
+        </div>
+
+        <!-- Controls panel -->
+        <div class="flex flex-wrap gap-4 items-center bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-lg">
+            <select id="trendBlock" class="bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 text-xs text-slate-350 font-mono outline-none focus:border-blue-500">
+                <option value="B-01">Block B-01 (Zone A)</option>
+                <option value="B-04">Block B-04 (Zone B)</option>
+            </select>
+
+            <select id="trendMetric" onchange="changeMetric()" class="bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 text-xs text-slate-350 font-mono outline-none focus:border-blue-500">
+                <option value="current">Dòng điện Motor Nâng (Ampe)</option>
+                <option value="temp">Nhiệt độ Động cơ (°C)</option>
+                <option value="frequency">Tần số biến tần VFD (Hz)</option>
+            </select>
+
+            <span class="text-slate-500 text-xs font-mono ml-auto" id="liveVal">Giá trị hiện tại: --</span>
+        </div>
+
+        <!-- Trend Chart Area -->
+        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 id="chartTitle" class="text-white text-sm font-bold font-mono">Đồ thị Dòng điện Motor nâng (Real-time Trend)</h3>
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-blue-500/10 text-blue-400">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping"></span>
+                    SÓNG PLC LIVE
+                </span>
+            </div>
+            
+            <div class="relative w-full h-[320px] bg-slate-950/60 border border-slate-900 rounded-lg overflow-hidden flex items-center justify-center">
+                <canvas id="trendCanvas" class="w-full h-full block"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let canvas, ctx;
+    let dataPoints = [];
+    const maxPoints = 50;
+    let currentMetric = 'current';
+    let animationId;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initChart();
+    });
+
+    function initChart() {
+        canvas = document.getElementById("trendCanvas");
+        ctx = canvas.getContext("2d");
+
+        // Resize canvas to physical pixels
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+
+        // Pre-populate mock points
+        for (let i = 0; i < maxPoints; i++) {
+            dataPoints.push(getRandomValue());
+        }
+
+        // Run render loop
+        tickChart();
+    }
+
+    function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+    }
+
+    function changeMetric() {
+        currentMetric = document.getElementById("trendMetric").value;
+        const title = document.getElementById("chartTitle");
+        
+        if (currentMetric === 'current') {
+            title.innerText = "Đồ thị Dòng điện Motor nâng (Real-time Trend)";
+        } else if (currentMetric === 'temp') {
+            title.innerText = "Đồ thị Nhiệt độ Động cơ (Real-time Trend)";
+        } else {
+            title.innerText = "Đồ thị Tần số biến tần VFD (Real-time Trend)";
+        }
+
+        dataPoints = [];
+        for (let i = 0; i < maxPoints; i++) {
+            dataPoints.push(getRandomValue());
+        }
+    }
+
+    function getRandomValue() {
+        const block = document.getElementById("trendBlock").value;
+        let isFaulty = block === "B-04";
+
+        if (currentMetric === 'current') {
+            // Normal is around 12-16 A. Faulty B-04 lift motor is around 25-28 A (overload)
+            return isFaulty ? (24 + Math.random() * 3) : (12 + Math.random() * 2);
+        } else if (currentMetric === 'temp') {
+            // Normal: 55-65°C. Faulty B-04 lift motor winding: 110-115°C (overheat)
+            return isFaulty ? (112 + Math.random() * 3) : (56 + Math.random() * 4);
+        } else {
+            // VFD Frequency: 45-50 Hz
+            return 48 + Math.random() * 2;
+        }
+    }
+
+    function tickChart() {
+        // Shift data
+        dataPoints.shift();
+        const newVal = getRandomValue();
+        dataPoints.push(newVal);
+
+        // Update live value label
+        const suffix = currentMetric === 'current' ? ' A' : (currentMetric === 'temp' ? ' °C' : ' Hz');
+        document.getElementById("liveVal").innerText = "Giá trị hiện tại: " + newVal.toFixed(1) + suffix;
+
+        // Draw
+        drawTrend();
+
+        setTimeout(tickChart, 500); // 500ms polling rate
+    }
+
+    function drawTrend() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 40;
+
+        // Determine min/max range based on metric
+        let minVal = 0;
+        let maxVal = 60;
+        if (currentMetric === 'temp') {
+            maxVal = 140;
+        }
+
+        // Draw grid
+        ctx.strokeStyle = "rgba(51, 65, 85, 0.2)";
+        ctx.lineWidth = 1;
+        for (let i = 1; i < 5; i++) {
+            let y = padding + (height - padding * 2) * (i / 4);
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
+
+            // Y Axis Labels
+            let val = maxVal - (maxVal - minVal) * (i / 4);
+            ctx.fillStyle = "rgb(148, 163, 184)";
+            ctx.font = "9px monospace";
+            ctx.fillText(val.toFixed(0), 10, y + 3);
+        }
+
+        // Plot line path
+        ctx.beginPath();
+        ctx.lineWidth = 2.5;
+        
+        let color = currentMetric === 'current' ? "rgb(59, 130, 246)" : (currentMetric === 'temp' ? "rgb(239, 68, 68)" : "rgb(168, 85, 247)");
+        ctx.strokeStyle = color;
+
+        const xStep = (width - padding * 2) / (maxPoints - 1);
+        
+        for (let i = 0; i < maxPoints; i++) {
+            let x = padding + i * xStep;
+            // Normalize y coordinate
+            let ratio = (dataPoints[i] - minVal) / (maxVal - minVal);
+            let y = height - padding - ratio * (height - padding * 2);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Fill area under curve
+        ctx.lineTo(padding + (maxPoints - 1) * xStep, height - padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.closePath();
+        
+        let gradientColor = currentMetric === 'current' ? "rgba(59, 130, 246, 0.08)" : (currentMetric === 'temp' ? "rgba(239, 68, 68, 0.08)" : "rgba(168, 85, 247, 0.08)");
+        ctx.fillStyle = gradientColor;
+        ctx.fill();
+    }
+</script>

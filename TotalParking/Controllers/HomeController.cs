@@ -68,6 +68,56 @@ namespace TotalParking.Controllers
             return View();
         }
 
+        public ActionResult OperationControl()
+        {
+            return View();
+        }
+
+        public ActionResult Queue()
+        {
+            return View();
+        }
+
+        public ActionResult Tracking()
+        {
+            return View();
+        }
+
+        public ActionResult Safety()
+        {
+            return View();
+        }
+
+        public ActionResult Assets()
+        {
+            return View();
+        }
+
+        public ActionResult Diagnostics()
+        {
+            return View();
+        }
+
+        public ActionResult Historian()
+        {
+            return View();
+        }
+
+        public ActionResult Cctv()
+        {
+            return View();
+        }
+
+        public ActionResult Energy()
+        {
+            return View();
+        }
+
+        public ActionResult Backup()
+        {
+            return View();
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

@@ -1,0 +1,317 @@
+@{
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+}
+
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Cây Thiết Bị &amp; Quản Lý Tài Sản (Asset Tree)</h1>
+                <p class="text-slate-400 text-sm mt-1">Giám sát cấu trúc phân cấp phần cứng SCADA, kiểm tra runtime động cơ, số chu kỳ và vật tư dự phòng liên quan.</p>
+            </div>
+        </div>
+
+        <!-- Main Layout Split -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Asset Tree View -->
+            <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
+                <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><rect width="6" height="6" x="16" y="16" rx="1"></rect><rect width="6" height="6" x="2" y="16" rx="1"></rect><rect width="6" height="6" x="9" y="2" rx="1"></rect><path d="M12 8v8"></path><path d="M12 12H5"></path><path d="M12 12h10"></path></svg>
+                    Cấu trúc phân cấp thiết bị
+                </h3>
+
+                <!-- Tree View Structure -->
+                <div class="font-mono text-xs select-none">
+                    <!-- Project Root -->
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 cursor-pointer py-1 font-bold text-slate-200">
+                            <span class="text-blue-500">🏢</span>
+                            <span>TotalParking SCADA</span>
+                        </div>
+                        
+                        <!-- Zone A -->
+                        <div class="pl-4 border-l border-slate-800 space-y-1">
+                            <div onclick="toggleNode('zoneA')" class="flex items-center gap-2 cursor-pointer py-1 font-semibold text-slate-350 hover:text-slate-200">
+                                <span id="icon-zoneA">▼</span>
+                                <span>Zone A (Hầm B1)</span>
+                            </div>
+                            
+                            <div id="zoneA" class="pl-4 border-l border-slate-800 space-y-1">
+                                <!-- Block A-01 -->
+                                <div onclick="toggleNode('blockA1')" class="flex items-center gap-2 cursor-pointer py-1 text-slate-400 hover:text-slate-200">
+                                    <span id="icon-blockA1">▶</span>
+                                    <span>Block A-01</span>
+                                </div>
+                                <div id="blockA1" class="hidden pl-4 border-l border-slate-800 space-y-0.5">
+                                    <div onclick="selectDevice('MTR-LIFT-A1')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
+                                        <span>⚙ Motor Nâng Hạ</span>
+                                        <span class="text-emerald-400">● TỐT</span>
+                                    </div>
+                                    <div onclick="selectDevice('VFD-LIFT-A1')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
+                                        <span>🔌 Biến tần VFD Nâng</span>
+                                        <span class="text-slate-500">● STOP</span>
+                                    </div>
+                                    <div onclick="selectDevice('LS-T3-A1')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
+                                        <span>🚨 Cảm biến hành trình LS-T3</span>
+                                        <span class="text-emerald-400">● OK</span>
+                                    </div>
+                                </div>
+
+                                <!-- Block B-04 (Zone A/B) -->
+                                <div onclick="toggleNode('blockB4')" class="flex items-center gap-2 cursor-pointer py-1 text-slate-400 hover:text-slate-200">
+                                    <span id="icon-blockB4">▼</span>
+                                    <span>Block B-04</span>
+                                </div>
+                                <div id="blockB4" class="pl-4 border-l border-slate-800 space-y-0.5">
+                                    <div onclick="selectDevice('MTR-LIFT-B4')" class="py-1 px-2 rounded cursor-pointer bg-red-950/20 hover:bg-slate-800/40 text-[11px] text-slate-400 flex justify-between">
+                                        <span>⚙ Motor Nâng Hạ</span>
+                                        <span class="text-red-400 animate-pulse font-bold">✗ LỖI</span>
+                                    </div>
+                                    <div onclick="selectDevice('VFD-LIFT-B4')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
+                                        <span>🔌 Biến tần VFD Nâng</span>
+                                        <span class="text-slate-500">● STOP</span>
+                                    </div>
+                                    <div onclick="selectDevice('LS-T3-B4')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
+                                        <span>🚨 Cảm biến hành trình LS-T3</span>
+                                        <span class="text-emerald-400">● OK</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right 2 Columns: Asset Details & Telemetry -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Info Display -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-6 shadow-xl space-y-6">
+                    <div class="flex justify-between items-start pb-4 border-b border-slate-800">
+                        <div>
+                            <h2 id="assetName" class="text-lg font-bold text-white">⚙ Động cơ Nâng hạ (Block B-04)</h2>
+                            <p id="assetCode" class="text-slate-500 text-xs font-mono mt-1">Mã thiết bị: MTR-LIFT-B4</p>
+                        </div>
+                        <span id="assetStatus" class="px-2.5 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-xs font-bold font-mono">
+                            TRẠNG THÁI: LỖI
+                        </span>
+                    </div>
+
+                    <!-- Telemetry grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-slate-800/20 border border-slate-800 p-4 rounded-xl">
+                            <span class="text-slate-500 text-[10px] uppercase font-mono block">Runtime tích lũy</span>
+                            <span id="telemetryRuntime" class="text-lg font-mono font-bold text-slate-200 mt-1">1,240 giờ</span>
+                        </div>
+                        <div class="bg-slate-800/20 border border-slate-800 p-4 rounded-xl">
+                            <span class="text-slate-500 text-[10px] uppercase font-mono block">Số chu kỳ đỗ xe</span>
+                            <span id="telemetryCycles" class="text-lg font-mono font-bold text-slate-200 mt-1">45,120 lần</span>
+                        </div>
+                        <div class="bg-slate-800/20 border border-slate-800 p-4 rounded-xl">
+                            <span class="text-slate-500 text-[10px] uppercase font-mono block">Nhiệt độ cuộn dây</span>
+                            <span id="telemetryTemp" class="text-lg font-mono font-bold text-red-400 mt-1">115°C</span>
+                        </div>
+                    </div>
+
+                    <!-- Asset metadata specifications -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <h4 class="text-slate-400 text-xs font-bold font-mono uppercase tracking-wider">Thông số kỹ thuật</h4>
+                            <div class="space-y-2 text-[11px] font-mono">
+                                <div class="flex justify-between border-b border-slate-800/50 pb-1">
+                                    <span class="text-slate-550">Hãng sản xuất:</span>
+                                    <span id="specVendor" class="text-slate-350">Mitsubishi Electric</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-800/50 pb-1">
+                                    <span class="text-slate-550">Model động cơ:</span>
+                                    <span id="specModel" class="text-slate-350">SF-JR 7.5kW 4P</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-800/50 pb-1">
+                                    <span class="text-slate-550">Số Serial:</span>
+                                    <span id="specSerial" class="text-slate-350">S/N: 2026-MTR-881A</span>
+                                </div>
+                                <div class="flex justify-between pb-1">
+                                    <span class="text-slate-550">Ngày lắp đặt:</span>
+                                    <span id="specDate" class="text-slate-350">12/03/2026</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Maintenance planning -->
+                        <div class="space-y-3">
+                            <h4 class="text-slate-400 text-xs font-bold font-mono uppercase tracking-wider">Lịch trình bảo dưỡng</h4>
+                            <div class="space-y-2 text-[11px] font-mono">
+                                <div class="flex justify-between border-b border-slate-800/50 pb-1">
+                                    <span class="text-slate-550">Bảo trì gần nhất:</span>
+                                    <span id="maintLast" class="text-slate-350">15/06/2026</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-800/50 pb-1">
+                                    <span class="text-slate-550">Dự kiến bảo trì tiếp theo:</span>
+                                    <span id="maintNext" class="text-slate-350 text-amber-400 font-bold">15/07/2026</span>
+                                </div>
+                                <div class="flex justify-between pb-1">
+                                    <span class="text-slate-550">Vật tư thay thế đi kèm:</span>
+                                    <span id="specParts" class="text-slate-350">Cuộn hút Phanh, Bôi trơn xích nâng</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Asset Telemetry Database
+    const assetDb = {
+        'MTR-LIFT-A1': {
+            name: '⚙ Động cơ Nâng hạ (Block A-01)',
+            code: 'MTR-LIFT-A1',
+            status: 'TRẠNG THÁI: TỐT',
+            statusClass: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400',
+            runtime: '840 giờ',
+            cycles: '22,410 lần',
+            temp: '55°C',
+            tempClass: 'text-emerald-400',
+            vendor: 'Mitsubishi Electric',
+            model: 'SF-JR 7.5kW 4P',
+            serial: 'S/N: 2026-MTR-771C',
+            date: '12/03/2026',
+            maintLast: '15/06/2026',
+            maintNext: '15/09/2026',
+            parts: 'Má phanh cơ khí 7.5kW'
+        },
+        'VFD-LIFT-A1': {
+            name: '🔌 Biến tần VFD Nâng (Block A-01)',
+            code: 'VFD-LIFT-A1',
+            status: 'TRẠNG THÁI: STOP',
+            statusClass: 'border-slate-700 bg-slate-800 text-slate-400',
+            runtime: '840 giờ',
+            cycles: '22,410 lần',
+            temp: '32°C',
+            tempClass: 'text-slate-300',
+            vendor: 'Yaskawa Electric',
+            model: 'A1000 7.5kW Heavy',
+            serial: 'S/N: YAS-2026-09A',
+            date: '12/03/2026',
+            maintLast: '12/04/2026',
+            maintNext: '12/10/2026',
+            parts: 'Tụ lọc nguồn, Quạt làm mát VFD'
+        },
+        'LS-T3-A1': {
+            name: '🚨 Cảm biến hành trình LS-T3 (Block A-01)',
+            code: 'LS-T3-A1',
+            status: 'TRẠNG THÁI: OK',
+            statusClass: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400',
+            runtime: '---',
+            cycles: '44,820 lần',
+            temp: '---',
+            tempClass: 'text-slate-400',
+            vendor: 'Autonics',
+            model: 'PR12-4DN limit sensor',
+            serial: 'S/N: AUT-88902B',
+            date: '12/03/2026',
+            maintLast: '15/06/2026',
+            maintNext: '15/09/2026',
+            parts: 'Cảm biến Limit Switch Autonics'
+        },
+        'MTR-LIFT-B4': {
+            name: '⚙ Động cơ Nâng hạ (Block B-04)',
+            code: 'MTR-LIFT-B4',
+            status: 'TRẠNG THÁI: LỖI',
+            statusClass: 'border-rose-500/40 bg-rose-500/10 text-rose-400 animate-pulse',
+            runtime: '1,240 giờ',
+            cycles: '45,120 lần',
+            temp: '115°C',
+            tempClass: 'text-red-400 font-bold',
+            vendor: 'Mitsubishi Electric',
+            model: 'SF-JR 7.5kW 4P',
+            serial: 'S/N: 2026-MTR-881A',
+            date: '12/03/2026',
+            maintLast: '15/06/2026',
+            maintNext: '15/07/2026',
+            parts: 'Cuộn hút Phanh, Bôi trơn xích nâng'
+        },
+        'VFD-LIFT-B4': {
+            name: '🔌 Biến tần VFD Nâng (Block B-04)',
+            code: 'VFD-LIFT-B4',
+            status: 'TRẠNG THÁI: STOP',
+            statusClass: 'border-slate-700 bg-slate-800 text-slate-400',
+            runtime: '1,240 giờ',
+            cycles: '45,120 lần',
+            temp: '45°C',
+            tempClass: 'text-slate-300',
+            vendor: 'Yaskawa Electric',
+            model: 'A1000 7.5kW Heavy',
+            serial: 'S/N: YAS-2026-11C',
+            date: '12/03/2026',
+            maintLast: '12/04/2026',
+            maintNext: '12/10/2026',
+            parts: 'Quạt làm mát VFD'
+        },
+        'LS-T3-B4': {
+            name: '🚨 Cảm biến hành trình LS-T3 (Block B-04)',
+            code: 'LS-T3-B4',
+            status: 'TRẠNG THÁI: OK',
+            statusClass: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400',
+            runtime: '---',
+            cycles: '90,240 lần',
+            temp: '---',
+            tempClass: 'text-slate-400',
+            vendor: 'Autonics',
+            model: 'PR12-4DN limit sensor',
+            serial: 'S/N: AUT-99104A',
+            date: '12/03/2026',
+            maintLast: '15/06/2026',
+            maintNext: '15/09/2026',
+            parts: 'Cảm biến Limit Switch Autonics'
+        }
+    };
+
+    function toggleNode(nodeId) {
+        const node = document.getElementById(nodeId);
+        const icon = document.getElementById('icon-' + nodeId);
+        
+        if (node.classList.contains('hidden')) {
+            node.classList.remove('hidden');
+            icon.innerText = '▼';
+        } else {
+            node.classList.add('hidden');
+            icon.innerText = '▶';
+        }
+    }
+
+    function selectDevice(key) {
+        const item = assetDb[key];
+        if (!item) return;
+
+        // Update titles
+        document.getElementById("assetName").innerText = item.name;
+        document.getElementById("assetCode").innerText = "Mã thiết bị: " + item.code;
+        
+        // Status badge
+        const badge = document.getElementById("assetStatus");
+        badge.className = "px-2.5 py-0.5 rounded border text-xs font-bold font-mono " + item.statusClass;
+        badge.innerText = item.status;
+
+        // Telemetries
+        document.getElementById("telemetryRuntime").innerText = item.runtime;
+        document.getElementById("telemetryCycles").innerText = item.cycles;
+        
+        const tempSpan = document.getElementById("telemetryTemp");
+        tempSpan.className = "text-lg font-mono font-bold mt-1 " + item.tempClass;
+        tempSpan.innerText = item.temp;
+
+        // Specifications
+        document.getElementById("specVendor").innerText = item.vendor;
+        document.getElementById("specModel").innerText = item.model;
+        document.getElementById("specSerial").innerText = item.serial;
+        document.getElementById("specDate").innerText = item.date;
+
+        // Maintenance schedule
+        document.getElementById("maintLast").innerText = item.maintLast;
+        document.getElementById("maintNext").innerText = item.maintNext;
+        document.getElementById("specParts").innerText = item.parts;
+    }
+</script>

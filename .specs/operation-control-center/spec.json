@@ -1,0 +1,142 @@
+{
+  "feature_name": "operation-control-center",
+  "created_at": "2026-07-03T23:20:00+07:00",
+  "updated_at": "2026-07-03T23:30:00+07:00",
+  "language": "vi",
+  "status": "done",
+  "phase": "completed",
+  "current_phase": "review",
+  "priority": "P1",
+  "effort": "12h",
+  "tags": ["scada", "operator", "control-panel", "plc"],
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": true
+    }
+  },
+  "scope_lock": {
+    "source": "Khách hàng yêu cầu một trang Operation Control Center (Trung tâm điều khiển vận hành) chuyên biệt để quản lý và vận hành trực quan bãi xe Puzzle, hỗ trợ gửi lệnh PLC trực tiếp, điều khiển block, và hướng dẫn phục hồi sự cố thời gian thực.",
+    "in_scope": [
+      "Tạo mới trang Operation Control Center (OperationControl.cshtml) và định tuyến MVC tương ứng",
+      "Điều khiển vận hành block: Start, Stop, Pause, Resume, Lock, Unlock, Disable block bảo trì",
+      "Chuyển chế độ hoạt động: Auto, Manual, Maintenance, Emergency",
+      "Reset lỗi thiết bị và thực hiện Homming (đồng bộ điểm gốc) cho cơ cấu sau sự cố",
+      "Quy trình phục hồi lỗi dạng checklist động có hướng dẫn cụ thể cho operator",
+      "Giao diện gọi xe vào/lấy xe ra trực quan dành riêng cho operator",
+      "Gửi lệnh PLC trực tiếp với hộp thoại xác nhận bảo mật trước khi thực thi",
+      "Giám sát chu kỳ trạng thái lệnh PLC: Command Sent -> PLC Accepted -> Running -> Done/Failed",
+      "Hiển thị mã lỗi cụ thể khi PLC từ chối hoặc lệnh thất bại"
+    ],
+    "out_of_scope": [
+      "Kết nối socket/serial thật với PLC vật lý (chỉ mô phỏng truyền tin qua client-side state)",
+      "Lưu trữ nhật ký lệnh vĩnh viễn ở DB (chỉ hiển thị log phiên hiện tại và đồng bộ localStorage)"
+    ],
+    "expansion_policy": "requires-user-approval"
+  },
+  "dependencies": {
+    "blockedBy": ["specs/ui-functional-upgrade"],
+    "blocks": []
+  },
+  "task_files": [
+    "tasks/task-R1-01-operation-control-ui.md",
+    "tasks/task-R2-01-block-controls.md",
+    "tasks/task-R3-01-fault-recovery.md",
+    "tasks/task-R4-01-command-pipeline.md",
+    "tasks/task-R5-01-car-dispatch.md"
+  ],
+  "task_registry": {
+    "tasks/task-R1-01-operation-control-ui.md": {
+      "id": "R1-01",
+      "title": "Tạo mới trang OCC và định tuyến MVC, tích hợp Sidebar Layout",
+      "status": "completed",
+      "dependencies": [],
+      "blocker": null,
+      "started_at": "2026-07-03T23:21:00+07:00",
+      "completed_at": "2026-07-03T23:23:00+07:00",
+      "last_updated_at": "2026-07-03T23:23:00+07:00"
+    },
+    "tasks/task-R2-01-block-controls.md": {
+      "id": "R2-01",
+      "title": "Xây dựng bảng điều khiển Block, nút hành động và đổi chế độ hoạt động",
+      "status": "completed",
+      "dependencies": ["tasks/task-R1-01-operation-control-ui.md"],
+      "blocker": null,
+      "started_at": "2026-07-03T23:23:00+07:00",
+      "completed_at": "2026-07-03T23:26:00+07:00",
+      "last_updated_at": "2026-07-03T23:26:00+07:00"
+    },
+    "tasks/task-R3-01-fault-recovery.md": {
+      "id": "R3-01",
+      "title": "Triển khai Reset lỗi, cơ cấu Homming và Checklist hướng dẫn phục hồi động",
+      "status": "completed",
+      "dependencies": ["tasks/task-R2-01-block-controls.md"],
+      "blocker": null,
+      "started_at": "2026-07-03T23:26:00+07:00",
+      "completed_at": "2026-07-03T23:28:00+07:00",
+      "last_updated_at": "2026-07-03T23:28:00+07:00"
+    },
+    "tasks/task-R4-01-command-pipeline.md": {
+      "id": "R4-01",
+      "title": "Triển khai bộ gửi lệnh PLC trực tiếp, popup xác nhận, và đèn chỉ báo chu kỳ lệnh",
+      "status": "completed",
+      "dependencies": ["tasks/task-R1-01-operation-control-ui.md"],
+      "blocker": null,
+      "started_at": "2026-07-03T23:23:00+07:00",
+      "completed_at": "2026-07-03T23:27:00+07:00",
+      "last_updated_at": "2026-07-03T23:27:00+07:00"
+    },
+    "tasks/task-R5-01-car-dispatch.md": {
+      "id": "R5-01",
+      "title": "Xây dựng module Gọi xe vào / Trả xe ra dành cho Operator",
+      "status": "completed",
+      "dependencies": ["tasks/task-R1-01-operation-control-ui.md"],
+      "blocker": null,
+      "started_at": "2026-07-03T23:23:00+07:00",
+      "completed_at": "2026-07-03T23:27:00+07:00",
+      "last_updated_at": "2026-07-03T23:27:00+07:00"
+    }
+  },
+  "blocker": null,
+  "progress": {
+    "init": "done",
+    "requirements": "done",
+    "research": "done",
+    "design": "done",
+    "tasks": "done",
+    "code": "done",
+    "test": "done",
+    "review": "done"
+  },
+  "timestamps": {
+    "init": "2026-07-03T23:20:00+07:00",
+    "requirements_done": "2026-07-03T23:25:00+07:00",
+    "research_done": "2026-07-03T23:25:00+07:00",
+    "design_done": "2026-07-03T23:25:00+07:00",
+    "tasks_done": "2026-07-03T23:25:00+07:00",
+    "code_done": "2026-07-03T23:29:00+07:00",
+    "test_done": "2026-07-03T23:29:00+07:00",
+    "review_done": "2026-07-03T23:30:00+07:00",
+    "validation_done": "2026-07-03T23:30:00+07:00"
+  },
+  "design_context": {
+    "discovery_mode": "light",
+    "discovery_reason": "Tạo mới trang SCADA và triển khai logic mô phỏng điều khiển PLC thông qua Javascript trên nền ASP.NET MVC",
+    "validation_recommended": true
+  },
+  "validation": {
+    "status": "completed",
+    "session_count": 1,
+    "questions_asked": 3,
+    "last_validated_at": "2026-07-03T23:21:00+07:00"
+  },
+  "ready_for_implementation": true
+}

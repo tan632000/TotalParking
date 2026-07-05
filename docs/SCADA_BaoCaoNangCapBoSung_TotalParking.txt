@@ -1,0 +1,727 @@
+CÔNG TY CỔ PHẦN TOTAL PARKING
+totalparking.vn  
+BÁO CÁO PHÂN TÍCH, ĐÁNH GIÁ
+VÀ ĐỀ XUẤT NÂNG CẤP
+HỆ THỐNG SCADA BÃI ĐỖ XE TỰ ĐỘNG
+LUMI Automated Parking SCADA – TotalParking
+I. TỔNG QUAN HỆ THỐNG SCADA HIỆN TẠI
+Các màn hình hiện có
+Dashboard tổng quan – KPI hệ thống, trạng thái kết nối, alarm active.
+Mặt bằng hệ thống – Bản đồ zone/block/pallet với màu trạng thái trực quan.
+Zone/Block Monitoring – Theo dõi chi tiết từng block và pallet.
+Popup chi tiết Block/Pallet – Thông tin vận hành nhanh, lịch sử, bảo trì, alarm.
+AI-VDS điều hướng xe – Phân loại, điều phối, cân bằng tải zone.
+Alarm & Event – Quản lý alarm realtime, ACK, lịch sử sự kiện.
+Bảo trì hệ thống – Work order, chu kỳ, runtime, tần suất block.
+Remote Diagnostics – Chẩn đoán sâu đến motor, PLC I/O, reset, bypass.
+Báo cáo & thống kê – Mật độ, Pareto lỗi, bảo trì, doanh thu, tần suất pallet.
+Lịch sử gửi xe & tìm kiếm xe – Quick finder, timeline lịch sử.
+Báo cáo doanh thu – Giao dịch, phí, QR, so sánh tháng.
+Quản lý thẻ RFID – Đăng ký, gán xe, đồng bộ HMI.
+Cấu hình hệ thống – Kết nối PLC, Modbus, DB, email, API.
+Remote Support & phân quyền – Ma trận vai trò, audit log, lịch sử remote.
+II. CÁC CHỨC NĂNG HIỆN TẠI ĐÃ CÓ
+STT
+Nhóm chức năng
+Nội dung đã có
+Mức độ
+Nhận xét
+1
+Dashboard tổng quan
+Tổng số block/pallet, xe đang đỗ, chỗ trống, SUV/Sedan, mật độ theo zone, trạng thái kết nối PLC/HMI/AI-VDS/SCADA, cảnh báo active
+Tốt
+Phù hợp làm màn hình giám sát trung tâm
+2
+Mặt bằng Zone/Block
+Bản đồ mặt bằng, phân vùng zone, block, pallet, mật độ từng zone, trạng thái ZCU/PGS, drill-down zone/block
+Tốt
+Operator quan sát toàn cục
+3
+Zone/Block Monitoring
+Theo dõi từng block: sức chứa, số xe, SUV/Sedan, chế độ Auto/Manual, trạng thái, tỷ lệ sử dụng
+Khá tốt
+Đủ thông tin vận hành cấp block
+4
+Popup Block/Pallet
+Thông tin block, zone, chế độ, sức chứa, chu kỳ, runtime motor, trạng thái pallet, biển số, kết nối PLC/HMI, nút lịch sử/bảo trì/alarm/admin
+Rất tốt
+Xem nhanh tình trạng block và pallet
+5
+AI-VDS điều hướng xe
+Phân loại SUV/Sedan/Oversized, cảnh báo quá khổ, đề xuất block, cân bằng tải zone, fallback mode, LED/PGS/ZCU, API access-control
+Khá tốt
+Có tư duy điều phối xe và tích hợp AI
+6
+Alarm & Event
+Tổng lỗi, lỗi vận hành, thiết bị đến hạn bảo trì, bảng alarm realtime, phân loại mức độ, zone/block/thiết bị/mã lỗi, nút ACK
+Tốt
+Cần bổ sung workflow xử lý alarm
+7
+Bảo trì hệ thống
+Tổng quan bảo trì, thiết bị khẩn cấp/ưu tiên, work order, tần suất hoạt động block, chu kỳ, runtime, danh sách work order, xuất dữ liệu
+Khá tốt
+Cần nâng lên từng thiết bị, spare parts
+8
+Remote Diagnostics
+Chọn zone/block, trạng thái PLC, chi tiết motor nâng: nhiệt độ/dòng/áp/tốc độ, PLC I/O, Reset PLC, Bypass Sensor, tạo work order khẩn
+Rất tốt
+Cần mở rộng đến nhiều thiết bị hơn
+9
+Báo cáo & thống kê
+Mật độ lưu lượng, Pareto lỗi, lịch sử bảo trì, lịch sử thẻ xe, doanh thu, tần suất pallet, xuất Excel/PDF
+Tốt
+Đủ nhiều nhóm báo cáo cho vận hành
+10
+Pareto lỗi
+Biểu đồ Pareto thiết bị, nguyên nhân, số lần, tỷ lệ %, tích lũy, ngưỡng 80%
+Tốt
+Hữu ích phân tích nguyên nhân lỗi chính
+11
+Lịch sử bảo trì
+Thiết bị, loại bảo trì, ngày, kỹ thuật viên, đánh giá sau bảo trì
+Khá tốt
+Nên thêm vật tư, chi phí, hình ảnh, root cause
+12
+Truy vết xe
+Quick Vehicle Finder, tìm biển số/mã thẻ, lịch sử gửi xe, thời gian, loại xe, vị trí, phí thanh toán
+Tốt
+Có truy vết xe cơ bản
+13
+Báo cáo doanh thu
+Doanh thu tháng, so sánh tháng trước, phí SUV/Sedan, tỷ lệ QR, lưu lượng theo ngày, nhật ký giao dịch
+Tốt
+Tốt nếu có tích hợp thanh toán
+14
+Tần suất pallet
+Bản đồ tần suất hoạt động pallet, mức tốt/TB/cần bảo trì, chu kỳ, lọc theo zone/block
+Tốt
+Hữu ích cho bảo trì theo pallet
+15
+Quản lý thẻ RFID
+Tổng thẻ, thẻ active/khóa/hết hạn, mã thẻ, biển số, chủ xe, loại xe, zone/block chỉ định, đồng bộ HMI, khóa/xóa/mở, đăng ký thẻ mới
+Khá tốt
+Đầy đủ cho quản lý thẻ nội bộ
+16
+Cấu hình hệ thống
+Kết nối PLC/HMI, IP SCADA server, Modbus TCP, polling, timeout, DB, email/SMS, API/Webhook, chẩn đoán server
+Tốt
+Có cấu hình vận hành cơ bản
+17
+Phân quyền & audit log
+Ma trận phân quyền Admin/Supervisor/Maintenance/Operator/Remote, tài khoản online, lịch sử remote, lệnh và kết quả
+Tốt
+Có nền bảo mật và kiểm soát thao tác
+III. NHỮNG PHẦN CÒN THIẾU VÀ CẦN BỔ SUNG
+Phần này phân tích chi tiết 19 nhóm chức năng cần bổ sung hoặc nâng cấp.
+1. Operation Control Center – Trung tâm điều khiển vận hành
+Hiện tại hệ thống có nhiều nút thao tác rải rác (Reset PLC, Bypass Sensor, Cưỡng bức Admin), nhưng chưa có màn hình điều khiển vận hành trung tâm tập trung bài bản. Đây là màn hình thiết yếu nhất cho operator trong ca vận hành.
+Cần bổ sung:
+Start / Stop / Pause / Resume block.
+Reset Fault và Home cơ cấu sau lỗi.
+Recover after fault – Quy trình phục hồi có hướng dẫn.
+Chuyển chế độ: Auto / Manual / Maintenance / Emergency.
+Gọi xe vào / Lấy xe ra theo yêu cầu operator.
+Lock / Unlock block và Disable block để bảo trì.
+Gửi lệnh trực tiếp đến PLC với xác nhận trước.
+Theo dõi trạng thái lệnh: Command Sent → PLC Accepted → Running → Done/Failed.
+Mã lỗi cụ thể nếu PLC từ chối lệnh.
+Xác nhận 2 bước (2-step confirmation) cho lệnh nguy hiểm hoặc không thể hoàn tác.
+2. Sequence View – Luồng xử lý lệnh từng bước
+Cần màn hình hiển thị quá trình thực thi lệnh theo từng bước tuần tự, giúp operator biết lệnh đang ở đâu và bị kẹt tại bước nào.
+Ví dụ: Quy trình lấy xe gồm các bước:
+Xác nhận thẻ / biển số xe.
+Xác định vị trí xe trong hệ thống.
+Chọn zone và block phù hợp.
+Kiểm tra Safety Interlock tổng thể.
+Gửi lệnh đến PLC.
+Pallet di chuyển đến vị trí xe.
+Xe được đưa về vị trí xuất.
+Hoàn tất – Thông báo khách hàng.
+Màn hình Sequence View cần hiển thị:
+Lệnh đang ở bước nào (Step indicator).
+Bước đã hoàn thành (màu xanh).
+Bước đang chạy (màu vàng, nhấp nháy).
+Bước bị kẹt hoặc lỗi (màu đỏ, lý do cụ thể).
+Thời gian đã chạy và thời gian dự kiến hoàn tất.
+3. Safety Interlock Matrix
+Màn hình ma trận điều kiện an toàn giúp operator biết ngay vì sao hệ thống không cho phép chạy. Đây là công cụ thiết yếu để giảm thời gian chẩn đoán khi hệ thống bị hold.
+Bảng mẫu Safety Interlock Matrix:
+STT
+Điều kiện an toàn
+Trạng thái
+Vị trí
+Cảnh báo
+Hành động đề xuất
+1
+E-Stop không bị nhấn
+OK
+Tất cả vị trí
+Kiểm tra nút E-Stop tại tất cả trạm
+2
+Cửa an toàn đã đóng
+OK
+Cổng vào/ra
+Kiểm tra sensor cửa
+3
+Light curtain không bị che
+OK
+Khu vực pallet
+Test light curtain định kỳ
+4
+Không có người trong vùng nguy hiểm
+WAIT
+Tầng hầm B1
+⚠
+Chờ tín hiệu clear từ sensor hiện diện
+5
+Xe không quá khổ
+OK
+Cổng vào
+AI-VDS đã phê duyệt
+6
+Pallet đúng vị trí
+OK
+Block chỉ định
+Sensor vị trí xác nhận
+7
+Sensor hành trình hợp lệ
+OK
+Tất cả cơ cấu
+Không có sensor bị báo lỗi
+8
+Khóa cơ khí đã nhả
+FAIL
+Block B01
+✗
+Kiểm tra actuator khóa cơ khí
+9
+Phanh motor sẵn sàng
+OK
+Tất cả motor
+Brake released confirmed
+10
+VFD không có lỗi
+OK
+Tất cả VFD
+Không có fault code
+11
+PLC Safety đang online
+OK
+Block B01
+Heartbeat OK
+12
+Không có lệnh xung đột
+OK
+Hệ thống
+Queue clean
+13
+Block liền kề không gây nguy hiểm
+OK
+B02, B03
+Không có lệnh đang chạy
+4. Bypass / Override Management
+Hiện đã có nút Bypass Sensor, nhưng cần nâng cấp để đảm bảo an toàn và truy vết đầy đủ.
+Cần bổ sung:
+Ghi rõ: Sensor nào đang bị bypass, ai bypass, khi nào, thời hạn hết hiệu lực.
+Lý do bypass (bắt buộc nhập trước khi thực hiện).
+Cảnh báo toàn hệ thống khi có bypass đang hoạt động (màu cảnh báo đặc biệt).
+Nhật ký đầy đủ tất cả bypass đã thực hiện.
+Chỉ Maintenance/Admin mới được thực hiện bypass.
+Yêu cầu xác nhận 2 lớp với bypass ảnh hưởng đến an toàn.
+Tự động hết hạn bypass sau thời gian quy định nếu không gia hạn.
+5. Vehicle Queue / Dispatch Queue
+Khi nhiều xe cùng vào/ra, operator cần một màn hình hàng đợi rõ ràng để theo dõi và can thiệp. Hiện tại chưa thấy màn hình này.
+Danh sách xe đang chờ gửi và đang chờ lấy.
+Xe đang AI-VDS phân loại / đang được cấp pallet / đang điều phối.
+Xe đang bị hold (hold lý do gì) và xe bị reject (từ chối vì sao).
+ETA – Thời gian chờ dự kiến cho từng xe.
+Block được chỉ định và trạng thái hiện tại của block đó.
+Ưu tiên xử lý (Priority queue: VIP, khẩn cấp, thường).
+6. Timeline hành trình xe
+Bổ sung timeline trực quan cho từng xe, từ lúc vào cổng đến khi rời bãi, thể hiện rõ từng bước và điểm lỗi nếu có.
+Xe vào cổng → AI-VDS nhận diện → Cấp RFID/thẻ → Chọn zone/block.
+Lưu xe vào pallet → Xe đã đỗ → Khách hàng gọi xe → Xuất xe.
+Thanh toán → Hoàn tất. Nếu lỗi ở bước nào, timeline hiển thị ngay tại đó.
+7. Asset Tree chi tiết (Cây thiết bị)
+Cần cây thiết bị đầy đủ theo phân cấp: Project → Zone → Block → Cơ cấu → Thiết bị con.
+Thiết bị cần quản lý trong từng block:
+Motor: Motor nâng, motor trượt ngang, motor xoay/quay.
+Truyền động: VFD nâng, VFD trượt, hộp số, xích nâng, con lăn.
+An toàn: Phanh motor, relay an toàn, contactor.
+Cảm biến: Sensor hành trình, sensor quang, encoder.
+Điều khiển: PLC remote I/O.
+Pallet: Từng vị trí pallet với mã định danh.
+Mỗi thiết bị cần có:
+Mã thiết bị, model, serial number, ngày lắp đặt.
+Vị trí lắp đặt chính xác.
+Trạng thái hiện tại: Running / Stopped / Fault / Maintenance.
+Số lỗi (7 ngày / 30 ngày), runtime, cycle count.
+Ngày bảo trì gần nhất và ngày bảo trì tiếp theo.
+Linh kiện thay thế liên quan.
+8. Fault History theo từng thiết bị
+Mỗi thiết bị cần có trang lịch sử lỗi riêng để kỹ thuật viên phân tích pattern và đưa ra quyết định bảo trì chính xác.
+Số lỗi trong 7 ngày / 30 ngày.
+Loại lỗi lặp lại nhiều nhất (top fault codes).
+Thời điểm lỗi gần nhất, ai ACK, ai reset.
+Sau khi reset chạy được bao lâu thì lỗi lại.
+MTBF (Mean Time Between Failures) và MTTR (Mean Time To Repair).
+Nguyên nhân gốc (Root Cause) và hành động khắc phục đã thực hiện.
+9. Historian / Trend kỹ thuật
+Biểu đồ xu hướng theo thời gian giúp phát hiện bất thường trước khi sự cố xảy ra – nền tảng của Predictive Maintenance.
+Các thông số cần historian:
+Dòng điện motor nâng và trượt (A).
+Nhiệt độ motor và tủ điện (°C).
+Điện áp nguồn (V), tần số VFD (Hz), tốc độ motor (RPM).
+Số chu kỳ và thời gian chu trình (giây).
+Thời gian lấy xe / gửi xe (giây).
+Số lần lỗi theo giờ/ngày.
+Trạng thái kết nối PLC theo thời gian.
+10. Predictive Maintenance – Bảo trì dự đoán
+Nâng cấp từ bảo trì theo chu kỳ cố định sang bảo trì dựa trên tình trạng thực tế của thiết bị.
+Cảnh báo dòng motor tăng bất thường (dấu hiệu kẹt cơ, mòn ổ bi).
+Nhiệt độ motor tăng dần theo thời gian (hao mòn, thiếu bôi trơn).
+Thời gian chu trình dài hơn bình thường (dấu hiệu cơ học yếu).
+Sensor chập chờn – cảnh báo sắp hỏng hẳn.
+VFD lỗi lặp lại – phân tích nguyên nhân.
+Dự đoán ngày cần bảo trì dựa trên tốc độ suy giảm.
+Đề xuất kiểm tra cụ thể: xích, phanh, motor, hộp số.
+11. Work Order nâng cao
+Nâng cấp work order từ mức ghi chú sang quản lý công việc bảo trì chuyên nghiệp.
+Mã work order duy nhất, thiết bị liên quan, người phụ trách.
+SLA xử lý (ưu tiên, thời hạn hoàn thành).
+Trạng thái: New → Assigned → In Progress → Pending Part → Completed → Closed.
+Nguyên nhân lỗi, hành động khắc phục, vật tư thay thế.
+Hình ảnh trước/sau bảo trì.
+Thời gian bắt đầu/kết thúc, chi phí, ký xác nhận hoàn tất.
+Đánh giá chất lượng sau xử lý.
+12. Spare Parts Management – Quản lý vật tư dự phòng
+Chức năng này hiện chưa thấy trong hệ thống. Đây là module quan trọng để đảm bảo luôn có linh kiện khi cần.
+Danh sách spare parts với mã linh kiện, model, nhà cung cấp.
+Tồn kho hiện tại và mức tồn tối thiểu.
+Vật tư dùng cho thiết bị nào, block nào.
+Lịch sử xuất vật tư và gắn vật tư vào work order.
+Cảnh báo khi tồn kho xuống dưới mức tối thiểu.
+Đề xuất mua hàng tự động khi thiếu vật tư.
+13. Network / PLC / Modbus Diagnostics sâu
+Hiện hệ thống đã có trạng thái PLC connected và một số PLC I/O. Cần bổ sung chẩn đoán sâu hơn để phân biệt lỗi do thiết bị, PLC, mạng hay SCADA.
+Ping latency (ms) theo thời gian thực.
+Packet loss (%), retry count, timeout count, reconnect count.
+Last communication timestamp và heartbeat trend.
+Tag quality: Good / Bad / Uncertain / Stale.
+Bad quality alarm và stale data detection.
+PLC CPU load và memory usage.
+Remote I/O offline detection và analog out-of-range.
+14. KPI vận hành nâng cao
+Số xe vào/ra trong ngày, theo giờ, theo block.
+Thời gian gửi xe / lấy xe: trung bình, best case, worst case.
+Tỷ lệ lệnh thành công / thất bại.
+Availability từng block (%) và downtime (giờ/ngày).
+MTBF / MTTR theo block và theo thiết bị.
+OEE đơn giản theo block.
+AI-VDS accuracy và tỷ lệ fallback mode.
+Số lần reject xe quá khổ tại cổng vào.
+15. Camera / CCTV liên kết Alarm
+Camera tại cổng vào/ra, theo zone, theo block, khu vực pallet.
+Nhấp vào alarm → tự động mở camera đúng vị trí lỗi.
+Lưu snapshot tại thời điểm xảy ra alarm.
+Gắn snapshot/video clip vào alarm hoặc work order.
+16. Energy Monitoring – Giám sát điện năng
+Điện năng tổng toàn bãi và theo từng block (kWh).
+Công suất tức thời, peak load, dòng/áp/tần số/PF.
+Cảnh báo: quá dòng, mất pha, lệch pha, sụt áp.
+Chi phí điện ước tính theo ngày/tháng.
+So sánh điện năng theo ngày/tháng để phát hiện bất thường.
+17. Backup / Redundancy / UPS
+Trạng thái server chính / server dự phòng (failover).
+Database backup: lần gần nhất, kết quả, dung lượng, kiểm tra restore.
+UPS status: % pin, thời gian dự phòng, nhiệt độ.
+Network switch status và cảnh báo mất nguồn.
+Đồng bộ SCADA – HMI – PLC sau khôi phục nguồn.
+18. Cybersecurity nâng cao
+Chính sách mật khẩu: độ dài, phức tạp, thay đổi định kỳ.
+Tự khóa tài khoản sau nhiều lần đăng nhập sai.
+2FA bắt buộc cho Admin và Supervisor.
+IP whitelist cho remote support.
+Phân quyền chi tiết theo menu, hành động, zone/block.
+Log toàn bộ thay đổi cấu hình và lệnh điều khiển nguy hiểm.
+Session timeout tự động và theo dõi truy cập bất thường.
+19. UX/UI tối ưu
+Breadcrumb điều hướng và search toàn cục (biển số, block, alarm code, thiết bị).
+Filter nâng cao tại alarm, maintenance, report.
+Quick action ngay trên block, pin/favorite block hay dùng.
+Tooltip giải thích trạng thái, popup drill-down không cần đổi trang.
+Wall screen mode cho màn hình điều hành lớn.
+Mobile/tablet responsive cho đội bảo trì.
+Chuẩn hóa màu trạng thái nhất quán toàn hệ thống.
+IV. CHECKLIST ĐÁNH GIÁ: ĐÃ CÓ / CẦN NÂNG CẤP / CHƯA CÓ
+Bảng checklist dưới đây tổng hợp 35 hạng mục chức năng, trạng thái hiện tại, mức đánh giá và ưu tiên triển khai.
+Đã có – Tốt
+Đã có – Cần nâng cấp
+Chưa có – Cần bổ sung
+P0 > P1 > P2 > P3 (mức ưu tiên)
+STT
+Hạng mục
+Hiện trạng
+Đánh giá
+Ưu tiên
+Ghi chú đề xuất
+1
+Dashboard tổng quan
+Đã có – Tốt
+Tốt
+P0
+Đủ dùng, duy trì
+2
+Mặt bằng zone/block
+Đã có – Tốt
+Tốt
+P0
+Đủ dùng, duy trì
+3
+Popup block/pallet
+Đã có – Tốt
+Tốt
+P0
+Đủ dùng, duy trì
+4
+AI-VDS phân loại xe
+Đã có – Tốt
+Tốt
+P0
+Duy trì, tăng accuracy
+5
+Cân bằng tải zone
+Đã có – Cần nâng
+Khá tốt
+P1
+Bổ sung AI dispatch
+6
+Alarm & Event
+Đã có – Tốt
+Tốt
+P0
+Duy trì
+7
+ACK alarm
+Đã có – Tốt
+Tốt
+P0
+Duy trì
+8
+Workflow xử lý alarm
+Đã có – Cần nâng
+Cần nâng
+P1
+Thêm escalation, camera link
+9
+Bảo trì theo block
+Đã có – Tốt
+Khá tốt
+P0
+Duy trì
+10
+Remote diagnostics
+Đã có – Cần nâng
+Cần mở rộng
+P1
+Bổ sung nhiều thiết bị
+11
+Chi tiết motor
+Đã có – Cần nâng
+Bước đầu
+P1
+Mở rộng toàn asset
+12
+Asset tree đầy đủ
+Chưa có – Cần bổ
+Chưa có
+P1
+Zone→Block→Thiết bị con
+13
+Fault history thiết bị
+Chưa có – Cần bổ
+Chưa có
+P1
+MTBF, MTTR, root cause
+14
+Work order nâng cao
+Đã có – Cần nâng
+Cần nâng
+P1
+Vật tư, hình ảnh, SLA, chi phí
+15
+Lịch sử bảo trì
+Đã có – Tốt
+Khá tốt
+P0
+Thêm root cause, chi phí
+16
+Spare parts management
+Chưa có – Cần bổ
+Chưa có
+P2
+Tồn kho, cảnh báo, mua hàng
+17
+Pareto lỗi
+Đã có – Tốt
+Tốt
+P0
+Duy trì
+18
+Lịch sử xe
+Đã có – Tốt
+Tốt
+P0
+Duy trì
+19
+Quick vehicle finder
+Đã có – Tốt
+Tốt
+P0
+Duy trì
+20
+Revenue report
+Đã có – Tốt
+Tốt
+P0
+Duy trì
+21
+Tần suất pallet
+Đã có – Tốt
+Tốt
+P0
+Duy trì
+22
+RFID management
+Đã có – Tốt
+Tốt
+P0
+Duy trì
+23
+Đăng ký thẻ mới
+Đã có – Tốt
+Tốt
+P0
+Duy trì
+24
+Operation Control Center
+Chưa có – Cần bổ
+Chưa đầy đủ
+P1
+Start/Stop/Mode/Commands
+25
+Safety Interlock Matrix
+Chưa có – Cần bổ
+Chưa có
+P1
+Điều kiện an toàn trước khi chạy
+26
+Bypass management
+Đã có – Cần nâng
+Cơ bản
+P1
+Log, timeout, xác nhận 2 lớp
+27
+Vehicle Queue
+Chưa có – Cần bổ
+Chưa có
+P1
+Queue xe vào/ra realtime
+28
+Sequence View
+Chưa có – Cần bổ
+Chưa có
+P1
+Trạng thái từng bước lệnh
+29
+Historian/Trend kỹ thuật
+Chưa có – Cần bổ
+Chưa rõ
+P1
+Dòng, nhiệt, VFD, chu kỳ
+30
+Network/PLC diagnostics sâu
+Đã có – Cần nâng
+Cần mở rộng
+P1
+Latency, packet loss, tag quality
+31
+Camera linked alarm
+Chưa có – Cần bổ
+Chưa có
+P2
+Popup camera khi alarm
+32
+Energy monitoring
+Chưa có – Cần bổ
+Chưa có
+P2
+kWh, dòng/áp, chi phí điện
+33
+Backup/Redundancy/UPS
+Chưa có – Cần bổ
+Chưa rõ
+P2
+Server dự phòng, UPS status
+34
+Cybersecurity nâng cao
+Đã có – Cần nâng
+Cần nâng
+P2
+2FA, IP whitelist, session timeout
+35
+Simulation/Training mode
+Chưa có – Cần bổ
+Chưa có
+P3
+Mô phỏng, đào tạo operator
+V. ĐỀ XUẤT MENU SCADA HOÀN CHỈNH
+Bảng dưới đây đề xuất cấu trúc menu SCADA hoàn chỉnh gồm 19 nhóm chức năng, bao gồm cả menu hiện có và menu cần bổ sung.
+STT
+Menu
+Mục đích
+Người dùng
+Dữ liệu hiển thị
+Ưu tiên
+1
+Dashboard tổng quan
+Giám sát KPI toàn hệ thống
+Admin, Supervisor, Operator
+Slots, xe, alarm, kết nối, mật độ zone
+P0 – Đã có
+2
+Mặt bằng hệ thống
+Bản đồ zone/block/pallet
+Operator, Supervisor
+Sơ đồ, màu trạng thái, drill-down
+P0 – Đã có
+3
+Trung tâm điều khiển
+Điều khiển vận hành realtime
+Operator, Supervisor
+Start/Stop/Mode/Fault/Commands
+P1 – Bổ sung
+4
+Điều hướng xe / AI-VDS
+Phân loại, điều phối xe
+Operator, AI system
+Xe đang vào/ra, loại xe, block chỉ định
+P0 – Đã có
+5
+Hàng đợi xe
+Queue xe vào/ra realtime
+Operator
+Danh sách xe, trạng thái, ETA, block
+P1 – Bổ sung
+6
+Truy vết xe & pallet
+Tìm xe, lịch sử di chuyển
+Operator, Quản lý
+Biển số, zone, pallet, timeline
+P0 – Đã có
+7
+Alarm & Event
+Quản lý cảnh báo
+Tất cả vai trò
+Alarm realtime, lịch sử, ACK, workflow
+P0 – Đã có
+8
+Safety Interlock
+Ma trận điều kiện an toàn
+Operator, Kỹ thuật
+Checklist an toàn realtime, lý do không chạy
+P1 – Bổ sung
+9
+Bảo trì
+Quản lý bảo trì & work order
+Maintenance, Supervisor
+Work order, lịch bảo trì, spare parts
+P0 – Nâng cấp
+10
+Asset Tree / Thiết bị
+Chi tiết từng thiết bị
+Kỹ thuật, Maintenance
+Cây thiết bị, thông số, runtime, fault
+P1 – Bổ sung
+11
+Remote Diagnostics
+Chẩn đoán thiết bị từ xa
+Kỹ thuật, Remote Support
+Motor, PLC I/O, reset, bypass
+P0 – Nâng cấp
+12
+Historian / Trend
+Biểu đồ kỹ thuật theo thời gian
+Kỹ thuật, Maintenance
+Dòng, nhiệt, VFD, chu kỳ, runtime
+P1 – Bổ sung
+13
+Báo cáo
+Báo cáo vận hành & quản lý
+Quản lý, Supervisor
+Pareto, downtime, MTBF, doanh thu
+P0 – Nâng cấp
+14
+Quản lý thẻ RFID
+Quản lý thẻ xe và chủ xe
+Operator, Admin
+Danh sách thẻ, đăng ký, đồng bộ HMI
+P0 – Đã có
+15
+Camera / CCTV
+Liên kết camera với alarm
+Operator, Bảo vệ
+Feed realtime, popup theo alarm/zone
+P2 – Bổ sung
+16
+Energy Monitoring
+Giám sát điện năng
+Kỹ thuật, Quản lý
+kWh, dòng/áp/tần số, chi phí, cảnh báo
+P2 – Bổ sung
+17
+Cài đặt hệ thống
+Cấu hình kết nối và thông số
+Admin
+PLC, Modbus, DB, email, API, webhook
+P0 – Đã có
+18
+User & Permission
+Quản lý người dùng và quyền
+Admin
+Tài khoản, vai trò, 2FA, audit log
+P0 – Nâng cấp
+19
+Backup / System Health
+Sức khỏe hệ thống & backup
+Admin, IT
+Server, DB, UPS, network, failover
+P2 – Bổ sung
+VI. ĐỀ XUẤT GIAI ĐOẠN TRIỂN KHAI
+Việc nâng cấp được chia thành 3 giai đoạn rõ ràng, mỗi giai đoạn tập trung vào nhóm ưu tiên và có mục tiêu vận hành cụ thể.
+Giai đoạn 1 – Hoàn thiện lõi vận hành (P1 – Ưu tiên cao)
+Operation Control Center – Start/Stop/Mode/Fault/Command/2-step confirmation.
+Safety Interlock Matrix – Kiểm tra điều kiện an toàn tổng thể.
+Vehicle Queue / Dispatch Queue – Hàng đợi xe vào/ra realtime.
+Sequence View – Theo dõi từng bước xử lý lệnh.
+Asset Tree chi tiết – Zone → Block → Cơ cấu → Thiết bị con.
+Fault History từng thiết bị – MTBF, MTTR, root cause.
+Historian / Trend kỹ thuật – Dòng, nhiệt, VFD, chu kỳ.
+Bypass / Override Management an toàn – Log, timeout, xác nhận 2 lớp.
+Giai đoạn 2 – Tối ưu bảo trì và hiệu suất 
+Predictive Maintenance – Bảo trì dự đoán dựa trên trend.
+Work Order nâng cao – SLA, vật tư, hình ảnh, chi phí, ký xác nhận.
+Spare Parts Management – Tồn kho, cảnh báo, đề xuất mua hàng.
+KPI vận hành nâng cao – Availability, downtime, MTBF, MTTR, OEE.
+Network / PLC Diagnostics sâu – Latency, packet loss, tag quality.
+Camera liên kết alarm – Popup camera đúng vị trí khi có alarm.
+Báo cáo nâng cao – Downtime, Pareto theo thiết bị, lỗi theo ca.
+Giai đoạn 3 – Chuyên nghiệp hóa hệ thống 
+Energy Monitoring – kWh, chi phí điện, cảnh báo điện.
+Backup / Redundancy / UPS – Server dự phòng, failover, restore.
+Cybersecurity nâng cao – 2FA, IP whitelist, session timeout, audit đầy đủ.
+Simulation / Training mode – Mô phỏng và đào tạo operator.
+Mobile/tablet maintenance app cho đội bảo trì.
+API mở rộng – BMS, app cư dân, hệ thống thanh toán, LPR, AI dispatch.
+— Bộ phận Kỹ thuật & Phát triển Sản phẩm
+TotalParking Vietnam

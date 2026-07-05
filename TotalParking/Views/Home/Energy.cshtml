@@ -1,0 +1,84 @@
+@{
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+}
+
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Giám sát Điện năng (Energy Monitoring)</h1>
+                <p class="text-slate-400 text-sm mt-1">Theo dõi điện năng tiêu thụ tổng thể, peak load, công suất động cơ và ước tính chi phí vận hành.</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="alert('Đã tải lại báo cáo điện năng')" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors font-semibold">
+                    Làm mới
+                </button>
+            </div>
+        </div>
+
+        <!-- Energy KPIs -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
+                <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">ĐIỆN NĂNG TIÊU THỤ THÁNG</div>
+                <div class="text-blue-400 text-2xl font-mono font-bold mt-1">1,420 kWh</div>
+                <div class="text-[10px] text-emerald-400 font-mono mt-1">↓ 4.2% so với tháng trước</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
+                <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">CÔNG SUẤT ĐỈNH (PEAK LOAD)</div>
+                <div class="text-amber-500 text-2xl font-mono font-bold mt-1">32.4 kW</div>
+                <div class="text-[10px] text-slate-500 font-mono mt-1">Ghi nhận lúc 17:35 hôm qua</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
+                <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">HỆ SỐ CÔNG SUẤT (POWER FACTOR)</div>
+                <div class="text-emerald-400 text-2xl font-mono font-bold mt-1">0.94</div>
+                <div class="text-[10px] text-emerald-500 font-mono mt-1">Đạt chuẩn bù công suất phản kháng</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
+                <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">CHI PHÍ ĐIỆN ƯỚC TÍNH</div>
+                <div class="text-violet-400 text-2xl font-mono font-bold mt-1">4.260.000 đ</div>
+                <div class="text-[10px] text-slate-500 font-mono mt-1">Tạm tính theo biểu giá kinh doanh</div>
+            </div>
+        </div>
+
+        <!-- Telemetry Details -->
+        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
+            <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-500"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                Phân bổ điện năng theo Block
+            </h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <div class="flex justify-between text-xs font-mono mb-1">
+                        <span class="text-slate-300">Block B-01 (Zone A - Hầm B1)</span>
+                        <span class="text-slate-400">420 kWh (29.5%)</span>
+                    </div>
+                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 rounded-full" style="width: 29.5%;"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs font-mono mb-1">
+                        <span class="text-slate-300">Block B-02 (Zone B - Hầm B2)</span>
+                        <span class="text-slate-400">380 kWh (26.7%)</span>
+                    </div>
+                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 rounded-full" style="width: 26.7%;"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs font-mono mb-1">
+                        <span class="text-slate-300">Block B-03 (Zone B - Hầm B2)</span>
+                        <span class="text-slate-400">310 kWh (21.8%)</span>
+                    </div>
+                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-amber-500 rounded-full" style="width: 21.8%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

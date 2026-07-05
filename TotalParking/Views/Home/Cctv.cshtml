@@ -1,0 +1,68 @@
+@{
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+}
+
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Giám sát Camera / CCTV (CCTV Integration)</h1>
+                <p class="text-slate-400 text-sm mt-1">Liên kết camera giám sát trực tiếp với vị trí an toàn và cảnh báo sự cố SCADA.</p>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/50 transition-colors font-semibold shadow-md">
+                    Xem tất cả (Grid)
+                </button>
+            </div>
+        </div>
+
+        <!-- Camera Feeds Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Camera 1 -->
+            <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                <div class="bg-slate-950 p-2 border-b border-slate-800 flex justify-between items-center">
+                    <span class="text-xs font-mono font-bold text-slate-400">CAM-IN: Cổng Vào 1</span>
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                        LIVE
+                    </span>
+                </div>
+                <div class="aspect-video bg-slate-950 flex flex-col items-center justify-center relative group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-slate-700 group-hover:text-slate-500 transition-colors"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></svg>
+                    <div class="absolute bottom-2 left-2 text-[10px] font-mono text-slate-500 bg-black/60 px-2 py-0.5 rounded">Cổng Đo Quét AI-VDS</div>
+                </div>
+            </div>
+
+            <!-- Camera 2 -->
+            <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                <div class="bg-slate-950 p-2 border-b border-slate-800 flex justify-between items-center">
+                    <span class="text-xs font-mono font-bold text-slate-400">CAM-ZONE-A: Hầm B1</span>
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                        LIVE
+                    </span>
+                </div>
+                <div class="aspect-video bg-slate-950 flex flex-col items-center justify-center relative group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-slate-700 group-hover:text-slate-500 transition-colors"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></svg>
+                    <div class="absolute bottom-2 left-2 text-[10px] font-mono text-slate-500 bg-black/60 px-2 py-0.5 rounded">Khu Vực Block B-01 - B-04</div>
+                </div>
+            </div>
+
+            <!-- Camera 3 -->
+            <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                <div class="bg-slate-950 p-2 border-b border-slate-800 flex justify-between items-center">
+                    <span class="text-xs font-mono font-bold text-slate-400">CAM-OUT: Cổng Ra 1</span>
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                        LIVE
+                    </span>
+                </div>
+                <div class="aspect-video bg-slate-950 flex flex-col items-center justify-center relative group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-slate-700 group-hover:text-slate-500 transition-colors"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></svg>
+                    <div class="absolute bottom-2 left-2 text-[10px] font-mono text-slate-500 bg-black/60 px-2 py-0.5 rounded">Trả xe / Nhận dạng người nhận</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,349 @@
+@{
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+}
+
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Hàng Đợi Vận Hành &amp; Điều Phối Xe (Dispatch Queue)</h1>
+                <p class="text-slate-400 text-sm mt-1">Giám sát và kiểm soát hàng đợi xe vào/ra trực tuyến, phân bổ độ ưu tiên và phê duyệt/từ chối đỗ xe.</p>
+            </div>
+            <button onclick="resetQueue()" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors font-semibold">
+                Khởi tạo lại hàng đợi
+            </button>
+        </div>
+
+        <!-- Layout Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <!-- Left 2 Columns: Active Queue Tables -->
+            <div class="xl:col-span-2 space-y-6">
+                <!-- Entry Queue (Xe vào bãi) -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 shadow-xl overflow-hidden">
+                    <div class="p-4 bg-slate-900/80 border-b border-slate-800 flex justify-between items-center">
+                        <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                            Hàng đợi xe gửi vào bãi (Entry Queue)
+                        </h3>
+                        <span id="entryCount" class="text-xs text-blue-400 font-mono font-bold">3 xe đang chờ</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs font-mono text-left">
+                            <thead class="border-b border-slate-800 bg-slate-850">
+                                <tr>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Biển số</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Loại xe</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Ưu tiên</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Block chỉ định</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Trạng thái</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">ETA</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400 text-center">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="entryQueueBody">
+                                <!-- JS render -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Exit Queue (Xe ra bãi) -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 shadow-xl overflow-hidden">
+                    <div class="p-4 bg-slate-900/80 border-b border-slate-800 flex justify-between items-center">
+                        <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                            Hàng đợi xe lấy ra bãi (Exit Queue)
+                        </h3>
+                        <span id="exitCount" class="text-xs text-emerald-400 font-mono font-bold">2 xe đang chờ</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs font-mono text-left">
+                            <thead class="border-b border-slate-800 bg-slate-850">
+                                <tr>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Biển số</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Loại xe</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Ưu tiên</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Vị trí đỗ</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Trạng thái</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">ETA</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400 text-center">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="exitQueueBody">
+                                <!-- JS render -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Rejected Log & Statistics -->
+            <div class="space-y-6">
+                <!-- Statistics -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        Hiệu suất điều phối hàng đợi
+                    </h3>
+                    <div class="space-y-3 font-mono text-[11px]">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Thời gian trung bình xử lý:</span>
+                            <span class="text-slate-350 font-bold">12.5s</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Tỷ lệ điều phối đúng hạn:</span>
+                            <span class="text-emerald-400 font-bold">98.4%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Tỷ lệ xe bị từ chối đỗ:</span>
+                            <span class="text-red-400 font-bold">1.2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rejected List -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        Danh sách xe bị từ chối (Rejected Vehicles)
+                    </h3>
+                    <div id="rejectedList" class="space-y-2 max-h-60 overflow-y-auto font-mono text-[11px]">
+                        <!-- JS render -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reject -->
+<div id="rejectModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 w-80 shadow-2xl space-y-4 text-slate-100">
+        <h3 class="text-sm font-bold text-white">Xác nhận Từ Chối xe đỗ</h3>
+        <div>
+            <label class="text-slate-500 text-[10px] uppercase font-mono block mb-1">Lý do từ chối (Bắt buộc)</label>
+            <select id="rejectReason" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-200 outline-none">
+                <option value="Xe quá khổ/quá tải trọng">Xe quá khổ/quá tải trọng (Oversized)</option>
+                <option value="Thẻ từ bị khóa/hết hạn">Thẻ từ bị khóa/hết hạn</option>
+                <option value="Chưa đóng phí đỗ xe">Chưa đóng phí đỗ xe</option>
+                <option value="Block chỉ định đang lỗi">Block chỉ định đang lỗi</option>
+            </select>
+        </div>
+        <div class="flex justify-end gap-2 text-xs">
+            <button onclick="closeRejectModal()" class="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-350">Hủy</button>
+            <button onclick="confirmReject()" class="px-3 py-1.5 rounded bg-red-600 hover:bg-red-500 text-white font-bold">Từ Chối</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let activeRejectPlate = null;
+    let activeRejectQueueType = null;
+
+    const mockEntryQueue = [
+        { plate: "30G-445.62", type: "Sedan", priority: "Standard", block: "A-01", status: "Queued", eta: 45 },
+        { plate: "29A-889.31", type: "SUV", priority: "VIP", block: "B-04", status: "Processing", eta: 12 },
+        { plate: "30F-122.95", type: "Sedan", priority: "Standard", block: "B-02", status: "Held", eta: 90 }
+    ];
+
+    const mockExitQueue = [
+        { plate: "30K-771.84", type: "Sedan", priority: "Standard", slot: "Pallet P02 (Block A-01)", status: "Processing", eta: 24 },
+        { plate: "29H-992.15", type: "SUV", priority: "Standard", slot: "Pallet P08 (Block B-04)", status: "Queued", eta: 55 }
+    ];
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initQueue();
+    });
+
+    function getQueueData() {
+        let entry = localStorage.getItem("dispatchEntryQueue");
+        let exit = localStorage.getItem("dispatchExitQueue");
+        let rejected = localStorage.getItem("dispatchRejectedList");
+
+        return {
+            entry: entry ? JSON.parse(entry) : mockEntryQueue,
+            exit: exit ? JSON.parse(exit) : mockExitQueue,
+            rejected: rejected ? JSON.parse(rejected) : [
+                { plate: "30E-667.12", reason: "Xe quá khổ/quá tải trọng", time: "14:24" },
+                { plate: "29C-112.54", reason: "Thẻ từ bị khóa/hết hạn", time: "12:15" }
+            ]
+        };
+    }
+
+    function initQueue() {
+        const data = getQueueData();
+        localStorage.setItem("dispatchEntryQueue", JSON.stringify(data.entry));
+        localStorage.setItem("dispatchExitQueue", JSON.stringify(data.exit));
+        localStorage.setItem("dispatchRejectedList", JSON.stringify(data.rejected));
+        renderQueue();
+    }
+
+    function resetQueue() {
+        localStorage.setItem("dispatchEntryQueue", JSON.stringify(mockEntryQueue));
+        localStorage.setItem("dispatchExitQueue", JSON.stringify(mockExitQueue));
+        localStorage.setItem("dispatchRejectedList", JSON.stringify([]));
+        renderQueue();
+        alert("Đã hoàn tác và tạo lại hàng đợi mặc định!");
+    }
+
+    function toggleHold(plate, queueType) {
+        let key = queueType === "entry" ? "dispatchEntryQueue" : "dispatchExitQueue";
+        let queue = JSON.parse(localStorage.getItem(key));
+        
+        queue = queue.map(item => {
+            if (item.plate === plate) {
+                item.status = item.status === "Held" ? "Queued" : "Held";
+            }
+            return item;
+        });
+
+        localStorage.setItem(key, JSON.stringify(queue));
+        renderQueue();
+    }
+
+    function setVIP(plate, queueType) {
+        let key = queueType === "entry" ? "dispatchEntryQueue" : "dispatchExitQueue";
+        let queue = JSON.parse(localStorage.getItem(key));
+        
+        queue = queue.map(item => {
+            if (item.plate === plate) {
+                item.priority = "VIP";
+                item.eta = 5; // Reduces ETA for VIP
+            }
+            return item;
+        });
+
+        // Re-sort: VIP first
+        queue.sort((a, b) => {
+            if (a.priority === "VIP" && b.priority !== "VIP") return -1;
+            if (a.priority !== "VIP" && b.priority === "VIP") return 1;
+            return 0;
+        });
+
+        localStorage.setItem(key, JSON.stringify(queue));
+        renderQueue();
+    }
+
+    function openRejectModal(plate, queueType) {
+        activeRejectPlate = plate;
+        activeRejectQueueType = queueType;
+        document.getElementById("rejectModal").classList.remove("hidden");
+    }
+
+    function closeRejectModal() {
+        document.getElementById("rejectModal").classList.add("hidden");
+    }
+
+    function confirmReject() {
+        const reason = document.getElementById("rejectReason").value;
+        const key = activeRejectQueueType === "entry" ? "dispatchEntryQueue" : "dispatchExitQueue";
+        let queue = JSON.parse(localStorage.getItem(key));
+
+        // Remove from active queue
+        queue = queue.filter(item => item.plate !== activeRejectPlate);
+        localStorage.setItem(key, JSON.stringify(queue));
+
+        // Add to rejected log
+        let rejected = JSON.parse(localStorage.getItem("dispatchRejectedList"));
+        rejected.unshift({
+            plate: activeRejectPlate,
+            reason,
+            time: new Date().toLocaleTimeString().slice(0, 5)
+        });
+        localStorage.setItem("dispatchRejectedList", JSON.stringify(rejected));
+
+        closeRejectModal();
+        renderQueue();
+    }
+
+    function renderQueue() {
+        const data = getQueueData();
+
+        // Count labels
+        document.getElementById("entryCount").innerText = `${data.entry.length} xe đang chờ`;
+        document.getElementById("exitCount").innerText = `${data.exit.length} xe đang chờ`;
+
+        // Render Entry
+        const entryBody = document.getElementById("entryQueueBody");
+        entryBody.innerHTML = "";
+        data.entry.forEach(item => {
+            let statusBadge = getStatusBadge(item.status);
+            let prioBadge = getPrioBadge(item.priority);
+
+            const tr = document.createElement("tr");
+            tr.className = "border-b border-slate-800/40 hover:bg-slate-800/10";
+            tr.innerHTML = `
+                <td class="px-4 py-3 font-bold text-slate-200">${item.plate}</td>
+                <td class="px-4 py-3 text-slate-400">${item.type}</td>
+                <td class="px-4 py-3">${prioBadge}</td>
+                <td class="px-4 py-3 text-slate-400 font-bold">${item.block}</td>
+                <td class="px-4 py-3">${statusBadge}</td>
+                <td class="px-4 py-3 font-semibold text-slate-300 font-mono">${item.eta}s</td>
+                <td class="px-4 py-3 text-center space-x-1.5">
+                    <button onclick="setVIP('${item.plate}', 'entry')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600/20 text-blue-400 hover:bg-blue-600/40 border border-blue-500/25 transition-colors">VIP</button>
+                    <button onclick="toggleHold('${item.plate}', 'entry')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-600/20 text-amber-400 hover:bg-amber-600/40 border border-amber-500/25 transition-colors">
+                        ${item.status === "Held" ? "Resume" : "Hold"}
+                    </button>
+                    <button onclick="openRejectModal('${item.plate}', 'entry')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600/20 text-red-400 hover:bg-red-600/40 border border-red-500/25 transition-colors">Reject</button>
+                </td>
+            `;
+            entryBody.appendChild(tr);
+        });
+
+        // Render Exit
+        const exitBody = document.getElementById("exitQueueBody");
+        exitBody.innerHTML = "";
+        data.exit.forEach(item => {
+            let statusBadge = getStatusBadge(item.status);
+            let prioBadge = getPrioBadge(item.priority);
+
+            const tr = document.createElement("tr");
+            tr.className = "border-b border-slate-800/40 hover:bg-slate-800/10";
+            tr.innerHTML = `
+                <td class="px-4 py-3 font-bold text-slate-200">${item.plate}</td>
+                <td class="px-4 py-3 text-slate-400">${item.type}</td>
+                <td class="px-4 py-3">${prioBadge}</td>
+                <td class="px-4 py-3 text-slate-400 font-bold">${item.slot}</td>
+                <td class="px-4 py-3">${statusBadge}</td>
+                <td class="px-4 py-3 font-semibold text-slate-300 font-mono">${item.eta}s</td>
+                <td class="px-4 py-3 text-center space-x-1.5">
+                    <button onclick="setVIP('${item.plate}', 'exit')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600/20 text-blue-400 hover:bg-blue-600/40 border border-blue-500/25 transition-colors">VIP</button>
+                    <button onclick="toggleHold('${item.plate}', 'exit')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-600/20 text-amber-400 hover:bg-amber-600/40 border border-amber-500/25 transition-colors">
+                        ${item.status === "Held" ? "Resume" : "Hold"}
+                    </button>
+                    <button onclick="openRejectModal('${item.plate}', 'exit')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600/20 text-red-400 hover:bg-red-600/40 border border-red-500/25 transition-colors">Reject</button>
+                </td>
+            `;
+            exitBody.appendChild(tr);
+        });
+
+        // Render Rejected
+        const rejectedContainer = document.getElementById("rejectedList");
+        rejectedContainer.innerHTML = "";
+        data.rejected.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "bg-slate-800/30 border border-slate-800 p-2.5 rounded-lg flex justify-between items-center";
+            div.innerHTML = `
+                <div>
+                    <div class="font-bold text-red-400">${item.plate}</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">${item.reason}</div>
+                </div>
+                <span class="text-[10px] text-slate-600">${item.time}</span>
+            `;
+            rejectedContainer.appendChild(div);
+        });
+    }
+
+    function getStatusBadge(status) {
+        if (status === "Queued") return `<span class="px-2 py-0.5 rounded border border-slate-700/60 bg-slate-800 text-slate-400 text-[10px] font-bold">CHỜ CHẠY</span>`;
+        if (status === "Processing") return `<span class="px-2 py-0.5 rounded border border-blue-500/40 bg-blue-500/10 text-blue-400 text-[10px] font-bold animate-pulse">ĐANG CHẠY</span>`;
+        if (status === "Held") return `<span class="px-2 py-0.5 rounded border border-amber-500/40 bg-amber-500/10 text-amber-300 text-[10px] font-bold">BỊ HOLD</span>`;
+        return status;
+    }
+
+    function getPrioBadge(priority) {
+        if (priority === "VIP") return `<span class="px-1.5 py-0.5 rounded border border-rose-500 bg-rose-500/20 text-rose-300 text-[9px] font-bold animate-pulse">VIP</span>`;
+        return `<span class="px-1.5 py-0.5 rounded border border-slate-700 text-slate-500 text-[9px]">NORMAL</span>`;
+    }
+</script>

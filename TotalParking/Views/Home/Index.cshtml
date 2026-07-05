@@ -981,6 +981,19 @@
 
     // Initialize initial alarms list (including reading localStorage for maintenance pallets)
     function initAlarms() {
+        const storedAlarms = localStorage.getItem('activeAlarms');
+        if (storedAlarms) {
+            try {
+                activeAlarms = JSON.parse(storedAlarms);
+                renderAlarmsTable();
+                updateCounters();
+                updateGlobalBanner();
+                return;
+            } catch (e) {
+                console.error("Lỗi đọc activeAlarms từ localStorage:", e);
+            }
+        }
+
         // 1. Check if there are pallets with cycles >= 100 in localStorage
         const storedCycles = localStorage.getItem('palletCycleData');
         let highCyclePallets = [];
@@ -1059,6 +1072,7 @@
             });
         }
 
+        localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
         renderAlarmsTable();
         updateCounters();
         updateGlobalBanner();
@@ -1162,6 +1176,7 @@
             
             setTimeout(() => {
                 activeAlarms = activeAlarms.filter(a => a.id !== id);
+                localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
                 renderAlarmsTable();
                 updateCounters();
                 updateGlobalBanner();
@@ -1217,6 +1232,8 @@
         if (activeAlarms.length > 8) {
             activeAlarms.pop();
         }
+
+        localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
 
         // Render & Update UI
         renderAlarmsTable();

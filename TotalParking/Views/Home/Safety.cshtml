@@ -1,0 +1,343 @@
+@{
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+}
+
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Ma Trận An Toàn &amp; Quản Lý Bypass (Safety Interlock)</h1>
+                <p class="text-slate-400 text-sm mt-1">Giám sát các điều kiện Safety Interlock trước khi chạy và kiểm soát trạng thái Bypass cưỡng bức cảm biến.</p>
+            </div>
+        </div>
+
+        <!-- Bypass Banner Warning -->
+        <div id="bypassBanner" class="hidden flex items-center justify-between p-3 rounded-lg border border-amber-500/35 bg-amber-500/10 text-amber-300 animate-pulse">
+            <div class="flex items-center gap-2.5">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                <span class="text-xs font-semibold uppercase tracking-wider font-mono">CẢNH BÁO: ĐANG CÓ THIẾT BỊ BỊ BYPASS HOẠT ĐỘNG TRONG HỆ THỐNG</span>
+            </div>
+            <span class="text-[10px] font-mono text-amber-400">Force Mode Active</span>
+        </div>
+
+        <!-- Main Layout Split -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <!-- Left 2 Columns: Safety Interlock Matrix -->
+            <div class="xl:col-span-2 space-y-6">
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 shadow-xl overflow-hidden">
+                    <div class="p-4 bg-slate-900/80 border-b border-slate-800 flex justify-between items-center">
+                        <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
+                            Ma Trận Điều Kiện An Toàn Hệ Thống (Safety Interlock Matrix)
+                        </h3>
+                        <span class="text-[10px] font-mono text-slate-500">Quét chu kỳ: 500ms</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs font-mono text-left">
+                            <thead class="border-b border-slate-800 bg-slate-850">
+                                <tr>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">STT</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Điều kiện an toàn</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Vị trí</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Trạng thái</th>
+                                    <th class="px-4 py-2.5 font-bold text-slate-400">Hành động đề xuất</th>
+                                </tr>
+                            </thead>
+                            <tbody id="interlockTableBody">
+                                <!-- Dynamic JS render -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Bypass Manager Form & Active Bypasses -->
+            <div class="space-y-6">
+                <!-- Form to Add Bypass -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        Tạo Lệnh Bypass Sensor mới
+                    </h3>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Thiết bị / Cảm biến</label>
+                            <select id="bypassDevice" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors">
+                                <option value="SafeGuard">Photogate - Cảm biến an toàn</option>
+                                <option value="LimitSwitch">LS-T3 - Cảm biến hành trình</option>
+                                <option value="MotorOverload">Lift Motor - Quá tải động cơ nâng</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Vị trí Block đỗ</label>
+                            <select id="bypassBlock" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors">
+                                <option value="Block A-01">Block A-01</option>
+                                <option value="Block B-02">Block B-02</option>
+                                <option value="Block B-03">Block B-03</option>
+                                <option value="Block B-04">Block B-04</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Thời gian tự động tắt (Timeout)</label>
+                            <select id="bypassTimeout" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors">
+                                <option value="5">5 phút</option>
+                                <option value="15">15 phút</option>
+                                <option value="30">30 phút</option>
+                                <option value="60">60 phút (1 giờ)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Lý do Bypass (Bắt buộc)</label>
+                            <textarea id="bypassReason" class="w-full h-16 bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors resize-none" placeholder="Vd: Bảo trì cơ khí định kỳ, sensor báo lỗi giả..."></textarea>
+                        </div>
+                        <button onclick="addBypass()" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-slate-900 rounded text-xs font-bold shadow transition-colors flex items-center justify-center gap-1.5">
+                            Kích hoạt Bypass
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bypasses List -->
+                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        Danh sách Sensor đang Bypass
+                    </h3>
+                    <div id="activeBypassesList" class="space-y-3">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Mock Safety Interlock Matrix Database
+    let baseInterlocks = [
+        { id: 1, name: "E-Stop không bị nhấn", loc: "Tất cả vị trí", status: "OK", action: "Kiểm tra nút E-Stop tại các trạm", key: "estop" },
+        { id: 2, name: "Cửa an toàn đã đóng", loc: "Cổng vào/ra", status: "OK", action: "Kiểm tra cơ cấu sensor đóng cửa", key: "door" },
+        { id: 3, name: "Light curtain không bị che", loc: "Khu vực pallet", status: "OK", action: "Test & căn chỉnh tia quang photogate", key: "curtain" },
+        { id: 4, name: "Không có người trong vùng nguy hiểm", loc: "Tầng hầm B1", status: "WAIT", action: "Chờ tín hiệu clear từ sensor hiện diện", key: "person" },
+        { id: 5, name: "Xe không quá khổ", loc: "Cổng vào", status: "OK", action: "AI-VDS đo quét & duyệt chiều cao xe", key: "oversized" },
+        { id: 6, name: "Pallet đúng vị trí khóa", loc: "Block chỉ định", status: "OK", action: "Sensor vị trí Encoder/Limit Switch xác nhận", key: "pallet" },
+        { id: 7, name: "Sensor hành trình hợp lệ", loc: "Tất cả cơ cấu", status: "OK", action: "Kiểm tra tín hiệu đầu vào limit switch", key: "limit" },
+        { id: 8, name: "Khóa cơ khí đã nhả", loc: "Block B-01", status: "FAIL", action: "Kiểm tra actuator khóa cơ khí chống rơi", key: "mechlock" },
+        { id: 9, name: "Phanh motor sẵn sàng", loc: "Tất cả motor", status: "OK", action: "Brake released confirmed (cuộn hút phanh)", key: "brake" },
+        { id: 10, name: "VFD không có lỗi", loc: "Tất cả VFD", status: "OK", action: "Đọc mã lỗi trên màn hình LCD của biến tần", key: "vfd" },
+        { id: 11, name: "PLC Safety đang online", loc: "Block B-01", status: "OK", action: "Kiểm tra tín hiệu heartbeat PLC Safety", key: "plc" },
+        { id: 12, name: "Không có lệnh xung đột", loc: "Hệ thống", status: "OK", action: "Clear hàng đợi lệnh điều phối", key: "conflict" },
+        { id: 13, name: "Block liền kề không gây nguy hiểm", loc: "B02, B03", status: "OK", action: "Chờ block liền kề chạy xong chu kỳ", key: "adjacent" }
+    ];
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initBypasses();
+        renderMatrix();
+        setInterval(checkSystemStates, 1000);
+    });
+
+    function getBypasses() {
+        let raw = localStorage.getItem("occBypassedSensors");
+        return raw ? JSON.parse(raw) : {};
+    }
+
+    function initBypasses() {
+        let bypasses = getBypasses();
+        renderBypassesList(bypasses);
+    }
+
+    function addBypass() {
+        const device = document.getElementById("bypassDevice").value;
+        const block = document.getElementById("bypassBlock").value;
+        const timeout = parseInt(document.getElementById("bypassTimeout").value);
+        const reason = document.getElementById("bypassReason").value.trim();
+
+        if (!reason) {
+            alert("Vui lòng nhập lý do Bypass!");
+            return;
+        }
+
+        let bypasses = getBypasses();
+        const blockKey = block.replace("Block ", ""); // Vd: "A-01", "B-04"
+        
+        if (!bypasses[blockKey]) bypasses[blockKey] = [];
+        
+        // Check if already bypassed
+        if (bypasses[blockKey].includes(device)) {
+            alert("Cảm biến này tại block đã được Bypass trước đó!");
+            return;
+        }
+
+        bypasses[blockKey].push(device);
+        localStorage.setItem("occBypassedSensors", JSON.stringify(bypasses));
+
+        // Save detailed log
+        let bypassLogs = localStorage.getItem("occBypassLogs") ? JSON.parse(localStorage.getItem("occBypassLogs")) : [];
+        const expTime = new Date(Date.now() + timeout * 60 * 1000).toLocaleTimeString();
+        bypassLogs.push({
+            device,
+            block,
+            reason,
+            user: "Supervisor_01",
+            timestamp: new Date().toLocaleTimeString(),
+            expiry: expTime
+        });
+        localStorage.setItem("occBypassLogs", JSON.stringify(bypassLogs));
+
+        // Clear form
+        document.getElementById("bypassReason").value = "";
+        
+        initBypasses();
+        renderMatrix();
+        alert("Đã kích hoạt Bypass thành công!");
+    }
+
+    function removeBypass(blockKey, device) {
+        let bypasses = getBypasses();
+        if (bypasses[blockKey]) {
+            bypasses[blockKey] = bypasses[blockKey].filter(d => d !== device);
+            if (bypasses[blockKey].length === 0) {
+                delete bypasses[blockKey];
+            }
+        }
+        localStorage.setItem("occBypassedSensors", JSON.stringify(bypasses));
+        initBypasses();
+        renderMatrix();
+    }
+
+    function renderBypassesList(bypasses) {
+        const listContainer = document.getElementById("activeBypassesList");
+        listContainer.innerHTML = "";
+        
+        let count = 0;
+        for (const [block, devices] of Object.entries(bypasses)) {
+            devices.forEach(dev => {
+                count++;
+                let devName = dev === "SafeGuard" ? "Photogate" : (dev === "LimitSwitch" ? "Limit Switch" : "Motor Overload");
+                
+                const div = document.createElement("div");
+                div.className = "bg-slate-800/40 border border-slate-700/60 p-3 rounded-lg flex justify-between items-start";
+                div.innerHTML = `
+                    <div>
+                        <div class="font-bold text-amber-400 text-xs">${devName} – Block ${block}</div>
+                        <div class="text-[10px] text-slate-500 mt-1 font-mono">Bởi: Supervisor_01</div>
+                    </div>
+                    <button onclick="removeBypass('${block}', '${dev}')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600/20 text-red-400 hover:bg-red-600/40 border border-red-500/25 transition-colors">
+                        Gỡ bỏ
+                    </button>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        const banner = document.getElementById("bypassBanner");
+        if (count > 0) {
+            banner.classList.remove("hidden");
+        } else {
+            banner.classList.add("hidden");
+        }
+    }
+
+    function checkSystemStates() {
+        renderMatrix();
+    }
+
+    function renderMatrix() {
+        const tbody = document.getElementById("interlockTableBody");
+        tbody.innerHTML = "";
+
+        // Read dynamic states from local storage
+        let bypasses = getBypasses();
+        let blockStates = localStorage.getItem("occBlockStates") ? JSON.parse(localStorage.getItem("occBlockStates")) : {};
+        let alarms = localStorage.getItem("activeAlarms") ? JSON.parse(localStorage.getItem("activeAlarms")) : [];
+
+        // Determine if any block has emergency/fault
+        let hasEStop = alarms.some(a => a.type === "operator" && a.message.includes("E-Stop"));
+        let hasPhotogateError = alarms.some(a => a.type === "system" && a.message.includes("quang") || a.message.includes("Photogate"));
+        let hasMotorError = alarms.some(a => a.type === "system" && a.message.includes("motor") || a.message.includes("động cơ"));
+        let hasLimitSwitchError = alarms.some(a => a.type === "system" && a.message.includes("hành trình") || a.message.includes("LS-T3"));
+
+        baseInterlocks.forEach(item => {
+            let status = item.status;
+            let note = item.action;
+            let rowClass = "border-b border-slate-800/40 hover:bg-slate-800/10";
+            
+            // Map live state to interlocks
+            if (item.key === "estop") {
+                if (hasEStop) {
+                    status = "FAIL";
+                    note = "E-Stop khẩn cấp tại Block đang kích hoạt!";
+                } else if (bypasses["B-04"] && bypasses["B-04"].includes("SafeGuard")) { // Safeguard bypass
+                    status = "BYPASSED";
+                    note = "Bypass nút an toàn đang bật.";
+                }
+            }
+            if (item.key === "curtain") {
+                if (hasPhotogateError) {
+                    status = "FAIL";
+                    note = "Cảnh báo an toàn quang Photogate bị che chắn!";
+                }
+                // Check if bypassed in any block
+                for (let blk in bypasses) {
+                    if (bypasses[blk].includes("SafeGuard")) {
+                        status = "BYPASSED";
+                        note = `Cảm biến quang đang bị Bypass tại Block ${blk}`;
+                    }
+                }
+            }
+            if (item.key === "limit") {
+                if (hasLimitSwitchError) {
+                    status = "FAIL";
+                    note = "Trễ hành trình Limit Switch LS-T3!";
+                }
+                for (let blk in bypasses) {
+                    if (bypasses[blk].includes("LimitSwitch")) {
+                        status = "BYPASSED";
+                        note = `Cảm biến hành trình đang bị Bypass tại Block ${blk}`;
+                    }
+                }
+            }
+            if (item.key === "vfd") {
+                if (hasMotorError) {
+                    status = "FAIL";
+                    note = "VFD ngắt do quá dòng/quá nhiệt cuộn dây motor!";
+                }
+                for (let blk in bypasses) {
+                    if (bypasses[blk].includes("MotorOverload")) {
+                        status = "BYPASSED";
+                        note = `Bypass bảo vệ quá tải motor tại Block ${blk}`;
+                    }
+                }
+            }
+
+            let statusBadge = "";
+            if (status === "OK") {
+                statusBadge = `<span class="px-2 py-0.5 rounded border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">● OK</span>`;
+            } else if (status === "WAIT") {
+                statusBadge = `<span class="px-2 py-0.5 rounded border border-amber-500/40 bg-amber-500/10 text-amber-400 text-[10px] font-bold">⚠ CHỜ</span>`;
+                rowClass += " bg-amber-950/5";
+            } else if (status === "FAIL") {
+                statusBadge = `<span class="px-2 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-[10px] font-bold animate-pulse">✗ LỖI</span>`;
+                rowClass += " bg-red-950/10";
+            } else if (status === "BYPASSED") {
+                statusBadge = `<span class="px-2 py-0.5 rounded border border-yellow-500 bg-yellow-500/20 text-yellow-300 text-[10px] font-bold animate-pulse">⚡ BYPASS</span>`;
+                rowClass += " bg-yellow-950/10";
+            }
+
+            const tr = document.createElement("tr");
+            tr.className = rowClass;
+            tr.innerHTML = `
+                <td class="px-4 py-3 font-semibold text-slate-500">${item.id}</td>
+                <td class="px-4 py-3 font-bold text-slate-200">${item.name}</td>
+                <td class="px-4 py-3 text-slate-400 font-bold">${item.loc}</td>
+                <td class="px-4 py-3">${statusBadge}</td>
+                <td class="px-4 py-3 text-slate-400 text-[11px]">${note}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+</script>

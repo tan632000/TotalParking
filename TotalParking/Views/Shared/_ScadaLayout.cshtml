@@ -96,90 +96,155 @@
                         <div class="px-3 pt-4 pb-2">
                             <span class="text-[10px] font-mono text-slate-600 uppercase tracking-widest">Điều hướng</span>
                         </div>
-                        <nav class="flex-1 px-2 pb-4">
-                            <a href="@Url.Action("Index", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2.5 rounded mb-0.5 text-left transition-all group relative border @(currentAction == "index" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
-                                <span class="@(currentAction == "index" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
-                                </span>
-                                <span class="text-xs font-medium flex-1 leading-tight">Dashboard Tổng quan</span>
-                                @if (currentAction == "index") {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right text-blue-400/60"><path d="m9 18 6-6-6-6"></path></svg>
-                                }
-                            </a>
-                            <a href="@Url.Action("FloorPlan", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2.5 rounded mb-0.5 text-left transition-all group relative border @(currentAction == "floorplan" || currentAction == "zones" || currentAction == "zonedetail" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
-                                <span class="@(currentAction == "floorplan" || currentAction == "zones" || currentAction == "zonedetail" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"></path><path d="M15 5.764v15"></path><path d="M9 3.236v15"></path></svg>
-                                </span>
-                                <span class="text-xs font-medium flex-1 leading-tight">Mặt bằng hệ thống</span>
-                                @if (currentAction == "floorplan" || currentAction == "zones" || currentAction == "zonedetail") {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right text-blue-400/60"><path d="m9 18 6-6-6-6"></path></svg>
-                                }
-                            </a>
-                            <a href="@Url.Action("Routing", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2.5 rounded mb-0.5 text-left transition-all group relative border @(currentAction == "routing" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
-                                <span class="@(currentAction == "routing" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-navigation"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
-                                </span>
-                                <span class="text-xs font-medium flex-1 leading-tight">Điều hướng xe</span>
-                                @if (currentAction == "routing") {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right text-blue-400/60"><path d="m9 18 6-6-6-6"></path></svg>
-                                }
-                            </a>
-                            <a href="@Url.Action("Alarms", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2.5 rounded mb-0.5 text-left transition-all group relative border @(currentAction == "alarms" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
-                                <span class="@(currentAction == "alarms" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>
-                                </span>
-                                <span class="text-xs font-medium flex-1 leading-tight">Alarm &amp; Event</span>
-                                <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-full text-white min-w-[18px] text-center bg-red-500 mr-1.5">4</span>
-                                @if (currentAction == "alarms") {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right text-blue-400/60"><path d="m9 18 6-6-6-6"></path></svg>
-                                }
-                            </a>
-                            <a href="@Url.Action("Maintenance", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2.5 rounded mb-0.5 text-left transition-all group relative border @(currentAction == "maintenance" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
-                                <span class="@(currentAction == "maintenance" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-                                </span>
-                                <span class="text-xs font-medium flex-1 leading-tight">Bảo trì</span>
-                                <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-full text-white min-w-[18px] text-center bg-amber-500 mr-1.5">2</span>
-                                @if (currentAction == "maintenance") {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right text-blue-400/60"><path d="m9 18 6-6-6-6"></path></svg>
-                                }
-                            </a>
-                            <a href="@Url.Action("Reports", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2.5 rounded mb-0.5 text-left transition-all group relative border @(currentAction == "reports" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
-                                <span class="@(currentAction == "reports" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-chart-column-increasing"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M8 18v-2"></path><path d="M12 18v-4"></path><path d="M16 18v-6"></path></svg>
-                                </span>
-                                <span class="text-xs font-medium flex-1 leading-tight">Báo cáo</span>
-                                @if (currentAction == "reports") {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right text-blue-400/60"><path d="m9 18 6-6-6-6"></path></svg>
-                                }
-                            </a>
-                            <a href="@Url.Action("Cards", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2.5 rounded mb-0.5 text-left transition-all group relative border @(currentAction == "cards" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
-                                <span class="@(currentAction == "cards" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
-                                </span>
-                                <span class="text-xs font-medium flex-1 leading-tight">Quản lý thẻ</span>
-                                @if (currentAction == "cards") {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right text-blue-400/60"><path d="m9 18 6-6-6-6"></path></svg>
-                                }
-                            </a>
-                            <a href="@Url.Action("Settings", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2.5 rounded mb-0.5 text-left transition-all group relative border @(currentAction == "settings" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
-                                <span class="@(currentAction == "settings" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                </span>
-                                <span class="text-xs font-medium flex-1 leading-tight">Cài đặt hệ thống</span>
-                                @if (currentAction == "settings") {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right text-blue-400/60"><path d="m9 18 6-6-6-6"></path></svg>
-                                }
-                            </a>
-                            <a href="@Url.Action("Remote", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2.5 rounded mb-0.5 text-left transition-all group relative border @(currentAction == "remote" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
-                                <span class="@(currentAction == "remote" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-headphones"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"></path></svg>
-                                </span>
-                                <span class="text-xs font-medium flex-1 leading-tight">Remote Support</span>
-                                @if (currentAction == "remote") {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right text-blue-400/60"><path d="m9 18 6-6-6-6"></path></svg>
-                                }
-                            </a>
+                        <nav class="flex-1 px-2 pb-6 space-y-4">
+                            <!-- 1. GIÁM SÁT VẬN HÀNH -->
+                            <div>
+                                <div class="px-3 mb-1.5 text-[9px] font-bold text-slate-500 uppercase tracking-widest">Giám sát vận hành</div>
+                                <div class="space-y-0.5">
+                                    <a href="@Url.Action("Index", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "index" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "index" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Dashboard Tổng quan</span>
+                                    </a>
+                                    <a href="@Url.Action("FloorPlan", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "floorplan" || currentAction == "zones" || currentAction == "zonedetail" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "floorplan" || currentAction == "zones" || currentAction == "zonedetail" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"></path><path d="M15 5.764v15"></path><path d="M9 3.236v15"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Mặt bằng hệ thống</span>
+                                    </a>
+                                    <a href="@Url.Action("OperationControl", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "operationcontrol" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "operationcontrol" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders"><line x1="4" x2="20" y1="21" y2="21"></line><line x1="4" x2="20" y1="14" y2="14"></line><line x1="4" x2="20" y1="7" y2="7"></line><line x1="9" x2="9" y1="18" y2="24"></line><line x1="15" x2="15" y1="11" y2="17"></line><line x1="10" x2="10" y1="4" y2="10"></line></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Điều khiển vận hành</span>
+                                    </a>
+                                    <a href="@Url.Action("Routing", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "routing" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "routing" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-navigation"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Điều hướng xe</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 2. ĐIỀU PHỐI PHƯƠNG TIỆN -->
+                            <div>
+                                <div class="px-3 mb-1.5 text-[9px] font-bold text-slate-500 uppercase tracking-widest">Điều phối xe</div>
+                                <div class="space-y-0.5">
+                                    <a href="@Url.Action("Queue", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "queue" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "queue" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-ordered"><line x1="10" x2="21" y1="6" y2="6"></line><line x1="10" x2="21" y1="12" y2="12"></line><line x1="10" x2="21" y1="18" y2="18"></line><path d="M4 6h1v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Hàng đợi xe</span>
+                                    </a>
+                                    <a href="@Url.Action("Tracking", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "tracking" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "tracking" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Truy vết xe &amp; pallet</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 3. BẢO TRÌ & CHẨN ĐOÁN -->
+                            <div>
+                                <div class="px-3 mb-1.5 text-[9px] font-bold text-slate-500 uppercase tracking-widest">Bảo trì &amp; Chẩn đoán</div>
+                                <div class="space-y-0.5">
+                                    <a href="@Url.Action("Alarms", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "alarms" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "alarms" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Alarm &amp; Event</span>
+                                    </a>
+                                    <a href="@Url.Action("Safety", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "safety" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "safety" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-alert"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Safety Interlock</span>
+                                    </a>
+                                    <a href="@Url.Action("Maintenance", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "maintenance" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "maintenance" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Bảo trì hệ thống</span>
+                                    </a>
+                                    <a href="@Url.Action("Assets", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "assets" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "assets" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-network"><rect width="6" height="6" x="16" y="16" rx="1"></rect><rect width="6" height="6" x="2" y="16" rx="1"></rect><rect width="6" height="6" x="9" y="2" rx="1"></rect><path d="M12 8v8"></path><path d="M12 12H5"></path><path d="M12 12h10"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Asset Tree / Thiết bị</span>
+                                    </a>
+                                    <a href="@Url.Action("Diagnostics", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "diagnostics" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "diagnostics" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Remote Diagnostics</span>
+                                    </a>
+                                    <a href="@Url.Action("Historian", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "historian" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "historian" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Historian / Trend</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 4. QUẢN LÝ & BÁO CÁO -->
+                            <div>
+                                <div class="px-3 mb-1.5 text-[9px] font-bold text-slate-500 uppercase tracking-widest">Quản lý &amp; Báo cáo</div>
+                                <div class="space-y-0.5">
+                                    <a href="@Url.Action("Reports", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "reports" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "reports" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-chart-column-increasing"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M8 18v-2"></path><path d="M12 18v-4"></path><path d="M16 18v-6"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Báo cáo &amp; thống kê</span>
+                                    </a>
+                                    <a href="@Url.Action("Cards", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "cards" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "cards" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Quản lý thẻ RFID</span>
+                                    </a>
+                                    <a href="@Url.Action("Cctv", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "cctv" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "cctv" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-video"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Camera / CCTV</span>
+                                    </a>
+                                    <a href="@Url.Action("Energy", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "energy" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "energy" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Energy Monitoring</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 5. CẤU HÌNH & BẢO MẬT -->
+                            <div>
+                                <div class="px-3 mb-1.5 text-[9px] font-bold text-slate-500 uppercase tracking-widest">Cấu hình &amp; Bảo mật</div>
+                                <div class="space-y-0.5">
+                                    <a href="@Url.Action("Settings", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "settings" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "settings" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Cấu hình hệ thống</span>
+                                    </a>
+                                    <a href="@Url.Action("Remote", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "remote" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "remote" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">User &amp; Permission</span>
+                                    </a>
+                                    <a href="@Url.Action("Backup", "Home")" style="text-decoration: none;" class="w-full flex items-center gap-3 px-3 py-2 rounded text-left transition-all group relative border @(currentAction == "backup" ? "bg-blue-600/20 text-blue-300 border-blue-600/40" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30 border-transparent")">
+                                        <span class="@(currentAction == "backup" ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300")">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hard-drive"><rect width="20" height="8" x="2" y="3" rx="2"></rect><rect width="20" height="8" x="2" y="13" rx="2"></rect><line x1="6" x2="6.01" y1="7" y2="7"></line><line x1="6" x2="6.01" y1="17" y2="17"></line><line x1="10" x2="10.01" y1="7" y2="7"></line><line x1="10" x2="10.01" y1="17" y2="17"></line></svg>
+                                        </span>
+                                        <span class="text-[11px] font-medium flex-1 leading-tight">Backup &amp; Health</span>
+                                    </a>
+                                </div>
+                            </div>
                         </nav>
                         <div class="px-4 py-3 border-t border-slate-700/40">
                             <div class="text-[10px] font-mono text-slate-600">TotalParking SCADA</div>

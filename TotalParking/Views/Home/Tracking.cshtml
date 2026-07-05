@@ -1,0 +1,100 @@
+@{
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+}
+
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Truy vết Xe &amp; Pallet (Vehicle Tracking)</h1>
+                <p class="text-slate-400 text-sm mt-1">Giám sát vị trí thời gian thực và lịch sử dịch chuyển khay đỗ trong hệ thống cơ khí.</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="alert('Đang đồng bộ dữ liệu tracking từ PLC...')" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+                    Đồng bộ
+                </button>
+            </div>
+        </div>
+
+        <!-- Simulated Tracking Map / Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Search & Quick Tracking -->
+            <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
+                <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                    Tìm kiếm Xe &amp; Định vị nhanh
+                </h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Biển số hoặc Mã thẻ xe</label>
+                        <input type="text" id="trackInput" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" placeholder="Ví dụ: 30F-123.45 hoặc CARD_01">
+                    </div>
+                    <button onclick="alert('Đang quét RFID & quét tọa độ Encoder...')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-semibold shadow transition-colors">
+                        Định vị vị trí xe
+                    </button>
+                </div>
+
+                <div class="border-t border-slate-800 pt-4">
+                    <h4 class="text-slate-400 text-xs font-semibold mb-2">Trạng thái kết nối RFID Gate</h4>
+                    <div class="space-y-2 text-[11px] font-mono">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Đầu đọc Cổng vào (In-Gate):</span>
+                            <span class="text-emerald-400">● ONLINE</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Đầu đọc Cổng ra (Out-Gate):</span>
+                            <span class="text-emerald-400">● ONLINE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Visual Timeline & Pallet Path Tracking -->
+            <div class="lg:col-span-2 bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
+                <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    Hành trình Pallet di chuyển
+                </h3>
+                
+                <div class="border border-slate-800 rounded-lg p-6 bg-slate-950/20">
+                    <div class="relative pl-6 border-l-2 border-slate-700 space-y-6">
+                        <!-- Step 1 -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] top-0.5 w-4.5 h-4.5 rounded-full border-2 border-blue-500 bg-slate-900 flex items-center justify-center">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                            </div>
+                            <div>
+                                <h4 class="text-blue-400 text-xs font-bold font-mono">STEP 1: Quét RFID &amp; Phân loại cổng vào</h4>
+                                <p class="text-slate-400 text-[10px] mt-0.5">Xe được phát hiện tại Cổng 1, chụp ảnh LPR biển số và gán khay đỗ an toàn.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] top-0.5 w-4.5 h-4.5 rounded-full border-2 border-emerald-500 bg-slate-900 flex items-center justify-center">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            </div>
+                            <div>
+                                <h4 class="text-emerald-400 text-xs font-bold font-mono">STEP 2: Bàn nâng nhận khay đỗ (Lift Received)</h4>
+                                <p class="text-slate-400 text-[10px] mt-0.5">Xác nhận cảm biến tải trọng khay đỗ, motor phanh nhả và bàn nâng di chuyển.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] top-0.5 w-4.5 h-4.5 rounded-full border-2 border-slate-700 bg-slate-900 flex items-center justify-center">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-700"></span>
+                            </div>
+                            <div>
+                                <h4 class="text-slate-500 text-xs font-bold font-mono">STEP 3: Xếp khay vào ô đỗ chỉ định</h4>
+                                <p class="text-slate-500 text-[10px] mt-0.5">Di chuyển ngang Pallet bằng cơ cấu Slide Runner của block Puzzle.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

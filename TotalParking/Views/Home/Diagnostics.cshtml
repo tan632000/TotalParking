@@ -1,0 +1,137 @@
+@{
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+}
+
+<div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Chẩn Đoán Lỗi &amp; Lịch Sử Sự Cố (Remote Diagnostics)</h1>
+                <p class="text-slate-400 text-sm mt-1">Giám sát chỉ số độ tin cậy MTBF/MTTR, tra cứu lịch sử lỗi của từng thiết bị và phân tích nguyên nhân gốc (Root Cause).</p>
+            </div>
+            <button onclick="window.location.reload();" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors font-semibold">
+                Làm mới dữ liệu
+            </button>
+        </div>
+
+        <!-- Reliability KPIs -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
+                <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">ĐỘ SẴN SÀNG BLOCK (AVAILABILITY)</div>
+                <div class="text-emerald-400 text-2xl font-mono font-bold mt-1">99.85%</div>
+                <div class="text-[10px] text-emerald-500 font-mono mt-1">Chuẩn OEE công nghiệp</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
+                <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">CHỈ SỐ MTBF (ĐỘ TIN CẬY)</div>
+                <div class="text-blue-400 text-2xl font-mono font-bold mt-1">364 giờ</div>
+                <div class="text-[10px] text-slate-500 font-mono mt-1">Thời gian trung bình giữa 2 sự cố</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
+                <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">CHỈ SỐ MTTR (THỜI GIAN SỬA)</div>
+                <div class="text-violet-400 text-2xl font-mono font-bold mt-1">18.5 phút</div>
+                <div class="text-[10px] text-emerald-400 font-mono mt-1">Thời gian phục hồi trung bình</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
+                <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">SỐ SỰ CỐ HOẠT ĐỘNG (ACTIVE ALARMS)</div>
+                <div class="text-red-400 text-2xl font-mono font-bold mt-1" id="activeAlarmsCount">1 sự cố</div>
+                <div class="text-[10px] text-red-500 font-mono mt-1" id="activeAlarmsWarning">Đang chờ xử lý khẩn cấp</div>
+            </div>
+        </div>
+
+        <!-- Fault Log Section -->
+        <div class="bg-slate-900/50 rounded-xl border border-slate-800 shadow-xl overflow-hidden">
+            <div class="p-4 bg-slate-900/80 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                    Nhật ký sự cố thiết bị &amp; Nguyên nhân gốc (Fault History Log)
+                </h3>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs font-mono text-left">
+                    <thead class="border-b border-slate-800 bg-slate-850">
+                        <tr>
+                            <th class="px-4 py-2.5 font-bold text-slate-400">Thời gian</th>
+                            <th class="px-4 py-2.5 font-bold text-slate-400">Thiết bị</th>
+                            <th class="px-4 py-2.5 font-bold text-slate-400">Mã lỗi</th>
+                            <th class="px-4 py-2.5 font-bold text-slate-400">Nguyên nhân gốc (Root Cause)</th>
+                            <th class="px-4 py-2.5 font-bold text-slate-400">Hành động khắc phục</th>
+                            <th class="px-4 py-2.5 font-bold text-slate-400">Người ACK/Reset</th>
+                        </tr>
+                    </thead>
+                    <tbody id="faultHistoryBody">
+                        <!-- Rendered by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const mockFaultHistory = [
+        { time: "05/07/2026 14:10:05", dev: "Motor Nâng Hạ (Block B-04)", code: "ERR-MTR-04", root: "Nhiệt độ cuộn dây quá cao (115°C) do quá tải cơ học lâu ngày", fix: "Reset PLC, kiểm tra hệ bôi trơn xích nâng và phanh", user: "Supervisor_01", status: "Active" },
+        { time: "04/07/2026 09:22:10", dev: "Cảm biến hành trình LS-T3 (Block B-02)", code: "WARN-LMT-08", root: "Bám bụi bẩn dính dầu mỡ gây trễ phản hồi tiếp điểm cơ khí", fix: "Lau sạch bụi bẩn trên đầu sensor và kiểm tra cơ cấu lò xo tiếp điểm", user: "Operator_02", status: "Resolved" },
+        { time: "03/07/2026 18:35:15", dev: "Cảm biến quang Photogate (Block B-03)", code: "ERR-SAFE-02", root: "Vật cản cơ học che chắn vùng quang an toàn của block đỗ xe", fix: "Kiểm tra và dọn dẹp chướng ngại vật cản tia laser cảm biến quang", user: "Supervisor_01", status: "Resolved" },
+        { time: "01/07/2026 11:05:42", dev: "Biến tần VFD Nâng (Block A-01)", code: "ERR-VFD-01", root: "Sụt áp tức thời ở đường nguồn cấp cho biến tần", fix: "Ack lỗi trên VFD và reset PLC cấp nguồn điện hoạt động lại bình thường", user: "Operator_01", status: "Resolved" }
+    ];
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initDiagnostics();
+    });
+
+    function initDiagnostics() {
+        // Read from local storage to check if Block B-04 error has been resolved or not
+        let alarms = localStorage.getItem("activeAlarms") ? JSON.parse(localStorage.getItem("activeAlarms")) : [];
+        let hasMotorError = alarms.some(a => a.type === "system" && a.message.includes("động cơ") || a.message.includes("motor"));
+
+        const activeCount = document.getElementById("activeAlarmsCount");
+        const activeWarning = document.getElementById("activeAlarmsWarning");
+
+        if (hasMotorError) {
+            activeCount.innerText = "1 sự cố";
+            activeCount.className = "text-red-400 text-2xl font-mono font-bold mt-1 animate-pulse";
+            activeWarning.innerText = "Đang chờ xử lý khẩn cấp";
+            activeWarning.className = "text-[10px] text-red-500 font-mono mt-1 animate-pulse";
+        } else {
+            activeCount.innerText = "0 sự cố";
+            activeCount.className = "text-emerald-400 text-2xl font-mono font-bold mt-1";
+            activeWarning.innerText = "Hệ thống vận hành an toàn";
+            activeWarning.className = "text-[10px] text-emerald-400 font-mono mt-1";
+        }
+
+        const tbody = document.getElementById("faultHistoryBody");
+        tbody.innerHTML = "";
+
+        mockFaultHistory.forEach((item, index) => {
+            // Update active status dynamically based on localStorage
+            let currentStatus = item.status;
+            if (index === 0 && !hasMotorError) {
+                currentStatus = "Resolved";
+            }
+
+            let statusBadge = "";
+            let rowClass = "border-b border-slate-800/40 hover:bg-slate-800/10";
+            if (currentStatus === "Active") {
+                statusBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/25 animate-pulse">ACTIVE</span>`;
+                rowClass += " bg-red-950/5";
+            } else {
+                statusBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/25">RESOLVED</span>`;
+            }
+
+            const tr = document.createElement("tr");
+            tr.className = rowClass;
+            tr.innerHTML = `
+                <td class="px-4 py-3 text-slate-400 whitespace-nowrap">${item.time}</td>
+                <td class="px-4 py-3 font-bold text-slate-200">${item.dev}</td>
+                <td class="px-4 py-3 text-red-400 font-bold">${item.code}</td>
+                <td class="px-4 py-3 text-slate-350">${item.root}</td>
+                <td class="px-4 py-3 text-slate-400">${item.fix}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-slate-500">
+                    ${item.user} <span class="ml-1">${statusBadge}</span>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+</script>

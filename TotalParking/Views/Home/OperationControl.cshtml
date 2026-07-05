@@ -1,0 +1,1578 @@
+@{
+    ViewBag.Title = "Trung tâm Điều khiển Vận hành (OCC)";
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+    var currentAction = "operationcontrol";
+}
+
+<!-- Custom Styles for OCC SCADA Dashboard -->
+<style>
+    /* Custom SCADA styling */
+    .occ-container {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    
+    .glowing-led {
+        box-shadow: 0 0 12px currentColor;
+    }
+    
+    .status-pulse {
+        animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @@keyframes pulse-ring {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: .6;
+            transform: scale(1.05);
+        }
+    }
+
+    .alarm-flash {
+        animation: alarm-flashing 1.2s infinite;
+    }
+
+    @@keyframes alarm-flashing {
+        0%, 100% {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.5);
+            box-shadow: 0 0 5px rgba(239, 68, 68, 0.1);
+        }
+        50% {
+            background-color: rgba(239, 68, 68, 0.25);
+            border-color: rgba(239, 68, 68, 0.9);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+    }
+
+    /* SCADA dark themes */
+    .bg-dark-panel {
+        background: rgba(13, 27, 46, 0.95);
+        border: 1px solid rgba(51, 65, 85, 0.5);
+    }
+
+    .bg-dark-card {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(71, 85, 105, 0.3);
+    }
+</style>
+
+<div class="occ-container p-6 text-slate-100 min-h-screen pb-16">
+    <!-- Header Area -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-5 border-b border-slate-700/50">
+        <div>
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-blue-600/10 rounded border border-blue-500/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders text-blue-400"><line x1="4" x2="20" y1="21" y2="21"></line><line x1="4" x2="20" y1="14" y2="14"></line><line x1="4" x2="20" y1="7" y2="7"></line><line x1="9" x2="9" y1="18" y2="24"></line><line x1="15" x2="15" y1="11" y2="17"></line><line x1="10" x2="10" y1="4" y2="10"></line></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-100 uppercase">Operation Control Center (OCC)</h1>
+                    <p class="text-xs text-slate-400">Trung tâm điều khiển tập trung, giám sát lệnh PLC & điều phối khay đỗ</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 self-stretch md:self-auto">
+            <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800 rounded px-3 py-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 glowing-led text-emerald-500"></span>
+                <span class="text-xs font-mono text-slate-300">PLC Link: OK</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800 rounded px-3 py-1.5">
+                <span class="w-2 h-2 rounded-full bg-blue-500 glowing-led text-blue-500"></span>
+                <span class="text-xs font-mono text-slate-300">Operator Session</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Area -->
+    <div class="flex flex-wrap items-center gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-800/80 mb-6">
+        <div class="flex items-center gap-2">
+            <label class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Phân khu (Zone):</label>
+            <select id="occ-zone-select" onchange="onZoneChanged()" class="bg-slate-800 border border-slate-700/60 rounded px-3 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                <option value="1">Zone 1 (Hầm B1)</option>
+                <option value="2">Zone 2 (Hầm B2)</option>
+                <option value="3">Zone 3 (Bãi ngoài trời A)</option>
+                <option value="4">Zone 4 (Bãi ngoài trời B)</option>
+                <option value="5">Zone 5 (Khối cao tầng 1)</option>
+                <option value="6">Zone 6 (Khối cao tầng 2)</option>
+            </select>
+        </div>
+        <div class="flex items-center gap-2">
+            <label class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Chọn Block:</label>
+            <select id="occ-block-select" onchange="onBlockDropdownChanged()" class="bg-slate-800 border border-slate-700/60 rounded px-3 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                <!-- Dynamically populated -->
+            </select>
+        </div>
+    </div>
+
+    <!-- Main Workspace Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Side: Blocks Grid Panel -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-slate-800 gap-1 mb-2">
+                <button id="tab-left-map" onclick="switchLeftTab('map')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 border-blue-500 text-blue-400 bg-slate-900/30 rounded-t-lg transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.148 4.7 9.35 2 4.385 4.7v15.3l4.965-2.7 4.798 2.7 4.965-2.7V4.7Z"></path><path d="M9 2v15"></path><path d="M15 7v15"></path></svg>
+                    Bản đồ vận hành
+                </button>
+                <button id="tab-left-sequence" onclick="switchLeftTab('sequence')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/20 rounded-t-lg transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-checks"><path d="m3 17 2 2 4-4"></path><path d="m3 7 2 2 4-4"></path><path d="M13 6h8"></path><path d="M13 12h8"></path><path d="M13 18h8"></path><path d="m3 12 2 2 4-4"></path></svg>
+                    Sequence View
+                    <span id="seq-active-badge" class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping hidden"></span>
+                </button>
+            </div>
+
+            <!-- Content Tab A: Map View -->
+            <div id="left-tab-content-map" class="space-y-6">
+                <div class="bg-dark-panel rounded-xl p-5 shadow-xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-grid text-slate-400"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg>
+                            Danh Sách Block - Zone <span id="block-grid-zone-num">1</span>
+                        </h2>
+                        <span class="text-[10px] font-mono bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-750">Mô phỏng thời gian thực</span>
+                    </div>
+                    
+                    <!-- Blocks Summary Grid -->
+                    <div id="occ-blocks-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Cards will be populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Storing / Occupancy Visual Grid of Selected Block -->
+                <div class="bg-dark-panel rounded-xl p-5 shadow-xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid text-slate-400"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg>
+                            Sơ Đồ Khay Đỗ Cơ Khí (Pallet Grid) - <span id="pallet-grid-block-title" class="text-blue-400">Block A-01</span>
+                        </h2>
+                        <span class="text-[10px] font-mono text-slate-400">Tổng số: 12 khay</span>
+                    </div>
+
+                    <!-- Pallet Matrix (3x4 Layout) -->
+                    <div id="occ-pallet-matrix" class="grid grid-cols-4 gap-3 bg-slate-950/40 p-4 rounded-lg border border-slate-800/80">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div class="flex flex-wrap gap-4 mt-4 justify-center text-[10px] font-medium text-slate-400">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-slate-800 border border-slate-700/50"></span>
+                            <span>Khay Trống</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-blue-900/60 border border-blue-700/40"></span>
+                            <span>Đã Đăng Ký Đỗ</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-amber-500/20 border border-amber-500/50"></span>
+                            <span>Đang Vận Hành Điều Phối</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-red-650 border border-red-500/60"></span>
+                            <span>Lỗi Vị Trí</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Tab B: Sequence View -->
+            <div id="left-tab-content-sequence" class="bg-dark-panel rounded-xl p-6 shadow-xl hidden space-y-6">
+                <!-- Active command info -->
+                <div class="flex justify-between items-start border-b border-slate-800 pb-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span id="seq-header-icon" class="p-1.5 bg-blue-500/10 text-blue-400 rounded border border-blue-500/25 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-in"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" x2="3" y1="12" y2="12"></line></svg>
+                            </span>
+                            <span id="seq-command-title" class="text-sm font-bold text-slate-100 uppercase tracking-tight">QUY TRÌNH GỬI XE VÀO (STORE)</span>
+                        </div>
+                        <div class="flex items-center gap-3 mt-2.5 text-xs text-slate-400 font-mono">
+                            <span>Block: <span id="seq-block-id" class="text-slate-200 font-semibold">Block A-01</span></span>
+                            <span>•</span>
+                            <span>Biển số: <span id="seq-vehicle-id" class="text-slate-200 font-semibold">-</span></span>
+                        </div>
+                    </div>
+                    <!-- Timing counters -->
+                    <div class="flex gap-5">
+                        <div class="text-right">
+                            <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Thời gian chạy</div>
+                            <div id="seq-timer-elapsed" class="text-lg font-mono font-bold text-blue-400">0.0s</div>
+                        </div>
+                        <div class="text-right border-l border-slate-800 pl-4">
+                            <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Thời gian dự kiến</div>
+                            <div id="seq-timer-estimated" class="text-lg font-mono font-bold text-slate-400">12.0s</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sequence Timeline steps container -->
+                <div class="relative pl-8 py-2">
+                    <!-- Line connector -->
+                    <div id="seq-line-connector" class="absolute left-3.5 top-2 bottom-2 w-[2px] bg-slate-800"></div>
+
+                    <!-- Steps Container populated by JS -->
+                    <div id="seq-steps-list" class="space-y-5">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Global Stuck Error display box -->
+                <div id="seq-stuck-box" class="bg-red-950/20 border border-red-900/40 p-4 rounded-lg flex gap-3 hidden animate-in fade-in duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-octagon text-red-500 shrink-0"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+                    <div>
+                        <h4 class="text-xs font-bold text-red-400 uppercase">TIẾN TRÌNH BỊ KẸT / LỖI THIẾT BỊ</h4>
+                        <p id="seq-stuck-desc" class="text-[11px] text-red-300 mt-1 leading-relaxed">
+                            Cơ cấu nâng trục đứng phản hồi dòng quá tải (Current Overload) tại vị trí trung gian của Block. Tiến trình bị ngắt để bảo vệ cơ học.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Idle state placeholder when no command is running -->
+                <div id="seq-idle-placeholder" class="py-12 text-center text-slate-500 text-xs font-medium space-y-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity mx-auto text-slate-600 opacity-60"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    <p>Hiện không có lệnh điều phối xe nào đang thực thi trên block.</p>
+                    <p class="text-[10px] text-slate-600">Hãy chuyển block sang chế độ Manual và thực hiện Gọi/Trả xe để theo dõi tiến trình.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Detailed Control Cockpit Panel -->
+        <div class="space-y-6">
+            
+            <!-- Block Status & Mode Selector Cockpit -->
+            <div class="bg-dark-panel rounded-xl p-5 shadow-xl border-l-4 border-blue-500" id="cockpit-panel">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 id="cockpit-block-name" class="text-base font-bold text-slate-100">Block A-01 Control Panel</h2>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span id="cockpit-mode-badge" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-900/50 text-blue-300 border border-blue-800/50">AUTO</span>
+                            <span id="cockpit-status-badge" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-900">BÌNH THƯỜNG</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span id="cockpit-lock-status" class="text-xs text-slate-400 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-unlock text-emerald-400"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                            Mở khóa
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Admin Override Blinking Banner -->
+                <div id="occ-admin-override-banner" class="bg-amber-500/10 border border-amber-500 text-amber-500 p-2.5 rounded-lg text-[11px] mb-4 text-center animate-pulse hidden font-semibold">
+                    ⚠️ CHẾ ĐỘ CƯỠNG BỨC ADMIN ĐANG HOẠT ĐỘNG (FORCED OVERRIDE ACTIVE)
+                </div>
+
+                <!-- Guided Fault Recovery Alert Panel (Hidden by default, shown for Error state) -->
+                <div id="occ-recovery-alert-panel" class="alarm-flash border rounded-lg p-3.5 mb-5 hidden">
+                    <div class="flex gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle text-red-400 shrink-0 mt-0.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+                        <div>
+                            <h3 class="text-xs font-bold text-red-200">BLOCK ĐANG BỊ LỖI HỆ THỐNG</h3>
+                            <p class="text-[11px] text-red-300/90 mt-1 leading-relaxed">Mã lỗi: <span id="recovery-error-code" class="font-mono font-bold bg-red-950 px-1 py-0.2 rounded border border-red-900">ERR-MTR-04</span>. Lỗi chênh lệch nhiệt độ cuộn dây motor nâng hạ Block B04 quá tải (115°C).</p>
+                            
+                            <button id="btn-start-recovery" onclick="startRecoveryWorkflow()" class="mt-3 bg-red-650 hover:bg-red-600 active:bg-red-700 text-white font-semibold text-[11px] px-3 py-1.5 rounded transition-all flex items-center gap-1.5 border border-red-500/40">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+                                Bắt đầu phục hồi sau lỗi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guided Fault Recovery Interactive Checklist (Hidden by default) -->
+                <div id="occ-recovery-checklist-panel" class="bg-slate-950/60 border border-red-900/50 rounded-lg p-4 mb-5 hidden">
+                    <h3 class="text-xs font-bold text-red-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-square-2 text-red-400"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="m9 12 2 2 4-4"></path></svg>
+                        Checklist Phục Hồi Hướng Dẫn
+                    </h3>
+                    <div class="space-y-2.5">
+                        <label class="flex items-start gap-2.5 p-2 rounded bg-slate-900/40 hover:bg-slate-900/80 cursor-pointer transition-all border border-slate-800/40">
+                            <input type="checkbox" id="chk-recovery-step1" onchange="onRecoveryCheck()" class="mt-0.5 accent-blue-600 rounded bg-slate-850 border-slate-700">
+                            <span class="text-[11px] text-slate-300 leading-tight">1. Xác nhận không có vật cản cơ cấu nâng hạ khay đỗ thực tế.</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-2 rounded bg-slate-900/40 hover:bg-slate-900/80 cursor-pointer transition-all border border-slate-800/40">
+                            <input type="checkbox" id="chk-recovery-step2" onchange="onRecoveryCheck()" class="mt-0.5 accent-blue-600 rounded bg-slate-850 border-slate-700">
+                            <span class="text-[11px] text-slate-300 leading-tight">2. Đóng chốt khóa an toàn của bàn nâng tại cơ cấu cơ học.</span>
+                        </label>
+                        <button id="btn-recovery-reset" disabled onclick="executeFaultRecovery()" class="w-full bg-slate-800 text-slate-500 font-bold text-xs py-2 rounded transition-all border border-slate-700/60 mt-2 flex items-center justify-center gap-2 cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                            Reset PLC Fault & Home Block
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mode Selector Section -->
+                <div class="mb-5">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Chế Độ Hoạt Động (Mode Selector)</label>
+                    <div class="grid grid-cols-4 gap-1.5">
+                        <button id="btn-mode-auto" onclick="setBlockMode('Auto')" class="text-[10px] font-bold py-2 rounded transition-all border bg-slate-800 border-slate-750 text-slate-300 hover:bg-slate-700/30">AUTO</button>
+                        <button id="btn-mode-manual" onclick="setBlockMode('Manual')" class="text-[10px] font-bold py-2 rounded transition-all border bg-slate-800 border-slate-750 text-slate-300 hover:bg-slate-700/30">MANUAL</button>
+                        <button id="btn-mode-maintenance" onclick="setBlockMode('Maintenance')" class="text-[10px] font-bold py-2 rounded transition-all border bg-slate-800 border-slate-750 text-slate-300 hover:bg-slate-700/30">MAINT</button>
+                        <button id="btn-mode-emergency" onclick="setBlockMode('Emergency')" class="text-[10px] font-bold py-2 rounded transition-all border bg-red-950/20 border-red-900/30 text-red-400 hover:bg-red-900/20">ESTOP</button>
+                    </div>
+                </div>
+
+                <!-- Action Controls Section -->
+                <div class="mb-5 border-t border-slate-800 pt-4">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Hành Động Khởi Chạy (Block Commands)</label>
+                    <div class="grid grid-cols-4 gap-2 mb-2">
+                        <button id="btn-action-start" onclick="sendOperationalCommand('Start')" class="text-[10px] font-bold py-2 rounded bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/20">START</button>
+                        <button id="btn-action-stop" onclick="sendOperationalCommand('Stop')" class="text-[10px] font-bold py-2 rounded bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-900/20">STOP</button>
+                        <button id="btn-action-pause" onclick="sendOperationalCommand('Pause')" class="text-[10px] font-bold py-2 rounded bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-900/20">PAUSE</button>
+                        <button id="btn-action-resume" onclick="sendOperationalCommand('Resume')" class="text-[10px] font-bold py-2 rounded bg-blue-650 hover:bg-blue-600 text-white shadow-lg shadow-blue-900/20">RESUME</button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button id="btn-action-lock" onclick="sendMaintenanceCommand('Lock')" class="text-[10px] font-bold py-1.5 rounded bg-slate-800 hover:bg-slate-700/60 text-slate-200 border border-slate-700 flex items-center justify-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            KHÓA BLOCK
+                        </button>
+                        <button id="btn-action-unlock" onclick="sendMaintenanceCommand('Unlock')" class="text-[10px] font-bold py-1.5 rounded bg-slate-800 hover:bg-slate-700/60 text-slate-200 border border-slate-700 flex items-center justify-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-unlock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                            MỞ KHÓA
+                        </button>
+                        <button id="btn-action-disable" onclick="sendMaintenanceCommand('Disable')" class="text-[10px] font-bold py-1.5 rounded bg-slate-800 text-slate-400 border border-slate-700/50 cursor-not-allowed flex items-center justify-center gap-1" disabled title="Chỉ hoạt động ở chế độ Maintenance">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                            DISABLE BẢO TRÌ
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1.5 mt-2 border-t border-slate-800/40 pt-2">
+                        <button id="btn-action-bypass" onclick="openBypassModal()" class="text-[10px] font-bold py-1.5 rounded bg-slate-800 hover:bg-slate-700/60 text-slate-200 border border-slate-700 flex items-center justify-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-off"><path d="M19.69 14a6.9 6.9 0 0 0 .31-2V5l-8-3-3.16 1.18"></path><path d="M12 22s8-4 8-10"></path><path d="M4.58 9.04A10.45 10.45 0 0 0 4 12c0 6 8 10 8 10a19.43 19.43 0 0 0 3.3-3.7"></path><path d="m2 2 20 20"></path></svg>
+                            Bypass Sensor
+                        </button>
+                        <button id="btn-action-override" onclick="toggleAdminOverride()" class="text-[10px] font-bold py-1.5 rounded bg-slate-800 hover:bg-slate-700/60 text-slate-200 border border-slate-700 flex items-center justify-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-cog"><circle cx="18" cy="15" r="3"></circle><circle cx="9" cy="7" r="4"></circle><path d="M10 15H6a4 4 0 0 0-4 4v2"></path><path d="m21.7 16.4-.9-.3"></path><path d="m15.2 13.9-.9-.3"></path><path d="m16.6 18.7.3-.9"></path><path d="m19.1 12.2.3-.9"></path><path d="m20 13.7.7-.7"></path><path d="m16 17.3.7-.7"></path><path d="m19 17.3.7.7"></path><path d="m15 13.7.7.7"></path></svg>
+                            Cưỡng bức Admin
+                        </button>
+                        <button id="btn-action-trigger-fault" onclick="triggerMockFault()" class="text-[10px] font-bold py-1.5 rounded bg-red-950/30 hover:bg-red-900/20 text-red-400 border border-red-900/30 flex items-center justify-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            Giả lập Lỗi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Operator Vehicle Storing & Retrieving (Enabled only in MANUAL mode) -->
+                <div id="occ-dispatch-panel" class="mb-5 border-t border-slate-800 pt-4 opacity-50 pointer-events-none transition-all duration-300">
+                    <div class="flex justify-between items-center mb-2.5">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Gọi / Trả Xe Thủ Công (Operator Dispatch - Manual Only)</label>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-[10px] text-red-400 font-bold select-none hover:text-red-300 transition-all">
+                            <input type="checkbox" id="chk-simulate-stuck" class="accent-red-600 rounded bg-slate-900 border-slate-800">
+                            <span>Giả lập kẹt cơ cấu</span>
+                        </label>
+                    </div>
+                    <div class="space-y-4">
+                        <!-- Gọi xe vào Form -->
+                        <div class="bg-slate-950/30 p-3 rounded border border-slate-800/80">
+                            <h4 class="text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-in text-blue-400"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" x2="3" y1="12" y2="12"></line></svg>
+                                Gọi Xe Vào Khay
+                            </h4>
+                            <div class="flex gap-2">
+                                <input type="text" id="dispatch-plate-num" placeholder="Ví dụ: 30K-888.88" class="flex-1 bg-slate-900 border border-slate-700/60 rounded px-2 py-1 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 font-mono">
+                                <button onclick="executeVehicleStore()" class="bg-blue-650 hover:bg-blue-600 text-white font-bold text-xs px-3 py-1 rounded">Gửi lệnh Gọi xe</button>
+                            </div>
+                        </div>
+                        <!-- Trả xe ra Form -->
+                        <div class="bg-slate-950/30 p-3 rounded border border-slate-800/80">
+                            <h4 class="text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out text-amber-400"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+                                Trả Xe Ra Ngoài
+                            </h4>
+                            <div class="flex gap-2">
+                                <select id="dispatch-occupied-slots" class="flex-1 bg-slate-900 border border-slate-700/60 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono">
+                                    <!-- Populated dynamically -->
+                                </select>
+                                <button onclick="executeVehicleRetrieve()" class="bg-amber-600 hover:bg-amber-505 text-white font-bold text-xs px-3 py-1 rounded">Gửi lệnh Trả xe</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Direct PLC Command Pipeline Control -->
+                <div class="border-t border-slate-800 pt-4">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2.5">Gửi Lệnh Trực Tiếp PLC (Direct PLC Commands)</label>
+                    <div class="space-y-3">
+                        <div class="flex gap-2">
+                            <input type="text" id="plc-raw-cmd" placeholder="Mã lệnh (Ví dụ: CMD_ROTATE_P03)" class="flex-1 bg-slate-900 border border-slate-700/60 rounded px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 font-mono">
+                            <button id="btn-plc-send" onclick="confirmAndSendPlcCommand()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs px-3.5 py-1.5 rounded font-bold transition-all">Send</button>
+                        </div>
+                        
+                        <!-- LED Pipeline Status Sequence -->
+                        <div class="bg-slate-950/40 p-3 rounded-lg border border-slate-800/80">
+                            <div class="flex justify-between items-center gap-1.5 text-[9px] font-mono text-slate-500 mb-3">
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <span id="led-sent" class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all"></span>
+                                    <span>Sent</span>
+                                </div>
+                                <div class="w-4 h-[1px] bg-slate-800 mb-3"></div>
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <span id="led-accepted" class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all"></span>
+                                    <span>Accepted</span>
+                                </div>
+                                <div class="w-4 h-[1px] bg-slate-800 mb-3"></div>
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <span id="led-running" class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all"></span>
+                                    <span>Running</span>
+                                </div>
+                                <div class="w-4 h-[1px] bg-slate-800 mb-3"></div>
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <span id="led-done" class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all"></span>
+                                    <span id="led-done-lbl">Done</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                                <div id="plc-progress-bar" class="bg-blue-500 h-1.5 w-0 transition-all duration-300 ease-out"></div>
+                            </div>
+
+                            <!-- Error Message display (hidden by default) -->
+                            <div id="plc-error-alert" class="mt-2.5 p-2 bg-red-950/20 border border-red-900/40 rounded text-[10px] text-red-400 font-mono hidden">
+                                Rejection code: <span id="plc-error-code" class="font-bold">ERR_PLC_REJECT_0x0A</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal: Direct PLC Command Security Confirmation -->
+<div id="occ-confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-5 shadow-2xl mx-4 animate-in fade-in zoom-in-95 duration-250">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="p-2 bg-red-500/10 rounded-full border border-red-500/25">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-alert text-red-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+            </div>
+            <h3 class="text-sm font-bold text-slate-100 uppercase tracking-tight">Xác Nhận Lệnh PLC Trực Tiếp</h3>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            Bạn có chắc chắn muốn gửi trực tiếp lệnh <span id="confirm-modal-cmd-code" class="font-mono font-bold text-amber-400 bg-slate-950 px-1 py-0.5 rounded border border-slate-800">CMD_ROTATE_P03</span> xuống cơ cấu phần cứng của block <span id="confirm-modal-block-id" class="font-bold text-slate-200">Block A-01</span> không? Hành động này có thể gây dịch chuyển cơ học khay đỗ.
+        </p>
+        <div class="flex gap-2 justify-end">
+            <button onclick="closeConfirmationModal()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700/60 border border-slate-700 text-slate-300 text-xs font-semibold rounded transition-all">Hủy bỏ</button>
+            <button onclick="executeConfirmedPlcCommand()" class="px-3.5 py-1.5 bg-red-600 hover:bg-red-500 text-white text-xs font-semibold rounded transition-all shadow-lg shadow-red-900/20">Xác nhận gửi</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Bypass Sensor Selection -->
+<div id="occ-bypass-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-5 shadow-2xl mx-4 animate-in fade-in zoom-in-95 duration-250">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="p-2 bg-purple-500/10 rounded-full border border-purple-500/25">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-off text-purple-400"><path d="M19.69 14a6.9 6.9 0 0 0 .31-2V5l-8-3-3.16 1.18"></path><path d="M12 22s8-4 8-10"></path><path d="M4.58 9.04A10.45 10.45 0 0 0 4 12c0 6 8 10 8 10a19.43 19.43 0 0 0 3.3-3.7"></path><path d="m2 2 20 20"></path></svg>
+            </div>
+            <h3 class="text-sm font-bold text-slate-100 uppercase tracking-tight">Bypass Cảm Biến (Force Override)</h3>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            Chọn cảm biến cơ khí muốn cưỡng bức Bỏ qua (Bypass) trên block <span id="bypass-modal-block-id" class="font-bold text-slate-200">Block A-01</span>:
+        </p>
+        <div class="space-y-3 mb-5 text-xs text-slate-300">
+            <label class="flex items-center gap-2.5 cursor-pointer p-2.5 bg-slate-950/30 rounded border border-slate-850">
+                <input type="checkbox" id="chk-bypass-safeguard" class="accent-purple-600">
+                <span>Cảm biến SafeGuard (Vùng quét an toàn)</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer p-2.5 bg-slate-950/30 rounded border border-slate-850">
+                <input type="checkbox" id="chk-bypass-lift-limit" class="accent-purple-600">
+                <span>Cảm biến quang hành trình LS-T3</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer p-2.5 bg-slate-950/30 rounded border border-slate-850">
+                <input type="checkbox" id="chk-bypass-overload" class="accent-purple-600">
+                <span>Rơ-le chống quá tải cuộn dây Lift Motor</span>
+            </label>
+        </div>
+        <div class="flex gap-2 justify-end">
+            <button onclick="closeBypassModal()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700/60 border border-slate-700 text-slate-300 text-xs font-semibold rounded transition-all">Hủy</button>
+            <button onclick="saveBypassSensors()" class="px-3.5 py-1.5 bg-purple-650 hover:bg-purple-600 text-white text-xs font-semibold rounded transition-all shadow-lg shadow-purple-900/20">Lưu thay thế</button>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript State Engine & Actions -->
+<script>
+    // Constants mapping Zone to its Blocks list
+    const zoneBlocksMap = {
+        "1": ["Block A-01", "Block A-02", "Block A-03"],
+        "2": ["Block A-04", "Block B-01", "Block B-02"],
+        "3": ["Block B-03", "Block B-04", "Block C-01"],
+        "4": ["Block C-02", "Block C-03", "Block C-04"],
+        "5": ["Block D-01", "Block D-02", "Block D-03"],
+        "6": ["Block E-01", "Block E-02", "Block E-03"]
+    };
+
+    // Simulated states database
+    let blockStates = {};
+    let palletOccupancy = {};
+    let activeAlarms = [];
+    let selectedBlockId = "Block A-01";
+    let isCommandPipelineRunning = false;
+
+    // Load initial states from localStorage or defaults
+    function loadInitialStates() {
+        // 1. Block States
+        const storedBlockStates = localStorage.getItem('occBlockStates');
+        if (storedBlockStates) {
+            blockStates = JSON.parse(storedBlockStates);
+        } else {
+            // Default initial block state mappings
+            blockStates = {
+                "Block A-01": { status: "Normal", mode: "Auto", locked: false },
+                "Block A-02": { status: "Running", mode: "Auto", locked: false },
+                "Block A-03": { status: "Normal", mode: "Auto", locked: false },
+                "Block A-04": { status: "Normal", mode: "Auto", locked: false },
+                "Block B-01": { status: "Normal", mode: "Auto", locked: false },
+                "Block B-02": { status: "Normal", mode: "Auto", locked: false },
+                "Block B-03": { status: "Normal", mode: "Auto", locked: false },
+                "Block B-04": { status: "Error", mode: "Auto", locked: false, errorCode: "ERR-MTR-04", errorDesc: "Lỗi chênh lệch nhiệt độ cuộn dây motor nâng hạ Block B04 quá tải (115°C)" },
+                "Block C-01": { status: "Normal", mode: "Auto", locked: false },
+                "Block C-02": { status: "Normal", mode: "Auto", locked: false },
+                "Block C-03": { status: "Normal", mode: "Auto", locked: false },
+                "Block C-04": { status: "Normal", mode: "Auto", locked: false },
+                "Block D-01": { status: "Normal", mode: "Auto", locked: false },
+                "Block D-02": { status: "Normal", mode: "Auto", locked: false },
+                "Block D-03": { status: "Normal", mode: "Auto", locked: false },
+                "Block E-01": { status: "Normal", mode: "Auto", locked: false },
+                "Block E-02": { status: "Normal", mode: "Auto", locked: false },
+                "Block E-03": { status: "Normal", mode: "Auto", locked: false }
+            };
+            saveBlockStates();
+        }
+
+        // 2. Pallet Occupancy (which slots contain a car license plate)
+        const storedOccupancy = localStorage.getItem('occPalletOccupancy');
+        if (storedOccupancy) {
+            palletOccupancy = JSON.parse(storedOccupancy);
+        } else {
+            // Seed default mock occupied slots (about 40% filled)
+            for (const zone of Object.values(zoneBlocksMap)) {
+                zone.forEach(block => {
+                    palletOccupancy[block] = [
+                        "29A-481.02", null, "30F-992.38", null, 
+                        null, "51G-102.39", null, null, 
+                        "99A-381.10", null, null, "30K-481.99"
+                    ];
+                });
+            }
+            savePalletOccupancy();
+        }
+
+        // 3. Active alarms list
+        const storedAlarms = localStorage.getItem('activeAlarms');
+        if (storedAlarms) {
+            activeAlarms = JSON.parse(storedAlarms);
+        } else {
+            activeAlarms = [];
+        }
+    }
+
+    function saveBlockStates() {
+        localStorage.setItem('occBlockStates', JSON.stringify(blockStates));
+    }
+
+    function savePalletOccupancy() {
+        localStorage.setItem('occPalletOccupancy', JSON.stringify(palletOccupancy));
+    }
+
+    function saveActiveAlarms() {
+        localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
+    }
+
+    // Zone Changed callback
+    function onZoneChanged() {
+        const zoneSelect = document.getElementById('occ-zone-select');
+        const zoneId = zoneSelect.value;
+        
+        // Update Grid Zone Title
+        document.getElementById('block-grid-zone-num').innerText = zoneId;
+
+        // Populate Blocks select options
+        const blockSelect = document.getElementById('occ-block-select');
+        blockSelect.innerHTML = '';
+        
+        const blocksList = zoneBlocksMap[zoneId] || [];
+        blocksList.forEach((block, idx) => {
+            const opt = document.createElement('option');
+            opt.value = block;
+            opt.textContent = block;
+            blockSelect.appendChild(opt);
+        });
+
+        // Re-render blocks cards grid
+        renderBlocksGrid(blocksList);
+
+        // Select the first block in the new zone
+        if (blocksList.length > 0) {
+            selectBlock(blocksList[0]);
+        }
+    }
+
+    // Dropdown Block Select callback
+    function onBlockDropdownChanged() {
+        const blockId = document.getElementById('occ-block-select').value;
+        selectBlock(blockId);
+    }
+
+    // Select specific block in detail cockpit
+    function selectBlock(blockId) {
+        selectedBlockId = blockId;
+
+        // Highlight selected block card in grid
+        const cards = document.querySelectorAll('.occ-block-card');
+        cards.forEach(card => {
+            if (card.dataset.blockId === blockId) {
+                card.classList.add('border-blue-500', 'bg-slate-900/90');
+                card.classList.remove('border-slate-800');
+            } else {
+                card.classList.remove('border-blue-500', 'bg-slate-900/90');
+                card.classList.add('border-slate-800');
+            }
+        });
+
+        // Set value of block dropdown to match selection
+        document.getElementById('occ-block-select').value = blockId;
+
+        // Update Cockpit View
+        const blockData = blockStates[blockId] || { status: "Normal", mode: "Auto", locked: false };
+        document.getElementById('cockpit-block-name').innerText = `${blockId} Control Panel`;
+        
+        // Mode badge
+        const modeBadge = document.getElementById('cockpit-mode-badge');
+        modeBadge.innerText = blockData.mode;
+        
+        // Remove old classes
+        modeBadge.className = "text-[10px] font-bold uppercase px-2 py-0.5 rounded border ";
+        if (blockData.mode === "Auto") modeBadge.classList.add('bg-blue-900/50', 'text-blue-300', 'border-blue-800/50');
+        else if (blockData.mode === "Manual") modeBadge.classList.add('bg-amber-950', 'text-amber-400', 'border-amber-900');
+        else if (blockData.mode === "Maintenance") modeBadge.classList.add('bg-purple-950', 'text-purple-400', 'border-purple-900');
+        else modeBadge.classList.add('bg-red-950', 'text-red-400', 'border-red-900');
+
+        // Status badge
+        const statusBadge = document.getElementById('cockpit-status-badge');
+        statusBadge.innerText = translateStatus(blockData.status);
+        statusBadge.className = "text-[10px] font-bold uppercase px-2 py-0.5 rounded ";
+        if (blockData.status === "Normal") statusBadge.classList.add('bg-emerald-950', 'text-emerald-400', 'border', 'border-emerald-900');
+        else if (blockData.status === "Running") statusBadge.classList.add('bg-blue-950', 'text-blue-400', 'border', 'border-blue-900', 'status-pulse');
+        else if (blockData.status === "Error") statusBadge.classList.add('bg-red-950', 'text-red-400', 'border', 'border-red-900');
+        else if (blockData.status === "Disabled") statusBadge.classList.add('bg-slate-800', 'text-slate-400', 'border', 'border-slate-700');
+        else statusBadge.classList.add('bg-amber-950', 'text-amber-400', 'border', 'border-amber-900');
+
+        // Lock status
+        const lockStatus = document.getElementById('cockpit-lock-status');
+        if (blockData.locked) {
+            lockStatus.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock text-red-500"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span class="text-red-500 font-semibold">Đang Khóa</span>
+            `;
+        } else {
+            lockStatus.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-unlock text-emerald-400"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                <span>Mở khóa</span>
+            `;
+        }
+
+        // Mode buttons state highlight
+        highlightActiveModeButtons(blockData.mode);
+
+        // Maintenance Disable button state
+        const btnDisable = document.getElementById('btn-action-disable');
+        if (blockData.mode === "Maintenance") {
+            btnDisable.disabled = false;
+            btnDisable.className = "text-[10px] font-bold py-1.5 rounded bg-purple-900/20 hover:bg-purple-900/40 text-purple-300 border border-purple-800 flex items-center justify-center gap-1 cursor-pointer";
+            btnDisable.removeAttribute('title');
+        } else {
+            btnDisable.disabled = true;
+            btnDisable.className = "text-[10px] font-bold py-1.5 rounded bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed flex items-center justify-center gap-1";
+            btnDisable.setAttribute('title', 'Chỉ hoạt động ở chế độ Maintenance');
+        }
+
+        // Check Admin Override state
+        const isAdminOverride = localStorage.getItem('occAdminOverride') === 'true';
+        const adminBanner = document.getElementById('occ-admin-override-banner');
+        if (isAdminOverride) {
+            adminBanner.classList.remove('hidden');
+        } else {
+            adminBanner.classList.add('hidden');
+        }
+
+        // Lock/Unlock command buttons when block is Disabled
+        const opButtons = ['btn-action-start', 'btn-action-stop', 'btn-action-pause', 'btn-action-resume'];
+        opButtons.forEach(btnId => {
+            const btn = document.getElementById(btnId);
+            if ((blockData.status === "Disabled" || blockData.status === "Error") && !isAdminOverride) {
+                btn.disabled = true;
+                btn.classList.add('opacity-40', 'cursor-not-allowed');
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+        });
+
+        // Enable/Disable Dispatch Panel depending on MANUAL mode
+        const dispatchPanel = document.getElementById('occ-dispatch-panel');
+        if (blockData.mode === "Manual" && (blockData.status !== "Disabled" && blockData.status !== "Error" || isAdminOverride)) {
+            dispatchPanel.classList.remove('opacity-50', 'pointer-events-none');
+            // Refresh occupied slots dropdown
+            refreshOccupiedSlotsDropdown(blockId);
+        } else {
+            dispatchPanel.classList.add('opacity-50', 'pointer-events-none');
+        }
+
+        // Fault Recovery Display Logic
+        const recoveryAlert = document.getElementById('occ-recovery-alert-panel');
+        const recoveryChecklist = document.getElementById('occ-recovery-checklist-panel');
+
+        if (blockData.status === "Error") {
+            recoveryAlert.classList.remove('hidden');
+            document.getElementById('recovery-error-code').innerText = blockData.errorCode || "ERR-PLC-99";
+            
+            // Check if there is an active recovery checklist in localStorage
+            const activeRecovery = localStorage.getItem('occActiveRecovery');
+            if (activeRecovery) {
+                const recoveryData = JSON.parse(activeRecovery);
+                if (recoveryData.blockId === blockId) {
+                    // Show checklist immediately
+                    showRecoveryChecklist(recoveryData);
+                } else {
+                    recoveryChecklist.classList.add('hidden');
+                }
+            } else {
+                recoveryChecklist.classList.add('hidden');
+            }
+        } else {
+            recoveryAlert.classList.add('hidden');
+            recoveryChecklist.classList.add('hidden');
+        }
+
+        // Update visual Pallet Grid
+        renderPalletGrid(blockId);
+
+        // Update Sequence View Tab placeholder if idle
+        if (!isCommandPipelineRunning) {
+            const idlePlaceholder = document.getElementById('seq-idle-placeholder');
+            const stepsList = document.getElementById('seq-steps-list');
+            const stuckBox = document.getElementById('seq-stuck-box');
+            const activeBadge = document.getElementById('seq-active-badge');
+            
+            if (idlePlaceholder) idlePlaceholder.classList.remove('hidden');
+            if (stepsList) stepsList.innerHTML = '';
+            if (stuckBox) stuckBox.classList.add('hidden');
+            if (activeBadge) activeBadge.classList.add('hidden');
+        }
+    }
+
+    function translateStatus(status) {
+        switch (status) {
+            case "Normal": return "BÌNH THƯỜNG";
+            case "Running": return "ĐANG CHẠY";
+            case "Warning": return "CẢNH BÁO";
+            case "Error": return "LỖI";
+            case "Disabled": return "BỊ KHÓA BẢO TRÌ";
+            default: return status;
+        }
+    }
+
+    function highlightActiveModeButtons(activeMode) {
+        const modes = ['Auto', 'Manual', 'Maintenance', 'Emergency'];
+        modes.forEach(mode => {
+            const btn = document.getElementById(`btn-mode-${mode.toLowerCase()}`);
+            if (mode === activeMode) {
+                btn.className = `text-[10px] font-bold py-2 rounded border `;
+                if (mode === "Auto") btn.classList.add('bg-blue-600', 'border-blue-500', 'text-white', 'glowing-led');
+                else if (mode === "Manual") btn.classList.add('bg-amber-600', 'border-amber-500', 'text-white', 'glowing-led');
+                else if (mode === "Maintenance") btn.classList.add('bg-purple-600', 'border-purple-500', 'text-white', 'glowing-led');
+                else btn.classList.add('bg-red-600', 'border-red-500', 'text-white', 'glowing-led', 'status-pulse');
+            } else {
+                btn.className = "text-[10px] font-bold py-2 rounded border bg-slate-800 border-slate-750 text-slate-300 hover:bg-slate-700/30";
+            }
+        });
+    }
+
+    // Render cards list of all blocks in selected zone
+    function renderBlocksGrid(blocksList) {
+        const grid = document.getElementById('occ-blocks-grid');
+        grid.innerHTML = '';
+
+        blocksList.forEach(blockId => {
+            const data = blockStates[blockId] || { status: "Normal", mode: "Auto", locked: false };
+            
+            // Count occupied slots
+            const slots = palletOccupancy[blockId] || Array(12).fill(null);
+            const occupiedCount = slots.filter(s => s !== null).length;
+
+            let statusBorder = "border-slate-800";
+            let statusDot = "bg-slate-400";
+            let statusText = "bg-slate-800 text-slate-300 border-slate-700";
+
+            if (data.status === "Normal") {
+                statusDot = "bg-emerald-500";
+            } else if (data.status === "Running") {
+                statusDot = "bg-blue-500 status-pulse";
+            } else if (data.status === "Error") {
+                statusDot = "bg-red-500";
+                statusBorder = "border-red-900/50 alarm-flash";
+            } else if (data.status === "Disabled") {
+                statusDot = "bg-slate-600";
+            }
+
+            // Create Card Element
+            const card = document.createElement('div');
+            card.dataset.blockId = blockId;
+            card.className = `occ-block-card p-4 rounded-xl border ${statusBorder} bg-slate-900/30 hover:border-slate-700 cursor-pointer transition-all duration-200`;
+            
+            if (blockId === selectedBlockId) {
+                card.classList.add('border-blue-500', 'bg-slate-900/90');
+                card.classList.remove('border-slate-800');
+            }
+
+            card.onclick = () => selectBlock(blockId);
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs font-bold text-slate-200">${blockId}</span>
+                    <span class="w-2 h-2 rounded-full ${statusDot} glowing-led"></span>
+                </div>
+                <div class="space-y-1.5 text-[10px] font-mono text-slate-400">
+                    <div class="flex justify-between">
+                        <span>Chế độ:</span>
+                        <span class="font-bold text-slate-200">${data.mode}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Trạng thái:</span>
+                        <span class="font-bold text-slate-200">${translateStatus(data.status)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Đã đỗ:</span>
+                        <span class="font-bold text-blue-400">${occupiedCount}/12 khay</span>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // Render visual slots grid of selected block
+    function renderPalletGrid(blockId) {
+        const container = document.getElementById('occ-pallet-matrix');
+        container.innerHTML = '';
+        
+        document.getElementById('pallet-grid-block-title').innerText = blockId;
+
+        const slots = palletOccupancy[blockId] || Array(12).fill(null);
+        
+        slots.forEach((occupied, idx) => {
+            const slotNum = String(idx + 1).padStart(2, '0');
+            let colorClass = "bg-slate-900/50 hover:bg-slate-900/80 border-slate-800 text-slate-400";
+            let label = "TRỐNG";
+            
+            if (occupied) {
+                colorClass = "bg-blue-950/40 border-blue-900/50 text-blue-300";
+                label = occupied;
+            }
+
+            // check if slot is currently selected in dispatch
+            const cell = document.createElement('div');
+            cell.className = `p-3 rounded-lg border text-center transition-all ${colorClass}`;
+            cell.innerHTML = `
+                <div class="text-[10px] font-bold text-slate-500 mb-1">Khay P${slotNum}</div>
+                <div class="text-[10px] font-mono font-bold leading-none truncate">${label}</div>
+            `;
+            container.appendChild(cell);
+        });
+    }
+
+    // Refresh dispatch occupied dropdown
+    function refreshOccupiedSlotsDropdown(blockId) {
+        const select = document.getElementById('dispatch-occupied-slots');
+        select.innerHTML = '';
+
+        const slots = palletOccupancy[blockId] || Array(12).fill(null);
+        let count = 0;
+        slots.forEach((occupied, idx) => {
+            if (occupied) {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `P${String(idx + 1).padStart(2, '0')} - ${occupied}`;
+                select.appendChild(opt);
+                count++;
+            }
+        });
+
+        if (count === 0) {
+            const opt = document.createElement('option');
+            opt.value = "";
+            opt.textContent = "Không có xe đỗ";
+            select.appendChild(opt);
+        }
+    }
+
+    // Set operation Mode (Auto, Manual, Maint, Emergency)
+    function setBlockMode(mode) {
+        if (blockStates[selectedBlockId].status === "Disabled" && mode !== "Maintenance") {
+            alert(`Cảnh báo: Block ${selectedBlockId} đang bị khóa bảo trì (Disabled). Vui lòng Unlock trước khi chuyển sang chế độ ${mode}!`);
+            return;
+        }
+
+        blockStates[selectedBlockId].mode = mode;
+        saveBlockStates();
+
+        // If Emergency, trigger system failure/warning visual
+        if (mode === "Emergency") {
+            blockStates[selectedBlockId].status = "Warning";
+            saveBlockStates();
+        } else if (blockStates[selectedBlockId].status === "Warning") {
+            blockStates[selectedBlockId].status = "Normal";
+            saveBlockStates();
+        }
+
+        // Refresh Grid and Cockpit
+        refreshOCCView();
+    }
+
+    // Operational Commands: Start, Stop, Pause, Resume
+    function sendOperationalCommand(cmd) {
+        const block = blockStates[selectedBlockId];
+        if (block.status === "Disabled" || block.status === "Error") {
+            return;
+        }
+
+        if (cmd === "Start") {
+            block.status = "Running";
+        } else if (cmd === "Stop" || cmd === "Pause") {
+            block.status = "Normal";
+        } else if (cmd === "Resume") {
+            block.status = "Running";
+        }
+
+        saveBlockStates();
+        refreshOCCView();
+        
+        // Visual indicator alert
+        alert(`Đã gửi lệnh vận hành [${cmd}] xuống PLC của Block ${selectedBlockId} thành công.`);
+    }
+
+    // Maintenance Commands: Lock, Unlock, Disable
+    function sendMaintenanceCommand(cmd) {
+        const block = blockStates[selectedBlockId];
+
+        if (cmd === "Lock") {
+            block.locked = true;
+            alert(`Đã khóa chốt cơ học Block ${selectedBlockId}.`);
+        } else if (cmd === "Unlock") {
+            block.locked = false;
+            if (block.status === "Disabled") {
+                block.status = "Normal";
+            }
+            alert(`Đã mở khóa chốt cơ học Block ${selectedBlockId}.`);
+        } else if (cmd === "Disable") {
+            block.status = "Disabled";
+            alert(`Đã ngắt nguồn điện (Disabled) và đưa Block ${selectedBlockId} vào chế độ bảo trì cứng.`);
+        }
+
+        saveBlockStates();
+        refreshOCCView();
+    }
+
+    // Vehicle Dispatch Storing (Gọi xe vào)
+    function executeVehicleStore() {
+        const plateInput = document.getElementById('dispatch-plate-num');
+        const plate = plateInput.value.trim().toUpperCase();
+        
+        if (!plate) {
+            alert("Vui lòng nhập biển số xe hợp lệ!");
+            return;
+        }
+
+        const slots = palletOccupancy[selectedBlockId];
+        const emptyIdx = slots.indexOf(null);
+
+        if (emptyIdx === -1) {
+            alert(`Cảnh báo: Block ${selectedBlockId} đã đầy khay đỗ! Không thể gửi thêm xe.`);
+            return;
+        }
+
+        plateInput.value = "";
+        isCommandPipelineRunning = true;
+        disableDispatchButtons(true);
+
+        // Run the sequence view pipeline
+        runSequenceViewPipeline('STORE', plate, emptyIdx, () => {
+            // Success callback
+            slots[emptyIdx] = plate;
+            savePalletOccupancy();
+
+            // Increment cycle counts in palletCycleData
+            let cycleData = {};
+            const storedCycles = localStorage.getItem('palletCycleData');
+            if (storedCycles) {
+                cycleData = JSON.parse(storedCycles);
+            }
+            if (!cycleData[selectedBlockId]) {
+                cycleData[selectedBlockId] = Array(12).fill(0);
+            }
+            cycleData[selectedBlockId][emptyIdx] = (cycleData[selectedBlockId][emptyIdx] || 0) + 1;
+            localStorage.setItem('palletCycleData', JSON.stringify(cycleData));
+
+            isCommandPipelineRunning = false;
+            disableDispatchButtons(false);
+            refreshOCCView();
+            alert(`Gọi xe thành công! Xe [${plate}] đã được cất vào khay P${String(emptyIdx + 1).padStart(2, '0')}. Chu kỳ hoạt động khay tăng lên.`);
+        });
+    }
+
+    // Vehicle Dispatch Retrieving (Trả xe ra)
+    function executeVehicleRetrieve() {
+        const select = document.getElementById('dispatch-occupied-slots');
+        const slotIdxStr = select.value;
+
+        if (slotIdxStr === "") {
+            alert("Không có xe đỗ để lấy ra!");
+            return;
+        }
+
+        const slotIdx = parseInt(slotIdxStr);
+        const slots = palletOccupancy[selectedBlockId];
+        const plate = slots[slotIdx];
+
+        isCommandPipelineRunning = true;
+        disableDispatchButtons(true);
+
+        // Run the sequence view pipeline
+        runSequenceViewPipeline('RETRIEVE', plate, slotIdx, () => {
+            // Success callback
+            slots[slotIdx] = null;
+            savePalletOccupancy();
+
+            isCommandPipelineRunning = false;
+            disableDispatchButtons(false);
+            refreshOCCView();
+            alert(`Lấy xe thành công! Đã trả xe [${plate}] tại khay P${String(slotIdx + 1).padStart(2, '0')} ra ngoài.`);
+        });
+    }
+
+    function disableDispatchButtons(disabled) {
+        // disable inputs in manual dispatch panel
+        const dispatchPanel = document.getElementById('occ-dispatch-panel');
+        const inputs = dispatchPanel.querySelectorAll('input, button, select');
+        inputs.forEach(i => i.disabled = disabled);
+    }
+
+    // Direct PLC Command Flow
+    function confirmAndSendPlcCommand() {
+        const cmdInput = document.getElementById('plc-raw-cmd');
+        const cmd = cmdInput.value.trim().toUpperCase();
+
+        if (!cmd) {
+            alert("Vui lòng nhập mã lệnh PLC!");
+            return;
+        }
+
+        if (isCommandPipelineRunning) {
+            alert("Lệnh trước đó đang được PLC thực thi. Vui lòng chờ!");
+            return;
+        }
+
+        // Open Confirmation Modal
+        document.getElementById('confirm-modal-cmd-code').innerText = cmd;
+        document.getElementById('confirm-modal-block-id').innerText = selectedBlockId;
+        document.getElementById('occ-confirm-modal').classList.remove('hidden');
+    }
+
+    function closeConfirmationModal() {
+        document.getElementById('occ-confirm-modal').classList.add('hidden');
+    }
+
+    function executeConfirmedPlcCommand() {
+        closeConfirmationModal();
+
+        const cmdInput = document.getElementById('plc-raw-cmd');
+        const cmd = cmdInput.value.trim().toUpperCase();
+        cmdInput.value = "";
+
+        isCommandPipelineRunning = true;
+        cmdInput.disabled = true;
+        document.getElementById('btn-plc-send').disabled = true;
+
+        // Reset progress indicators
+        resetLEDPipeline();
+
+        // Simulate Pipeline
+        const isSuccess = (cmd !== "CMD_INVALID");
+        runSimulationPipeline(cmd, isSuccess, () => {
+            // Completion callback
+            isCommandPipelineRunning = false;
+            cmdInput.disabled = false;
+            document.getElementById('btn-plc-send').disabled = false;
+            refreshOCCView();
+        });
+    }
+
+    function resetLEDPipeline() {
+        const leds = ['sent', 'accepted', 'running', 'done'];
+        leds.forEach(id => {
+            const led = document.getElementById(`led-${id}`);
+            led.className = "w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all";
+            led.style.boxShadow = "none";
+        });
+        document.getElementById('led-done-lbl').innerText = "Done";
+        document.getElementById('plc-progress-bar').style.width = "0%";
+        document.getElementById('plc-error-alert').classList.add('hidden');
+    }
+
+    // Main simulated timing loop for PLC feedback
+    function runSimulationPipeline(cmdCode, shouldSucceed, onComplete) {
+        resetLEDPipeline();
+        
+        // 1. Sent
+        setTimeout(() => {
+            const led = document.getElementById('led-sent');
+            led.className = "w-3 h-3 rounded-full bg-blue-500 border border-blue-400 glowing-led transition-all";
+            led.style.color = "rgb(59, 130, 246)";
+
+            // 2. Accepted
+            setTimeout(() => {
+                const ledAcc = document.getElementById('led-accepted');
+                ledAcc.className = "w-3 h-3 rounded-full bg-amber-500 border border-amber-400 glowing-led transition-all";
+                ledAcc.style.color = "rgb(245, 158, 11)";
+
+                // 3. Running (Ticking progress bar)
+                setTimeout(() => {
+                    const ledRun = document.getElementById('led-running');
+                    ledRun.className = "w-3 h-3 rounded-full bg-blue-500 border border-blue-400 glowing-led transition-all status-pulse";
+                    ledRun.style.color = "rgb(59, 130, 246)";
+
+                    let percent = 0;
+                    const interval = setInterval(() => {
+                        percent += 10;
+                        document.getElementById('plc-progress-bar').style.width = `${percent}%`;
+
+                        if (percent >= 100) {
+                            clearInterval(interval);
+
+                            // 4. Done or Failed
+                            setTimeout(() => {
+                                if (shouldSucceed) {
+                                    const ledDone = document.getElementById('led-done');
+                                    ledDone.className = "w-3 h-3 rounded-full bg-emerald-500 border border-emerald-400 glowing-led transition-all";
+                                    ledDone.style.color = "rgb(16, 185, 129)";
+                                    document.getElementById('led-done-lbl').innerText = "Done";
+                                    
+                                    onComplete();
+                                } else {
+                                    const ledDone = document.getElementById('led-done');
+                                    ledDone.className = "w-3 h-3 rounded-full bg-red-500 border border-red-400 glowing-led transition-all alarm-flash";
+                                    ledDone.style.color = "rgb(239, 68, 68)";
+                                    document.getElementById('led-done-lbl').innerText = "Failed";
+
+                                    // Display error code
+                                    const errAlert = document.getElementById('plc-error-alert');
+                                    document.getElementById('plc-error-code').innerText = "ERR_PLC_REJECT_0x0A";
+                                    errAlert.classList.remove('hidden');
+
+                                    onComplete();
+                                }
+                            }, 300);
+                        }
+                    }, 180);
+                }, 400);
+            }, 300);
+        }, 150);
+    }
+
+    // Interactive Guided Recovery Workflow
+    function startRecoveryWorkflow() {
+        const recoveryChecklist = document.getElementById('occ-recovery-checklist-panel');
+        recoveryChecklist.classList.remove('hidden');
+
+        // Initialize checklist state in localStorage
+        const checklistState = {
+            blockId: selectedBlockId,
+            step1: false,
+            step2: false
+        };
+        localStorage.setItem('occActiveRecovery', JSON.stringify(checklistState));
+
+        // Reset checkboxes visual
+        document.getElementById('chk-recovery-step1').checked = false;
+        document.getElementById('chk-recovery-step2').checked = false;
+        
+        const btnReset = document.getElementById('btn-recovery-reset');
+        btnReset.disabled = true;
+        btnReset.className = "w-full bg-slate-800 text-slate-500 font-bold text-xs py-2 rounded border border-slate-700/60 mt-2 flex items-center justify-center gap-2 cursor-not-allowed";
+    }
+
+    function showRecoveryChecklist(data) {
+        const recoveryChecklist = document.getElementById('occ-recovery-checklist-panel');
+        recoveryChecklist.classList.remove('hidden');
+
+        document.getElementById('chk-recovery-step1').checked = data.step1;
+        document.getElementById('chk-recovery-step2').checked = data.step2;
+
+        onRecoveryCheck();
+    }
+
+    function onRecoveryCheck() {
+        const s1 = document.getElementById('chk-recovery-step1').checked;
+        const s2 = document.getElementById('chk-recovery-step2').checked;
+
+        // Save progress to localStorage
+        const checklistState = {
+            blockId: selectedBlockId,
+            step1: s1,
+            step2: s2
+        };
+        localStorage.setItem('occActiveRecovery', JSON.stringify(checklistState));
+
+        // Unlock reset button if both are checked
+        const btnReset = document.getElementById('btn-recovery-reset');
+        if (s1 && s2) {
+            btnReset.disabled = false;
+            btnReset.className = "w-full bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold text-xs py-2 rounded transition-all shadow-lg shadow-red-900/20 border border-red-500/50 mt-2 flex items-center justify-center gap-2 cursor-pointer";
+        } else {
+            btnReset.disabled = true;
+            btnReset.className = "w-full bg-slate-800 text-slate-500 font-bold text-xs py-2 rounded border border-slate-700/60 mt-2 flex items-center justify-center gap-2 cursor-not-allowed";
+        }
+    }
+
+    function executeFaultRecovery() {
+        // Simulate resetting fault
+        const btnReset = document.getElementById('btn-recovery-reset');
+        btnReset.disabled = true;
+        btnReset.innerText = "Đang truyền lệnh Reset PLC & Homing...";
+
+        setTimeout(() => {
+            // Restore status to normal
+            blockStates[selectedBlockId].status = "Normal";
+            delete blockStates[selectedBlockId].errorCode;
+            delete blockStates[selectedBlockId].errorDesc;
+            saveBlockStates();
+
+            // Clear guided recovery checklist state
+            localStorage.removeItem('occActiveRecovery');
+
+            // Clear alarm in activeAlarms in localStorage
+            activeAlarms = activeAlarms.filter(a => !a.source.includes(selectedBlockId));
+            saveActiveAlarms();
+
+            btnReset.innerText = "Reset PLC Fault & Home Block";
+            
+            // Refresh views
+            refreshOCCView();
+            alert(`Khắc phục sự cố thành công! Block ${selectedBlockId} đã được khôi phục về trạng thái BÌNH THƯỜNG.`);
+        }, 1500);
+    }
+
+    // Trigger mock fault for testing
+    function triggerMockFault() {
+        blockStates[selectedBlockId].status = "Error";
+        blockStates[selectedBlockId].errorCode = "ERR-MTR-OCC";
+        blockStates[selectedBlockId].errorDesc = `Lỗi đột ngột kích hoạt tại ${selectedBlockId} phục vụ mục đích kiểm thử quy trình khắc phục sự cố.`;
+        saveBlockStates();
+        
+        // Also simulate injecting this alarm into activeAlarms in localStorage to display on Dashboard!
+        const zoneSelect = document.getElementById('occ-zone-select');
+        const zoneId = zoneSelect.value;
+        const newAlarm = {
+            id: "ALM-" + Math.floor(100000 + Math.random() * 900000),
+            time: new Date().toTimeString().split(' ')[0],
+            code: "ERR-MTR-OCC",
+            type: 2, // System Fault
+            typeName: "Lỗi Thiết Bị",
+            source: `Z${zoneId} · ${selectedBlockId}`,
+            msg: `Lỗi kích hoạt giả lập trên OCC tại ${selectedBlockId} - Vui lòng chạy quy trình phục hồi`
+        };
+        activeAlarms.unshift(newAlarm);
+        saveActiveAlarms();
+
+        refreshOCCView();
+        alert(`Đã kích hoạt LỖI GIẢ LẬP thành công cho ${selectedBlockId}. Hãy bấm nút "Bắt đầu phục hồi sau lỗi" trên cockpit.`);
+    }
+
+    // Admin Override functions
+    function toggleAdminOverride() {
+        const currentOverride = localStorage.getItem('occAdminOverride') === 'true';
+        const newOverride = !currentOverride;
+        localStorage.setItem('occAdminOverride', newOverride ? 'true' : 'false');
+        
+        if (newOverride) {
+            alert("⚠️ Cảnh báo: Đã kích hoạt chế độ CƯỠNG BỨC ADMIN. Cho phép vận hành cưỡng bức block lỗi/bị khóa!");
+        } else {
+            alert("Đã tắt chế độ CƯỠNG BỨC ADMIN.");
+        }
+        
+        refreshOCCView();
+    }
+
+    // Bypass Sensor functions
+    function openBypassModal() {
+        document.getElementById('bypass-modal-block-id').innerText = selectedBlockId;
+        
+        // Load existing bypass states for this block
+        const storedBypasses = localStorage.getItem('occBypassedSensors');
+        let bypasses = {};
+        if (storedBypasses) {
+            bypasses = JSON.parse(storedBypasses);
+        }
+        const blockBypasses = bypasses[selectedBlockId] || [];
+        
+        document.getElementById('chk-bypass-safeguard').checked = blockBypasses.includes('safeguard');
+        document.getElementById('chk-bypass-lift-limit').checked = blockBypasses.includes('lift-limit');
+        document.getElementById('chk-bypass-overload').checked = blockBypasses.includes('overload');
+        
+        document.getElementById('occ-bypass-modal').classList.remove('hidden');
+    }
+
+    function closeBypassModal() {
+        document.getElementById('occ-bypass-modal').classList.add('hidden');
+    }
+
+    function saveBypassSensors() {
+        const storedBypasses = localStorage.getItem('occBypassedSensors');
+        let bypasses = {};
+        if (storedBypasses) {
+            bypasses = JSON.parse(storedBypasses);
+        }
+        
+        const blockBypasses = [];
+        if (document.getElementById('chk-bypass-safeguard').checked) blockBypasses.push('safeguard');
+        if (document.getElementById('chk-bypass-lift-limit').checked) blockBypasses.push('lift-limit');
+        if (document.getElementById('chk-bypass-overload').checked) blockBypasses.push('overload');
+        
+        bypasses[selectedBlockId] = blockBypasses;
+        localStorage.setItem('occBypassedSensors', JSON.stringify(bypasses));
+        
+        closeBypassModal();
+        alert(`Đã lưu cấu hình Bypass cảm biến cho ${selectedBlockId}.`);
+        
+        // If overload or safeguard is bypassed and block is in Error state, allow override
+        refreshOCCView();
+    }
+
+    // Active Sequence intervals
+    let activeSequenceInterval = null;
+    let activeTimerInterval = null;
+
+    const storingSteps = [
+        "Xác nhận thẻ / biển số xe",
+        "Kiểm tra cảm biến an toàn & chiều cao xe",
+        "Xác định vị trí khay đỗ trống",
+        "Kiểm tra Safety Interlock toàn bãi",
+        "Gửi lệnh di chuyển khay đến PLC",
+        "Bàn nâng di chuyển khay đến vị trí nhận",
+        "Khách hàng đưa xe vào khay an toàn",
+        "Đưa xe vào vị trí đỗ an toàn trên block",
+        "Hoàn tất giao dịch gửi xe"
+    ];
+
+    const retrievingSteps = [
+        "Xác nhận thẻ / biển số xe",
+        "Xác định vị trí xe trong hệ thống",
+        "Chọn zone và block phù hợp",
+        "Kiểm tra Safety Interlock tổng thể",
+        "Gửi lệnh lấy xe đến PLC",
+        "Pallet di chuyển khay xe ra",
+        "Xe được đưa về vị trí xuất/trả xe",
+        "Hoàn tất lấy xe – Thông báo khách hàng"
+    ];
+
+    function switchLeftTab(tabId) {
+        const tabMap = document.getElementById('tab-left-map');
+        const tabSeq = document.getElementById('tab-left-sequence');
+        const contentMap = document.getElementById('left-tab-content-map');
+        const contentSeq = document.getElementById('left-tab-content-sequence');
+
+        if (!tabMap || !tabSeq || !contentMap || !contentSeq) return;
+
+        if (tabId === 'map') {
+            tabMap.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 border-blue-500 text-blue-400 bg-slate-900/30 rounded-t-lg transition-all flex items-center gap-2";
+            tabSeq.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/20 rounded-t-lg transition-all flex items-center gap-2";
+            contentMap.classList.remove('hidden');
+            contentSeq.classList.add('hidden');
+        } else {
+            tabSeq.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 border-blue-500 text-blue-400 bg-slate-900/30 rounded-t-lg transition-all flex items-center gap-2";
+            tabMap.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/20 rounded-t-lg transition-all flex items-center gap-2";
+            contentMap.classList.add('hidden');
+            contentSeq.classList.remove('hidden');
+        }
+    }
+
+    function runSequenceViewPipeline(type, plate, slotIdx, successCallback) {
+        // Clear previous runs
+        if (activeSequenceInterval) clearInterval(activeSequenceInterval);
+        if (activeTimerInterval) clearInterval(activeTimerInterval);
+
+        // UI Setup
+        switchLeftTab('sequence');
+        document.getElementById('seq-idle-placeholder').classList.add('hidden');
+        document.getElementById('seq-stuck-box').classList.add('hidden');
+        document.getElementById('seq-active-badge').classList.remove('hidden');
+
+        const blockId = selectedBlockId;
+        const steps = type === 'STORE' ? storingSteps : retrievingSteps;
+
+        // Header info
+        document.getElementById('seq-command-title').innerText = type === 'STORE' ? "QUY TRÌNH GỬI XE VÀO (STORE)" : "QUY TRÌNH LẤY XE RA (RETRIEVE)";
+        document.getElementById('seq-header-icon').innerHTML = type === 'STORE' ? 
+            `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-in"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" x2="3" y1="12" y2="12"></line></svg>` :
+            `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2 2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>`;
+        
+        document.getElementById('seq-block-id').innerText = blockId;
+        document.getElementById('seq-vehicle-id').innerText = plate;
+        document.getElementById('seq-timer-elapsed').innerText = "0.0s";
+        document.getElementById('seq-timer-estimated').innerText = (steps.length * 1.2).toFixed(1) + "s";
+
+        // Render steps list
+        const listContainer = document.getElementById('seq-steps-list');
+        listContainer.innerHTML = steps.map((step, idx) => `
+            <div id="seq-step-${idx}" class="relative flex gap-4 items-start">
+                <div class="seq-circle absolute -left-[27px] w-6 h-6 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-[10px] font-mono text-slate-500 z-10 transition-all duration-300">
+                    ${idx + 1}
+                </div>
+                <div>
+                    <h4 class="seq-text text-xs font-bold text-slate-500 transition-all duration-300">${step}</h4>
+                    <span class="seq-time text-[9px] text-slate-600 font-mono hidden"></span>
+                </div>
+            </div>
+        `).join('');
+
+        // Timers
+        let elapsed = 0;
+        activeTimerInterval = setInterval(() => {
+            elapsed += 0.1;
+            document.getElementById('seq-timer-elapsed').innerText = elapsed.toFixed(1) + "s";
+        }, 100);
+
+        const isStuck = document.getElementById('chk-simulate-stuck').checked;
+        let currentStep = 0;
+
+        // Function to style a step
+        function setStepStyle(idx, status, timeStr) {
+            const stepEl = document.getElementById(`seq-step-${idx}`);
+            if (!stepEl) return;
+            const circle = stepEl.querySelector('.seq-circle');
+            const text = stepEl.querySelector('.seq-text');
+            const timeSpan = stepEl.querySelector('.seq-time');
+
+            // Reset classes
+            circle.className = "seq-circle absolute -left-[27px] w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-mono z-10 transition-all duration-300 ";
+            text.className = "seq-text text-xs font-bold transition-all duration-300 ";
+
+            if (status === 'completed') {
+                circle.classList.add('bg-emerald-950', 'border-emerald-700', 'text-emerald-400', 'font-bold');
+                circle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check text-emerald-400"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                text.classList.add('text-emerald-400/90');
+                timeSpan.innerText = `Hoàn thành tại ${timeStr}`;
+                timeSpan.className = "seq-time text-[9px] font-mono text-slate-500";
+                timeSpan.classList.remove('hidden');
+            } else if (status === 'running') {
+                circle.classList.add('bg-amber-950', 'border-amber-500', 'text-amber-400', 'font-bold', 'animate-pulse');
+                circle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-2 animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`;
+                text.classList.add('text-amber-400');
+            } else if (status === 'failed') {
+                circle.classList.add('bg-red-950', 'border-red-650', 'text-red-400', 'font-bold', 'alarm-flash');
+                circle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x text-red-400"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>`;
+                text.classList.add('text-red-400');
+                timeSpan.innerText = `Lỗi kẹt cơ cấu tại ${timeStr}`;
+                timeSpan.className = "seq-time text-[9px] font-mono text-red-400";
+                timeSpan.classList.remove('hidden');
+            }
+        }
+
+        // Set first step as running
+        setStepStyle(0, 'running');
+
+        // Loop
+        activeSequenceInterval = setInterval(() => {
+            // Complete current step
+            setStepStyle(currentStep, 'completed', elapsed.toFixed(1) + "s");
+            currentStep++;
+
+            if (currentStep === steps.length) {
+                // Done!
+                clearInterval(activeSequenceInterval);
+                clearInterval(activeTimerInterval);
+                document.getElementById('seq-active-badge').classList.add('hidden');
+                
+                successCallback();
+            } else if (isStuck && currentStep === 5) {
+                // Stuck!
+                clearInterval(activeSequenceInterval);
+                clearInterval(activeTimerInterval);
+                document.getElementById('seq-active-badge').classList.add('hidden');
+
+                // Style the stuck step (Step 6 / index 5)
+                setStepStyle(5, 'failed', elapsed.toFixed(1) + "s");
+
+                // Show error box
+                const stuckBox = document.getElementById('seq-stuck-box');
+                const stuckDesc = document.getElementById('seq-stuck-desc');
+                
+                let errCode = "";
+                let errDesc = "";
+
+                if (type === 'STORE') {
+                    errCode = "ERR-LFT-OCC";
+                    errDesc = `Bàn nâng bị kẹt cơ khí - Quá dòng Motor nâng trục đứng (ERR_LIFT_OVERCURRENT_0x1C) tại ${blockId}.`;
+                } else {
+                    errCode = "ERR-LMT-OCC";
+                    errDesc = `Trục di chuyển ngang Pallet bị kẹt - Trễ phản hồi Limit Switch hành trình LS-T3 (ERR_LIMIT_SWITCH_TIMEOUT_0x1E) tại ${blockId}.`;
+                }
+
+                stuckDesc.innerText = errDesc;
+                stuckBox.classList.remove('hidden');
+
+                // Update block state to Error
+                blockStates[blockId].status = "Error";
+                blockStates[blockId].errorCode = errCode;
+                blockStates[blockId].errorDesc = errDesc;
+                saveBlockStates();
+
+                // Inject Alarm into activeAlarms
+                const zoneSelect = document.getElementById('occ-zone-select');
+                const zoneId = zoneSelect.value;
+                const newAlarm = {
+                    id: "ALM-" + Math.floor(100000 + Math.random() * 900000),
+                    time: new Date().toTimeString().split(' ')[0],
+                    code: errCode,
+                    type: 2, // System Fault
+                    typeName: "Lỗi Thiết Bị",
+                    source: `Z${zoneId} · ${blockId}`,
+                    msg: errDesc
+                };
+                activeAlarms.unshift(newAlarm);
+                saveActiveAlarms();
+
+                // Clean up execution
+                isCommandPipelineRunning = false;
+                disableDispatchButtons(false);
+                refreshOCCView();
+                
+                alert(`⚠️ TIẾN TRÌNH BỊ KẸT: ${errDesc}\nBlock đã chuyển sang trạng thái lỗi. Vui lòng kiểm tra và phục hồi sự cố.`);
+            } else {
+                // Set next step as running
+                setStepStyle(currentStep, 'running');
+            }
+        }, 1200);
+    }
+
+    function refreshOCCView() {
+        // Redraw Grid
+        const zoneId = document.getElementById('occ-zone-select').value;
+        renderBlocksGrid(zoneBlocksMap[zoneId]);
+
+        // Redraw Cockpit Details
+        selectBlock(selectedBlockId);
+    }
+
+    // Initialize layout on DOM load
+    document.addEventListener("DOMContentLoaded", () => {
+        loadInitialStates();
+        
+        // Trigger initial zone load (Zone 1)
+        onZoneChanged();
+    });
+</script>
