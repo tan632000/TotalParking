@@ -70,3 +70,16 @@ Thumbs.db
 # Explicit rules to keep SCADALayout tracked
 # =========================================================================
 !/TotalParking/SCADALayout/
+
+# CafeKit / Ecosystem
+specs/_shared/
+plans/*
+!plans/*.md
+!plans/templates/
+!plans/templates/**
+.cafekit-backup/
+.cafekit.lock
+.claude/
+.opencode/
+.codex/
+.agents/
