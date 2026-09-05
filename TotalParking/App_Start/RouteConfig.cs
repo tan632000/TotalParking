@@ -13,6 +13,20 @@ namespace TotalParking
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // Endpoint cho app Camera AI. Phải nằm ở gốc site và phải đăng ký trước route
+            // Default, xem docs/camera-led-routing-design.md §3.2.
+            routes.MapRoute(
+                name: "ingest-health",
+                url: "health",
+                defaults: new { controller = "Ingest", action = "Health" }
+            );
+
+            routes.MapRoute(
+                name: "ingest-vehicle",
+                url: "vehicle",
+                defaults: new { controller = "Ingest", action = "Vehicle" }
+            );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
