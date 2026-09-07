@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using TotalParking.Services.Plc;
 
 namespace TotalParking
 {
@@ -16,6 +17,11 @@ namespace TotalParking
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // Nạp cấu hình PLC. Vòng poll chỉ chạy khi plc:enabled = true, còn
+            // công cụ nghiệm thu /PlcStatus/Read thì dùng được ngay cả khi tắt.
+            // Xem Services/Plc/PlcHost.cs.
+            PlcHost.Initialize();
         }
     }
 }

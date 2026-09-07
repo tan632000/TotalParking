@@ -155,6 +155,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IngestController.cs" />
+    <Compile Include="Controllers\PlcStatusController.cs" />
     <Compile Include="Models\ParkingCard.cs" />
     <Compile Include="Models\VehicleEvent.cs" />
     <Compile Include="Models\VehicleProfile.cs" />
@@ -164,6 +165,17 @@
     <Compile Include="Services\VehicleProfileRepository.cs" />
     <Compile Include="Services\VehicleEventRepository.cs" />
     <Compile Include="Services\ParkingCardRepository.cs" />
+    <Compile Include="Models\PlcDevice.cs" />
+    <Compile Include="Models\CardScanDecision.cs" />
+    <Compile Include="Services\PlcDeviceRepository.cs" />
+    <Compile Include="Services\PlcRequestRepository.cs" />
+    <Compile Include="Services\CardScanService.cs" />
+    <Compile Include="Services\Plc\PlcTypes.cs" />
+    <Compile Include="Services\Plc\OmronFinsClient.cs" />
+    <Compile Include="Services\Plc\CardCodeDecoder.cs" />
+    <Compile Include="Services\Plc\PlcConnection.cs" />
+    <Compile Include="Services\Plc\PlcConnectionManager.cs" />
+    <Compile Include="Services\Plc\PlcHost.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -255,6 +267,9 @@
     <None Include="Database\02_seed_parking_cards.sql" />
     <None Include="Database\03_vehicle_event.sql" />
     <None Include="Database\04_vehicle_profile.sql" />
+    <None Include="Database\05_parking_topology.sql" />
+    <None Include="Database\06_plc_device.sql" />
+    <None Include="Database\07_parking_session.sql" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
