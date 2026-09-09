@@ -40,6 +40,8 @@ namespace TotalParking.Controllers
         private static readonly VehicleEventRepository   _events     = new VehicleEventRepository();
         private static readonly VehicleProfileRepository _profiles   = new VehicleProfileRepository();
         private static readonly VehicleClassifier        _classifier = new VehicleClassifier();
+        private static readonly VehicleRoutingRepository _routings   = new VehicleRoutingRepository();
+        private static readonly ZoneRouter               _router     = new ZoneRouter();
 
         public static DateTime? LastHealthUtc;
         public static DateTime? LastVehicleUtc;
@@ -135,12 +137,19 @@ namespace TotalParking.Controllers
             // ca chiec xe chi vi mot phep tinh co the chay lai la sai huong.
             try
             {
-                _profiles.Save(_classifier.Classify(vehicle));
+                var profile = _classifier.Classify(vehicle);
+                _profiles.Save(profile);
+
+                // Dieu huong cung nhom voi phan loai: du lieu dan xuat, tinh lai
+                // duoc tu su kien tho. Nam trong CUNG khoi try vi neu phan loai
+                // that bai thi khong co ho so de chon zone — chay tiep chi de
+                // sinh ra mot quyet dinh dua tren null.
+                _routings.Save(_router.Route(profile, _routings.GetZoneCapacity()));
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError(
-                    "Ingest: khong phan loai/luu duoc ho so cho " + eventId + ". " + ex);
+                    "Ingest: khong phan loai/dieu huong duoc cho " + eventId + ". " + ex);
             }
 
             LastVehicleUtc = DateTime.UtcNow;

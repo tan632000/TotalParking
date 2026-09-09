@@ -678,21 +678,34 @@ thứ tự, thời điểm và cách xử lý khi có sự cố.
 
 ### 6.1 Phần cứng và ba thanh ghi đã chốt
 
-Giai đoạn thí điểm: **hai PLC**, `192.168.0.10` và `192.168.0.11`.
+Dải IP thật, theo `docs/LUMI IP Range CL1.xlsx`:
 
-`192.168.0.10` chính là con PLC mà dự án **PLC-Connect đã kết nối thành công** —
-`.specs/plc-communication-service/spec.json` ghi rõ IP này, và `appsettings.json` để
-`Port 9600`, `SourceNode 1`, `DestinationNode 10`. Nghĩa là bắt tay FINS/TCP, cổng, và cách
-đánh node **đã được kiểm chứng trên đúng phần cứng này**, không phải suy đoán từ tài liệu.
-Model là Omron **CP2E-N60DR-A**.
+```
+192.169.1.2   ~ .49    Máy tính trạm (.4), Camera (.2), TV (.13)
+192.169.1.50  ~ .69    Bảng LED
+192.169.1.70  ~ .79    PGS: CCU + ZCU 1..5
+192.169.1.100 ~ .254   PLC  ->  Block N = 192.169.1.(N + 100)
+```
 
-Điều đó thu hẹp rủi ro kỹ thuật đáng kể: phần chưa chắc chắn không còn là "nói chuyện được với
-PLC không", mà chỉ còn là "thanh ghi chứa gì" và "chạy ổn định với nhiều PLC ra sao".
+Block 1 ở `192.169.1.101`. Công thức `N+100` là có hệ thống nên `06_plc_device.sql` sinh IP
+thẳng từ `block_no`, không gán tay từng con — bảng `block` và bảng PLC không thể lệch nhau.
 
-Lưu ý một điểm lệch nhỏ giữa hai nguồn trong PLC-Connect: `appsettings.json` để `SourceNode 1`
-còn `PlcConfig.cs` mặc định `SourceNode 100`. Bản thân việc đó không sao vì bắt tay FINS/TCP
-trả về node được cấp phát và `OmronFinsClient` ghi đè lại — nhưng khi cấu hình cho PLC thứ hai
-thì nên lấy theo file cấu hình đã chạy được, không lấy theo hằng số trong code.
+**`192.168.0.10` trong `appsettings.json` của PLC-Connect và trong `spec.json` là di sản từ
+môi trường thử nghiệm cũ, không phải địa chỉ của bãi này.** Đừng lấy hai nguồn đó làm căn cứ.
+
+Model PLC là Omron **CP2E-N60DR-A**. Chưa có bằng chứng nào cho thấy đã từng kết nối thành
+công: `PlcService` ghi một dòng `Logger.Info(... thành công ...)` mỗi lần kết nối được, và
+dòng đó không xuất hiện ở đâu trong log đã xem.
+
+Lưu ý một điểm lệch giữa hai nguồn trong PLC-Connect: `appsettings.json` để `SourceNode 1`
+còn `PlcConfig.cs` mặc định `SourceNode 100`. Không sao vì bắt tay FINS/TCP trả về node được
+cấp phát và `OmronFinsClient` ghi đè lại.
+
+> **Dải `192.169.1.0/24` không phải dải private.** Chỉ `192.168.0.0/16` mới là; `192.169.x.x`
+> thuộc không gian địa chỉ công cộng, đang trùng với IP thật của một tổ chức khác. Trong mạng
+> kín thì không gây lỗi, nhưng máy trạm có Wi-Fi ra Internet nên sẽ có ngày xung đột. Đổi
+> sang `192.168.x.x` hoặc `10.x.x.x` lúc mới có 6 thiết bị thì rẻ; đổi khi đã có 112 PLC thì
+> không.
 
 #### Ba thanh ghi
 
@@ -937,13 +950,15 @@ CREATE TABLE IF NOT EXISTS plc_device (
     CONSTRAINT fk_plc_block FOREIGN KEY (block_id) REFERENCES block (block_id)
 ) ENGINE = InnoDB;
 
--- Seed giai doan thi diem: hai PLC. block_id can thay bang block_id that
--- sau khi seed bang block.
--- 192.168.0.10 la con PLC ma PLC-Connect da ket noi thanh cong (muc 6.1).
-INSERT INTO plc_device (block_id, ip_address, port, plc_node, pc_node) VALUES
-    (1, '192.168.0.10', 9600, 10, 1),
-    (2, '192.168.0.11', 9600, 11, 1) AS new
-ON DUPLICATE KEY UPDATE ip_address = new.ip_address, port = new.port;
+-- IP sinh thang tu block_no theo cong thuc N+100 (muc 6.1), khong gan tay
+-- tung con: bang block va bang PLC khong the lech nhau.
+INSERT INTO plc_device (block_id, ip_address, port, plc_node, pc_node)
+SELECT b.block_id, CONCAT('192.169.1.', b.block_no + 100), 9600,
+       LEAST(b.block_no, 254), 1
+FROM   block b
+WHERE  b.kind = 'Mechanical' AND b.block_no BETWEEN 1 AND 154
+ON DUPLICATE KEY UPDATE
+    ip_address = CONCAT('192.169.1.', b.block_no + 100), port = 9600;
 
 -- Nhat ky tung luot quet the: SCADA doc duoc gi va da tra loi HMI ra sao.
 -- Day la bang doi chieu khi co tranh cai "luc do he thong biet gi".
@@ -1393,9 +1408,8 @@ gọi HTTP song song, không cần phần cứng và không cần dữ liệu b�
 8. **Xác nhận HMI coi `D402` khác `2200`/`2600` là chỉ hiện pallet tầng dưới**, không phải
    hiện tất cả. Mặc định của trường hợp không chắc chắn phải là hạn chế.
 
-9. **Node của PLC thứ hai.** `192.168.0.10` đã biết dùng `DestinationNode 10`. `192.168.0.11`
-   dùng node mấy? Và khi mở rộng lên 112 PLC thì đánh số theo quy tắc nào — `plc_node` là 1
-   byte, tối đa 254 node mỗi network nên vẫn đủ, nhưng cần một quy tắc chứ không phải gán tay.
+9. **Quy tắc đánh FINS node.** Seed đang đề nghị `plc_node = block_no`, chưa xác nhận với bên
+   lập trình PLC. `plc_node` là 1 byte, tối đa 254 node mỗi network nên 112 block vẫn đủ.
 
 9b. **HMI phân biệt gửi xe với lấy xe bằng gì?** `W75.0 = 1` xuất hiện ở cả hai nghiệp vụ
    (mục 6.3). Nếu HMI không tự suy ra được thì cần thêm một thanh ghi phân biệt.

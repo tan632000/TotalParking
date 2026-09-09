@@ -171,6 +171,34 @@
 
             </div>
         </div>
+
+        <!-- Bảng theo dõi xe vào, dữ liệu thật từ /Monitor/RoutingState -->
+        <div class="bg-slate-900/40 p-4 rounded-xl border border-slate-800/40">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                    Xe vào bãi &amp; điều hướng
+                </h3>
+                <span id="feed-status" class="text-[10px] font-mono text-slate-500">
+                    đang kết nối…
+                </span>
+            </div>
+
+            <div class="routing-row text-slate-500 font-bold border-b border-slate-700">
+                <div>GIỜ</div>
+                <div>XE / PHÂN LOẠI</div>
+                <div>KẾT QUẢ</div>
+                <div>ĐIỀU HƯỚNG</div>
+            </div>
+
+            <div id="routing-feed" class="routing-feed">
+                <div class="routing-row text-slate-500">
+                    <div>--:--:--</div>
+                    <div>chưa có xe nào</div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -204,6 +232,68 @@
         stroke-width: 2.5;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    /* Zone dang duoc dieu huong toi.
+       Dung class RIENG, khong dung .active cua hover: hai thu phai doc lap.
+       Neu dung chung thi khi nhan vien tro chuot sang zone khac roi bo ra,
+       lop hover se xoa luon dau hieu dieu huong — mat thong tin dang can nhat. */
+    .zone-polygon.routed {
+        fill: rgba(34, 197, 94, 0.18);
+        stroke: rgb(34, 197, 94);
+        stroke-width: 3.5;
+        animation: routedPulse 1.4s ease-in-out infinite;
+    }
+
+    @@keyframes routedPulse {
+        0%, 100% { filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.55)); }
+        50%      { filter: drop-shadow(0 0 18px rgba(34, 197, 94, 0.95)); }
+    }
+
+    .zone-callout.routed {
+        border-color: rgb(34, 197, 94) !important;
+        box-shadow: 0 0 16px rgba(34, 197, 94, 0.55) !important;
+    }
+
+    /* Bang theo doi xe vao */
+    .routing-feed {
+        max-height: 320px;
+        overflow-y: auto;
+    }
+
+    .routing-row {
+        display: grid;
+        grid-template-columns: 62px 1fr 78px 74px;
+        gap: 8px;
+        align-items: center;
+        padding: 6px 8px;
+        border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+        font-size: 11px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .routing-row.fresh {
+        animation: freshFlash 2s ease-out 1;
+    }
+
+    @@keyframes freshFlash {
+        0%   { background: rgba(34, 197, 94, 0.28); }
+        100% { background: transparent; }
+    }
+
+    .routing-badge {
+        display: inline-block;
+        padding: 1px 6px;
+        border-radius: 3px;
+        font-weight: 700;
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .badge-routed      { background: rgba(34, 197, 94, 0.18);  color: rgb(74, 222, 128); }
+    .badge-nocapacity  { background: rgba(245, 158, 11, 0.18); color: rgb(251, 191, 36); }
+    .badge-manual      { background: rgba(59, 130, 246, 0.18); color: rgb(96, 165, 250); }
+    .badge-rejected    { background: rgba(239, 68, 68, 0.18);  color: rgb(248, 113, 113); }
+    .badge-none        { background: rgba(100, 116, 139, 0.18); color: rgb(148, 163, 184); }
 
     /* Polygons glow borders on active/hover */
     .zone-polygon.zone-1.active, .zone-polygon.zone-1:hover {
@@ -372,4 +462,157 @@
             }
         }
     });
+</script>
+
+<!-- Điều hướng thời gian thực: poll snapshot rồi tô zone được chỉ định -->
+<script>
+    (function () {
+        var URL = "@Url.Action("RoutingState", "Monitor")";
+        var POLL_MS = 2000;
+
+        // Nhớ event_id đã thấy để chỉ nháy sáng dòng MỚI. Không có nó thì mỗi
+        // nhịp poll cả bảng lại nháy, và mắt không phân biệt được xe nào vừa vào.
+        var seen = {};
+        var firstLoad = true;
+        var routedZone = null;
+        var timer = null;
+
+        var statusEl = document.getElementById("feed-status");
+        var feedEl = document.getElementById("routing-feed");
+
+        function setStatus(text, cls) {
+            if (!statusEl) return;
+            statusEl.textContent = text;
+            statusEl.className = "text-[10px] font-mono " + cls;
+        }
+
+        // Tô zone đang được điều hướng tới. Dùng class .routed riêng, không dùng
+        // .active — xem ghi chú ở phần CSS.
+        function markRoutedZone(zoneId) {
+            if (routedZone === zoneId) return;
+
+            document.querySelectorAll(".zone-polygon.routed, .zone-callout.routed")
+                .forEach(function (el) { el.classList.remove("routed"); });
+
+            routedZone = zoneId;
+            if (zoneId === null || zoneId === undefined) return;
+
+            var poly = document.querySelector(".zone-polygon.zone-" + zoneId);
+            var callout = document.querySelector('.zone-callout[data-zone="' + zoneId + '"]');
+            if (poly) poly.classList.add("routed");
+            if (callout) callout.classList.add("routed");
+        }
+
+        // Cập nhật con số mật độ trong callout bằng số thật từ DB.
+        // Các con số cứng trong markup là mock lúc dựng giao diện.
+        function updateCallouts(zones) {
+            zones.forEach(function (z) {
+                var callout = document.querySelector(
+                    '.zone-callout[data-zone="' + z.zone_id + '"]');
+                if (!callout) return;
+
+                var details = callout.querySelectorAll(".callout-detail");
+                if (details.length >= 2) {
+                    details[0].textContent = "+ Pallet trống: " + z.free_mech;
+                    details[1].textContent = "+ Tầng dưới: " + z.free_tier0;
+                }
+
+                var density = callout.querySelector(".callout-density");
+                if (density) {
+                    density.textContent = z.total === 0
+                        ? "Chưa có dữ liệu block"
+                        : "Mật độ: " + z.in_use + "/" + z.total + " (" + z.used_pct + "%)";
+                }
+            });
+        }
+
+        function badgeFor(outcome) {
+            switch (outcome) {
+                case "ROUTED":      return ["badge-routed", "ĐÃ CHỈ"];
+                case "NO_CAPACITY": return ["badge-nocapacity", "HẾT CHỖ"];
+                case "MANUAL":      return ["badge-manual", "CHỜ NV"];
+                case "REJECTED":    return ["badge-rejected", "TỪ CHỐI"];
+                default:            return ["badge-none", "—"];
+            }
+        }
+
+        function renderFeed(recent) {
+            if (!feedEl) return;
+
+            if (!recent.length) {
+                feedEl.innerHTML =
+                    '<div class="routing-row text-slate-500">' +
+                    '<div>--:--:--</div><div>chưa có xe nào</div><div></div><div></div></div>';
+                return;
+            }
+
+            feedEl.innerHTML = recent.map(function (v) {
+                var b = badgeFor(v.outcome);
+                // Lần tải đầu không nháy: cả bảng đều "mới" với trình duyệt
+                // nhưng không có xe nào vừa vào thật.
+                var isFresh = !firstLoad && !seen[v.event_id];
+                seen[v.event_id] = true;
+
+                var name = v.vehicle || v.category || "(không rõ)";
+                var cls = v.weight_class ? v.weight_class : "?";
+                var zone = v.zone_code
+                    ? '<span class="text-emerald-400 font-bold">' + v.zone_code + "</span>"
+                    : '<span class="text-slate-600">—</span>';
+
+                return '<div class="routing-row' + (isFresh ? " fresh" : "") + '">' +
+                       "<div class=\"text-slate-400\">" + v.at + "</div>" +
+                       "<div class=\"text-slate-200 truncate\" title=\"" +
+                           (v.reason || "") + '">' + name +
+                           ' <span class="text-slate-500">· ' + cls + "</span></div>" +
+                       '<div><span class="routing-badge ' + b[0] + '">' + b[1] + "</span></div>" +
+                       "<div>" + zone + "</div>" +
+                       "</div>";
+            }).join("");
+        }
+
+        function tick() {
+            fetch(URL, { cache: "no-store" })
+                .then(function (res) {
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    return res.json();
+                })
+                .then(function (data) {
+                    if (data.error) throw new Error(data.error);
+                    updateCallouts(data.zones || []);
+                    renderFeed(data.recent || []);
+                    markRoutedZone(data.latest_zone);
+                    firstLoad = false;
+                    setStatus("cập nhật " + data.now, "text-emerald-500");
+                })
+                .catch(function (err) {
+                    // Chưa chạy migration 05/07/08 là trạng thái bình thường lúc
+                    // dựng hệ thống. Báo ra chứ không im lặng, và không dừng poll.
+                    setStatus("lỗi: " + err.message, "text-amber-500");
+                });
+        }
+
+        function start() {
+            if (timer) return;
+            tick();
+            timer = setInterval(tick, POLL_MS);
+        }
+
+        function stop() {
+            if (!timer) return;
+            clearInterval(timer);
+            timer = null;
+        }
+
+        // Tab ở nền thì ngừng poll. Trang này hay được mở rồi để đó cả ngày trên
+        // màn hình phòng điều khiển; poll khi không ai xem chỉ tốn kết nối DB.
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) stop(); else start();
+        });
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", start);
+        } else {
+            start();
+        }
+    })();
 </script>

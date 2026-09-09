@@ -4,7 +4,7 @@
 --
 -- Thiet ke: docs/parking-session-db-design.md muc 5.
 -- Du lieu that cua 112 block phai lay tu file CAD goc; phan seed o cuoi file
--- nay chi la 2 block thi diem, dung cho 2 PLC 192.168.0.10 va .11.
+-- nay chi la 2 block thi diem.
 
 USE total_parking;
 
