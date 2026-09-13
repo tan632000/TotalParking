@@ -84,19 +84,34 @@ CREATE TABLE IF NOT EXISTS plc_request (
 ) ENGINE = InnoDB;
 
 -- ------------------------------------------------------------- seed thi diem
--- Hai PLC dang co. 192.168.0.10 la con PLC ma du an PLC-Connect da ket noi
--- thanh cong (Omron CP2E-N60DR-A, port 9600, SourceNode 1, DestinationNode 10)
--- nen cac tham so mang o day lay theo appsettings.json da chay duoc cua no.
+-- Dai IP that lay tu docs/LUMI IP Range CL1.xlsx:
 --
--- plc_node cua .11 la PHONG DOAN. Can xac nhan truoc khi chay that.
+--   192.169.1.2   ~ .49    May tinh tram (.4), Camera (.2), TV (.13)
+--   192.169.1.50  ~ .69    Bang LED
+--   192.169.1.70  ~ .79    PGS: CCU + ZCU 1..5
+--   192.169.1.100 ~ .254   PLC   ->  Block N = 192.169.1.(N + 100)
+--
+-- Quy tac N+100 la CO HE THONG, khong phai gan tay tung con: sinh thang tu
+-- block_no de khong bao gio lech giua bang block va bang PLC.
+--
+-- LUU Y: 192.169.1.0/24 KHONG phai dai private. Chi 192.168.0.0/16 moi private;
+-- 192.169.x.x thuoc khong gian dia chi cong cong, dang trung voi IP that cua
+-- mot to chuc khac tren Internet. Khong gay loi trong mang kin, nhung neu may
+-- tram co duong ra Internet thi mot ngay nao do se co dia chi khong the truy
+-- cap duoc. Nen doi sang 192.168.x.x hoac 10.x.x.x luc con de.
+--
+-- plc_node de = block_no: DE NGHI, chua xac nhan voi ben lap trinh PLC.
+-- Bat tay FINS/TCP tra ve node duoc cap phat va client ghi de lai, nen sai o
+-- day khong lam hong ket noi.
 INSERT INTO plc_device (block_id, ip_address, port, plc_node, pc_node)
-SELECT b.block_id, d.ip_address, d.port, d.plc_node, d.pc_node
-FROM (
-    SELECT 1 AS block_no, '192.168.0.10' AS ip_address, 9600 AS port,
-           10 AS plc_node, 1 AS pc_node
-    UNION ALL SELECT 2, '192.168.0.11', 9600, 11, 1
-) d
-JOIN block b ON b.block_no = d.block_no
+SELECT b.block_id,
+       CONCAT('192.169.1.', b.block_no + 100),
+       9600,
+       LEAST(b.block_no, 254),
+       1
+FROM   block b
+WHERE  b.kind = 'Mechanical'
+  AND  b.block_no BETWEEN 1 AND 154   -- .101 ~ .254
 ON DUPLICATE KEY UPDATE
-    ip_address = d.ip_address, port = d.port,
-    plc_node = d.plc_node, pc_node = d.pc_node;
+    ip_address = CONCAT('192.169.1.', b.block_no + 100),
+    port = 9600;
