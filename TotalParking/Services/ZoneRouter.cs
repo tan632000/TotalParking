@@ -39,7 +39,19 @@ namespace TotalParking.Services
                 return Decide(profile.EventId, RoutingOutcome.Manual, profile.ManualReason);
             }
 
-            var eligible = (zones ?? new List<ZoneCapacity>())
+            var all = zones ?? new List<ZoneCapacity>();
+
+            // Chưa khai báo sức chứa thì KHÔNG được trả "hết chỗ". Hai chuyện
+            // khác nhau: "hết chỗ" là sự thật về bãi xe, "chưa có dữ liệu" là sự
+            // thật về hệ thống. Gộp lại thì màn hình báo bãi đầy trong khi thực
+            // ra chưa ai nhập bảng năng lực block.
+            if (all.Count == 0 || all.All(z => z.Total == 0))
+            {
+                return Decide(profile.EventId, RoutingOutcome.NoData,
+                    "Chua khai bao suc chua block. Can bang nang luc tu file CAD.");
+            }
+
+            var eligible = all
                 .Where(z => FreeFor(z, profile.WeightClass) > 0)
                 // Gần cổng trước. Hoà nhau thì chọn zone rỗng hơn để tải rải đều
                 // thay vì dồn hết vào một zone rồi mới sang zone kế tiếp.

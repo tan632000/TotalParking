@@ -293,6 +293,7 @@
     .badge-nocapacity  { background: rgba(245, 158, 11, 0.18); color: rgb(251, 191, 36); }
     .badge-manual      { background: rgba(59, 130, 246, 0.18); color: rgb(96, 165, 250); }
     .badge-rejected    { background: rgba(239, 68, 68, 0.18);  color: rgb(248, 113, 113); }
+    .badge-nodata      { background: rgba(168, 85, 247, 0.18); color: rgb(192, 132, 252); }
     .badge-none        { background: rgba(100, 116, 139, 0.18); color: rgb(148, 163, 184); }
 
     /* Polygons glow borders on active/hover */
@@ -513,8 +514,12 @@
 
                 var details = callout.querySelectorAll(".callout-detail");
                 if (details.length >= 2) {
-                    details[0].textContent = "+ Pallet trống: " + z.free_mech;
-                    details[1].textContent = "+ Tầng dưới: " + z.free_tier0;
+                    // total = 0 nghĩa là chưa khai báo block, không phải hết chỗ.
+                    // Hiện "0 chỗ trống" lúc đó là bịa ra một sự thật về bãi xe.
+                    details[0].textContent = z.total === 0
+                        ? "+ Chưa khai báo block" : "+ Pallet trống: " + z.free_mech;
+                    details[1].textContent = z.total === 0
+                        ? "" : "+ Tầng dưới: " + z.free_tier0;
                 }
 
                 var density = callout.querySelector(".callout-density");
@@ -530,6 +535,9 @@
             switch (outcome) {
                 case "ROUTED":      return ["badge-routed", "ĐÃ CHỈ"];
                 case "NO_CAPACITY": return ["badge-nocapacity", "HẾT CHỖ"];
+                // Khác HẾT CHỖ: chưa ai nhập bảng năng lực block. Hiện "HẾT CHỖ"
+                // lúc này là báo sai về bãi xe thay vì báo đúng về hệ thống.
+                case "NO_DATA":     return ["badge-nodata", "CHƯA CÓ DL"];
                 case "MANUAL":      return ["badge-manual", "CHỜ NV"];
                 case "REJECTED":    return ["badge-rejected", "TỪ CHỐI"];
                 default:            return ["badge-none", "—"];

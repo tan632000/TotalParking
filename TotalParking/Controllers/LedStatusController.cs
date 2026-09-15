@@ -52,6 +52,9 @@ namespace TotalParking.Controllers
                     free_l48m     = c.FreeL48m,     total_l48m     = c.TotalL48m,
                     free_standard = c.FreeStandard, total_standard = c.TotalStandard,
                     free_total    = c.FreeTotal,
+                    // false = chua khai bao block. Publisher se XOA bang thay vi
+                    // day so, xem LedPublisher.PublishPanel.
+                    has_data      = c.HasData,
                     // Phien dang mo nhung chua biet block — khong tru vao bo dem nao.
                     used_unassigned = c.UsedUnassigned
                 };
@@ -72,6 +75,7 @@ namespace TotalParking.Controllers
                 panels = pub.States.Select(s => new
                 {
                     code     = s.Panel.Code,
+                    name     = s.Panel.Name,
                     endpoint = s.Panel.Endpoint,
                     kind     = s.Panel.Kind,
                     online   = s.Online,
@@ -112,7 +116,7 @@ namespace TotalParking.Controllers
             var pub = LedHost.Publisher;
             if (pub == null) return Json2(503, new { error = "Tang LED chua nap duoc." });
 
-            var target = pub.States.FirstOrDefault(s => s.Panel.Code == panel);
+            var target = Resolve(pub, panel);
             if (target == null) return Json2(404, new { error = "Khong co bang LED '" + panel + "'." });
 
             if (port < 0 || port > 3) return Json2(400, new { error = "port phai trong 0..3" });
@@ -154,7 +158,7 @@ namespace TotalParking.Controllers
             var pub = LedHost.Publisher;
             if (pub == null) return Json2(503, new { error = "Tang LED chua nap duoc." });
 
-            var target = pub.States.FirstOrDefault(s => s.Panel.Code == panel);
+            var target = Resolve(pub, panel);
             if (target == null) return Json2(404, new { error = "Khong co bang LED '" + panel + "'." });
 
             try
@@ -166,6 +170,18 @@ namespace TotalParking.Controllers
             {
                 return Json2(502, new { error = ex.Message });
             }
+        }
+
+        // Nhan ca hai cach goi: '65' (octet cuoi) hoac 'Bang led 9' (ten bang IP).
+        // Nguoi thao tac tai hien truong doc duoc ten nao thi go ten do.
+        private static LedPanelState Resolve(LedPublisher pub, string key)
+        {
+            if (string.IsNullOrWhiteSpace(key)) return null;
+            key = key.Trim();
+            return pub.States.FirstOrDefault(s =>
+                       string.Equals(s.Panel.Code, key, StringComparison.OrdinalIgnoreCase))
+                ?? pub.States.FirstOrDefault(s =>
+                       string.Equals(s.Panel.Name, key, StringComparison.OrdinalIgnoreCase));
         }
 
         private static int Clamp(int v, int lo, int hi)

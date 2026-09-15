@@ -284,7 +284,8 @@
     <None Include="Database\07_parking_session.sql" />
     <None Include="Database\08_vehicle_routing.sql" />
     <None Include="Database\09_led_panel.sql" />
-    <None Include="Database\99_demo_seed.sql" />
+    <None Include="Database\10_led_panel_full.sql" />
+    <None Include="Database\11_remove_demo_data.sql" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />

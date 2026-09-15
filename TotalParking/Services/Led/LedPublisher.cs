@@ -144,7 +144,17 @@ namespace TotalParking.Services.Led
                     continue;
                 }
 
-                var hub   = LedFrameBuilder.Build(port, capacity);
+                // CHƯA CÓ DỮ LIỆU SỨC CHỨA -> XOÁ BẢNG, không đẩy số.
+                //
+                // Đây là chốt chặn sinh ra từ một sự cố thật: bảng đầu hầm đã
+                // hiển thị "36 chỗ trống" cho tài xế, trong khi 36 là con số bịa
+                // trong demo seed. Bảng chỉ đường nói dối tệ hơn bảng tối.
+                //
+                // Không đẩy `0 0 0` thay thế: đó là "bãi đã đầy", cũng là nói dối,
+                // và còn đuổi tài xế đi khỏi một bãi có thể đang trống.
+                var hub   = capacity.HasData
+                                ? LedFrameBuilder.Build(port, capacity)
+                                : LedHub.Blank(port.PortIndex);
                 var frame = hub.GetCommand();
 
                 try

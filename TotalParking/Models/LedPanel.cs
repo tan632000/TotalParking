@@ -19,8 +19,14 @@ namespace TotalParking.Models
     public class LedPanel
     {
         public int    PanelId   { get; set; }
-        // Octet cuối của IP, cũng là số bảng trên sơ đồ hiện trường.
+
+        // HAI CÁCH ĐÁNH SỐ, cố ý giữ cả hai vì ngoài hiện trường dùng song song
+        // và chúng không trùng nhau — dải IP nhảy từ .58 sang .65:
+        //   Code = octet cuối IP   '65'          (sơ đồ kỹ thuật, led_position.jpg)
+        //   Name = tên bảng IP     'Bang led 9'  (bên thi công gọi)
+        // Ép về một cái thì mỗi lần trao đổi lại phải quy đổi bằng đầu.
         public string Code      { get; set; }
+        public string Name      { get; set; }
         public string IpAddress { get; set; }
         public int    Port      { get; set; }
         public string HubType   { get; set; }
@@ -72,5 +78,16 @@ namespace TotalParking.Models
         public int UsedUnassigned { get; set; }
 
         public int FreeTotal { get { return FreeL5m + FreeL48m + FreeStandard; } }
+
+        // Bãi đã được khai báo sức chứa hay chưa.
+        //
+        // Phân biệt "không còn chỗ" với "không biết còn chỗ hay không" là bắt
+        // buộc, không phải chi tiết. Cả hai đều cho ba số 0, nhưng một cái là
+        // sự thật về bãi xe còn cái kia là sự thật về hệ thống — và đẩy `0 0 0`
+        // lên bảng khi thực ra chưa có dữ liệu là nói với tài xế rằng bãi đã đầy.
+        public bool HasData
+        {
+            get { return TotalL5m + TotalL48m + TotalStandard > 0; }
+        }
     }
 }

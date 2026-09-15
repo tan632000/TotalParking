@@ -140,34 +140,15 @@ CREATE TABLE IF NOT EXISTS parking_slot (
         CHECK (condition_state IN ('OK','MAINTENANCE','FAULT','DISABLED'))
 ) ENGINE = InnoDB;
 
--- ------------------------------------------------------------- seed thi diem
--- HAI block cho hai PLC dang co. Day KHONG phai du lieu that cua bai:
--- 112 block that phai sinh tu file CAD, xem muc 12.1 cua tai lieu thiet ke.
--- Block 1 va 2 chon kieu 10 SPACES-5000L (2 tang x 5 cot) vi day la kieu
--- pho bien nhat doc duoc tren ban ve.
-INSERT INTO block (zone_id, block_no, kind, slot_count, bay_length_mm, tier_count, column_count)
-VALUES
-    (1, 1, 'Mechanical', 10, 5000, 2, 5),
-    (1, 2, 'Mechanical', 10, 5000, 2, 5) AS new
-ON DUPLICATE KEY UPDATE
-    zone_id = new.zone_id, kind = new.kind, slot_count = new.slot_count,
-    bay_length_mm = new.bay_length_mm, tier_count = new.tier_count,
-    column_count = new.column_count;
-
--- Sinh o cho hai block tren: tier 0..1 x col 0..4.
--- label dang P01..P10, danh so theo tang duoi truoc.
-INSERT INTO parking_slot (block_id, slot_index, label, tier, col_index)
-SELECT b.block_id,
-       t.n * b.column_count + c.n                              AS slot_index,
-       CONCAT('P', LPAD(t.n * b.column_count + c.n + 1, 2, '0')) AS label,
-       t.n, c.n
-FROM   block b
-JOIN   (SELECT 0 AS n UNION ALL SELECT 1) t
-JOIN   (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2
-        UNION ALL SELECT 3 UNION ALL SELECT 4) c
-WHERE  b.block_no IN (1, 2)
-  AND  t.n < b.tier_count
-  AND  c.n < b.column_count
--- Chay lai khong doi gi: o da co thi giu nguyen ke ca cycle_count va
--- condition_state. Khong dung VALUES(...) vi ham do da deprecated tu 8.0.20.
-ON DUPLICATE KEY UPDATE slot_id = slot_id;
+-- ------------------------------------------------------------------- seed
+-- KHONG seed block o day nua.
+--
+-- Truoc day file nay tao 2 block "thi diem" 10 o, chon kieu 5000L "vi day la
+-- kieu pho bien nhat doc duoc tren ban ve" — tuc la PHONG DOAN. Nhung con so
+-- phong doan do da di thang len bang LED dau ham va hien cho tai xe that.
+--
+-- Du lieu block that phai lay tu file CAD goc: 112 block, so o 3/5/6/10 khac
+-- nhau tung block. Xem docs/parking-session-db-design.md muc 12.1.
+--
+-- Bang `block` rong la trang thai DUNG cho toi luc do: LedPublisher se xoa
+-- bang thay vi day so, va ZoneRouter tra NO_DATA thay vi "het cho".

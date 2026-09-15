@@ -24,7 +24,7 @@ namespace TotalParking.Services
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText =
-                        "SELECT panel_id, code, ip_address, port, hub_type, kind, " +
+                        "SELECT panel_id, code, name, ip_address, port, hub_type, kind, " +
                         "       pos_x, pos_y, note, is_active " +
                         "FROM   led_panel " +
                         (activeOnly ? "WHERE is_active = 1 " : "") +
@@ -38,6 +38,7 @@ namespace TotalParking.Services
                             {
                                 PanelId   = Convert.ToInt32(r["panel_id"]),
                                 Code      = Convert.ToString(r["code"]),
+                                Name      = Str(r, "name"),
                                 IpAddress = Convert.ToString(r["ip_address"]),
                                 Port      = Convert.ToInt32(r["port"]),
                                 HubType   = Convert.ToString(r["hub_type"]),

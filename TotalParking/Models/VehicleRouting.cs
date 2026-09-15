@@ -6,6 +6,10 @@ namespace TotalParking.Models
     {
         public const string Routed      = "ROUTED";
         public const string NoCapacity  = "NO_CAPACITY";
+        // Khác NoCapacity: bãi chưa được khai báo sức chứa. "Hết chỗ" là sự thật
+        // về bãi xe; "chưa có dữ liệu" là sự thật về hệ thống. Gộp hai cái làm
+        // một chính là cách hệ thống tỏ ra biết trong khi nó không biết.
+        public const string NoData      = "NO_DATA";
         public const string Rejected    = "REJECTED";
         public const string Manual      = "MANUAL";
     }
