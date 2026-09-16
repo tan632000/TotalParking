@@ -86,22 +86,57 @@ namespace TotalParking.Services.Plc
         }
 
         // ------------------------------------------------------------ lỗi
+        //
+        // CHỈ GHI KHI LỖI ĐỔI. Một PLC mất điện thì mọi nhịp poll và mọi vòng quét
+        // ô đều ném đúng một thông báo "quá thời gian" — block 95 một mình sinh 79
+        // dòng giống hệt nhau trong vài giờ. Lặp lại không nói thêm điều gì: dòng
+        // đầu đã cho biết nó hỏng, dòng cuối không cho biết nó hỏng hơn.
+        //
+        // Cái cần biết là lỗi BẮT ĐẦU lúc nào và HẾT lúc nào — nên ghi lần đầu,
+        // im lặng khi lặp, rồi ghi một dòng HET LOI khi thiết bị trở lại.
+        private static readonly System.Collections.Generic.Dictionary<string, string> LastError =
+            new System.Collections.Generic.Dictionary<string, string>();
+
         public static void Error(string ip, int blockNo, string op, string message)
         {
+            string key = (ip ?? "?") + "|" + op;
+            lock (Sync)
+            {
+                string prev;
+                if (LastError.TryGetValue(key, out prev) && prev == message) return;
+                LastError[key] = message;
+            }
             Append("ERROR", ip, blockNo, op, "", message);
         }
 
+        // Thiết bị trở lại sau khi đã ghi lỗi. Không có dòng này thì nhật ký chỉ
+        // có điểm bắt đầu của sự cố, và không cách nào biết nó kéo dài bao lâu.
+        public static void Recovered(string ip, int blockNo, string op)
+        {
+            string key = (ip ?? "?") + "|" + op;
+            lock (Sync)
+            {
+                if (!LastError.ContainsKey(key)) return;   // chưa từng lỗi thì không ghi
+                LastError.Remove(key);
+            }
+            Append("HETLOI", ip, blockNo, op, "OK", "thiet bi da tro lai");
+        }
+
         // Dòng SCAN chứng minh "đã đọc từ IP này lúc này" — đúng thứ cần để truy
-        // vết. Nhưng 51 block × mỗi 45 giây là ~68 dòng/phút, đủ để chôn vùi sự
-        // kiện đáng quan tâm. Tắt được bằng plc:auditScanLines = false; lúc đó chỉ
-        // còn dòng SCAN của block CÓ ô đổi trạng thái.
+        // vết. Nhưng 54 block × mỗi 45 giây là ~72 dòng/phút, tức hơn 100 nghìn
+        // dòng mỗi ngày, và thực đo cho thấy 18.506/19.242 dòng của nhật ký đầu
+        // tiên là dòng SCAN báo "0 doi" — 96% dung lượng không mang tin gì.
+        //
+        // MẶC ĐỊNH TẮT. Bật lại bằng plc:auditScanLines = true khi cần chứng minh
+        // vòng quét có chạm tới một PLC cụ thể. Khi tắt, block nào CÓ ô đổi trạng
+        // thái vẫn được ghi — đó mới là sự kiện.
         public static bool ScanLines
         {
             get
             {
                 bool b;
                 string v = ConfigurationManager.AppSettings["plc:auditScanLines"];
-                return !bool.TryParse(v, out b) || b;   // mặc định BẬT
+                return bool.TryParse(v, out b) && b;   // mặc định TẮT
             }
         }
 

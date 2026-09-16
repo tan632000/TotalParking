@@ -297,6 +297,12 @@ namespace TotalParking.Services.Plc
                 await _client.ConnectAsync(Device.IpAddress, Device.Port, Device.TimeoutMs)
                              .ConfigureAwait(false);
 
+                if (_failStreak > 0)
+                {
+                    PlcAuditLog.Recovered(Device.IpAddress, Device.BlockNo, "KET NOI");
+                    PlcAuditLog.Recovered(Device.IpAddress, Device.BlockNo, "QUET O");
+                }
+
                 IsOnline    = true;
                 LastError   = null;
                 _failStreak = 0;

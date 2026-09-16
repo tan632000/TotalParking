@@ -83,6 +83,42 @@ namespace TotalParking.Services.Led
             }
         }
 
+        // Nạp lại danh mục bảng và cổng từ DB mà KHÔNG dừng vòng đẩy.
+        //
+        // Số chỗ trống đọc lại mỗi nhịp nên đổi view là thấy ngay, nhưng danh
+        // mục cổng thì `Load()` chỉ nạp một lần rồi giữ trong `_states`. Đổi ánh
+        // xạ mũi tên -> zone mà phải khởi động lại cả SCADA là cái giá quá đắt
+        // cho một dòng cấu hình, nhất là khi vòng poll PLC đang giữ 54 kết nối.
+        //
+        // Giữ nguyên số liệu chẩn đoán (đã gửi/lỗi/khung cuối) của bảng còn tồn
+        // tại: mất chúng là mất luôn khả năng trả lời "bảng này im từ bao giờ".
+        public int Reload()
+        {
+            lock (_sync)
+            {
+                var fresh = _repo.GetPanels();
+                var keep  = new Dictionary<int, LedPanelState>();
+
+                foreach (var p in fresh)
+                {
+                    LedPanelState old;
+                    if (_states.TryGetValue(p.PanelId, out old))
+                    {
+                        old.Panel = p;          // cổng mới, lịch sử cũ
+                        keep[p.PanelId] = old;
+                    }
+                    else
+                    {
+                        keep[p.PanelId] = new LedPanelState { Panel = p };
+                    }
+                }
+
+                _states.Clear();
+                foreach (var kv in keep) _states[kv.Key] = kv.Value;
+                return _states.Count;
+            }
+        }
+
         public void StartLoop()
         {
             lock (_sync)

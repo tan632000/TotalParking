@@ -172,6 +172,39 @@ namespace TotalParking.Controllers
             }
         }
 
+        // POST /LedStatus/Reload — nạp lại danh mục bảng/cổng từ DB.
+        //
+        // Không cần cho việc đổi SỐ (số chỗ trống đọc lại mỗi nhịp), chỉ cần khi
+        // đổi CẤU HÌNH CỔNG: thêm mũi tên, đổi ánh xạ mũi tên -> zone, đổi hướng.
+        //
+        // Không đòi led:allowManualSend: lệnh này chỉ đọc lại DB rồi đẩy đúng
+        // thứ vòng lặp vẫn đang đẩy, không phải người vận hành tự ghi số lên bảng.
+        [HttpPost]
+        public ActionResult Reload()
+        {
+            if (!IsLoopback()) return Json2(403, new { error = "Chi chap nhan tu loopback." });
+
+            var pub = LedHost.Publisher;
+            if (pub == null) return Json2(503, new { error = "Tang LED chua nap duoc." });
+
+            try
+            {
+                int panels = pub.Reload();
+                int ports  = pub.States.Sum(s => s.Panel.Ports == null ? 0 : s.Panel.Ports.Count);
+                return Json2(200, new
+                {
+                    reloaded = true,
+                    panels,
+                    ports,
+                    note = "So chi doi o nhip day tiep theo."
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(502, new { error = ex.Message });
+            }
+        }
+
         // Nhan ca hai cach goi: '65' (octet cuoi) hoac 'Bang led 9' (ten bang IP).
         // Nguoi thao tac tai hien truong doc duoc ten nao thi go ten do.
         private static LedPanelState Resolve(LedPublisher pub, string key)
