@@ -11,13 +11,15 @@
 --   62b73250   block 103 o 2  (D202, tho '3250 62B7')
 --   6296cac0   block 103 o 3  (D204, tho 'CAC0 6296')
 --
--- ======================= LUU Y VE BO CUC =======================
--- Ma tren la giai ma theo Binary32Lo (word thap truoc). CHUA XAC NHAN day la thu
--- tu dung — chi biet no nhat quan giua vong quet o va vong poll.
+-- ======================= BO CUC DA CHOT =======================
+-- Binary32Lo (word thap truoc) — DA XAC NHAN ngay 16/09.
 --
--- Neu hoa ra thu tu nguoc (Binary32Hi) thi ma that se la '3250 62b7' va 'cac0 6296'.
--- Da them CA HAI chieu de bai test khong bi chan boi cau hoi con dang bo ngo.
--- Khi chot duoc bo cuc, XOA cac dong con lai.
+-- Bang chung: khach cung cap ma the '62bae060', va thanh ghi D400 cua block 96
+-- doc ra dung chuoi do theo Binary32Lo, khong can dao byte. Truoc do hai the
+-- TEST.001/002 cung nhat quan giua vong quet o va vong poll.
+--
+-- Da xoa cac dong '...H' (chieu byte nguoc) vi khong con can.
+-- Da chot vao plc_device: card_layout = 'Binary32Lo', card_word_len = 2.
 --
 -- source_label = 'THE TEST' de loc va xoa sach sau khi nghiem thu xong:
 --     DELETE FROM parking_card WHERE source_label = 'THE TEST';
@@ -26,12 +28,9 @@ USE total_parking;
 
 INSERT INTO parking_card (card_code, card_no, customer_type_id, weight_class_id, source_label, is_active)
 VALUES
-    -- doc theo Binary32Lo — bo cuc dang dung
     ('62b73250', 'TEST.001', 1, 1, 'THE TEST', 1),
     ('6296cac0', 'TEST.002', 1, 1, 'THE TEST', 1),
-    -- doc theo Binary32Hi — phong truong hop thu tu word nguoc lai
-    ('325062b7', 'TEST.001H', 1, 1, 'THE TEST', 1),
-    ('cac06296', 'TEST.002H', 1, 1, 'THE TEST', 1)
+    ('62bae060', 'TEST.003', 1, 1, 'THE TEST', 1)
 ON DUPLICATE KEY UPDATE
     is_active    = 1,
     source_label = 'THE TEST';
@@ -49,3 +48,11 @@ JOIN   block b ON b.block_id = s.block_id
 LEFT   JOIN parking_card c ON c.card_code = s.card_code
 WHERE  s.card_code IS NOT NULL
 ORDER  BY da_dang_ky DESC, b.block_no, s.slot_index;
+
+-- ------------------------------------------------- chot bo cuc ma the
+-- Chot cung thay vi de NULL: de NULL thi moi luot quet phai do lai bo cuc va truy
+-- van bang the, va mot bo cuc sai van co xac suat nho cho ra ma trung the khac.
+UPDATE plc_device SET card_layout = 'Binary32Lo', card_word_len = 2;
+
+SELECT COUNT(*) AS so_plc, card_layout, card_word_len FROM plc_device
+GROUP BY card_layout, card_word_len;

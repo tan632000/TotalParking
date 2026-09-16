@@ -310,6 +310,7 @@
     <None Include="Database\21_block_map_view.sql" />
     <None Include="Database\22_car_location_filter.sql" />
     <None Include="Database\23_test_cards.sql" />
+    <None Include="Database\24_led_capacity_from_plc.sql" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
