@@ -118,9 +118,15 @@ namespace TotalParking.Services.Led
                     return;
                 }
 
+                // Suc chua theo zone cho cac bang chi huong. Loi o day khong duoc
+                // lam hong ca vong day: bang tong van phai chay.
+                IDictionary<int, LedCapacity> byZone = null;
+                try { byZone = _repo.GetCapacityByZone(); }
+                catch (Exception) { byZone = null; }
+
                 foreach (var state in States)
                 {
-                    PublishPanel(state, capacity);
+                    PublishPanel(state, capacity, byZone);
                 }
             }
             finally
@@ -129,7 +135,8 @@ namespace TotalParking.Services.Led
             }
         }
 
-        private void PublishPanel(LedPanelState state, LedCapacity capacity)
+        private void PublishPanel(LedPanelState state, LedCapacity capacity,
+                                  IDictionary<int, LedCapacity> byZone)
         {
             var ports = state.Panel.Ports.Where(p => p.IsActive).ToList();
             if (ports.Count == 0) return;
@@ -152,8 +159,19 @@ namespace TotalParking.Services.Led
                 //
                 // Không đẩy `0 0 0` thay thế: đó là "bãi đã đầy", cũng là nói dối,
                 // và còn đuổi tài xế đi khỏi một bãi có thể đang trống.
-                var hub   = capacity.HasData
-                                ? LedFrameBuilder.Build(port, capacity)
+                // Cong ZONES lay so cua CAC ZONE mui ten dan toi, khong phai so
+                // toan bai. Cong TOTAL (bang tong o loi vao) moi lay toan bai.
+                LedCapacity forPort = capacity;
+                if (port.Scope == LedPortScope.Zones)
+                {
+                    forPort = LedPanelRepository.SumZones(byZone, port.ZoneList);
+                    // Khai bao ZONES ma khong tra duoc zone nao -> KHONG roi ve so
+                    // toan bai. Xoa trang con hon chi sai huong.
+                    if (forPort == null) forPort = new LedCapacity();
+                }
+
+                var hub   = forPort.HasData
+                                ? LedFrameBuilder.Build(port, forPort)
                                 : LedHub.Blank(port.PortIndex);
                 var frame = hub.GetCommand();
 

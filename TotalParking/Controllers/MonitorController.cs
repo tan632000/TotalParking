@@ -61,6 +61,8 @@ namespace TotalParking.Controllers
                         lane         = v.Lane,
                         weight_class = v.WeightClass,
                         length_mm    = v.LengthMm,
+                        height_mm    = v.HeightMm,
+                        weight_kg    = v.WeightKg,
                         outcome      = v.Outcome,
                         reason       = v.Reason,
                         zone_id      = v.ZoneId,

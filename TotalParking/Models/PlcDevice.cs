@@ -35,10 +35,22 @@ namespace TotalParking.Models
         public string RequestBit     { get; set; }
         public string RequestBitArea { get; set; }
 
-        // SCADA -> PLC/HMI
+        // ---- HOP DONG CU, DA BO ----
+        // D402 (hang tai 2200/2600) va W75.0 (dung/sai block). Giu lai de khong
+        // pha du lieu cu, nhung KHONG con duoc ghi nua. Thay bang FindAnswerWord:
+        // W75.0 chi tra duoc dung/sai (1 bit), con D1000 tra ve SO BLOCK — tra loi
+        // duoc "xe dang o dau" chu khong chi "co phai o day khong".
         public string PermitBit     { get; set; }
         public string PermitBitArea { get; set; }
         public int    ClassWord     { get; set; }
+
+        // ---- HOP DONG MOI: tim xe ----
+        // Khach quet RFID o mot block BAT KY -> PLC ghi ma the vao day.
+        public int FindCardWord { get; set; }
+        // So word cua ma the o FindCardWord. Ma the 32 bit = 2 word.
+        public int FindCardLen  { get; set; }
+        // SCADA ghi SO BLOCK noi xe dang dau vao day. 0 = khong tim thay.
+        public int FindAnswerWord { get; set; }
 
         public bool IsActive { get; set; }
 

@@ -27,15 +27,15 @@ namespace TotalParking.Services.Led
 
             // X5.X6 — Mechanical L < 5 M
             hub.Position1.Value = capacity.FreeL5m;
-            hub.Position1.Color = ColorFor(capacity.FreeL5m);
+            hub.Position1.Color = ColorFor(capacity.FreeL5m, capacity.TotalL5m);
 
             // X7.X8 — Mechanical L < 4.8 M
             hub.Position2.Value = capacity.FreeL48m;
-            hub.Position2.Color = ColorFor(capacity.FreeL48m);
+            hub.Position2.Color = ColorFor(capacity.FreeL48m, capacity.TotalL48m);
 
             // X9.X10 — Standard
             hub.Position3.Value = capacity.FreeStandard;
-            hub.Position3.Color = ColorFor(capacity.FreeStandard);
+            hub.Position3.Color = ColorFor(capacity.FreeStandard, capacity.TotalStandard);
 
             return hub;
         }
@@ -43,8 +43,17 @@ namespace TotalParking.Services.Led
         // Đỏ khi hết chỗ, vàng khi sắp hết, xanh khi còn thoải mái.
         // Bảng là module P10-RG hai màu và hiện được cả ba màu này — đã xác nhận
         // bằng probe trên phần cứng thật.
-        private static LedColor ColorFor(int free)
+        //
+        // ĐEN khi `total == 0`: bãi KHÔNG CÓ loại khoang này. Màu đen làm số biến
+        // mất khỏi bảng, khác hẳn với số 0 đỏ.
+        //
+        // Phân biệt này quan trọng đúng như phân biệt ở LedPublisher: `0` đỏ nghĩa
+        // là "hết chỗ" — một sự thật về bãi xe, và nó đuổi tài xế đi. Bãi này
+        // không có khoang L < 4.8 M nào, nên hiện `0` đỏ ở bộ đếm đó là báo hết
+        // chỗ cho một loại chỗ chưa từng tồn tại.
+        private static LedColor ColorFor(int free, int total)
         {
+            if (total <= 0)           return LedColor.Black;
             if (free <= 0)            return LedColor.Red;
             if (free <= LowThreshold) return LedColor.Yellow;
             return LedColor.Green;

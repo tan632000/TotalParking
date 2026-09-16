@@ -50,6 +50,8 @@ namespace TotalParking.Controllers
                     poll_enabled = PlcHost.Enabled,
                     poll_running = manager.IsRunning,
                     manual_write_allowed = PlcHost.AllowManualWrite,
+                    // So PLC bi don D1000 con sot luc khoi dong. -1 = dang chay.
+                    startup_cleared = PlcHost.LastStartupCleared,
                     now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     blocks = manager.Connections.Select(c => new
                     {
@@ -65,8 +67,9 @@ namespace TotalParking.Controllers
                         registers = new
                         {
                             card   = "D" + c.Device.CardWord,
-                            @class = "D" + c.Device.ClassWord,
-                            permit = c.Device.PermitBitArea + c.Device.PermitBit,
+                            // Hop dong MOI: D1002 doc ma the tim xe, D1000 tra so block.
+                            find_card   = "D" + c.Device.FindCardWord,
+                            find_answer = "D" + c.Device.FindAnswerWord,
                             request = c.Device.HasRequestBit
                                 ? c.Device.RequestBitArea + c.Device.RequestBit
                                 : null
@@ -121,7 +124,10 @@ namespace TotalParking.Controllers
             }
         }
 
-        // POST /PlcStatus/Write   body: block=1&class=2200&permit=1
+        // POST /PlcStatus/Write   body: block=95&answer=27
+        //
+        // Ghi SO BLOCK noi xe dang dau xuong D1000 cua PLC ung voi `block`.
+        // answer = 0 nghia la khong tim thay xe.
         //
         // Ghi thẳng cặp trả lời xuống PLC, bỏ qua bước tra thẻ. Dùng để nghiệm thu
         // phía HMI trước khi ladder có bit báo lượt quẹt: xác nhận HMI thật sự ẩn
@@ -132,7 +138,7 @@ namespace TotalParking.Controllers
         // plc:enabled — chạy vòng poll là việc thường ngày, còn cưỡng bức thanh ghi
         // thì không.
         [HttpPost]
-        public async Task<ActionResult> Write(int block, int @class, bool permit)
+        public async Task<ActionResult> Write(int block, int answer)
         {
             if (!IsLoopbackClient()) return Forbidden();
 
@@ -142,25 +148,31 @@ namespace TotalParking.Controllers
                     error = "plc:allowManualWrite = false trong Web.config."
                 });
 
-            if (@class != WeightClassWord.Max2200 && @class != WeightClassWord.Max2600)
-                return Json2(400, new { error = "class phai la 2200 hoac 2600" });
+            if (answer < 0 || answer > 65535)
+                return Json2(400, new { error = "answer phai trong 0..65535" });
 
             var conn = Resolve(block);
             if (conn == null) return Json2(404, new { error = "Khong co block " + block });
 
             try
             {
-                await conn.WriteAnswerAsync(@class, permit);
+                // answer = SO BLOCK noi xe dang dau, ghi xuong D1000. 0 = khong tim thay.
+                // Hop dong cu (D402 + W75.0) da bo.
+                await conn.WriteFindAnswerAsync(answer);
                 return Json2(200, new
                 {
+                    // block  : PLC duoc ghi — IP suy tu DB theo cong thuc N+100
+                    // answer : gia tri ghi xuong D1000
                     block_no = block,
+                    endpoint = conn.Device.Endpoint,
                     wrote = new
                     {
-                        // Thứ tự liệt kê đúng thứ tự đã ghi: D402 trước, W75.0 sau.
-                        d402  = @class,
-                        w75_0 = permit ? 1 : 0
+                        register = "D" + conn.Device.FindAnswerWord,
+                        value    = answer
                     },
-                    note = "Da ghi. Kiem tra tren HMI: 2600 phai an pallet tang tren."
+                    note = answer == 0
+                        ? "Da ghi 0 = khong tim thay xe."
+                        : "Da ghi so block " + answer + ". Kiem tra HMI cua block " + block + "."
                 });
             }
             catch (Exception ex)

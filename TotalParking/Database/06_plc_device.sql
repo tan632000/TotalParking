@@ -83,35 +83,7 @@ CREATE TABLE IF NOT EXISTS plc_request (
     CONSTRAINT fk_plc_request_block FOREIGN KEY (block_id) REFERENCES block (block_id)
 ) ENGINE = InnoDB;
 
--- ------------------------------------------------------------- seed thi diem
--- Dai IP that lay tu docs/LUMI IP Range CL1.xlsx:
---
---   192.169.1.2   ~ .49    May tinh tram (.4), Camera (.2), TV (.13)
---   192.169.1.50  ~ .69    Bang LED
---   192.169.1.70  ~ .79    PGS: CCU + ZCU 1..5
---   192.169.1.100 ~ .254   PLC   ->  Block N = 192.169.1.(N + 100)
---
--- Quy tac N+100 la CO HE THONG, khong phai gan tay tung con: sinh thang tu
--- block_no de khong bao gio lech giua bang block va bang PLC.
---
--- LUU Y: 192.169.1.0/24 KHONG phai dai private. Chi 192.168.0.0/16 moi private;
--- 192.169.x.x thuoc khong gian dia chi cong cong, dang trung voi IP that cua
--- mot to chuc khac tren Internet. Khong gay loi trong mang kin, nhung neu may
--- tram co duong ra Internet thi mot ngay nao do se co dia chi khong the truy
--- cap duoc. Nen doi sang 192.168.x.x hoac 10.x.x.x luc con de.
---
--- plc_node de = block_no: DE NGHI, chua xac nhan voi ben lap trinh PLC.
--- Bat tay FINS/TCP tra ve node duoc cap phat va client ghi de lai, nen sai o
--- day khong lam hong ket noi.
-INSERT INTO plc_device (block_id, ip_address, port, plc_node, pc_node)
-SELECT b.block_id,
-       CONCAT('192.169.1.', b.block_no + 100),
-       9600,
-       LEAST(b.block_no, 254),
-       1
-FROM   block b
-WHERE  b.kind = 'Mechanical'
-  AND  b.block_no BETWEEN 1 AND 154   -- .101 ~ .254
-ON DUPLICATE KEY UPDATE
-    ip_address = CONCAT('192.169.1.', b.block_no + 100),
-    port = 9600;
+-- ------------------------------------------------------------------ seed
+-- KHONG seed o day. Dai IP trong docs/LUMI_IP_Range_CL1.xlsx (192.169.1.N+100)
+-- da duoc do va XAC NHAN LA TRONG: 155 dia chi, khong mot thiet bi nao tra loi.
+-- PLC that nam o 192.168.250.1 ~ .7 -- xem 13_plc_real_range.sql.

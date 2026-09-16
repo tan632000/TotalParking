@@ -71,6 +71,37 @@ namespace TotalParking.Services.Plc
             }
         }
 
+        // Quét một lượt dọn câu trả lời còn sót ở D1000 trên mọi PLC.
+        //
+        // Gọi một lần lúc khởi động. Dùng ĐÚNG hàng rào throttle của vòng poll để
+        // không mở ồ ạt kết nối — 112 PLC cùng lúc sẽ làm cạn node như đã từng
+        // xảy ra khi dò thủ công.
+        public async Task<int> ClearStaleAnswersAsync()
+        {
+            int cleared = 0;
+            var tasks = _connections.Select(async c =>
+            {
+                await _throttle.WaitAsync().ConfigureAwait(false);
+                try
+                {
+                    if (await c.ClearStaleAnswerAsync().ConfigureAwait(false))
+                        Interlocked.Increment(ref cleared);
+                }
+                catch (Exception)
+                {
+                    // ClearStaleAnswerAsync đã tự ghi nhật ký. Một PLC hỏng không
+                    // được làm hỏng cả lượt dọn.
+                }
+                finally
+                {
+                    _throttle.Release();
+                }
+            }).ToArray();
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+            return cleared;
+        }
+
         public void StartLoop()
         {
             if (_loop != null || _connections.Count == 0) return;

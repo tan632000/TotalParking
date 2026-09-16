@@ -27,7 +27,9 @@ namespace TotalParking.Services.Plc
         private const int ReconnectMaxMs  = 30000;
 
         private readonly SemaphoreSlim _gate = new SemaphoreSlim(1, 1);
-        private readonly CardScanService      _scans    = new CardScanService();
+        // CardScanService thuoc hop dong cu (quyet dinh permit/hang tai). Luong moi
+        // chi can tra "xe dang o block nao", nen dung CarLocatorService.
+        private readonly CarLocatorService    _locator  = new CarLocatorService();
         private readonly PlcRequestRepository _requests = new PlcRequestRepository();
 
         private OmronFinsClient _client;
@@ -39,6 +41,51 @@ namespace TotalParking.Services.Plc
         // chưa đúng thì mã giải ra là null ở mọi vòng, và so sánh null với null
         // sẽ không chặn được gì — hệ quả là ghi xuống PLC mỗi 500ms.
         private string _lastSeenRaw;
+
+        // Thoi diem ghi D1000 mot gia tri KHAC 0. null = dang khong co cau tra loi
+        // nao cho. Dung de tu dat lai ve 0 sau ResetAfter.
+        private DateTime? _answerAtUtc;
+
+        // Sau bao lau thi xoa cau tra loi o D1000 ve 0.
+        //
+        // Cau tra loi tim xe la thong tin NHAT THOI: tai xe doc so block roi di.
+        // De nguyen thi lan quet sau cua nguoi khac se thay so block cua nguoi
+        // truoc neu vi ly do nao do SCADA chua kip ghi de.
+        // Co xoa D1002 sau khi da tra loi khong.
+        //
+        // Day la cach TIEU THU YEU CAU: doc xong thi xoa, de luot quet sau duoc
+        // nhan ra la yeu cau MOI chu khong phai gia tri con sot.
+        //
+        // Khong co no thi: khach quet lai DUNG the do se khong duoc tra loi, vi
+        // D1002 khong doi va he thong bo qua de tranh ghi de moi nhip. Truoc khi
+        // co auto-reset D1000 thi dieu do vo hai (dap an nam mai); gio thi thanh
+        // han che that.
+        //
+        // LUU Y: day la lan dau SCADA GHI vao D1002 — truoc gio chi doc. Tat duoc
+        // bang plc:clearFindCardAfterAnswer = false neu ladder khong chap nhan.
+        private static bool ClearFindCardAfterAnswer
+        {
+            get
+            {
+                string v = System.Configuration.ConfigurationManager
+                               .AppSettings["plc:clearFindCardAfterAnswer"];
+                bool b;
+                return !bool.TryParse(v, out b) || b;   // mac dinh BAT
+            }
+        }
+
+        private static TimeSpan ResetAfter
+        {
+            get
+            {
+                int ms;
+                if (!int.TryParse(
+                        System.Configuration.ConfigurationManager.AppSettings["plc:findAnswerResetMs"],
+                        out ms) || ms < 1000)
+                    ms = 30000;
+                return TimeSpan.FromMilliseconds(ms);
+            }
+        }
 
         public PlcDevice Device { get; private set; }
 
@@ -124,10 +171,9 @@ namespace TotalParking.Services.Plc
             }
         }
 
-        // Ghi thẳng cặp trả lời xuống PLC, bỏ qua bước tra thẻ. Giữ nguyên thứ tự
-        // D402 trước, W75.0 sau — nếu thứ tự này sai thì lúc nghiệm thu cũng phải
-        // lộ ra, chứ không phải chỉ đúng ở đường chạy thật.
-        public async Task WriteAnswerAsync(int classValue, bool permit)
+        // Ghi thẳng số block xuống D1000, bỏ qua bước tra thẻ. Dùng để nghiệm thu
+        // tại hiện trường: xác nhận HMI của block nào phản ứng.
+        public async Task WriteFindAnswerAsync(int blockNo)
         {
             await _gate.WaitAsync().ConfigureAwait(false);
             try
@@ -135,8 +181,103 @@ namespace TotalParking.Services.Plc
                 if (!await EnsureConnectedAsync().ConfigureAwait(false))
                     throw new InvalidOperationException("Chua ket noi duoc toi PLC: " + LastError);
 
-                await WriteAnswerCoreAsync(classValue, permit).ConfigureAwait(false);
+                await WriteFindAnswerCoreAsync(blockNo).ConfigureAwait(false);
                 MarkOk();
+            }
+            finally
+            {
+                _gate.Release();
+            }
+        }
+
+        // Xoá D1002 về 0 sau khi đã trả lời, để lượt quẹt sau được nhận là mới.
+        //
+        // Đặt _lastSeenRaw = null luôn: giá trị cũ không còn ý nghĩa so sánh khi
+        // thanh ghi đã bị xoá. Nếu giữ lại thì lượt quẹt cùng thẻ ngay sau đó vẫn
+        // bị bỏ qua — đúng cái lỗi mà việc xoá này sinh ra để chữa.
+        private async Task ClearFindCardAsync()
+        {
+            int len = Device.FindCardLen > 0 ? Device.FindCardLen : 2;
+            var zeros = new ushort[len];
+
+            await _client.WriteWordsAsync(
+                PlcMemoryArea.DM, (ushort)Device.FindCardWord, zeros, Device.TimeoutMs)
+                .ConfigureAwait(false);
+
+            _lastSeenRaw = null;
+            PlcAuditLog.Write(Device.IpAddress, Device.BlockNo,
+                              "D" + Device.FindCardWord, 0, true,
+                              "xoa yeu cau sau khi tra loi (" + len + " word)");
+        }
+
+        // Xoá D1000 về 0 khi câu trả lời đã quá hạn.
+        //
+        // Ghi chú cũ ở đây nói SCADA KHÔNG tự xoá D1000 vì ladder mới là bên quyết
+        // định hiển thị bao lâu. Yêu cầu vận hành đã chốt khác: tự xoá sau 30 giây.
+        // Lý do chấp nhận được — câu trả lời tìm xe là thông tin nhất thời, để nó
+        // nằm mãi thì lượt quẹt sau của người khác có thể đọc phải số block của
+        // người trước nếu SCADA chưa kịp ghi đè.
+        private async Task ResetAnswerIfDueAsync()
+        {
+            if (!_answerAtUtc.HasValue) return;
+            if (DateTime.UtcNow - _answerAtUtc.Value < ResetAfter) return;
+
+            try
+            {
+                await WriteFindAnswerCoreAsync(CarLocatorService.NotFound).ConfigureAwait(false);
+                // WriteFindAnswerCoreAsync đã tự đặt _answerAtUtc = null vì ghi 0.
+            }
+            catch (Exception ex)
+            {
+                // Xoá không được thì thôi, lượt poll sau thử lại. KHÔNG xoá
+                // _answerAtUtc: giữ nguyên để còn thử tiếp, nếu không thì câu trả
+                // lời cũ nằm lại vĩnh viễn mà không ai biết.
+                PlcAuditLog.Error(Device.IpAddress, Device.BlockNo,
+                                  "XOA D" + Device.FindAnswerWord, ex.Message);
+            }
+        }
+
+        // Dọn câu trả lời còn sót lúc khởi động.
+        //
+        // _answerAtUtc nằm trong bộ nhớ, nên nếu ứng dụng khởi động lại (build,
+        // IIS recycle, mất điện) trong khoảng 30 giây chờ reset thì hẹn giờ mất
+        // hẳn — và D1000 giữ giá trị cũ vĩnh viễn cho tới lượt quẹt tiếp theo ở
+        // chính block đó. Tài xế sau đọc phải số block của người trước.
+        //
+        // Giả định: khởi động lại thì không có lượt tìm xe nào đang dở. Hợp lý,
+        // vì khởi động lại vốn đã làm mất mọi trạng thái đang xử lý.
+        //
+        // ĐỌC TRƯỚC, chỉ ghi khi khác 0: 112 PLC mà ghi mù cả loạt là 112 lệnh ghi
+        // thừa xuống thiết bị mỗi lần app recycle.
+        public async Task<bool> ClearStaleAnswerAsync()
+        {
+            await _gate.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                if (!await EnsureConnectedAsync().ConfigureAwait(false)) return false;
+
+                var w = await _client.ReadWordsAsync(
+                    PlcMemoryArea.DM, (ushort)Device.FindAnswerWord, 1, Device.TimeoutMs)
+                    .ConfigureAwait(false);
+
+                if (w == null || w.Length == 0 || w[0] == 0) return false;
+
+                await _client.WriteWordsAsync(
+                    PlcMemoryArea.DM, (ushort)Device.FindAnswerWord,
+                    new ushort[] { 0 }, Device.TimeoutMs).ConfigureAwait(false);
+
+                _answerAtUtc = null;
+                MarkOk();
+                PlcAuditLog.Write(Device.IpAddress, Device.BlockNo,
+                                  "D" + Device.FindAnswerWord, 0, true,
+                                  "don luc khoi dong, gia tri cu = " + w[0]);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                PlcAuditLog.Error(Device.IpAddress, Device.BlockNo,
+                                  "DON D" + Device.FindAnswerWord, ex.Message);
+                return false;
             }
             finally
             {
@@ -165,13 +306,29 @@ namespace TotalParking.Services.Plc
             }
             catch (Exception ex)
             {
+                PlcAuditLog.Error(Device.IpAddress, Device.BlockNo, "KET NOI", ex.Message);
                 Fail(ex.Message, dropConnection: true);
                 return false;
             }
         }
 
+        // Một nhịp trao đổi: đọc D1002, tra xe, ghi số block xuống D1000.
+        //
+        // HỢP ĐỒNG MỚI (khách xác nhận), thay cho D100 / D402 / W75.0:
+        //   D1002  đọc   mã thẻ khách vừa quẹt để TÌM XE
+        //   D1000  ghi   số block nơi xe đó đang thực sự đỗ, 0 = không tìm thấy
+        //
+        // Nguồn tra cứu là plc_slot_state — chính các PLC đã báo ô nào giữ thẻ nào
+        // khi gửi xe thành công. Không dùng parking_session: bảng đó ghi ý định của
+        // SCADA, còn thanh ghi ô ghi sự thật của thiết bị.
         private async Task ExchangeAsync()
         {
+            // Bước 0 — câu trả lời cũ đã hết hạn thì xoá về 0.
+            //
+            // Làm TRƯỚC mọi thứ khác, và không phụ thuộc D1002 còn giữ thẻ hay
+            // không: đây là hẹn giờ tính từ lúc GHI, đúng như yêu cầu vận hành.
+            await ResetAnswerIfDueAsync().ConfigureAwait(false);
+
             // Bước 1 — có lượt quẹt mới không?
             if (Device.HasRequestBit)
             {
@@ -183,38 +340,49 @@ namespace TotalParking.Services.Plc
                 if (!pending) return;
             }
 
-            // Bước 2 — đọc mã thẻ. Chưa chốt bố cục thì đọc dư để còn dò.
-            int wordCount = Layout.HasValue
-                ? CardCodeDecoder.WordCountFor(Layout.Value)
-                : CardCodeDecoder.ProbeWordCount;
+            // Bước 2 — đọc mã thẻ ở D1002.
+            int wordCount = Device.FindCardLen > 0 ? Device.FindCardLen : 2;
 
             ushort[] words = await _client.ReadWordsAsync(
-                PlcMemoryArea.DM, (ushort)Device.CardWord, (ushort)wordCount, Device.TimeoutMs)
+                PlcMemoryArea.DM, (ushort)Device.FindCardWord, (ushort)wordCount, Device.TimeoutMs)
                 .ConfigureAwait(false);
 
             MarkOk();
 
             if (CardCodeDecoder.IsEmpty(words, wordCount))
             {
-                // Chưa có thẻ nào được quẹt. Ở chế độ có bit yêu cầu thì đây là
-                // bất thường (bit bật mà không có dữ liệu) nhưng vẫn không làm gì
-                // hơn được — để nguyên cho lượt sau.
+                // Không có ai đang tìm xe ở block này.
+                //
+                // Không xoá D1000 ở đây. Việc xoá do hẹn giờ ở Bước 0 lo — tính
+                // từ lúc GHI, không phải từ lúc D1002 trống. Xoá ngay khi D1002
+                // trống sẽ cắt mất câu trả lời trước mắt người đang đọc nó, vì
+                // ladder có thể xoá D1002 ngay sau khi SCADA vừa trả lời.
+                _lastSeenRaw = null;
                 return;
             }
 
             string rawHex   = CardCodeDecoder.ToRawHex(words);
             string cardCode = Decode(words);
 
-            // Không có bit yêu cầu: rơi về so sánh giá trị. Hạn chế đã biết —
-            // cùng một khách quẹt lại chính thẻ đó thì D100 không đổi và lượt thứ
-            // hai bị bỏ qua. Đây là lý do nên có bit yêu cầu ở ladder.
+            // Chi ghi nhat ky khi D1002 DOI gia tri.
+            //
+            // Ban dau ghi moi lan doc thay khac 0 -> mot the nam nguyen trong thanh
+            // ghi sinh ra 2 dong/giay, va 30 dong dau tien cua nhat ky deu la cung
+            // mot lan quet. Da thay dung hien tuong do luc test block 96.
+            if (rawHex != _lastSeenRaw)
+            {
+                PlcAuditLog.Read(Device.IpAddress, Device.BlockNo,
+                                 "D" + Device.FindCardWord, rawHex,
+                                 "ma the: " + (cardCode ?? "khong giai ma duoc"));
+            }
+
+            // Không có bit yêu cầu: rơi về so sánh giá trị, nếu không thì mỗi nhịp
+            // poll lại ghi đè D1000 cùng một giá trị. Hạn chế đã biết — cùng một
+            // khách quẹt lại chính thẻ đó thì D1002 không đổi và lượt thứ hai bị bỏ
+            // qua. Đây là lý do nên có bit yêu cầu ở ladder.
             if (!Device.HasRequestBit)
             {
                 if (rawHex == _lastSeenRaw) return;
-                // Lần đọc đầu sau khi kết nối luôn được coi là lượt quẹt mới, kể cả
-                // khi D100 chỉ đang giữ giá trị cũ từ trước lúc SCADA khởi động.
-                // Không tránh được nếu không có bit yêu cầu: ở chế độ này không có
-                // cách nào phân biệt "vừa quẹt" với "còn sót lại".
                 _lastSeenRaw = rawHex;
             }
 
@@ -222,65 +390,85 @@ namespace TotalParking.Services.Plc
             LastScanUtc = DateTime.UtcNow;
             LastCard    = cardCode;
 
-            // Bước 3 — tra DB.
-            CardScanDecision decision = cardCode == null
-                ? CardScanDecision.Deny(RejectReason.UnknownCode)
-                : _scans.Evaluate(Device.BlockId, cardCode);
-
-            // Bước 4 và 5 nằm trong try/finally để lượt quẹt LUÔN được ghi nhật ký,
-            // kể cả khi lệnh ghi xuống PLC thất bại. Ghi log chỉ ở nhánh thành công
-            // là bỏ mất đúng những lượt cần xem nhất: đã đọc được thẻ nhưng không
-            // trả lời được HMI.
+            // Bước 3 — tra xem xe đang đỗ ở block nào.
             //
-            // Dấu hiệu phân biệt trong bảng: answered_at IS NULL nghĩa là SCADA đọc
-            // được thẻ mà chưa kịp/không thể trả lời.
+            // Không tìm thấy trả về 0. Quan trọng là KHÔNG để nguyên giá trị cũ:
+            // khách quẹt thẻ lạ sẽ thấy số block của người trước đó và đi tới block
+            // không có xe mình.
+            int blockNo = cardCode == null
+                ? CarLocatorService.NotFound
+                : _locator.FindBlockNo(cardCode);
+
+            // Bước 4 và 5 trong try/finally để lượt quẹt LUÔN được ghi nhật ký, kể
+            // cả khi lệnh ghi xuống PLC thất bại. Ghi log chỉ ở nhánh thành công là
+            // bỏ mất đúng những lượt cần xem nhất: đã đọc được thẻ mà không trả lời
+            // được HMI. Dấu hiệu trong bảng: answered_at IS NULL.
             DateTime? answeredAt = null;
             try
             {
-                // Bước 4 — trả lời.
-                await WriteAnswerCoreAsync(decision.WeightClassValue, decision.Permit)
-                    .ConfigureAwait(false);
+                // Bước 4 — trả lời: ghi số block xuống D1000.
+                await WriteFindAnswerCoreAsync(blockNo).ConfigureAwait(false);
                 answeredAt = DateTime.Now;
 
-                // Bước 5 — tắt cờ yêu cầu. Làm SAU khi đã trả lời xong: nếu SCADA
-                // chết giữa chừng thì cờ vẫn bật và lượt quẹt này được xử lý lại từ
-                // đầu, thay vì mất hẳn.
+                // Bước 5 — tiêu thụ yêu cầu. Làm SAU khi đã trả lời: nếu SCADA chết
+                // giữa chừng thì yêu cầu vẫn còn và được xử lý lại từ đầu, thay vì
+                // mất hẳn.
                 if (Device.HasRequestBit)
                 {
                     await _client.SetBitStateAsync(
                         ParseArea(Device.RequestBitArea), Device.RequestBit,
                         BitState.Off, Device.TimeoutMs).ConfigureAwait(false);
                 }
+                else if (ClearFindCardAfterAnswer)
+                {
+                    // Không có bit báo lượt quẹt -> xoá chính D1002.
+                    await ClearFindCardAsync().ConfigureAwait(false);
+                }
 
                 MarkOk();
             }
             finally
             {
-                SafeLog(rawHex, cardCode, receivedAt, decision, answeredAt);
+                SafeLogFind(rawHex, cardCode, receivedAt, blockNo, answeredAt);
             }
         }
 
-        // THỨ TỰ HAI LỆNH GHI LÀ BẮT BUỘC: D402 trước, W75.0 sau.
+        // Ghi SO BLOCK noi xe dang dau xuong D1000.
         //
-        // W75.0 = 1 là tín hiệu "được phép đi tiếp". Nếu HMI thấy quyền trước khi
-        // hạng tải kịp tới nơi, nó đọc phải giá trị D402 của khách trước. Với khách
-        // 2600 mà D402 còn 2200 thì HMI mở cả pallet tầng trên, và tầng trên khả
-        // năng cao sập.
+        // Thay cho cap D402 + W75.0 cua hop dong cu. Khac biet ve ban chat: W75.0
+        // chi tra duoc dung/sai (1 bit), con day tra ve so block — tra loi duoc
+        // cau "xe dang o dau" chu khong chi "co phai o day khong".
         //
-        // Gom vào một hàm để đường chạy thật và đường nghiệm thu thủ công dùng
-        // chung đúng một thứ tự — nếu tách đôi thì chỉ cần một bên sửa là hai bên
-        // lệch nhau mà không ai biết.
-        private async Task WriteAnswerCoreAsync(int classValue, bool permit)
+        // Mot lenh ghi duy nhat nen khong con van de thu tu nhu D402-truoc-W75.0.
+        private async Task WriteFindAnswerCoreAsync(int blockNo)
         {
-            await _client.WriteWordsAsync(
-                PlcMemoryArea.DM, (ushort)Device.ClassWord,
-                new[] { (ushort)classValue }, Device.TimeoutMs)
-                .ConfigureAwait(false);
+            if (blockNo < 0) blockNo = 0;
+            if (blockNo > ushort.MaxValue) blockNo = ushort.MaxValue;
 
-            await _client.SetBitStateAsync(
-                ParseArea(Device.PermitBitArea), Device.PermitBit,
-                permit ? BitState.On : BitState.Off, Device.TimeoutMs)
-                .ConfigureAwait(false);
+            string reg = "D" + Device.FindAnswerWord;
+            try
+            {
+                await _client.WriteWordsAsync(
+                    PlcMemoryArea.DM, (ushort)Device.FindAnswerWord,
+                    new[] { (ushort)blockNo }, Device.TimeoutMs)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                // Ghi that bai cung phai vao nhat ky: mot lenh ghi khong toi noi
+                // la thu can biet nhat khi truy vet, va no khong de lai dau vet
+                // nao khac.
+                PlcAuditLog.Write(Device.IpAddress, Device.BlockNo, reg, blockNo, false, ex.Message);
+                throw;
+            }
+
+            // IP lay tu Device.IpAddress — DIA CHI THAT da gui goi tin toi, khong
+            // phai suy lai tu block_no.
+            PlcAuditLog.Write(Device.IpAddress, Device.BlockNo, reg, blockNo, true);
+
+            // Hen gio xoa: chi khi vua ghi mot gia tri KHAC 0. Ghi 0 thi khong hen
+            // lai, neu khong se thanh vong xoa-roi-hen-xoa vo tan.
+            _answerAtUtc = blockNo != 0 ? DateTime.UtcNow : (DateTime?)null;
         }
 
         private string Decode(ushort[] words)
@@ -310,22 +498,52 @@ namespace TotalParking.Services.Plc
                 }
                 catch
                 {
-                    // Không tra được thẻ thì cũng không dò được bố cục. Bỏ qua,
-                    // lượt sau thử lại.
-                    return null;
+                    // Không tra được DB thì cũng không dò được bố cục. Thôi dò,
+                    // rơi xuống nhánh mặc định bên dưới.
+                    break;
                 }
             }
-            return null;
+
+            // Không bố cục nào cho ra thẻ ĐÃ ĐĂNG KÝ -> vẫn trả về mã theo bố cục
+            // mặc định, KHÔNG trả null.
+            //
+            // Sửa một lỗi thật: trước đây nhánh này trả null, nên thẻ test ngoài
+            // hiện trường (không có trong parking_card) bị coi là "không giải mã
+            // được" và D1000 luôn nhận 0 — trong khi vòng quét ô đọc CÙNG giá trị
+            // đó lại giải mã ra bình thường. Hai bộ giải mã cho hai kết quả khác
+            // nhau trên cùng một dãy byte là thứ không được phép tồn tại.
+            //
+            // Layout vẫn KHÔNG được chốt ở đây: chốt bố cục dựa trên một mã chưa
+            // xác nhận thì một bố cục sai vẫn có xác suất cho ra mã trùng thẻ người
+            // khác. Việc lọc rác đã chuyển sang CarLocatorService, nơi dùng quy tắc
+            // "một mã thẻ chỉ nằm ở đúng một block".
+            return CardCodeDecoder.TryDecode(words, CardCodeLayout.Binary32Lo);
         }
 
         // Ghi nhật ký không được phép làm hỏng vòng trao đổi: HMI đã nhận câu trả
         // lời rồi, mất một dòng log không đáng để ném lỗi và kéo theo reconnect.
-        private void SafeLog(string rawHex, string cardCode, DateTime receivedAt,
-                             CardScanDecision decision, DateTime? answeredAt)
+        // Ghi nhat ky mot luot TIM XE.
+        //
+        // Dung lai bang plc_request nhung y nghia hai cot doi theo hop dong moi:
+        //   result_permit = tim thay xe hay khong
+        //   result_class  = SO BLOCK tra ve (khong con la 2200/2600)
+        // Doi y nghia cot ma khong doi ten la mot mon no ky thuat co y: doi ten cot
+        // can DDL va lam hong du lieu cu, trong khi bang nay chi de truy vet.
+        private void SafeLogFind(string rawHex, string cardCode, DateTime receivedAt,
+                                 int blockNo, DateTime? answeredAt)
         {
             try
             {
-                _requests.Log(Device.BlockId, rawHex, cardCode, receivedAt, decision, answeredAt);
+                var d = new CardScanDecision
+                {
+                    Permit           = blockNo != CarLocatorService.NotFound,
+                    WeightClassValue = blockNo,
+                    IsRetrieval      = true
+                };
+                if (blockNo == CarLocatorService.NotFound)
+                    d.RejectReason = RejectReason.InvalidCard;
+
+                _requests.Log(Device.BlockId, rawHex, cardCode, receivedAt, d, answeredAt);
             }
             catch { }
         }

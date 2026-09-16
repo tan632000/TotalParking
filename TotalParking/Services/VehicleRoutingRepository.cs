@@ -81,7 +81,7 @@ namespace TotalParking.Services
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText =
-                    "SELECT event_id, received_at, make, model, length_mm, weight_kg, " +
+                    "SELECT event_id, received_at, make, model, length_mm, height_mm, weight_kg, " +
                     "       camera_category, lane, weight_class, outcome, reason, " +
                     "       zone_id, zone_code " +
                     "FROM   v_vehicle_routing " +
@@ -100,6 +100,7 @@ namespace TotalParking.Services
                             Make        = Str(r, "make"),
                             Model       = Str(r, "model"),
                             LengthMm    = NullableInt(r, "length_mm"),
+                            HeightMm    = NullableInt(r, "height_mm"),
                             WeightKg    = NullableInt(r, "weight_kg"),
                             Category    = Str(r, "camera_category"),
                             Lane        = Str(r, "lane"),
@@ -148,6 +149,7 @@ namespace TotalParking.Services
         public string   Make        { get; set; }
         public string   Model       { get; set; }
         public int?     LengthMm    { get; set; }
+        public int?     HeightMm    { get; set; }
         public int?     WeightKg    { get; set; }
         public string   Category    { get; set; }
         public string   Lane        { get; set; }

@@ -10,20 +10,14 @@
                 <h1 class="text-2xl font-bold tracking-tight">Điều hướng giao thông & Phân loại xe (AI-VDS)</h1>
                 <p class="text-slate-400 text-sm mt-1">Giám sát xe vào cổng, kích thước đo quét bằng camera AI-VDS và cân bằng tải các block đỗ.</p>
             </div>
-            <div class="flex items-center gap-2 px-3 py-1.5 rounded border text-xs font-mono border-amber-700/50 bg-amber-950/40 text-amber-300 animate-pulse self-start md:self-auto">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi-off"><path d="M12 20h.01"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path><path d="M5 12.859a10 10 0 0 1 5.17-2.69"></path><path d="M19 12.859a10 10 0 0 0-2.007-1.523"></path><path d="M2 8.82a15 15 0 0 1 4.177-2.643"></path><path d="M22 8.82a15 15 0 0 0-11.288-3.764"></path><path d="m2 2 20 20"></path></svg>
-                AI-VDS – Fallback Mode
-            </div>
+            <!-- Huy hieu trang thai camera. Ban cu ghi cung "AI-VDS - Fallback Mode"
+                 kem animate-pulse: mot bao dong vinh vien cho su co khong co that.
+                 Gio chay theo /DeviceStatus/Summary (xem setCameraBanner). -->
+            <div id="ai-badge" class="hidden flex items-center gap-2 px-3 py-1.5 rounded border text-xs font-mono self-start md:self-auto"></div>
         </div>
 
-        <!-- Fallback Mode Warning Alert -->
-        <div class="flex items-start gap-3 p-4 rounded-lg border border-amber-800/60 bg-amber-950/20">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert text-amber-400 mt-0.5 shrink-0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
-            <div>
-                <div class="text-amber-300 text-sm font-semibold">AI-VDS đang hoạt động ở chế độ Fallback (Dự phòng)</div>
-                <p class="text-amber-500 text-xs mt-1 font-mono">Mất tín hiệu heartbeat từ cổng đo quét chính. Dữ liệu kích thước đang được quét thủ công hoặc sử dụng cảm biến dự phòng ZCU tại cổng vào.</p>
-            </div>
-        </div>
+        <!-- Chi hien khi camera that su im tieng hoac chua doc duoc CSDL. -->
+        <div id="ai-alert" class="hidden items-start gap-3 p-4 rounded-lg border"></div>
 
         <!-- Main Layout Grid -->
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -34,78 +28,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-navigation text-blue-500"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
                         Mật độ & Cân bằng tải Zone
                     </h3>
-                    <div class="space-y-4">
-                        <!-- Zone A -->
-                        <div class="bg-slate-800/30 rounded-lg p-3.5 border border-slate-700/30">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <div class="text-slate-200 text-xs font-semibold">Zone A – Hầm B1</div>
-                                    <div class="text-slate-500 text-[10px] mt-0.5 font-mono">11 khay trống (23/34 đỗ)</div>
-                                </div>
-                                <span class="text-xs font-mono font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">68%</span>
-                            </div>
-                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
-                                <div class="h-full bg-amber-500 rounded-full" style="width: 68%;"></div>
-                            </div>
-                            <div class="flex justify-between text-[10px] font-mono text-slate-400">
-                                <span>Khay chứa SUV: 9 khay</span>
-                                <span>Mức tải: Trung bình</span>
-                            </div>
-                        </div>
-
-                        <!-- Zone B -->
-                        <div class="bg-slate-800/30 rounded-lg p-3.5 border border-slate-700/30">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <div class="text-slate-200 text-xs font-semibold">Zone B – Hầm B2</div>
-                                    <div class="text-slate-500 text-[10px] mt-0.5 font-mono">18 khay trống (20/38 đỗ)</div>
-                                </div>
-                                <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">53%</span>
-                            </div>
-                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
-                                <div class="h-full bg-emerald-500 rounded-full" style="width: 53%;"></div>
-                            </div>
-                            <div class="flex justify-between text-[10px] font-mono text-slate-400">
-                                <span>Khay chứa SUV: 8 khay</span>
-                                <span>Mức tải: Bình thường</span>
-                            </div>
-                        </div>
-
-                        <!-- Zone C -->
-                        <div class="bg-slate-800/30 rounded-lg p-3.5 border border-slate-700/30">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <div class="text-slate-200 text-xs font-semibold">Zone C – Hầm B3</div>
-                                    <div class="text-slate-500 text-[10px] mt-0.5 font-mono">30 khay trống (10/40 đỗ)</div>
-                                </div>
-                                <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">25%</span>
-                            </div>
-                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
-                                <div class="h-full bg-emerald-500 rounded-full" style="width: 25%;"></div>
-                            </div>
-                            <div class="flex justify-between text-[10px] font-mono text-slate-400">
-                                <span>Khay chứa SUV: 4 khay</span>
-                                <span>Mức tải: Rảnh rỗi</span>
-                            </div>
-                        </div>
-
-                        <!-- Zone D -->
-                        <div class="bg-slate-800/30 rounded-lg p-3.5 border border-slate-700/30">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <div class="text-slate-200 text-xs font-semibold">Zone D – Tầng 1</div>
-                                    <div class="text-slate-500 text-[10px] mt-0.5 font-mono">34 khay trống (10/44 đỗ)</div>
-                                </div>
-                                <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">23%</span>
-                            </div>
-                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
-                                <div class="h-full bg-emerald-500 rounded-full" style="width: 23%;"></div>
-                            </div>
-                            <div class="flex justify-between text-[10px] font-mono text-slate-400">
-                                <span>Khay chứa SUV: 4 khay</span>
-                                <span>Mức tải: Rảnh rỗi</span>
-                            </div>
-                        </div>
+                    <div id="zone-list" class="space-y-4">
+                        <div class="text-center text-slate-600 text-[11px] font-mono py-6">Đang tải...</div>
                     </div>
                 </div>
 
@@ -116,66 +40,43 @@
                         Điều phối tín hiệu &amp; Cân bằng tải
                     </h3>
                     <div class="space-y-4 text-xs">
-                        <!-- Logic Cân bằng tải -->
+                        <!-- Cân bằng tải: tính từ mật độ zone THẬT.
+                             Bản cũ ghi cứng "Zone A (68%) vs Zone C (25%) = 43%" —
+                             Zone A và C không tồn tại, bãi thật đánh số 1-6. -->
                         <div class="p-3 bg-slate-950/60 rounded border border-slate-800">
                             <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-slate-300 font-bold">Logic Cân bằng tải tự động</span>
-                                <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">ACTIVE</span>
+                                <span class="text-slate-300 font-bold">Logic cân bằng tải tự động</span>
+                                <span id="lb-state" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-700/20 border border-slate-600/30 text-slate-400 font-bold">—</span>
                             </div>
                             <div class="text-[11px] text-slate-400 font-mono">
                                 Ngưỡng lệch mật độ kích hoạt: <span class="text-blue-400 font-bold">&gt;20%</span>
                             </div>
-                            <div class="text-[11px] text-slate-400 font-mono mt-1">
-                                Lệch tải hiện tại: Zone A (68%) vs Zone C (25%) = <span class="text-amber-400 font-bold">43%</span>
-                            </div>
-                            <div class="text-[11px] text-emerald-400 font-mono mt-1 flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><path d="M20 6 9 17l-5-5"></path></svg>
-                                Đang tự động hướng xe sang Zone C (mật độ thấp nhất)
-                            </div>
+                            <div id="lb-detail" class="text-[11px] text-slate-500 font-mono mt-1">đang tải...</div>
                         </div>
 
-                        <!-- Màn hình 55" Trạm phân loại -->
-                        <div class="p-3 bg-slate-950/60 rounded border border-slate-800">
+                        <!-- Màn hình 55": KHÔNG có nguồn dữ liệu nào. Bản cũ hiện
+                             "Màn hình: Hoạt động" kèm loại thẻ và vị trí khuyên
+                             dùng cụ thể, và một nút chỉ gọi alert(). -->
+                        <div class="p-3 bg-slate-950/60 rounded border border-slate-800 opacity-70">
                             <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-slate-300 font-bold">Màn hình 55" trạm phân loại</span>
-                                <span class="text-[10px] font-mono text-slate-500">Màn hình: Hoạt động</span>
+                                <span class="text-slate-400 font-bold">Màn hình 55" trạm phân loại</span>
+                                <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-700/20 border border-slate-600/30 text-slate-500 font-bold">CHƯA ĐẤU NỐI</span>
                             </div>
-                            <div class="p-2.5 bg-slate-900 rounded border border-slate-850 font-mono text-[11px] space-y-1">
-                                <div class="flex justify-between text-slate-200">
-                                    <span>Trạng thái hiển thị:</span>
-                                    <span class="text-blue-400 font-bold">HIỂN THỊ CHỈ ĐƯỜNG</span>
-                                </div>
-                                <div class="flex justify-between text-slate-400">
-                                    <span>Loại thẻ đề xuất:</span>
-                                    <span class="text-emerald-400">Thẻ Sedan (Xanh lá)</span>
-                                </div>
-                                <div class="flex justify-between text-slate-400">
-                                    <span>Vị trí khuyên dùng:</span>
-                                    <span class="text-slate-300">Zone B - Block B-01</span>
-                                </div>
-                            </div>
-                            <div class="flex justify-end gap-2 mt-2">
-                                <button onclick="alert('Đã chuyển màn hình 55 inch sang chế độ Quảng cáo/Standby thành công!')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px] border border-slate-750 transition-colors">
-                                    Chuyển chế độ chờ (Ad Mode)
-                                </button>
+                            <div class="text-[11px] text-slate-500 font-mono">
+                                Chưa có kết nối từ SCADA tới màn hình này. Không đọc được trạng thái, không điều khiển được.
                             </div>
                         </div>
 
-                        <!-- LED Matrix & Bảng LED hầm -->
+                        <!-- Bảng LED: số thật từ /LedStatus. Bản cũ ghi cứng
+                             "SUV: 38 | Sedan: 55 | Đỗ thường: 24" và câu
+                             "Đã truyền tín hiệu" bất kể bộ đẩy có chạy hay không. -->
                         <div class="p-3 bg-slate-950/60 rounded border border-slate-800">
                             <div class="flex items-center justify-between mb-1.5">
                                 <span class="text-slate-300 font-bold">Bảng LED &amp; Chỉ dẫn hầm</span>
-                                <span class="text-[10px] font-mono text-emerald-400 font-semibold">Đã truyền tín hiệu</span>
+                                <span id="led-push-state" class="text-[10px] font-mono text-slate-500">đang tải...</span>
                             </div>
-                            <div class="space-y-1.5 text-[11px] font-mono text-slate-400">
-                                <div class="flex items-start gap-1.5">
-                                    <span class="text-blue-400 shrink-0">LED Matrix Ngoài trời:</span>
-                                    <span class="text-slate-300 bg-slate-900 px-1 py-0.5 rounded text-[10px]">SUV: 38 | Sedan: 55 | Đỗ thường: 24</span>
-                                </div>
-                                <div class="flex items-start gap-1.5">
-                                    <span class="text-blue-400 shrink-0">LED Chỉ dẫn hầm:</span>
-                                    <span class="text-slate-300 bg-slate-900 px-1 py-0.5 rounded text-[10px]">Zone B: Rẽ TRÁI (&lt;- 18) | Zone C: Đi THẲNG (↑ 30)</span>
-                                </div>
+                            <div id="led-numbers" class="space-y-1.5 text-[11px] font-mono text-slate-400">
+                                <div class="text-slate-600">đang tải...</div>
                             </div>
                         </div>
 
@@ -206,175 +107,449 @@
                         Phân loại xe đang tiếp nhận (AI-VDS Camera)
                     </h3>
 
-                    <!-- Operator notice banner for oversized vehicle -->
-                    <div class="mb-4 flex items-center justify-between p-3.5 bg-rose-950/40 border border-rose-500/50 rounded-lg text-rose-300 animate-pulse text-xs">
-                        <div class="flex items-center gap-2">
-                            <span class="flex h-2.5 w-2.5 relative">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
-                            </span>
-                            <span class="font-bold uppercase tracking-wide">CẢNH BÁO XE QUÁ KHỔ:</span>
-                            <span>Xe <strong>43A-56789</strong> kích thước vượt giới hạn bãi đỗ (>1.80m). Đã khóa máy phát thẻ tự động!</span>
-                        </div>
-                        <span class="font-mono text-[10px] bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/30 text-rose-400">HOLD CARD</span>
+                    <!-- Cảnh báo xe cần can thiệp. Bản trước ghi cứng một dòng đỏ
+                         nhấp nháy về "xe 43A-56789 quá khổ, đã khóa máy phát thẻ" —
+                         chuông báo động vĩnh viễn cho một sự kiện không có thật.
+                         Giờ chỉ hiện khi CSDL thật sự có xe bị REJECTED / MANUAL. -->
+                    <div id="veh-alert" class="hidden mb-4 p-3.5 rounded-lg text-xs"></div>
+
+                    <div class="flex items-center justify-between mb-3">
+                        <span id="veh-updated" class="text-[10px] text-slate-500 font-mono">đang tải...</span>
+                        <button onclick="loadVehicleFeed()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-750 text-slate-300 text-[10px] font-bold rounded border border-slate-700 transition-colors">
+                            Làm mới
+                        </button>
                     </div>
 
-                    <!-- Entries List -->
-                    <div class="space-y-3">
-                        <!-- Vehicle 1: SUV (Plate 51G-12345) -->
-                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-lg border border-slate-800 bg-slate-900 hover:border-slate-700/80 transition-all">
-                            <div class="flex items-start gap-3.5">
-                                <div class="p-2 bg-blue-500/10 rounded border border-blue-500/20 text-blue-400 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
-                                </div>
-                                <div>
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 border border-blue-500/35">SUV</span>
-                                        <span class="text-slate-100 text-sm font-bold font-mono tracking-wider">51G-12345</span>
-                                        <span class="text-slate-500 text-xs font-mono">Cao: 1.65m · Dài: 4.85m</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-2 text-xs font-mono text-slate-400">
-                                        <span>Đề xuất:</span>
-                                        <span class="text-blue-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded">Block A-02</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-                                        <span class="text-yellow-400 font-bold bg-yellow-500/10 px-1.5 py-0.5 rounded border border-yellow-500/20">SUV-Card (Yellow)</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-2.5 md:pt-0 border-slate-850">
-                                <div class="flex items-center gap-1.5 text-slate-500 text-xs font-mono">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    08:41:55
-                                </div>
-                                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">Đã phân loại</span>
-                            </div>
-                        </div>
-
-                        <!-- Vehicle 2: Sedan (Plate 30H-88877) -->
-                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-lg border border-slate-800 bg-slate-900 hover:border-slate-700/80 transition-all">
-                            <div class="flex items-start gap-3.5">
-                                <div class="p-2 bg-emerald-500/10 rounded border border-emerald-500/20 text-emerald-400 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
-                                </div>
-                                <div>
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/35">Sedan</span>
-                                        <span class="text-slate-100 text-sm font-bold font-mono tracking-wider">30H-88877</span>
-                                        <span class="text-slate-500 text-xs font-mono">Cao: 1.45m · Dài: 4.20m</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-2 text-xs font-mono text-slate-400">
-                                        <span>Đề xuất:</span>
-                                        <span class="text-blue-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded">Block B-01</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-                                        <span class="text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">Sedan-Card (Green)</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-2.5 md:pt-0 border-slate-850">
-                                <div class="flex items-center gap-1.5 text-slate-500 text-xs font-mono">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    08:42:10
-                                </div>
-                                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400">Đang dẫn đường</span>
-                            </div>
-                        </div>
-
-                        <!-- Vehicle 3: Oversized Rejection (Plate 43A-56789) - Visual prominence -->
-                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-lg border border-rose-900/60 bg-rose-950/10 hover:border-rose-800/80 transition-all shadow-[0_0_15px_rgba(244,63,94,0.05)]">
-                            <div class="flex items-start gap-3.5">
-                                <div class="p-2 bg-rose-500/15 rounded border border-rose-500/30 text-rose-500 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-alert"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
-                                </div>
-                                <div>
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/40">OVERSIZED</span>
-                                        <span class="text-slate-100 text-sm font-bold font-mono tracking-wider">43A-56789</span>
-                                        <span class="text-rose-400 text-xs font-bold font-mono bg-rose-950/50 px-1.5 py-0.5 rounded border border-rose-500/20">
-                                            Cao: 1.85m (> 1.80m) · Dài: 5.20m
-                                        </span>
-                                    </div>
-                                    <div class="text-rose-400/90 text-xs font-mono mt-2 flex items-center gap-1.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-rose-500"><circle cx="12" cy="12" r="10"></circle><line x1="15" x2="9" y1="9" y2="15"></line></svg>
-                                        <span>Xe vượt giới hạn vật lý bãi đỗ – Hệ thống từ chối cấp phát thẻ đỗ xe!</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-2.5 md:pt-0 border-rose-950/50">
-                                <div class="flex items-center gap-1.5 text-slate-500 text-xs font-mono">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    08:42:30
-                                </div>
-                                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full border border-rose-500/50 bg-rose-500/10 text-rose-400">Từ chối / Rejected</span>
-                            </div>
-                        </div>
+                    <div id="veh-list" class="space-y-3">
+                        <div class="text-center text-slate-600 text-[11px] font-mono py-6">Đang tải...</div>
                     </div>
                 </div>
 
-                <!-- Communication Status List (6 items) -->
+                <script>
+                // Danh sách xe DỮ LIỆU THẬT qua /Monitor/RoutingState (trang mặt
+                // bằng đã dùng endpoint này, nên không thêm đường truy vấn mới).
+                //
+                // KHÔNG có biển số ở đây, và đó là đúng: camera AI gửi về hãng,
+                // dòng xe, kích thước, cân nặng — bảng vehicle_event không hề có
+                // cột biển số. Bản cũ hiện "51G-12345" là bịa. Nhãn nhận dạng thật
+                // là hãng + dòng xe, kèm mã sự kiện để tra ngược.
+                const VEH_OUTCOME = {
+                    ROUTED:      { label: 'Đã phân loại',      cls: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400' },
+                    MANUAL:      { label: 'Cần thao tác tay',  cls: 'border-amber-500/40 bg-amber-500/10 text-amber-400'      },
+                    REJECTED:    { label: 'Từ chối',           cls: 'border-rose-500/50 bg-rose-500/10 text-rose-400'         },
+                    NO_CAPACITY: { label: 'Hết chỗ',           cls: 'border-rose-500/50 bg-rose-500/10 text-rose-400'         },
+                    NO_DATA:     { label: 'Chưa có dữ liệu',   cls: 'border-slate-600/40 bg-slate-700/20 text-slate-400'      }
+                };
+
+                const VEH_LANE = {
+                    MechanicalL48M: 'Cơ khí L<4.8M',
+                    MechanicalL5M:  'Cơ khí L<5M',
+                    Normal:         'Đỗ thường'
+                };
+
+                function vehEsc(s) {
+                    if (s === null || s === undefined) return '';
+                    return String(s).replace(/[&<>"']/g, function (c) {
+                        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                    });
+                }
+
+                function vehMm(v) { return (v === null || v === undefined) ? null : (v / 1000).toFixed(2) + 'm'; }
+
+                function loadVehicleFeed() {
+                    const list = document.getElementById('veh-list');
+                    const stamp = document.getElementById('veh-updated');
+                    stamp.textContent = 'đang tải...';
+
+                    fetch('/Monitor/RoutingState')
+                        .then(function (r) { return r.json(); })
+                        .then(function (d) {
+                            if (!d || !d.recent) throw new Error(d && d.error ? d.error : 'phản hồi rỗng');
+                            renderZones(d.zones || []);
+                            renderVehicleAlert(d.recent);
+                            if (!d.recent.length) {
+                                list.innerHTML = '<div class="text-center text-slate-600 text-[11px] font-mono py-6">'
+                                               + 'Chưa có xe nào được camera ghi nhận.</div>';
+                            } else {
+                                list.innerHTML = d.recent.map(vehCard).join('');
+                            }
+                            stamp.textContent = 'Cập nhật ' + vehEsc(d.now) + ' · ' + d.recent.length + ' xe gần nhất';
+                        })
+                        .catch(function (e) {
+                            list.innerHTML = '<div class="text-center text-rose-400 text-[11px] font-mono py-6">'
+                                           + 'Không lấy được dữ liệu: ' + vehEsc(e.message) + '</div>';
+                            stamp.textContent = 'lỗi';
+                        });
+                }
+
+                // Mật độ zone từ cùng một phản hồi. Bản cũ ghi cứng "Zone A – Hầm B1"
+                // đến "Zone D – Tầng 1" với các con số 68% / 53% / 25% / 23% bất động,
+                // trong khi bãi thật có SÁU zone đánh số 1–6. Tên zone còn chẳng khớp,
+                // nên không ai đối chiếu nổi với sơ đồ mặt bằng.
+                function renderZones(zones) {
+                    const box = document.getElementById('zone-list');
+                    if (!box) return;
+
+                    if (!zones.length) {
+                        box.innerHTML = '<div class="text-center text-slate-600 text-[11px] font-mono py-6">'
+                                      + 'Chưa khai báo zone nào.</div>';
+                        renderLoadBalancer([]);
+                        return;
+                    }
+                    renderLoadBalancer(zones);
+
+                    box.innerHTML = zones.map(function (z) {
+                        const pct = z.used_pct || 0;
+                        // Ngưỡng màu theo mức đầy, để mắt nhìn ra ngay zone nào sắp hết chỗ.
+                        const tone = pct >= 85 ? { bar: 'bg-rose-500',    txt: 'text-rose-400',    cls: 'bg-rose-500/10 border-rose-500/20',       label: 'Sắp đầy'     }
+                                   : pct >= 60 ? { bar: 'bg-amber-500',   txt: 'text-amber-500',   cls: 'bg-amber-500/10 border-amber-500/20',     label: 'Trung bình'  }
+                                   :             { bar: 'bg-emerald-500', txt: 'text-emerald-400', cls: 'bg-emerald-500/10 border-emerald-500/20', label: 'Còn rộng'    };
+
+                        const free = (z.total || 0) - (z.in_use || 0);
+                        return ''
+                        + '<div class="bg-slate-800/30 rounded-lg p-3.5 border border-slate-700/30">'
+                        +   '<div class="flex justify-between items-start mb-2">'
+                        +     '<div>'
+                        +       '<div class="text-slate-200 text-xs font-semibold">Zone ' + vehEsc(z.zone_id)
+                        +         (z.code ? ' <span class="text-slate-500 font-mono">(' + vehEsc(z.code) + ')</span>' : '') + '</div>'
+                        +       '<div class="text-slate-500 text-[10px] mt-0.5 font-mono">'
+                        +         free + ' ô trống / ' + (z.total || 0) + ' ô</div>'
+                        +     '</div>'
+                        +     '<span class="text-xs font-mono font-bold ' + tone.txt + ' ' + tone.cls + ' px-1.5 py-0.5 rounded border">' + pct + '%</span>'
+                        +   '</div>'
+                        +   '<div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-2">'
+                        +     '<div class="h-full ' + tone.bar + ' rounded-full" style="width: ' + Math.min(100, pct) + '%;"></div>'
+                        +   '</div>'
+                        +   '<div class="flex justify-between text-[10px] font-mono text-slate-400">'
+                        +     '<span>Cơ khí: ' + (z.free_mech || 0) + ' · Đỗ thường: ' + (z.free_ground || 0) + '</span>'
+                        +     '<span>' + tone.label + '</span>'
+                        +   '</div>'
+                        + '</div>';
+                    }).join('');
+                }
+
+                // Lệch tải = chênh lệch phần trăm giữa zone đầy nhất và rỗng nhất,
+                // tính từ chính số liệu zone vừa vẽ ở trên nên hai khối không bao
+                // giờ nói hai điều khác nhau.
+                const LB_THRESHOLD = 20;
+
+                function renderLoadBalancer(zones) {
+                    const state = document.getElementById('lb-state');
+                    const detail = document.getElementById('lb-detail');
+                    if (!state || !detail) return;
+
+                    if (!zones.length) {
+                        state.textContent = 'KHÔNG CÓ DỮ LIỆU';
+                        state.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-700/20 border border-slate-600/30 text-slate-400 font-bold';
+                        detail.textContent = 'Chưa khai báo zone nào.';
+                        detail.className = 'text-[11px] text-slate-500 font-mono mt-1';
+                        return;
+                    }
+
+                    let hi = zones[0], lo = zones[0];
+                    zones.forEach(function (z) {
+                        if ((z.used_pct || 0) > (hi.used_pct || 0)) hi = z;
+                        if ((z.used_pct || 0) < (lo.used_pct || 0)) lo = z;
+                    });
+                    const gap = (hi.used_pct || 0) - (lo.used_pct || 0);
+                    const active = gap > LB_THRESHOLD;
+
+                    state.textContent = active ? 'ĐANG CÂN BẰNG' : 'CÂN BẰNG';
+                    state.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono font-bold border '
+                                    + (active ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+                                              : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400');
+
+                    detail.className = 'text-[11px] font-mono mt-1 ' + (active ? 'text-amber-400' : 'text-slate-400');
+                    detail.innerHTML = 'Lệch tải hiện tại: Zone ' + vehEsc(hi.zone_id) + ' (' + (hi.used_pct || 0) + '%)'
+                                     + ' vs Zone ' + vehEsc(lo.zone_id) + ' (' + (lo.used_pct || 0) + '%) = '
+                                     + '<span class="font-bold">' + gap + '%</span>'
+                                     + (active
+                                        ? '<br>Ưu tiên hướng xe sang Zone ' + vehEsc(lo.zone_id) + ' (mật độ thấp nhất)'
+                                        : '<br>Chênh lệch dưới ngưỡng, không cần can thiệp');
+                }
+
+                // Số trên bảng LED lấy từ /LedStatus. Quan trọng: phân biệt "số hệ
+                // thống TÍNH ĐƯỢC" với "số đã ĐẨY LÊN bảng" — bộ đẩy đang tắt thì
+                // bảng vẫn giữ khung cũ, và nói "Đã truyền tín hiệu" là sai.
+                function loadLedNumbers() {
+                    const nums = document.getElementById('led-numbers');
+                    const st = document.getElementById('led-push-state');
+                    if (!nums || !st) return;
+
+                    fetch('/LedStatus')
+                        .then(function (r) { return r.json(); })
+                        .then(function (d) {
+                            const c = d.capacity || {};
+                            const running = !!d.running;
+                            st.textContent = running ? 'Đang đẩy tự động' : 'Bộ đẩy đang TẮT';
+                            st.className = 'text-[10px] font-mono ' + (running ? 'text-emerald-400 font-semibold' : 'text-amber-500 font-semibold');
+
+                            const row = function (label, free, total) {
+                                if (!total) {
+                                    return '<div class="flex items-start gap-1.5">'
+                                         + '<span class="text-slate-600 shrink-0">' + label + ':</span>'
+                                         + '<span class="text-slate-600">bãi không có loại này</span></div>';
+                                }
+                                return '<div class="flex items-start gap-1.5">'
+                                     + '<span class="text-blue-400 shrink-0">' + label + ':</span>'
+                                     + '<span class="text-slate-300 bg-slate-900 px-1 py-0.5 rounded text-[10px]">'
+                                     + free + ' / ' + total + ' trống</span></div>';
+                            };
+
+                            nums.innerHTML =
+                                  row('Cơ khí L&lt;5M', c.free_l5m, c.total_l5m)
+                                + row('Cơ khí L&lt;4.8M', c.free_l48m, c.total_l48m)
+                                + row('Đỗ thường', c.free_standard, c.total_standard)
+                                + (running ? ''
+                                    : '<div class="text-[10px] text-amber-500/80 mt-1">Đây là số hệ thống tính được. '
+                                    + 'Bộ đẩy đang tắt nên bảng LED vẫn giữ khung tin cũ.</div>');
+                        })
+                        .catch(function (e) {
+                            st.textContent = 'lỗi';
+                            st.className = 'text-[10px] font-mono text-rose-400';
+                            nums.innerHTML = '<div class="text-rose-400">Không lấy được: ' + vehEsc(e.message) + '</div>';
+                        });
+                }
+
+                // Chỉ cảnh báo khi có xe THẬT cần người can thiệp, và chỉ tính
+                // trong danh sách gần nhất — không để một xe bị từ chối hôm kia
+                // làm đỏ màn hình mãi mãi.
+                function renderVehicleAlert(rows) {
+                    const box = document.getElementById('veh-alert');
+                    const bad = rows.filter(function (v) {
+                        return v.outcome === 'REJECTED' || v.outcome === 'NO_CAPACITY' || v.outcome === 'MANUAL';
+                    });
+
+                    if (!bad.length) { box.className = 'hidden'; box.innerHTML = ''; return; }
+
+                    const hard = bad.filter(function (v) { return v.outcome !== 'MANUAL'; });
+                    const isHard = hard.length > 0;
+                    const v = (isHard ? hard : bad)[0];
+
+                    box.className = isHard
+                        ? 'mb-4 p-3.5 bg-rose-950/40 border border-rose-500/50 rounded-lg text-rose-300 text-xs'
+                        : 'mb-4 p-3.5 bg-amber-950/30 border border-amber-500/40 rounded-lg text-amber-300 text-xs';
+
+                    const name = v.vehicle || v.event_id;
+                    box.innerHTML =
+                        '<div class="flex items-center gap-2 flex-wrap">'
+                        + '<span class="w-2.5 h-2.5 rounded-full ' + (isHard ? 'bg-rose-500' : 'bg-amber-500') + '"></span>'
+                        + '<span class="font-bold uppercase tracking-wide">'
+                        + (isHard ? 'XE KHÔNG VÀO ĐƯỢC BÃI:' : 'CẦN THAO TÁC TAY:') + '</span>'
+                        + '<span><strong>' + vehEsc(name) + '</strong> lúc ' + vehEsc(v.at)
+                        + (v.reason ? ' — ' + vehEsc(v.reason) : '') + '</span>'
+                        + '<span class="font-mono text-[10px] opacity-80">(' + bad.length + ' xe trong danh sách gần nhất)</span>'
+                        + '</div>';
+                }
+
+                function vehCard(v) {
+                    const oc = VEH_OUTCOME[v.outcome] || { label: v.outcome || '?', cls: 'border-slate-600/40 bg-slate-700/20 text-slate-400' };
+                    const bad = v.outcome === 'REJECTED' || v.outcome === 'NO_CAPACITY';
+
+                    const dims = [];
+                    if (v.height_mm) dims.push('Cao: ' + vehMm(v.height_mm));
+                    if (v.length_mm) dims.push('Dài: ' + vehMm(v.length_mm));
+                    if (v.weight_kg) dims.push(v.weight_kg + 'kg');
+
+                    const lane = v.lane ? (VEH_LANE[v.lane] || v.lane) : null;
+
+                    // Zone chỉ hiện khi thật sự có. Xe bị từ chối không được gán
+                    // zone nào, và bịa ra một zone cho nó là sai kiểu nguy hiểm.
+                    const zone = v.zone_code
+                        ? '<span class="text-blue-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded">Zone ' + vehEsc(v.zone_id) + ' (' + vehEsc(v.zone_code) + ')</span>'
+                        : '<span class="text-slate-500 bg-slate-800/60 px-1.5 py-0.5 rounded">chưa phân zone</span>';
+
+                    return ''
+                    + '<div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-lg border '
+                    +   (bad ? 'border-rose-900/60 bg-rose-950/20' : 'border-slate-800 bg-slate-900')
+                    +   ' hover:border-slate-700/80 transition-all">'
+                    + '<div class="flex items-start gap-3.5 min-w-0">'
+                    +   '<div class="p-2 ' + (bad ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : 'bg-blue-500/10 border-blue-500/20 text-blue-400') + ' rounded border shrink-0">'
+                    +     '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>'
+                    +   '</div>'
+                    +   '<div class="min-w-0">'
+                    +     '<div class="flex flex-wrap items-center gap-2">'
+                    +       (v.weight_class ? '<span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 border border-blue-500/35">' + vehEsc(v.weight_class) + '</span>' : '')
+                    +       '<span class="text-slate-100 text-sm font-bold font-mono tracking-wide truncate">' + vehEsc(v.vehicle || 'Không rõ xe') + '</span>'
+                    +       (dims.length ? '<span class="text-slate-500 text-xs font-mono">' + vehEsc(dims.join(' · ')) + '</span>' : '')
+                    +     '</div>'
+                    +     '<div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-2 text-xs font-mono text-slate-400">'
+                    +       '<span>Điều hướng:</span>' + zone
+                    +       (lane ? '<span class="text-yellow-400 font-bold bg-yellow-500/10 px-1.5 py-0.5 rounded border border-yellow-500/20">' + vehEsc(lane) + '</span>' : '')
+                    +       (v.reason ? '<span class="text-rose-400/80">' + vehEsc(v.reason) + '</span>' : '')
+                    +     '</div>'
+                    +     '<div class="text-[9px] text-slate-600 font-mono mt-1 truncate">' + vehEsc(v.event_id) + '</div>'
+                    +   '</div>'
+                    + '</div>'
+                    + '<div class="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-2.5 md:pt-0 border-slate-850 shrink-0">'
+                    +   '<span class="text-slate-500 text-xs font-mono">' + vehEsc(v.at) + '</span>'
+                    +   '<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ' + oc.cls + '">' + vehEsc(oc.label) + '</span>'
+                    + '</div>'
+                    + '</div>';
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    loadVehicleFeed();
+                    loadLedNumbers();
+                });
+                setInterval(loadVehicleFeed, 20000);
+                setInterval(loadLedNumbers, 20000);
+                </script>
+
+                <!-- Trạng thái thiết bị ngoại vi - DỮ LIỆU THẬT qua /DeviceStatus/Summary.
+                     Bản trước ghi cứng sáu thẻ kèm giờ giả (08:42:30) và chữ
+                     "Hoạt động" bất kể thực tế, kể cả cho máy phát thẻ - thiết bị
+                     chưa hề đấu nối vào SCADA. -->
                 <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl">
-                    <h3 class="text-white text-sm font-bold mb-4">Trạng thái truyền thông & Thiết bị ngoại vi</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
-                        <!-- Card 1: AI-VDS Connection -->
-                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
-                            <div class="flex items-center gap-1.5 mb-1.5">
-                                <span class="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></span>
-                                <span class="text-slate-200 text-[10px] font-bold font-mono">Gửi AI-VDS</span>
-                            </div>
-                            <div class="text-slate-400 text-[10px] font-mono">Mất kết nối</div>
-                            <div class="text-slate-600 text-[8px] font-mono mt-1">Lúc: 08:15:44</div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-white text-sm font-bold">Trạng thái truyền thông &amp; Thiết bị ngoại vi</h3>
+                        <div class="flex items-center gap-3">
+                            <span id="dev-updated" class="text-[10px] text-slate-500 font-mono">đang tải...</span>
+                            <button onclick="loadDeviceStatus()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-750 text-slate-300 text-[10px] font-bold rounded border border-slate-700 transition-colors">
+                                Làm mới
+                            </button>
                         </div>
-
-                        <!-- Card 2: LED Matrix Outside -->
-                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
-                            <div class="flex items-center gap-1.5 mb-1.5">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                                <span class="text-slate-200 text-[10px] font-bold font-mono">LED Ngoài trời</span>
-                            </div>
-                            <div class="text-slate-400 text-[10px] font-mono">Hoạt động</div>
-                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:25</div>
-                        </div>
-
-                        <!-- Card 3: LED Tunnel Directional -->
-                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
-                            <div class="flex items-center gap-1.5 mb-1.5">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                                <span class="text-slate-200 text-[10px] font-bold font-mono">LED Trong hầm</span>
-                            </div>
-                            <div class="text-slate-400 text-[10px] font-mono">Hoạt động</div>
-                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:27</div>
-                        </div>
-
-                        <!-- Card 4: PGS System -->
-                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
-                            <div class="flex items-center gap-1.5 mb-1.5">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                                <span class="text-slate-200 text-[10px] font-bold font-mono">Hệ thống PGS</span>
-                            </div>
-                            <div class="text-slate-400 text-[10px] font-mono">Hoạt động</div>
-                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:28</div>
-                        </div>
-
-                        <!-- Card 5: Card Dispenser -->
-                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
-                            <div class="flex items-center gap-1.5 mb-1.5">
-                                <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]"></span>
-                                <span class="text-slate-200 text-[10px] font-bold font-mono">Máy phát thẻ</span>
-                            </div>
-                            <div class="text-slate-400 text-[10px] font-mono">Giữ thẻ (Hold)</div>
-                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:30</div>
-                        </div>
-
-                        <!-- Card 6: ZCU Controllers -->
-                        <div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">
-                            <div class="flex items-center gap-1.5 mb-1.5">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                                <span class="text-slate-200 text-[10px] font-bold font-mono">Bộ điều khiển ZCU</span>
-                            </div>
-                            <div class="text-slate-400 text-[10px] font-mono">Hoạt động</div>
-                            <div class="text-slate-600 text-[8px] font-mono mt-1">Cập nhật: 08:42:15</div>
+                    </div>
+                    <div id="dev-grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
+                        <div class="col-span-full text-center text-slate-600 text-[11px] font-mono py-6">
+                            Đang thăm dò thiết bị...
                         </div>
                     </div>
                 </div>
+
+                <script>
+                // Bảng giám sát này TỰ THĂM DÒ, không đọc trạng thái từ vòng poll
+                // của PLC/LED - hai vòng đó phụ thuộc cờ plc:enabled / led:enabled,
+                // cờ tắt thì mọi thiết bị báo offline dù đang sống.
+                //
+                // Năm trạng thái, không được gộp:
+                //   ok / partial / down -> giám sát được VÀ kết luận được
+                //   unknown             -> giám sát được nhưng tín hiệu không đủ
+                //                          kết luận (camera im lặng: có thể chết,
+                //                          có thể chỉ là không có xe)
+                //   unmonitored         -> hệ thống KHÔNG có đường nào để biết
+                //
+                // Đỏ chỉ dành cho thứ ta biết CHẮC là chết. Gộp unknown vào đỏ thì
+                // đêm nào cũng báo động giả; gộp unmonitored vào xanh chính là lỗi
+                // của bản cũ (máy phát thẻ chưa đấu nối vẫn hiện "Hoạt động").
+                const DEV_STYLE = {
+                    ok:          { dot: 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]', text: 'text-emerald-400' },
+                    partial:     { dot: 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]',   text: 'text-amber-400'  },
+                    unknown:     { dot: 'bg-amber-600/70',                                       text: 'text-amber-500/90' },
+                    down:        { dot: 'bg-rose-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]',     text: 'text-rose-400'   },
+                    empty:       { dot: 'bg-slate-600',                                          text: 'text-slate-500'  },
+                    unmonitored: { dot: 'bg-slate-700',                                          text: 'text-slate-500'  }
+                };
+
+                function devEsc(s) {
+                    if (s === null || s === undefined) return '';
+                    return String(s).replace(/[&<>"']/g, function (c) {
+                        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                    });
+                }
+
+                function loadDeviceStatus() {
+                    const grid = document.getElementById('dev-grid');
+                    const stamp = document.getElementById('dev-updated');
+                    stamp.textContent = 'đang thăm dò...';
+
+                    fetch('/DeviceStatus/Summary')
+                        .then(function (r) { return r.json(); })
+                        .then(function (d) {
+                            if (!d || !d.groups) throw new Error(d && d.error ? d.error : 'phản hồi rỗng');
+                            grid.innerHTML = d.groups.map(devCard).join('');
+                            stamp.textContent = 'Cập nhật ' + devEsc(d.now);
+                            setCameraBanner(d.groups);
+                        })
+                        .catch(function (e) {
+                            grid.innerHTML = '<div class="col-span-full text-center text-rose-400 text-[11px] font-mono py-6">'
+                                           + 'Không lấy được trạng thái thiết bị: ' + devEsc(e.message) + '</div>';
+                            stamp.textContent = 'lỗi';
+                        });
+                }
+
+                // Huy hiệu + dải cảnh báo đầu trang, chạy theo trạng thái camera THẬT.
+                //
+                // Bản cũ ghi cứng "AI-VDS – Fallback Mode" kèm animate-pulse và một
+                // dải vàng "Mất tín hiệu heartbeat từ cổng đo quét chính" — hiện
+                // vĩnh viễn, kể cả khi camera vừa gửi sự kiện một phút trước. Báo
+                // động không bao giờ tắt thì chẳng ai còn để ý tới nó nữa.
+                function setCameraBanner(groups) {
+                    const badge = document.getElementById('ai-badge');
+                    const alert = document.getElementById('ai-alert');
+                    if (!badge || !alert) return;
+
+                    const cam = groups.filter(function (g) { return g.key === 'camera'; })[0];
+                    if (!cam) { badge.className = 'hidden'; alert.className = 'hidden'; return; }
+
+                    if (cam.health === 'ok') {
+                        badge.className = 'flex items-center gap-2 px-3 py-1.5 rounded border text-xs font-mono '
+                                        + 'border-emerald-700/50 bg-emerald-950/40 text-emerald-300 self-start md:self-auto';
+                        badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span>AI-VDS – Đang nhận dữ liệu';
+                        alert.className = 'hidden';
+                        return;
+                    }
+
+                    // unknown: camera không có heartbeat nên im lặng KHÔNG chứng minh
+                    // được là hỏng — vàng "chưa rõ", không phải đỏ "mất kết nối".
+                    const unknown = cam.health === 'unknown';
+                    badge.className = 'flex items-center gap-2 px-3 py-1.5 rounded border text-xs font-mono self-start md:self-auto '
+                                    + (unknown ? 'border-amber-700/50 bg-amber-950/40 text-amber-300'
+                                               : 'border-rose-700/50 bg-rose-950/40 text-rose-300');
+                    badge.innerHTML = '<span class="w-2 h-2 rounded-full ' + (unknown ? 'bg-amber-400' : 'bg-rose-400') + '"></span>'
+                                    + 'AI-VDS – ' + (unknown ? 'Chưa rõ' : 'Không giám sát được');
+
+                    alert.className = 'flex items-start gap-3 p-4 rounded-lg border '
+                                    + (unknown ? 'border-amber-800/60 bg-amber-950/20' : 'border-rose-800/60 bg-rose-950/20');
+                    alert.innerHTML =
+                        '<div>'
+                        + '<div class="' + (unknown ? 'text-amber-300' : 'text-rose-300') + ' text-sm font-semibold">'
+                        +   (unknown ? 'Camera AI-VDS chưa gửi sự kiện nào gần đây'
+                                     : 'Không xác định được trạng thái camera AI-VDS') + '</div>'
+                        + '<p class="' + (unknown ? 'text-amber-500' : 'text-rose-400') + ' text-xs mt-1 font-mono">'
+                        +   devEsc(cam.detail)
+                        +   (cam.last_seen ? ' · Sự kiện gần nhất: ' + devEsc(cam.last_seen) : '')
+                        +   (unknown ? ' — camera chỉ gửi khi có xe, nên im lặng có thể chỉ là bãi vắng.' : '')
+                        + '</p></div>';
+                }
+
+                function devCard(g) {
+                    const st = DEV_STYLE[g.health] || DEV_STYLE.unmonitored;
+
+                    // Số đếm chỉ hiện khi thật sự có giám sát. Hiện "0/0" cho thiết
+                    // bị chưa đấu nối là gợi ý sai rằng hệ thống có đo mà đo ra 0.
+                    const count = g.monitored && g.total > 0
+                        ? '<span class="text-[9px] font-mono ' + st.text + '">' + g.online + '/' + g.total + '</span>'
+                        : '';
+
+                    const offline = (g.offline && g.offline.length)
+                        ? '<div class="text-[8px] text-rose-400/70 font-mono mt-1 leading-tight" title="' + devEsc(g.offline.join(', ')) + '">'
+                          + 'Không phản hồi: ' + devEsc(g.offline.slice(0, 2).join(', '))
+                          + (g.offline.length > 2 ? ' +' + (g.offline.length - 2) : '') + '</div>'
+                        : '';
+
+                    const seen = g.last_seen
+                        ? '<div class="text-slate-600 text-[8px] font-mono mt-1">' + devEsc(g.last_seen) + '</div>'
+                        : '<div class="text-slate-700 text-[8px] font-mono mt-1">chưa có mốc thời gian</div>';
+
+                    return '<div class="bg-slate-900/80 rounded-lg p-3 border border-slate-800">'
+                         + '<div class="flex items-center justify-between mb-1.5">'
+                         +   '<div class="flex items-center gap-1.5 min-w-0">'
+                         +     '<span class="w-2 h-2 rounded-full shrink-0 ' + st.dot + '"></span>'
+                         +     '<span class="text-slate-200 text-[10px] font-bold font-mono truncate">' + devEsc(g.name) + '</span>'
+                         +   '</div>' + count
+                         + '</div>'
+                         + '<div class="' + st.text + ' text-[10px] font-mono">' + devEsc(g.detail) + '</div>'
+                         + offline + seen
+                         + '</div>';
+                }
+
+                document.addEventListener('DOMContentLoaded', loadDeviceStatus);
+                // 20 giây: dài hơn cache 15 giây phía máy chủ nên mỗi lần làm mới
+                // đều lấy được kết quả thăm dò mới, mà không dội kết nối xuống
+                // thiết bị đang chạy.
+                setInterval(loadDeviceStatus, 20000);
+                </script>
             </div>
         </div>
     </div>

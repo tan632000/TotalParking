@@ -118,6 +118,65 @@ namespace TotalParking.Services
             }
         }
 
+        // Sức chứa theo TỪNG ZONE. Bảng chỉ hướng phải hiện số của zone mà mũi
+        // tên dẫn tới, không phải số toàn bãi — nếu không thì tài xế rẽ theo mũi
+        // tên rồi mới biết zone đó đã đầy.
+        public IDictionary<int, LedCapacity> GetCapacityByZone()
+        {
+            var map = new Dictionary<int, LedCapacity>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "SELECT * FROM v_led_capacity_zone";
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        map[Num(r, "zone_id")] = new LedCapacity
+                        {
+                            FreeL5m       = Num(r, "free_l5m"),
+                            FreeL48m      = Num(r, "free_l48m"),
+                            FreeStandard  = Num(r, "free_standard"),
+                            TotalL5m      = Num(r, "total_l5m"),
+                            TotalL48m     = Num(r, "total_l48m"),
+                            TotalStandard = Num(r, "total_standard")
+                        };
+                    }
+                }
+            }
+            return map;
+        }
+
+        // Cộng dồn sức chứa của các zone mà một mũi tên dẫn tới.
+        //
+        // Trả về null khi KHÔNG tra được zone nào trong danh sách — phía gọi phải
+        // coi đó là "chưa có dữ liệu" và xoá trắng bảng, chứ không được rơi về số
+        // toàn bãi. Đẩy số toàn bãi lên một mũi tên chỉ về một hướng cụ thể là nói
+        // với tài xế rằng hướng đó có ngần ấy chỗ.
+        public static LedCapacity SumZones(IDictionary<int, LedCapacity> byZone, string zoneList)
+        {
+            if (byZone == null || string.IsNullOrWhiteSpace(zoneList)) return null;
+
+            var sum = new LedCapacity();
+            int found = 0;
+            foreach (var part in zoneList.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                int z;
+                if (!int.TryParse(part.Trim(), out z)) continue;
+                LedCapacity c;
+                if (!byZone.TryGetValue(z, out c)) continue;
+                found++;
+                sum.FreeL5m       += c.FreeL5m;
+                sum.FreeL48m      += c.FreeL48m;
+                sum.FreeStandard  += c.FreeStandard;
+                sum.TotalL5m      += c.TotalL5m;
+                sum.TotalL48m     += c.TotalL48m;
+                sum.TotalStandard += c.TotalStandard;
+            }
+            return found > 0 ? sum : null;
+        }
+
         private static int Num(IDataRecord r, string col)
         {
             object v = r[col];

@@ -21,7 +21,9 @@ namespace TotalParking.Services
             "       p.timeout_ms, p.poll_ms, " +
             "       p.card_word, p.card_word_len, p.card_layout, " +
             "       p.request_bit, p.request_bit_area, " +
-            "       p.permit_bit, p.permit_bit_area, p.class_word, p.is_active " +
+            "       p.permit_bit, p.permit_bit_area, p.class_word, " +
+            "       p.find_card_word, p.find_card_len, p.find_answer_word, " +
+            "       p.is_active " +
             "FROM   plc_device p " +
             "JOIN   block b ON b.block_id = p.block_id ";
 
@@ -71,6 +73,9 @@ namespace TotalParking.Services
                 PermitBit      = Convert.ToString(r["permit_bit"]),
                 PermitBitArea  = Convert.ToString(r["permit_bit_area"]),
                 ClassWord      = Convert.ToInt32(r["class_word"]),
+                FindCardWord   = Convert.ToInt32(r["find_card_word"]),
+                FindCardLen    = Convert.ToInt32(r["find_card_len"]),
+                FindAnswerWord = Convert.ToInt32(r["find_answer_word"]),
                 IsActive       = Convert.ToBoolean(r["is_active"])
             };
         }

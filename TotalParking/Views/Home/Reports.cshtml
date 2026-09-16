@@ -748,193 +748,182 @@
         document.getElementById('btn-' + tabId).classList.add('active');
     }
 
-    // Dynamic mock database for car finder
-    const mockVehicles = {
-        '51G-12345': { plate: '51G-12345', card: '0009124458', type: 'SUV', zone: 'Zone 1 (Zone A)', block: 'Block A-02', slot: 'Pallet P02', checkIn: '16-06-2026 08:41:55', duration: '14 giờ 15 phút', status: 'ONLINE - Sẵn sàng' },
-        '51G12345': { plate: '51G-12345', card: '0009124458', type: 'SUV', zone: 'Zone 1 (Zone A)', block: 'Block A-02', slot: 'Pallet P02', checkIn: '16-06-2026 08:41:55', duration: '14 giờ 15 phút', status: 'ONLINE - Sẵn sàng' },
-        '0009124458': { plate: '51G-12345', card: '0009124458', type: 'SUV', zone: 'Zone 1 (Zone A)', block: 'Block A-02', slot: 'Pallet P02', checkIn: '16-06-2026 08:41:55', duration: '14 giờ 15 phút', status: 'ONLINE - Sẵn sàng' },
-        
-        '30H-88877': { plate: '30H-88877', card: '0009124451', type: 'Sedan', zone: 'Zone 2 (Zone B)', block: 'Block B-01', slot: 'Pallet P03', checkIn: '16-06-2026 08:42:10', duration: '14 giờ 14 phút', status: 'ONLINE - Sẵn sàng' },
-        '30H88877': { plate: '30H-88877', card: '0009124451', type: 'Sedan', zone: 'Zone 2 (Zone B)', block: 'Block B-01', slot: 'Pallet P03', checkIn: '16-06-2026 08:42:10', duration: '14 giờ 14 phút', status: 'ONLINE - Sẵn sàng' },
-        '0009124451': { plate: '30H-88877', card: '0009124451', type: 'Sedan', zone: 'Zone 2 (Zone B)', block: 'Block B-01', slot: 'Pallet P03', checkIn: '16-06-2026 08:42:10', duration: '14 giờ 14 phút', status: 'ONLINE - Sẵn sàng' },
-        
-        '92B-11223': { plate: '92B-11223', card: '0009123388', type: 'Sedan', zone: 'Zone 3 (Zone C)', block: 'Block B-04', slot: 'Pallet P05', checkIn: '16-06-2026 07:15:30', duration: '15 giờ 41 phút', status: 'ONLINE - Sẵn sàng' },
-        '92B11223': { plate: '92B-11223', card: '0009123388', type: 'Sedan', zone: 'Zone 3 (Zone C)', block: 'Block B-04', slot: 'Pallet P05', checkIn: '16-06-2026 07:15:30', duration: '15 giờ 41 phút', status: 'ONLINE - Sẵn sàng' },
-        '0009123388': { plate: '92B-11223', card: '0009123388', type: 'Sedan', zone: 'Zone 3 (Zone C)', block: 'Block B-04', slot: 'Pallet P05', checkIn: '16-06-2026 07:15:30', duration: '15 giờ 41 phút', status: 'ONLINE - Sẵn sàng' }
-    };
+    // ----------------------------------------------------------------- Tìm xe
+    // Tra vị trí xe bằng DỮ LIỆU THẬT qua /VehicleFinder/Find.
+    //
+    // Bản trước của hàm này tra trong một mảng cứng gồm 3 xe, và với mọi truy vấn
+    // không khớp thì SINH NGẪU NHIÊN một mã thẻ rồi luôn trả về
+    // "Block A-01 / Pallet P08". Gõ gì cũng ra xe, không bao giờ báo không tìm
+    // thấy — nhân viên sẽ đi tìm chiếc xe không tồn tại.
+    //
+    // Nguyên tắc ở đây: KHÔNG hiển thị thứ gì hệ thống không thật sự biết.
+    // Chưa có dữ liệu bảng parking_slot nên không vẽ lưới pallet; nói thẳng là
+    // mới định vị được tới block.
+    let carFinderBusy = false;
+
+    function escHtml(s) {
+        if (s === null || s === undefined) return '';
+        return String(s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
+    function finderBox(iconColor, title, detail) {
+        return `
+            <div class="text-center space-y-2 py-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto ${iconColor}"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                <div class="text-xs font-bold text-slate-300 font-mono">${escHtml(title)}</div>
+                <div class="text-[11px] text-slate-500 font-mono">${escHtml(detail)}</div>
+            </div>
+        `;
+    }
 
     function runCarFinder() {
-        const query = document.getElementById('search-query-input').value.trim().toUpperCase();
+        const input = document.getElementById('search-query-input');
         const container = document.getElementById('finder-result-container');
-        
+        const query = input.value.trim();
+
         if (!query) {
-            alert('Vui lòng nhập biển số xe hoặc số thẻ từ!');
+            container.innerHTML = finderBox('text-slate-700', 'Chưa nhập gì',
+                'Nhập mã thẻ RFID, số thẻ hoặc biển số xe.');
+            return;
+        }
+        if (carFinderBusy) return;
+        carFinderBusy = true;
+
+        container.innerHTML = finderBox('text-blue-400 animate-pulse', 'Đang tra cứu...',
+            'Đang truy vấn cơ sở dữ liệu phiên gửi xe.');
+
+        fetch('/VehicleFinder/Find?q=' + encodeURIComponent(query))
+            .then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
+            .then(function (res) { renderCarFinder(res.body, query); })
+            .catch(function (err) {
+                container.innerHTML = finderBox('text-red-400', 'Không gọi được máy chủ',
+                    String(err && err.message ? err.message : err));
+            })
+            .then(function () { carFinderBusy = false; });
+    }
+
+    function renderCarFinder(data, query) {
+        const container = document.getElementById('finder-result-container');
+        const outcome = data && data.outcome;
+
+        if (outcome === 'card_unknown') {
+            container.innerHTML = finderBox('text-amber-400', 'Không tìm thấy "' + query + '"',
+                'Mã thẻ, số thẻ hoặc biển số này không có trong hệ thống. Kiểm tra lại cách nhập.');
+            return;
+        }
+        if (outcome === 'no_session') {
+            container.innerHTML = finderBox('text-amber-400', 'Thẻ hợp lệ nhưng chưa gửi xe',
+                'Thẻ có trong danh sách đăng ký nhưng chưa từng có phiên gửi xe nào.');
+            return;
+        }
+        if (outcome === 'db_error') {
+            container.innerHTML = finderBox('text-red-400', 'Lỗi cơ sở dữ liệu',
+                (data && data.message) || 'Không truy vấn được.');
+            return;
+        }
+        if (outcome !== 'found' || !data.results || !data.results.length) {
+            container.innerHTML = finderBox('text-amber-400', 'Không có kết quả',
+                (data && data.message) || 'Không tìm thấy phiên gửi xe nào.');
             return;
         }
 
-        let vehicle = mockVehicles[query] || mockVehicles[query.replace(/[-\s]/g, '')];
+        const v = data.results[0];
+        const live = v.is_active;
 
-        // Fallback mockup generator for other queries
-        if (!vehicle) {
-            const mockCard = "0009" + Math.floor(100000 + Math.random() * 900000);
-            vehicle = {
-                plate: query.includes('-') ? query : (query.length > 5 ? query.slice(0, 3) + '-' + query.slice(3) : query),
-                card: mockCard,
-                type: query.toLowerCase().includes('suv') ? 'SUV' : 'Sedan',
-                zone: 'Zone 1 (Zone A)',
-                block: 'Block A-01',
-                slot: 'Pallet P08',
-                checkIn: '16-06-2026 09:30:00',
-                duration: '12 giờ 28 phút',
-                status: 'ONLINE - Sẵn sàng'
-            };
-        }
+        // Đang trong bãi và đã lấy ra là hai câu trả lời khác hẳn nhau về nghiệp
+        // vụ, nên phải khác nhau cả về màu lẫn chữ — không chỉ khác một dòng nhỏ.
+        const badge = live
+            ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono">
+                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ĐANG TRONG BÃI - ${escHtml(v.status)}
+               </span>`
+            : `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-500/10 border border-slate-600/40 text-slate-400 font-mono">
+                   <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> ĐÃ LẤY RA - ${escHtml(v.status)}
+               </span>`;
 
-        // Generate mechanical grid: 3 levels, 4 columns
-        let gridHtml = `
-            <div class="mt-4 p-4 rounded-lg bg-slate-950 border border-slate-800">
-                <div class="text-[10px] text-slate-400 font-bold font-mono mb-2.5 uppercase flex items-center gap-1.5 justify-between">
-                    <span class="flex items-center gap-1.5 text-yellow-400">
-                        <span class="w-2 h-2 rounded-full bg-yellow-500 animate-ping"></span>
-                        VỊ TRÍ THỰC TẾ TRÊN PALLET: ${vehicle.slot} (${vehicle.block})
-                    </span>
-                    <span class="text-slate-500 text-[9px] font-normal font-mono normal-case">Nhấp nháy màu vàng là vị trí xe đỗ</span>
-                </div>
-                <div class="grid grid-cols-4 gap-2 max-w-xl mx-auto py-2">
-        `;
+        const zoneText  = v.zone_id ? ('Zone ' + v.zone_id + (v.zone_name ? ' (' + v.zone_name + ')' : '')) : 'Chưa phân zone';
+        const blockText = v.block_no ? ('Block ' + v.block_no) : 'Chưa phân block';
+        const plateText = v.plate ? v.plate : 'Chưa có biển số';
 
-        for (let lvl = 3; lvl >= 1; lvl--) {
-            for (let col = 1; col <= 4; col++) {
-                const slotNum = (lvl - 1) * 4 + col;
-                const slotId = 'Pallet P' + String(slotNum).padStart(2, '0');
-                
-                // Compare slot name (e.g. "Pallet P03" vs "P03" or "Pallet P03")
-                const isTarget = (vehicle.slot === slotId || 
-                                  vehicle.slot.replace('Pallet ', '') === 'P' + String(slotNum).padStart(2, '0') || 
-                                  vehicle.slot.includes('P' + String(slotNum).padStart(2, '0')));
-                
-                let slotClass = '';
-                let slotContent = '';
-                
-                if (isTarget) {
-                    slotClass = 'bg-yellow-500/10 border-2 border-yellow-500 text-yellow-300 shadow-[0_0_15px_rgba(234,179,8,0.35)] animate-pulse';
-                    slotContent = `
-                        <div class="flex flex-col items-center justify-center h-16 p-1 relative">
-                            <span class="absolute top-1 left-1 text-[7px] font-mono text-yellow-500 font-bold bg-yellow-950/80 px-1 rounded border border-yellow-850/30">T${lvl}-C${col}</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-yellow-400 mt-1.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
-                            <span class="text-[9px] font-bold mt-1 text-yellow-400 font-mono tracking-tight">${slotId}</span>
-                        </div>
-                    `;
-                } else {
-                    // Mock occupied vs empty slots
-                    const isOccupied = (slotNum === 1 || slotNum === 4 || slotNum === 6 || slotNum === 7 || slotNum === 10 || slotNum === 11);
-                    if (isOccupied) {
-                        slotClass = 'bg-slate-900/40 border border-slate-800 text-slate-500';
-                        slotContent = `
-                            <div class="flex flex-col items-center justify-center h-16 p-1 relative opacity-40">
-                                <span class="absolute top-1 left-1 text-[7px] font-mono text-slate-655 bg-slate-950 px-1 rounded">T${lvl}-C${col}</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-slate-500 mt-1.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
-                                <span class="text-[8px] mt-1 font-mono">${slotId}</span>
-                            </div>
-                        `;
-                    } else {
-                        slotClass = 'bg-slate-950 border border-dashed border-slate-800/80 text-slate-600 hover:border-slate-700/60 transition-colors';
-                        slotContent = `
-                            <div class="flex flex-col items-center justify-center h-16 p-1 relative">
-                                <span class="absolute top-1 left-1 text-[7px] font-mono text-slate-700">T${lvl}-C${col}</span>
-                                <span class="text-[8px] font-bold font-mono mt-1 text-slate-500">${slotId}</span>
-                                <span class="text-[7px] text-slate-700 font-mono font-bold mt-0.5">TRỐNG</span>
-                            </div>
-                        `;
-                    }
-                }
-                
-                gridHtml += `<div class="rounded-lg transition-all ${slotClass}">${slotContent}</div>`;
+        // parking_slot chưa có dữ liệu -> slot_label luôn null. Nói rõ là chưa
+        // định vị được tới ô, thay vì vẽ một lưới pallet không có thật.
+        const slotText = v.slot_label
+            ? v.slot_label
+            : (v.slot_count ? 'Chưa định vị (block có ' + v.slot_count + ' ô)' : 'Chưa định vị');
+
+        let historyHtml = '';
+        if (data.results.length > 1) {
+            let rows = '';
+            for (let i = 1; i < data.results.length; i++) {
+                const h = data.results[i];
+                rows += `
+                    <tr class="border-b border-slate-850/60">
+                        <td class="py-1.5 pr-3 text-slate-400">${escHtml(h.created_at)}</td>
+                        <td class="py-1.5 pr-3 text-slate-400">${h.block_no ? 'Block ' + h.block_no : '-'}</td>
+                        <td class="py-1.5 pr-3 text-slate-500">${escHtml(h.status)}</td>
+                        <td class="py-1.5 text-slate-500">${escHtml(h.duration)}</td>
+                    </tr>`;
             }
+            historyHtml = `
+                <div class="mt-3 pt-3 border-t border-slate-850">
+                    <div class="text-[10px] text-slate-500 font-mono uppercase tracking-wider mb-2">Các phiên trước của thẻ này</div>
+                    <table class="w-full text-[10px] font-mono">
+                        <thead><tr class="text-slate-600 border-b border-slate-850">
+                            <th class="text-left font-normal pb-1 pr-3">Vào lúc</th>
+                            <th class="text-left font-normal pb-1 pr-3">Vị trí</th>
+                            <th class="text-left font-normal pb-1 pr-3">Trạng thái</th>
+                            <th class="text-left font-normal pb-1">Thời lượng</th>
+                        </tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>`;
         }
 
-        gridHtml += `
-                </div>
-                <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[9px] font-mono text-slate-550 mt-1 pt-2 border-t border-slate-900/60">
-                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-yellow-500/10 border border-yellow-500 animate-pulse inline-block"></span> Vị trí xe tìm thấy</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-slate-900/40 border border-slate-800 inline-block"></span> Pallet có xe khác</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded border border-dashed border-slate-800 inline-block"></span> Pallet trống</span>
-                </div>
-            </div>
-        `;
-
-        // Render found card with premium design and RELEASE trigger
         container.innerHTML = `
             <div class="w-full text-left p-4 bg-slate-900 rounded-lg border border-slate-800 space-y-4 shadow-2xl">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pb-3 border-b border-slate-800/60">
                     <div class="flex items-center gap-3">
-                        <div class="p-2 bg-blue-500/10 text-blue-400 rounded-md border border-blue-500/25">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+                        <div class="p-2 ${live ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25' : 'bg-slate-700/20 text-slate-400 border-slate-700/40'} rounded-md border">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
                         </div>
                         <div>
-                            <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/15 border border-blue-500/30 text-blue-400 font-mono">${vehicle.type}</span>
-                                <h4 class="text-sm font-bold text-white tracking-wider font-mono">${vehicle.plate}</h4>
+                            <h4 class="text-sm font-bold text-white tracking-wider font-mono">${escHtml(plateText)}</h4>
+                            <div class="text-[10px] text-slate-500 font-mono mt-0.5">
+                                Mã thẻ RFID: <span class="text-slate-300">${escHtml(v.card_code)}</span>
+                                ${v.card_no ? ' &middot; Số thẻ: <span class="text-slate-300">' + escHtml(v.card_no) + '</span>' : ''}
                             </div>
-                            <div class="text-[10px] text-slate-500 font-mono mt-0.5">Mã thẻ RFID: ${vehicle.card}</div>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                            ${vehicle.status}
-                        </span>
-                    </div>
+                    <div class="text-right">${badge}</div>
                 </div>
 
-                <!-- Specs -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
                     <div class="p-2.5 bg-slate-950/60 rounded border border-slate-850">
                         <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Khu vực (Zone)</span>
-                        <span class="text-slate-200 font-bold block mt-0.5">${vehicle.zone}</span>
+                        <span class="text-slate-200 font-bold block mt-0.5">${escHtml(zoneText)}</span>
                     </div>
                     <div class="p-2.5 bg-slate-950/60 rounded border border-slate-850">
                         <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Khối đỗ (Block)</span>
-                        <span class="text-blue-400 font-bold block mt-0.5">${vehicle.block}</span>
+                        <span class="text-blue-400 font-bold block mt-0.5">${escHtml(blockText)}</span>
                     </div>
                     <div class="p-2.5 bg-slate-950/60 rounded border border-slate-850">
                         <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Khay đỗ (Pallet)</span>
-                        <span class="text-yellow-400 font-bold block mt-0.5">${vehicle.slot}</span>
+                        <span class="${v.slot_label ? 'text-yellow-400' : 'text-slate-500'} font-bold block mt-0.5">${escHtml(slotText)}</span>
                     </div>
                     <div class="p-2.5 bg-slate-950/60 rounded border border-slate-850">
                         <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Thời lượng đỗ</span>
-                        <span class="text-slate-200 font-bold block mt-0.5">${vehicle.duration}</span>
+                        <span class="text-slate-200 font-bold block mt-0.5">${escHtml(v.duration)}</span>
                     </div>
                 </div>
 
-                <!-- Interactive Mechanical Grid -->
-                ${gridHtml}
-
-                <!-- Actions -->
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-2">
-                    <div class="text-[10px] text-slate-500 font-mono">
-                        Thời gian vào: <span class="text-slate-400">${vehicle.checkIn}</span>
-                    </div>
-                    <button id="btn-release-car" onclick="simulateReleaseCar('${vehicle.slot}', '${vehicle.block}')" class="w-full sm:w-auto px-4 py-2 bg-amber-600 hover:bg-amber-500 text-slate-955 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/10">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
-                        Yêu cầu trả xe từ xa (Retrieve)
-                    </button>
+                <div class="flex flex-wrap gap-x-5 gap-y-1 text-[10px] text-slate-500 font-mono pt-1">
+                    <span>Vào lúc: <span class="text-slate-400">${escHtml(v.created_at)}</span></span>
+                    ${v.parked_at ? '<span>Đã cất xong: <span class="text-slate-400">' + escHtml(v.parked_at) + '</span></span>' : ''}
+                    ${v.completed_at ? '<span>Lấy ra lúc: <span class="text-slate-400">' + escHtml(v.completed_at) + '</span></span>' : ''}
+                    <span>Phiên #${v.session_id}</span>
                 </div>
-
-                <!-- Simulation progress container -->
-                <div id="release-progress-box" class="hidden p-4 rounded-lg bg-slate-950 border border-slate-800 space-y-2 mt-4">
-                    <div class="flex justify-between items-center text-[10px] font-mono">
-                        <span id="release-status-text" class="text-amber-400 font-bold">Đang gửi lệnh PLC xoay mâm...</span>
-                        <span id="release-percent-text" class="text-slate-400">0%</span>
-                    </div>
-                    <div class="h-2 bg-slate-900 rounded-full overflow-hidden">
-                        <div id="release-progress-bar" class="h-full bg-amber-500 transition-all duration-300" style="width: 0%;"></div>
-                    </div>
-                    <div class="text-[9px] text-slate-500 font-mono flex justify-between">
-                        <span>Lệnh: release_pallet(${vehicle.slot})</span>
-                        <span id="release-timer-text">Dự kiến: 3s</span>
-                    </div>
-                </div>
+                ${historyHtml}
             </div>
         `;
     }

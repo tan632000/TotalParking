@@ -35,6 +35,9 @@ namespace TotalParking.Services.Plc
         // plc:enabled: chạy vòng poll là việc thường ngày, còn cưỡng bức một
         // thanh ghi trên thiết bị thật thì không — và W75.0 = 1 sai lúc nghĩa là
         // HMI cho gửi xe vào block đang giữ xe khác.
+        // So PLC da bi don D1000 trong lan khoi dong gan nhat. -1 = chua chay xong.
+        public static int LastStartupCleared { get; private set; } = -1;
+
         public static bool AllowManualWrite
         {
             get { return ReadBool("plc:allowManualWrite", false); }
@@ -63,7 +66,29 @@ namespace TotalParking.Services.Plc
                 {
                     host._manager = new PlcConnectionManager();
                     host._manager.Load();
-                    if (Enabled) host._manager.StartLoop();
+                    if (Enabled)
+                    {
+                        host._manager.StartLoop();
+
+                        // Don cau tra loi con sot o D1000 tu lan chay truoc.
+                        //
+                        // Chay NEN, khong chan khoi dong: quet 112 PLC co the mat
+                        // vai chuc giay va ung dung web phai len duoc ngay.
+                        //
+                        // Chi chay khi plc:enabled — tat vong poll nghia la SCADA
+                        // khong quan ly D1000, luc do xoa di co the mat cau tra loi
+                        // do he khac ghi.
+                        var mgr = host._manager;
+                        System.Threading.Tasks.Task.Run(async () =>
+                        {
+                            try
+                            {
+                                int n = await mgr.ClearStaleAnswersAsync();
+                                LastStartupCleared = n;
+                            }
+                            catch (Exception) { }
+                        });
+                    }
                 }
                 catch (Exception)
                 {

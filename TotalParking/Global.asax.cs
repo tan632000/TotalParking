@@ -28,6 +28,13 @@ namespace TotalParking
             // khi led:enabled. Khi tắt có trật tự, LedHost xoá bảng về trạng
             // thái trống — board giữ nội dung cũ vĩnh viễn và không có watchdog.
             LedHost.Initialize();
+
+            // Vòng quét ô đỗ: đọc D400/D202…D308 để biết ô nào đang giữ thẻ nào.
+            // Công tắc riêng (plc:slotScanEnabled) vì vòng này CHỈ ĐỌC, trong khi
+            // vòng poll của PlcHost có ghi D1000. Gộp chung sẽ buộc phải bật quyền
+            // ghi mới có dữ liệu chiếm chỗ — thứ mà bảng LED và chức năng tìm xe
+            // cần trước tiên. Chạy SAU PlcHost vì nó dùng danh sách kết nối ở đó.
+            SlotScanHost.Initialize();
         }
     }
 }
