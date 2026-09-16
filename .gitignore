@@ -83,3 +83,8 @@ plans/*
 .opencode/
 .codex/
 .agents/
+
+# Archives (exceed GitHub 100 MB limit)
+*.rar
+*.zip
+*.7z
