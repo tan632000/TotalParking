@@ -26,6 +26,20 @@ namespace TotalParking.Controllers
         // Ngưỡng coi là đáng ngờ: 3 nhịp liên tiếp không đẩy được.
         private const int StaleWarnSeconds = 30;
 
+        // Ngưỡng độ phủ để số hiện màu xanh; dưới ngưỡng thì vàng. Đọc lại từ
+        // Web.config mỗi lần gọi để trả về đúng giá trị publisher đang dùng —
+        // nếu cứng hoá ở đây thì màn giám sát sẽ nói một đằng, bảng làm một nẻo.
+        private static int MinCoveragePct
+        {
+            get
+            {
+                int v;
+                return int.TryParse(
+                    System.Configuration.ConfigurationManager.AppSettings["led:minCoveragePct"],
+                    out v) ? v : 70;
+            }
+        }
+
         // GET /LedStatus
         public ActionResult Index()
         {
@@ -56,12 +70,43 @@ namespace TotalParking.Controllers
                     // day so, xem LedPublisher.PublishPanel.
                     has_data      = c.HasData,
                     // Phien dang mo nhung chua biet block — khong tru vao bo dem nao.
-                    used_unassigned = c.UsedUnassigned
+                    used_unassigned = c.UsedUnassigned,
+                    // Do phu: bao nhieu o co khi vua doc duoc tu PLC trong 5 phut.
+                    // Duoi nguong led:minCoveragePct thi so tren bang chuyen VANG.
+                    // Day la cach duy nhat nhin ra "so dang lac quan hon su that"
+                    // ma khong phai mo tung bang ra dem.
+                    slots_total  = c.SlotsTotal,
+                    slots_fresh  = c.SlotsFresh,
+                    coverage_pct = c.CoveragePct
                 };
             }
             catch (Exception ex)
             {
                 capacity = new { error = ex.Message };
+            }
+
+            // Do phu theo TUNG ZONE. Bang chi huong lay so cua zone no dan toi,
+            // nen mot bang chuyen vang hay khong phu thuoc vao zone do chu khong
+            // phai vao do phu toan bai. Khong co khoi nay thi thay bang vang ma
+            // khong biet vi sao.
+            object zones;
+            try
+            {
+                zones = _repo.GetCapacityByZone()
+                    .OrderBy(kv => kv.Key)
+                    .Select(kv => new
+                    {
+                        zone_id      = kv.Key,
+                        free_l5m     = kv.Value.FreeL5m,
+                        total_l5m    = kv.Value.TotalL5m,
+                        slots_fresh  = kv.Value.SlotsFresh,
+                        slots_total  = kv.Value.SlotsTotal,
+                        coverage_pct = kv.Value.CoveragePct
+                    }).ToArray();
+            }
+            catch (Exception ex)
+            {
+                zones = new { error = ex.Message };
             }
 
             return Json2(200, new
@@ -71,7 +116,9 @@ namespace TotalParking.Controllers
                 interval_ms = pub.IntervalMs,
                 manual_send_allowed = LedHost.AllowManualSend,
                 now = DateTime.Now.ToString("HH:mm:ss"),
+                min_coverage_pct = MinCoveragePct,
                 capacity,
+                zones,
                 panels = pub.States.Select(s => new
                 {
                     code     = s.Panel.Code,

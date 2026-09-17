@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace TotalParking.Models
@@ -76,6 +77,21 @@ namespace TotalParking.Models
         // Phiên đang mở nhưng chưa biết block. Không trừ vào bộ đếm nào vì
         // không biết nó sẽ chiếm loại khoang nào — phơi ra để nhìn thấy.
         public int UsedUnassigned { get; set; }
+
+        // ĐỘ PHỦ: trong số ô cơ khí thuộc phạm vi này, bao nhiêu ô vừa đọc được
+        // từ PLC trong vòng 5 phút.
+        //
+        // Con số chỗ trống coi ô chưa đọc được là TRỐNG, nên khi nhiều PLC mất
+        // kết nối thì nó lạc quan hơn sự thật mà không có dấu hiệu gì. Hai trường
+        // này là thứ để nhận ra điều đó.
+        public int SlotsTotal { get; set; }
+        public int SlotsFresh { get; set; }
+
+        // -1 = không biết (không có ô cơ khí nào trong phạm vi này).
+        public int CoveragePct
+        {
+            get { return SlotsTotal <= 0 ? -1 : (int)Math.Round(100.0 * SlotsFresh / SlotsTotal); }
+        }
 
         public int FreeTotal { get { return FreeL5m + FreeL48m + FreeStandard; } }
 

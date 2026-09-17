@@ -185,6 +185,7 @@
     <Compile Include="Models\DeviceStatus.cs" />
     <Compile Include="Services\DeviceProbeService.cs" />
     <Compile Include="Controllers\DeviceStatusController.cs" />
+    <Compile Include="Controllers\CardsController.cs" />
     <Compile Include="Models\SlotState.cs" />
     <Compile Include="Services\Plc\SlotOccupancyReader.cs" />
     <Compile Include="Services\Plc\SlotScanHost.cs" />
@@ -194,6 +195,8 @@
     <Compile Include="Services\Led\LedHost.cs" />
     <Compile Include="Services\PlcRequestRepository.cs" />
     <Compile Include="Services\CardScanService.cs" />
+    <Compile Include="Services\CardCsvParser.cs" />
+    <Compile Include="Services\BlockMapRepository.cs" />
     <Compile Include="Services\Plc\PlcTypes.cs" />
     <Compile Include="Services\Plc\OmronFinsClient.cs" />
     <Compile Include="Services\Plc\CardCodeDecoder.cs" />
@@ -313,6 +316,13 @@
     <None Include="Database\24_led_capacity_from_plc.sql" />
     <None Include="Database\25_led_ports_per_arrow.sql" />
     <None Include="Database\26_led_arrow_directions.sql" />
+    <None Include="Database\27_slot_card_plausible.sql" />
+    <None Include="Database\28_oto_cards.sql" />
+    <None Include="Database\29_zone_coverage.sql" />
+    <None Include="Database\30_led_car_length_nested.sql" />
+    <None Include="Database\31_led_arrow_swap_lr.sql" />
+    <None Include="Database\32_led51_port1_zone4.sql" />
+    <None Include="Database\33_block_xy_gate_rank.sql" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />

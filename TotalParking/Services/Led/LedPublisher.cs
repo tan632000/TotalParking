@@ -160,10 +160,37 @@ namespace TotalParking.Services.Led
                 try { byZone = _repo.GetCapacityByZone(); }
                 catch (Exception) { byZone = null; }
 
-                foreach (var state in States)
-                {
-                    PublishPanel(state, capacity, byZone);
-                }
+                // ĐẨY SONG SONG, KHÔNG TUẦN TỰ.
+                //
+                // Tuần tự thì một bảng chết kéo sập nhịp của tất cả bảng còn lại:
+                // lệnh gửi tới nó phải chờ hết thời gian chờ TCP, và bộ chặn
+                // `_busy` ở trên bỏ luôn mọi nhịp rơi vào lúc đó.
+                //
+                // Đã đo được hậu quả thật lúc 11:02 ngày 17/09, khi bảng 67 mất
+                // kết nối: 20 gói trong 45 giây thay vì ~189, và mỗi bảng chỉ còn
+                // được làm mới sau ~35 giây thay vì 5.
+                //
+                // Con số 35 giây đó nguy hiểm chứ không chỉ chậm: tài liệu nhà
+                // cung cấp ghi rõ bảng TỰ ĐÓNG socket nếu 30 giây không nhận được
+                // gói nào. Một bảng chết đẩy chu kỳ vượt ngưỡng đó là đủ làm các
+                // bảng đang khoẻ rụng theo — hỏng một con thành hỏng dây chuyền.
+                //
+                // An toàn khi song song: mỗi luồng chỉ chạm `state` của riêng một
+                // bảng, và SocketFor/DropSocket đã khoá `_sync` khi đụng từ điển
+                // socket dùng chung.
+                System.Threading.Tasks.Parallel.ForEach(
+                    States,
+                    new System.Threading.Tasks.ParallelOptions { MaxDegreeOfParallelism = 16 },
+                    state =>
+                    {
+                        // Nuốt lỗi TẠI ĐÂY, không để Parallel.ForEach gom thành
+                        // AggregateException ném ra khỏi Tick: ngoại lệ thoát khỏi
+                        // callback của Timer sẽ hạ cả tiến trình w3wp, tức mất luôn
+                        // vòng poll PLC. PublishPanel đã tự bắt lỗi từng cổng, đây
+                        // chỉ là lưới chặn cuối.
+                        try { PublishPanel(state, capacity, byZone); }
+                        catch (Exception ex) { state.LastError = ex.Message; }
+                    });
             }
             finally
             {

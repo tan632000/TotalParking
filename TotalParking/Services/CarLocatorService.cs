@@ -48,6 +48,14 @@ namespace TotalParking.Services
             // Mã nằm ở nhiều block = rác, loại thẳng.
             "  AND  (SELECT COUNT(DISTINCT s2.block_id) FROM plc_slot_state s2 " +
             "        WHERE s2.card_code = @code) = 1 " +
+            // Giá trị quá nhỏ = rác, loại thẳng. Xem v_slot_taken (file 27):
+            // sau khi có điện lại ngày 17/09, D400 của block 27 mang giá trị
+            // '000003e8' (= 1000) — ladder khởi tạo lại, không phải xe. Nó chỉ
+            // nằm ở một block nên quy tắc duy nhất ở trên KHÔNG bắt được.
+            //
+            // Phải trùng khít với điều kiện trong v_slot_taken, nếu không thì số
+            // trên bảng LED và kết quả tìm xe sẽ nói hai chuyện khác nhau.
+            "  AND  (LENGTH(s.card_code) < 8 OR CONV(s.card_code, 16, 10) > 65535) " +
             // Ô nào vừa đổi gần đây nhất thì tin hơn.
             "ORDER  BY s.changed_at DESC, s.read_at DESC " +
             "LIMIT  1";

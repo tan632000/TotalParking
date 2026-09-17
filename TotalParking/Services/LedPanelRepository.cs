@@ -112,7 +112,9 @@ namespace TotalParking.Services
                         TotalL5m       = Num(r, "total_l5m"),
                         TotalL48m      = Num(r, "total_l48m"),
                         TotalStandard  = Num(r, "total_standard"),
-                        UsedUnassigned = Num(r, "used_unassigned")
+                        UsedUnassigned = Num(r, "used_unassigned"),
+                        SlotsTotal     = Num(r, "slots_total"),
+                        SlotsFresh     = Num(r, "slots_fresh")
                     };
                 }
             }
@@ -140,7 +142,9 @@ namespace TotalParking.Services
                             FreeStandard  = Num(r, "free_standard"),
                             TotalL5m      = Num(r, "total_l5m"),
                             TotalL48m     = Num(r, "total_l48m"),
-                            TotalStandard = Num(r, "total_standard")
+                            TotalStandard = Num(r, "total_standard"),
+                            SlotsTotal    = Num(r, "slots_total"),
+                            SlotsFresh    = Num(r, "slots_fresh")
                         };
                     }
                 }
@@ -173,6 +177,12 @@ namespace TotalParking.Services
                 sum.TotalL5m      += c.TotalL5m;
                 sum.TotalL48m     += c.TotalL48m;
                 sum.TotalStandard += c.TotalStandard;
+                // Độ phủ cộng dồn theo SỐ Ô, không lấy trung bình phần trăm:
+                // mũi tên dẫn tới ba zone thì tài xế quan tâm tổng số ô mà hệ
+                // thống đang thật sự nhìn thấy, chứ không phải trung bình cộng
+                // của ba tỉ lệ — zone nhỏ sẽ kéo lệch con số đó.
+                sum.SlotsTotal    += c.SlotsTotal;
+                sum.SlotsFresh    += c.SlotsFresh;
             }
             return found > 0 ? sum : null;
         }
