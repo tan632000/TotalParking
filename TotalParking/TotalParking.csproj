@@ -186,6 +186,7 @@
     <Compile Include="Services\DeviceProbeService.cs" />
     <Compile Include="Controllers\DeviceStatusController.cs" />
     <Compile Include="Controllers\CardsController.cs" />
+    <Compile Include="Controllers\PgsStatusController.cs" />
     <Compile Include="Models\SlotState.cs" />
     <Compile Include="Services\Plc\SlotOccupancyReader.cs" />
     <Compile Include="Services\Plc\SlotScanHost.cs" />
@@ -197,6 +198,9 @@
     <Compile Include="Services\CardScanService.cs" />
     <Compile Include="Services\CardCsvParser.cs" />
     <Compile Include="Services\BlockMapRepository.cs" />
+    <Compile Include="Services\Pgs\PgsFrame.cs" />
+    <Compile Include="Services\Pgs\PgsConnection.cs" />
+    <Compile Include="Services\Pgs\PgsHost.cs" />
     <Compile Include="Services\Plc\PlcTypes.cs" />
     <Compile Include="Services\Plc\OmronFinsClient.cs" />
     <Compile Include="Services\Plc\CardCodeDecoder.cs" />
@@ -283,6 +287,7 @@
     <Content Include="Images\LM-CL1-BAS-NTC-CP-SHD-0001-01-Mechanical Parking System Drawing_page-0007.jpg" />
     <Content Include="Images\hmi_flow.jpg" />
     <Content Include="Images\zones_map.jpeg" />
+    <Content Include="Images\plan_map.jpg" />
     <Content Include="Content\scada.css" />
   </ItemGroup>
   <ItemGroup>
@@ -323,6 +328,7 @@
     <None Include="Database\31_led_arrow_swap_lr.sql" />
     <None Include="Database\32_led51_port1_zone4.sql" />
     <None Include="Database\33_block_xy_gate_rank.sql" />
+    <None Include="Database\34_block_map_xy.sql" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />

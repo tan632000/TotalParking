@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using TotalParking.Services.Led;
+using TotalParking.Services.Pgs;
 using TotalParking.Services.Plc;
 
 namespace TotalParking
@@ -28,6 +29,13 @@ namespace TotalParking
             // khi led:enabled. Khi tắt có trật tự, LedHost xoá bảng về trạng
             // thái trống — board giữ nội dung cũ vĩnh viễn và không có watchdog.
             LedHost.Initialize();
+
+            // Tầng cảm biến đỗ thường (PGS/ZCU). CHỈ ĐỌC — không gửi byte nào
+            // xuống thiết bị, nên không có công tắc "cho phép ghi tay".
+            //
+            // Chưa nối vào số trên bảng LED: còn thiếu bảng ánh xạ bit -> ô đỗ.
+            // Giai đoạn này đọc, lọc nhiễu và phơi ra /PgsStatus.
+            PgsHost.Initialize();
 
             // Vòng quét ô đỗ: đọc D400/D202…D308 để biết ô nào đang giữ thẻ nào.
             // Công tắc riêng (plc:slotScanEnabled) vì vòng này CHỈ ĐỌC, trong khi

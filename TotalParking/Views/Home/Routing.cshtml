@@ -45,18 +45,20 @@
             <div class="grid grid-cols-1 xl:grid-cols-5 gap-5">
                 @*  Ban do THAT lam nen, cham block chieu theo TUNG ZONE.
 
-                    Ly do ghi day du o BlockMapRepository: mot phep bien doi chung
-                    tu ban ve sang anh khong khop (da thu ba cach, 68/79/90% va deu
-                    lech he thong). Can theo tung zone thi block luon nam dung zone
-                    va giu duoc bo cuc tuong doi -- du cho muc dich uoc luong.     *@
+                    Anh nen la ban RENDER tu chinh ban ve vector (trang 1 cua
+                    LM-CL1-BAS-NTC-CP-SHD-0001-02), nen toa do block la CHINH XAC chu
+                    khong phai uoc luong: minh tu ve buc anh thi phep bien doi la do
+                    minh dat ra. Xem Database/34_block_map_xy.sql.
+
+                    Doi anh nen thi phai chay lai migration do.                    *@
                 <div class="xl:col-span-3">
                     <div class="relative w-full select-none rounded-lg overflow-hidden border border-slate-800"
-                         style="background:#0b1220; aspect-ratio: 1016 / 781;">
-                        <img src="@Url.Content("~/Images/zones_map.jpeg")" alt="Sơ đồ bãi"
+                         style="background:#0b1220; aspect-ratio: 1200 / 1139;">
+                        <img src="@Url.Content("~/Images/plan_map.jpg")" alt="Sơ đồ bãi"
                              class="w-full h-full object-contain select-none"
-                             style="opacity:.55; filter:brightness(.85);" />
+                             style="opacity:.92;" />
                         <svg id="sim-map" class="absolute top-0 left-0 w-full h-full"
-                             viewBox="0 0 1016 781" xmlns="http://www.w3.org/2000/svg">
+                             viewBox="0 0 1200 1139" xmlns="http://www.w3.org/2000/svg">
                             <g id="map-blocks"></g>
                             <g id="map-route"></g>
                         </svg>
