@@ -2,6 +2,20 @@
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
 
+@{
+    // Chong cache cho anh so do. Truoc day the <img> khong co tham so nao, nen sua
+    // anh xong thi trinh duyet van dung ban cu trong cache — sua o dia ma man hinh
+    // khong doi, rat mat cong tim.
+    //
+    // Lay theo LAN SUA CUOI cua file chu khong theo DateTime.Now nhu scada.css:
+    // anh nang gan 2 MB, dung Now thi moi lan tai trang deu phai tai lai tu dau.
+    // Theo mtime thi chi tai lai dung khi anh that su doi.
+    var mapPath = Server.MapPath("~/Images/plan_map.jpg");
+    var mapVer  = System.IO.File.Exists(mapPath)
+                ? System.IO.File.GetLastWriteTimeUtc(mapPath).Ticks
+                : 0L;
+}
+
 <div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
     <div class="space-y-6">
         <!-- Page Title & Header -->
@@ -54,27 +68,11 @@
                 <div class="xl:col-span-3">
                     <div class="relative w-full select-none rounded-lg overflow-hidden border border-slate-800"
                          style="background:#0b1220; aspect-ratio: 1594 / 1300;">
-                        <img src="@Url.Content("~/Images/plan_map.jpg")" alt="Sơ đồ bãi"
+                        <img src="@Url.Content("~/Images/plan_map.jpg")?v=@mapVer" alt="Sơ đồ bãi"
                              class="w-full h-full object-contain select-none"
                              style="opacity:.92;" />
                         <svg id="sim-map" class="absolute top-0 left-0 w-full h-full"
                              viewBox="0 0 1594 1300" xmlns="http://www.w3.org/2000/svg">
-                            @*
-                                Khung ten cua ban ve CAD nam san trong plan_map.jpg o goc
-                                duoi-trai: ten cong ty, logo, bang thong ke model. Khong
-                                lien quan gi den dieu huong xe nen che di.
-
-                                Vung nay da doi chieu voi du lieu that: 0 block co toa do,
-                                0 nut lan, 0 canh lan di qua no — khong the giau mat phan
-                                nao cua so do. Doi anh nen thi phai do lai.
-
-                                Mau rgb(236,236,238) la mau trang cua to giay SAU khi qua
-                                opacity .92 cua the <img> ben duoi. Dat trang thuan (#fff)
-                                thi o nay sang hon xung quanh va lo ra.
-
-                                Dat TRUOC #map-blocks de block va duong di luon ve de len.
-                            *@
-                            <rect x="74" y="903" width="480" height="310" fill="rgb(236, 236, 238)" />
                             <g id="map-blocks"></g>
                             <g id="map-route"></g>
                         </svg>

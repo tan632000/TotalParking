@@ -2,6 +2,20 @@
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
 }
 
+@{
+    // Chong cache cho anh so do. Truoc day the <img> khong co tham so nao, nen sua
+    // anh xong thi trinh duyet van dung ban cu trong cache — sua o dia ma man hinh
+    // khong doi, rat mat cong tim.
+    //
+    // Lay theo LAN SUA CUOI cua file chu khong theo DateTime.Now nhu scada.css:
+    // anh nang gan 2 MB, dung Now thi moi lan tai trang deu phai tai lai tu dau.
+    // Theo mtime thi chi tai lai dung khi anh that su doi.
+    var mapPath = Server.MapPath("~/Images/plan_map.jpg");
+    var mapVer  = System.IO.File.Exists(mapPath)
+                ? System.IO.File.GetLastWriteTimeUtc(mapPath).Ticks
+                : 0L;
+}
+
 @*
     Màn hình treo cho tài xế đang dừng ở barrier.
 
@@ -70,7 +84,7 @@
             nhat di dung luc tai xe dang phai doc no tu trong xe.
         *@
         <div id="dg-stage" class="relative w-full">
-            <img src="@Url.Content("~/Images/plan_map.jpg")" alt="Sơ đồ bãi xe"
+            <img src="@Url.Content("~/Images/plan_map.jpg")?v=@mapVer" alt="Sơ đồ bãi xe"
                  style="display: block; width: 100%; height: auto;" />
             <svg id="dg-map" class="absolute inset-0 w-full h-full"
                  preserveAspectRatio="xMidYMid meet"
@@ -96,18 +110,16 @@
     // Vung nay da duoc doi chieu voi du lieu that truoc khi che: 0 block co toa
     // do, 0 nut lan, va 0 canh lan di qua no. Khong the co doan duong nao bi
     // giau mat ben duoi. Doi anh nen thi phai do lai vung nay.
-    var MASK = { x: 74, y: 903, w: 480, h: 310 };
-
     // ===================== KHONG VE SO BLOCK LEN SO DO =====================
     // Ban ve da in san so cua tung block ngay trong anh. Truoc day trang nay ve
     // them mot lop so thu hai lay toa do tu /Monitor/BlockMap.
     //
     // Lop do bi bo vi hai ly do, ly do thu hai moi la ly do chinh:
     //
-    // 1. No dang lech. Do tren may phat trien 2026-09-19: `block.map_x/map_y`
-    //    chay trong khoang 31..1169 / 31..1108, tuc con o khung cu 1200x1139,
-    //    trong khi `viewBox` lay theo BlockMapRepository.ViewW/ViewH hien la
-    //    1594x1300. Hai khung lech nhau thi moi con so roi lech khoi o block.
+    // 1. Luc do no dang lech, vi `block.map_x/map_y` con o khung cu 1200x1139
+    //    trong khi `viewBox` da la 1594x1300. Dieu do DA DUOC SUA: do lai ngay
+    //    2026-09-20 thi toa do chay 179..1320 / 63..1137, dung trong khung hien
+    //    tai. Nen day khong con la ly do nua — ly do 2 moi la ly do that.
     //
     // 2. Ngay ca khi chinh lai toa do cho khop, lop so nay van la mot NGUON SAI
     //    DOC LAP: no co the dung bang so in tren ban ve, khong bao gio dung hon,
@@ -115,8 +127,8 @@
     //    ban ve thi khong the lech, vi no la mot phan cua chinh buc anh.
     //
     // Luu y: /Monitor/BlockMap van con phuc vu trang "Dieu huong xe", va o do
-    // cac cham block dung CHINH bo toa do nay. Neu diem 1 con dung thi cac cham
-    // ben trang do cung dang lech — do la mot viec khac, chua duoc sua o day.
+    // cac cham block dung CHINH bo toa do nay. Chung dang khop: toa do da duoc
+    // canh ve TAM hinh hoc cua tung block, khong con lay cho ban ve in so.
 
     var svg    = document.getElementById('dg-map');
     var kicker = document.getElementById('dg-kicker');
@@ -125,22 +137,14 @@
     var warn   = document.getElementById('dg-warn');
     var nowEl  = document.getElementById('dg-now');
 
-    // Khung toạ độ và tấm che: dựng một lần, giữ nguyên qua mọi trạng thái.
-    // Lấy kích thước từ phản hồi chứ không ghi cứng, theo I1.
+    // Khung toa do lay tu phan hoi chu khong ghi cung, theo I1.
+    //
+    // Truoc day cho nay con ve mot hinh chu nhat che khung ten cua ban ve o goc
+    // duoi-trai. Da bo: khung ten duoc xoa khoi CHINH file plan_map.jpg, tuc sua
+    // o dung nguon. Che bang lop phu la cach vong, va lop phu do phai do lai moi
+    // lan anh nen doi khung.
     function ensureFrame(payload) {
         svg.setAttribute('viewBox', '0 0 ' + payload.view_w + ' ' + payload.view_h);
-        if (document.getElementById('dg-mask')) return;
-
-        var m = document.createElementNS(NS, 'rect');
-        m.setAttribute('id', 'dg-mask');
-        m.setAttribute('x', MASK.x);
-        m.setAttribute('y', MASK.y);
-        m.setAttribute('width', MASK.w);
-        m.setAttribute('height', MASK.h);
-        // Trang, dung bang mau nen to giay quanh khung ten (da do: 255,255,255).
-        // The <img> khong con opacity nen khong phai tinh mau pha nua.
-        m.setAttribute('fill', '#ffffff');
-        svg.insertBefore(m, svg.firstChild);
     }
 
     // Xoá đường đi và vòng tròn đích. Gọi ở MỌI nhánh không phải ROUTE.
@@ -149,7 +153,6 @@
     // làm lười là "không vẽ nữa", và nét cũ nằm lại trên màn hình. Tài xế tiếp
     // theo sẽ lái theo đường của chiếc xe trước.
     //
-    // Xoá theo ID chứ không xoá sạch SVG, để tấm che không bị cuốn đi cùng.
     function clearRoute() {
         ['dg-path', 'dg-dot'].forEach(function (id) {
             var e = document.getElementById(id);
