@@ -89,14 +89,25 @@
     // giau mat ben duoi. Doi anh nen thi phai do lai vung nay.
     var MASK = { x: 74, y: 903, w: 480, h: 310 };
 
-    // So block in san trong anh ban ve chi cao khoang 10 don vi khung, tuc ~7 px
-    // tren man hinh — khong doc noi. Ve de so block tu /Monitor/BlockMap, la CUNG
-    // nguon toa do ma so do dang dung, nen nhan luon roi dung cho.
-    var blocks = null;
-    // So cua chinh block dich bi dia xanh che mat mot phan, nen no hien ra nhu mot
-    // con so khac ngay canh nhan lon — doc nham rat de. Giau dung no trong luc no
-    // dang la diem den, va tra lai ngay khi khong con.
-    var hiddenBlockLabel = null;
+    // ===================== KHONG VE SO BLOCK LEN SO DO =====================
+    // Ban ve da in san so cua tung block ngay trong anh. Truoc day trang nay ve
+    // them mot lop so thu hai lay toa do tu /Monitor/BlockMap.
+    //
+    // Lop do bi bo vi hai ly do, ly do thu hai moi la ly do chinh:
+    //
+    // 1. No dang lech. Do tren may phat trien 2026-09-19: `block.map_x/map_y`
+    //    chay trong khoang 31..1169 / 31..1108, tuc con o khung cu 1200x1139,
+    //    trong khi `viewBox` lay theo BlockMapRepository.ViewW/ViewH hien la
+    //    1594x1300. Hai khung lech nhau thi moi con so roi lech khoi o block.
+    //
+    // 2. Ngay ca khi chinh lai toa do cho khop, lop so nay van la mot NGUON SAI
+    //    DOC LAP: no co the dung bang so in tren ban ve, khong bao gio dung hon,
+    //    va bat cu lan doi anh nen nao cung co the lam no lech lai. So in tren
+    //    ban ve thi khong the lech, vi no la mot phan cua chinh buc anh.
+    //
+    // Luu y: /Monitor/BlockMap van con phuc vu trang "Dieu huong xe", va o do
+    // cac cham block dung CHINH bo toa do nay. Neu diem 1 con dung thi cac cham
+    // ben trang do cung dang lech — do la mot viec khac, chua duoc sua o day.
 
     var svg    = document.getElementById('dg-map');
     var kicker = document.getElementById('dg-kicker');
@@ -109,7 +120,7 @@
     // Lấy kích thước từ phản hồi chứ không ghi cứng, theo I1.
     function ensureFrame(payload) {
         svg.setAttribute('viewBox', '0 0 ' + payload.view_w + ' ' + payload.view_h);
-        if (document.getElementById('dg-mask')) { ensureBlocks(); return; }
+        if (document.getElementById('dg-mask')) return;
 
         var m = document.createElementNS(NS, 'rect');
         m.setAttribute('id', 'dg-mask');
@@ -122,57 +133,17 @@
         // toi o day thi tam che thanh mot o den giua to giay, trong nhu loi ve.
         m.setAttribute('fill', 'rgb(218, 221, 224)');
         svg.insertBefore(m, svg.firstChild);
-        ensureBlocks();
     }
 
-    // Lớp số block: tĩnh như tấm che, dựng một lần và không bị xoá theo đường đi.
-    // Nằm ngay trên tấm che và dưới đường đi, nên đường xanh luôn vẽ đè lên số.
-    function ensureBlocks() {
-        if (!blocks || document.getElementById('dg-blocks')) return;
-
-        var g = document.createElementNS(NS, 'g');
-        g.setAttribute('id', 'dg-blocks');
-
-        for (var i = 0; i < blocks.length; i++) {
-            var t = document.createElementNS(NS, 'text');
-            t.setAttribute('x', blocks[i].x);
-            t.setAttribute('y', blocks[i].y);
-            t.setAttribute('text-anchor', 'middle');
-            t.setAttribute('dominant-baseline', 'central');
-            t.setAttribute('font-size', '22');
-            t.setAttribute('font-weight', 'bold');
-            t.setAttribute('fill', '#0f172a');
-            // Viền trắng vẽ TRƯỚC nét chữ (paint-order), để số nổi lên khỏi nét
-            // bản vẽ chi chít bên dưới mà không cần thêm một phần tử nền nào.
-            t.setAttribute('stroke', '#ffffff');
-            t.setAttribute('stroke-width', '5');
-            t.setAttribute('style', 'paint-order: stroke fill;');
-            t.setAttribute('id', 'dg-b' + blocks[i].block_no);
-            t.textContent = blocks[i].block_no;
-            g.appendChild(t);
-        }
-
-        var mask = document.getElementById('dg-mask');
-        if (mask && mask.nextSibling) svg.insertBefore(g, mask.nextSibling);
-        else svg.appendChild(g);
-    }
-
-    // Xoá đường và nhãn. Gọi ở MỌI nhánh không phải ROUTE.
+    // Xoá đường đi và vòng tròn đích. Gọi ở MỌI nhánh không phải ROUTE.
     //
     // Đây là chỗ dễ sai nhất của một màn hình poll: khi không còn gì để vẽ, cách
     // làm lười là "không vẽ nữa", và nét cũ nằm lại trên màn hình. Tài xế tiếp
     // theo sẽ lái theo đường của chiếc xe trước.
     //
     // Xoá theo ID chứ không xoá sạch SVG, để tấm che không bị cuốn đi cùng.
-    function showAllBlockLabels() {
-        if (!hiddenBlockLabel) return;
-        hiddenBlockLabel.style.display = '';
-        hiddenBlockLabel = null;
-    }
-
     function clearRoute() {
-        showAllBlockLabels();
-        ['dg-path', 'dg-dot', 'dg-label'].forEach(function (id) {
+        ['dg-path', 'dg-dot'].forEach(function (id) {
             var e = document.getElementById(id);
             if (e && e.parentNode) e.parentNode.removeChild(e);
         });
@@ -204,28 +175,22 @@
 
         var last = payload.route[payload.route.length - 1];
 
-        var disc = document.createElementNS(NS, 'circle');
-        disc.setAttribute('id', 'dg-dot');
-        disc.setAttribute('cx', last.x);
-        disc.setAttribute('cy', last.y);
-        disc.setAttribute('r', '34');
-        disc.setAttribute('fill', '#22c55e');
-        svg.appendChild(disc);
-
-        var own = document.getElementById('dg-b' + payload.block_no);
-        if (own) { own.style.display = 'none'; hiddenBlockLabel = own; }
-
-        var label = document.createElementNS(NS, 'text');
-        label.setAttribute('id', 'dg-label');
-        label.setAttribute('x', last.x);
-        label.setAttribute('y', last.y);
-        label.setAttribute('text-anchor', 'middle');
-        label.setAttribute('dominant-baseline', 'central');
-        label.setAttribute('font-size', '34');
-        label.setAttribute('font-weight', 'bold');
-        label.setAttribute('fill', '#0f172a');
-        label.textContent = payload.block_no;
-        svg.appendChild(label);
+        // VONG TRON RONG, khong phai dia dac. Dia dac che mat dung con so in tren
+        // ban ve o ngay diem den — tuc che mat thu duy nhat con lai xac nhan tai
+        // xe da toi dung block. Vong tron khoanh lay no thay vi dan len tren.
+        //
+        // Cung vi vay khong ve so block o day nua: so block da nam san trong anh
+        // ben trong vong tron, va nam mot lan nua o bang chu lon ben phai.
+        var ring = document.createElementNS(NS, 'circle');
+        ring.setAttribute('id', 'dg-dot');
+        ring.setAttribute('cx', last.x);
+        ring.setAttribute('cy', last.y);
+        ring.setAttribute('r', '40');
+        ring.setAttribute('fill', 'none');
+        ring.setAttribute('stroke', '#22c55e');
+        ring.setAttribute('stroke-width', '12');
+        ring.setAttribute('style', 'filter: drop-shadow(0 0 7px rgba(15,23,42,.95));');
+        svg.appendChild(ring);
     }
 
     function render(payload) {
@@ -282,13 +247,6 @@
                 // thành một chỉ dẫn sai cho người đang đứng nhìn.
             });
     }
-
-    // Toa do block khong doi trong luc chay, nen doc dung MOT lan. Loi o day khong
-    // duoc lam hong man hinh: thieu so block van con duong di va so block dich.
-    fetch('/Monitor/BlockMap', { cache: 'no-store' })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) { if (d && d.blocks) { blocks = d.blocks; ensureBlocks(); } })
-        .catch(function () { });
 
     poll();
     setInterval(poll, POLL_MS);

@@ -1193,14 +1193,14 @@
     "tasks/task-R4-01-driver-guidance-view.md": {
       "id": "R4-01",
       "title": "Driver guidance view",
-      "status": "done",
+      "status": "in_progress",
       "dependencies": [
         "tasks/task-R3-01-route-service.md"
       ],
       "blocker": null,
       "started_at": "2026-09-19T21:10:46+07:00",
-      "completed_at": "2026-09-19T21:25:11+07:00",
-      "last_updated_at": "2026-09-19T21:25:11+07:00"
+      "completed_at": null,
+      "last_updated_at": "2026-09-19T23:18:28+07:00"
     },
     "tasks/task-R5-01-operator-page-alignment.md": {
       "id": "R5-01",
