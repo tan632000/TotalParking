@@ -42,6 +42,7 @@ namespace TotalParking.Controllers
         private static readonly VehicleClassifier        _classifier = new VehicleClassifier();
         private static readonly VehicleRoutingRepository _routings   = new VehicleRoutingRepository();
         private static readonly ZoneRouter               _router     = new ZoneRouter();
+        private static readonly BlockAllocator           _allocator  = new BlockAllocator();
 
         public static DateTime? LastHealthUtc;
         public static DateTime? LastVehicleUtc;
@@ -144,7 +145,7 @@ namespace TotalParking.Controllers
                 // duoc tu su kien tho. Nam trong CUNG khoi try vi neu phan loai
                 // that bai thi khong co ho so de chon zone — chay tiep chi de
                 // sinh ra mot quyet dinh dua tren null.
-                _routings.Save(_router.Route(profile, _routings.GetZoneCapacity()));
+                _routings.Save(WithDestinationBlock(_router.Route(profile, _routings.GetZoneCapacity())));
             }
             catch (Exception ex)
             {
@@ -154,6 +155,33 @@ namespace TotalParking.Controllers
 
             LastVehicleUtc = DateTime.UtcNow;
             return JsonText(200, "{\"status\":\"ok\"}");
+        }
+
+        // Chon block dich cho quyet dinh vua ra, TRUOC khi luu, de block va outcome di
+        // vao cung mot lan ghi. Khong bao gio co khoanh khac nao ma nguoi doc thay
+        // ROUTED ma chua co diem den.
+        private static VehicleRouting WithDestinationBlock(VehicleRouting decision)
+        {
+            if (decision == null) return null;
+            if (decision.Outcome != RoutingOutcome.Routed || !decision.ZoneId.HasValue) return decision;
+
+            var allocation = _allocator.Allocate(decision.ZoneId.Value, decision.EventId);
+
+            if (allocation.HasCapacity)
+            {
+                decision.BlockNo = allocation.BlockNo;
+                decision.OccupancyVerified = allocation.OccupancyVerified;
+                return decision;
+            }
+
+            // Zone con cho khi cong tong lai, nhung khong block nao con cho that. Ha
+            // xuong NO_CAPACITY thay vi giu ROUTED khong diem den: mot man hinh bao
+            // "di di" ma khong noi di dau thi te hon la noi thang rang het cho.
+            // ZoneId ve null theo dung hop dong cua model: chi ROUTED moi co zone.
+            decision.Outcome = RoutingOutcome.NoCapacity;
+            decision.Reason  = "Zone " + decision.ZoneId.Value + " khong con block nao con cho.";
+            decision.ZoneId  = null;
+            return decision;
         }
 
         // Chuan hoa payload. Camera dung 0 va "Unknown" lam gia tri "khong biet";

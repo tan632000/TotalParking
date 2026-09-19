@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using MySqlConnector;
 using Newtonsoft.Json;
 using TotalParking.Models;
 using TotalParking.Services;
@@ -27,6 +28,8 @@ namespace TotalParking.Controllers
         private static readonly ZoneRouter          _router = new ZoneRouter();
         private static readonly LedPanelRepository  _leds   = new LedPanelRepository();
         private static readonly BlockMapRepository  _map    = new BlockMapRepository();
+        private static readonly BlockAllocator      _blocks = new BlockAllocator();
+        private static readonly LaneNetwork         _lanes  = new LaneNetwork();
 
         // GET /Monitor/BlockMap
         //
@@ -136,13 +139,43 @@ namespace TotalParking.Controllers
                         .ToArray();
                 }
 
+                // Xem truoc dung bo chon block that, khong phai mot ban chep. Neu mo
+                // phong tu chon lay thi trang nay se day nguoi van hanh mot hanh vi
+                // he thong khong co. Van la CHI DOC: Allocate va RouteToBlock khong
+                // ghi dong nao.
+                int?   simBlock  = null;
+                bool   simFresh  = false;
+                object simRoute  = new object[0];
+                string simReason = decision.Reason;
+
+                if (decision.Outcome == RoutingOutcome.Routed && decision.ZoneId.HasValue)
+                {
+                    var picked = _blocks.Allocate(decision.ZoneId.Value, "SIM");
+                    if (picked.HasCapacity)
+                    {
+                        simBlock = picked.BlockNo;
+                        simFresh = picked.OccupancyVerified;
+
+                        var simPath = _lanes.RouteToBlock(picked.BlockNo.Value);
+                        if (simPath.Found && simPath.Points.Count >= 2)
+                            simRoute = simPath.Points.Select(pt => new { x = pt.X, y = pt.Y }).ToArray();
+                        else
+                            simReason = simPath.Reason;
+                    }
+                }
+
                 return Json2(200, new
                 {
                     now          = DateTime.Now.ToString("HH:mm:ss"),
+                    view_w       = BlockMapRepository.ViewW,
+                    view_h       = BlockMapRepository.ViewH,
                     weight_class = wc,
                     outcome      = decision.Outcome,
-                    reason       = decision.Reason,
+                    reason       = simReason,
                     zone_id      = decision.ZoneId,
+                    block_no     = simBlock,
+                    occupancy_verified = simFresh,
+                    route        = simRoute,
                     signs,
                     // Từng zone kèm lý do được chọn hay bị loại — phần quan trọng
                     // nhất với người vận hành: biết vì sao KHÔNG phải zone kia.
@@ -242,6 +275,105 @@ namespace TotalParking.Controllers
                 // chết ở JSON.parse.
                 return Json2(503, new { error = ex.Message });
             }
+        }
+
+        // GET /Monitor/DriverRoute
+        //
+        // Màn hình cho tài xế đang dừng ở barrier. Trả về ĐÚNG một trong ba trạng
+        // thái, và trình duyệt chỉ việc vẽ thứ được gửi tới:
+        //
+        //   ROUTE   — có block đã lưu VÀ có đường đi ít nhất hai điểm
+        //   MESSAGE — có quyết định nhưng không có điểm đến vẽ được; chỉ hiện chữ
+        //   WAITING — không có quyết định nào còn hiệu lực; xoá đường đang vẽ
+        //
+        // Không có trạng thái thứ tư nào kiểu "vẽ tạm". Một nét vẽ trên màn hình này
+        // là một mệnh lệnh lái xe; khi hệ thống không biết đường thì nó phải im lặng
+        // chứ không được đoán.
+        public ActionResult DriverRoute()
+        {
+            try
+            {
+                string now = DateTime.Now.ToString("HH:mm:ss");
+
+                var decision = _routings.GetCurrentDecision(BlockAllocator.DisplayWindowSeconds);
+
+                if (decision == null)
+                    return Json2(200, Waiting(now));
+
+                if (decision.Outcome != RoutingOutcome.Routed || !decision.BlockNo.HasValue)
+                    return Json2(200, Message(now, decision, decision.Reason));
+
+                var route = _lanes.RouteToBlock(decision.BlockNo.Value);
+
+                // Một điểm không phải là đường đi. Khi chỉ có đúng chừng đó, màn hình
+                // phải nói bằng chữ chứ không vẽ một chấm rồi để tài xế tự hiểu.
+                if (!route.Found || route.Points.Count < 2)
+                    return Json2(200, Message(now, decision, route.Reason));
+
+                return Json2(200, new
+                {
+                    now,
+                    view_w             = BlockMapRepository.ViewW,
+                    view_h             = BlockMapRepository.ViewH,
+                    state              = "ROUTE",
+                    event_id           = decision.EventId,
+                    outcome            = decision.Outcome,
+                    reason             = decision.Reason,
+                    zone_id            = decision.ZoneId,
+                    block_no           = decision.BlockNo,
+                    occupancy_verified = decision.OccupancyVerified,
+                    route              = route.Points.Select(p => new { x = p.X, y = p.Y }).ToArray()
+                });
+            }
+            catch (MySqlException ex) when (ex.Number == 1146)
+            {
+                // Chưa chạy 37/38_*.sql thì bảng làn đường hoặc cột block_no chưa tồn
+                // tại. Trả 503 có nội dung, giống RoutingState, thay vì để màn hình
+                // nhận trang lỗi HTML của IIS rồi chết ở JSON.parse.
+                return Json2(503, new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json2(500, new { error = ex.Message });
+            }
+        }
+
+        private static object Waiting(string now)
+        {
+            return new
+            {
+                now,
+                view_w             = BlockMapRepository.ViewW,
+                view_h             = BlockMapRepository.ViewH,
+                state              = "WAITING",
+                event_id           = (string)null,
+                outcome            = (string)null,
+                reason             = (string)null,
+                zone_id            = (int?)null,
+                block_no           = (int?)null,
+                occupancy_verified = false,
+                route              = new object[0]
+            };
+        }
+
+        // block_no về null theo C1: MESSAGE là trạng thái chỉ có chữ. Số block, nếu
+        // có, đã nằm sẵn trong câu lý do.
+        private static object Message(string now, VehicleRouting decision, string reason)
+        {
+            return new
+            {
+                now,
+                view_w             = BlockMapRepository.ViewW,
+                view_h             = BlockMapRepository.ViewH,
+                state              = "MESSAGE",
+                event_id           = decision.EventId,
+                outcome            = decision.Outcome,
+                reason             = reason,
+                zone_id            = decision.ZoneId,
+                block_no           = (int?)null,
+                occupancy_verified = decision.OccupancyVerified,
+                route              = new object[0]
+            };
         }
 
         private static string Describe(string make, string model)

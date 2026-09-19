@@ -2,7 +2,7 @@
   "schema_version": "2.1",
   "feature_name": "driver-route-guidance",
   "created_at": "2026-09-19T16:28:34+07:00",
-  "updated_at": "2026-09-19T09:37:46.395Z",
+  "updated_at": "2026-09-19T21:30:02+07:00",
   "language": "en",
   "status": "in_progress",
   "scope_lock": {
@@ -48,7 +48,7 @@
         ],
         "write_sets": {
           "R1-01": [
-            "TotalParking/Database/35_lane_network.sql",
+            "TotalParking/Database/37_lane_network.sql",
             "TotalParking/Database/verify_lane_network.sql"
           ],
           "R2-01": [
@@ -82,7 +82,7 @@
         "type": "dependency",
         "producer": "R1-01",
         "consumer": "R3-01",
-        "deliverable": "TotalParking/Database/35_lane_network.sql"
+        "deliverable": "TotalParking/Database/37_lane_network.sql"
       },
       {
         "id": "B-DEP-02",
@@ -114,7 +114,7 @@
         ],
         "resources": {
           "R1-01": [
-            "TotalParking/Database/35_lane_network.sql",
+            "TotalParking/Database/37_lane_network.sql",
             "TotalParking/Database/verify_lane_network.sql"
           ],
           "R2-01": [
@@ -689,7 +689,7 @@
       {
         "id": "A-R1-01-01",
         "type": "file",
-        "target": "TotalParking/Database/35_lane_network.sql",
+        "target": "TotalParking/Database/37_lane_network.sql",
         "role": "owner",
         "access": "write",
         "action": "create"
@@ -777,7 +777,7 @@
       {
         "id": "A-R3-01-04",
         "type": "file",
-        "target": "TotalParking/Database/35_lane_network.sql",
+        "target": "TotalParking/Database/37_lane_network.sql",
         "role": "consumer",
         "access": "read",
         "action": "read"
@@ -1160,59 +1160,59 @@
     "tasks/task-R1-01-lane-network-migration.md": {
       "id": "R1-01",
       "title": "Lane network migration",
-      "status": "pending",
+      "status": "done",
       "dependencies": [],
       "blocker": null,
-      "started_at": null,
-      "completed_at": null,
-      "last_updated_at": null
+      "started_at": "2026-09-19T20:32:26+07:00",
+      "completed_at": "2026-09-19T20:39:02+07:00",
+      "last_updated_at": "2026-09-19T20:39:02+07:00"
     },
     "tasks/task-R2-01-block-allocation.md": {
       "id": "R2-01",
       "title": "Block allocation",
-      "status": "pending",
+      "status": "done",
       "dependencies": [],
       "blocker": null,
-      "started_at": null,
-      "completed_at": null,
-      "last_updated_at": null
+      "started_at": "2026-09-19T20:45:09+07:00",
+      "completed_at": "2026-09-19T20:55:55+07:00",
+      "last_updated_at": "2026-09-19T20:55:55+07:00"
     },
     "tasks/task-R3-01-route-service.md": {
       "id": "R3-01",
       "title": "Route service",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         "tasks/task-R1-01-lane-network-migration.md",
         "tasks/task-R2-01-block-allocation.md"
       ],
       "blocker": null,
-      "started_at": null,
-      "completed_at": null,
-      "last_updated_at": null
+      "started_at": "2026-09-19T21:00:42+07:00",
+      "completed_at": "2026-09-19T21:10:03+07:00",
+      "last_updated_at": "2026-09-19T21:10:03+07:00"
     },
     "tasks/task-R4-01-driver-guidance-view.md": {
       "id": "R4-01",
       "title": "Driver guidance view",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         "tasks/task-R3-01-route-service.md"
       ],
       "blocker": null,
-      "started_at": null,
-      "completed_at": null,
-      "last_updated_at": null
+      "started_at": "2026-09-19T21:10:46+07:00",
+      "completed_at": "2026-09-19T21:25:11+07:00",
+      "last_updated_at": "2026-09-19T21:25:11+07:00"
     },
     "tasks/task-R5-01-operator-page-alignment.md": {
       "id": "R5-01",
       "title": "Operator page alignment",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         "tasks/task-R3-01-route-service.md"
       ],
       "blocker": null,
-      "started_at": null,
-      "completed_at": null,
-      "last_updated_at": null
+      "started_at": "2026-09-19T21:25:48+07:00",
+      "completed_at": "2026-09-19T21:29:52+07:00",
+      "last_updated_at": "2026-09-19T21:29:52+07:00"
     }
   },
   "decisions": [
@@ -1249,7 +1249,7 @@
       "classification": "reversible_assumption",
       "status": "recorded",
       "statement": "Lane centre lines are extracted from page 1 of the mechanical parking system drawing using the same transform that produced block.map_x and block.map_y, rather than being traced by hand.",
-      "evidence": "Bounded reversal: if the aisle linework cannot be isolated from that content stream, hand-trace the centre lines against plan_map.jpg and insert the same lane_node and lane_edge rows. The C3 schema, the routing frame, and every consumer are unchanged, so the reversal is confined to TotalParking/Database/35_lane_network.sql."
+      "evidence": "Bounded reversal: if the aisle linework cannot be isolated from that content stream, hand-trace the centre lines against plan_map.jpg and insert the same lane_node and lane_edge rows. The C3 schema, the routing frame, and every consumer are unchanged, so the reversal is confined to TotalParking/Database/37_lane_network.sql."
     },
     {
       "id": "Q6",

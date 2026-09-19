@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using MySqlConnector;
 
@@ -24,14 +24,17 @@ namespace TotalParking.Services
     public class BlockMapRepository
     {
         // Khung của Images/plan_map.jpg. Phải khớp với viewBox trong Routing.cshtml.
-        public const int ViewW = 1200;
-        public const int ViewH = 1139;
+        // Ảnh được cắt lại rộng hơn để thấy trọn mặt bằng toà nhà: khung cũ 1200x1139 (cắt ôm sát block)
+        // ôm sát 112 block nên cắt mất rìa toà nhà. Phép đổi là tịnh tiến thuần tuý
+        // (+142, +33), tỉ lệ không đổi — xem Database/34_block_map_xy.sql.
+        public const int ViewW = 1594;
+        public const int ViewH = 1300;
 
         // Cổng vào: ram 1 ở phía dưới theo lời khách. Đặt tay ngay dưới cụm block
         // thấp nhất của zone 1 — bản vẽ không có nhãn chữ cho ram nên không suy ra
         // được bằng dữ liệu. Chỉ dùng làm điểm xuất phát cho hoạt ảnh.
-        public const int GateX = 913;
-        public const int GateY = 1125;
+        public const int GateX = 1055;
+        public const int GateY = 1158;
 
         public class MapBlock
         {

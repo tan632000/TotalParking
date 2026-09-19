@@ -53,12 +53,12 @@
                     Doi anh nen thi phai chay lai migration do.                    *@
                 <div class="xl:col-span-3">
                     <div class="relative w-full select-none rounded-lg overflow-hidden border border-slate-800"
-                         style="background:#0b1220; aspect-ratio: 1200 / 1139;">
+                         style="background:#0b1220; aspect-ratio: 1594 / 1300;">
                         <img src="@Url.Content("~/Images/plan_map.jpg")" alt="Sơ đồ bãi"
                              class="w-full h-full object-contain select-none"
                              style="opacity:.92;" />
                         <svg id="sim-map" class="absolute top-0 left-0 w-full h-full"
-                             viewBox="0 0 1200 1139" xmlns="http://www.w3.org/2000/svg">
+                             viewBox="0 0 1594 1300" xmlns="http://www.w3.org/2000/svg">
                             <g id="map-blocks"></g>
                             <g id="map-route"></g>
                         </svg>
@@ -725,26 +725,30 @@
 
     // ------------------------------------------------- hoat anh xe chay
     //
-    // Duong di la DUONG GAP KHUC don gian (ngang roi doc), khong phai duong lai
-    // xe that: mang lan xe chi ton tai duoi dang pixel trong anh ban do, chua co
-    // du lieu. Day la minh hoa huong di, nen co dong chu thich goc duoi so do.
-    function driveTo(targets, label) {
+    // Duong di la DAY DIEM do SERVER tra ve, chay tren mang lan duong da so hoa
+    // trong lane_node / lane_edge. Truoc day cho nay ve mot duong gap khuc ngang
+    // roi doc, va duong do cat thang qua cac block dang do xe.
+    //
+    // Khong co duong lui hinh hoc: khi server khong tra ve duong, trang nay
+    // KHONG ve gi ca. Mot net tu che ra tren so do dieu hanh la mot hanh vi ma
+    // he thong khong he co.
+    function driveTo(blockNo, route, label) {
         resetMap();
-        if (!map || !targets.length) return;
+        if (!map || !blockNo) return;
 
-        targets.forEach(function (no) {
-            var e = blockEl(no);
-            if (e) {
-                e.setAttribute('opacity', 1);
-                e.setAttribute('stroke', '#ffffff');
-                e.setAttribute('stroke-width', 2.5);
-            }
-        });
+        var e = blockEl(blockNo);
+        if (e) {
+            e.setAttribute('opacity', 1);
+            e.setAttribute('stroke', '#ffffff');
+            e.setAttribute('stroke-width', 2.5);
+        }
 
-        var t = blockOf(targets[0]);
+        var t = blockOf(blockNo);
         if (!t) return;
-        var sx = map.gate.x, sy = map.gate.y;
-        var pts = [[sx, sy], [sx, t.y], [t.x, t.y]];
+        if (!route || route.length < 2) return;
+
+        var pts = route.map(function (p) { return [p.x, p.y]; });
+        var sx = pts[0][0], sy = pts[0][1];
 
         var dstr = 'M' + pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' L');
         gRoute.appendChild(el('path', { d: dstr, fill: 'none', stroke: '#22d3ee',
@@ -816,29 +820,26 @@
 
                 var zs = d.zones || [];
                 if (d.outcome === 'ROUTED' && d.zone_id) {
-                    // Chon block DICH trong zone: con nhieu cho nhat va DOC DUOC.
-                    // Uu tien block doc duoc, vi chi dan tai xe toi block ma he
-                    // thong dang mu la chi dan khong kiem chung duoc.
-                    var cand = map ? map.blocks.filter(function (b) {
-                        return b.zone_id === d.zone_id && b.occupied < b.slots;
-                    }) : [];
-                    cand.sort(function (a, b) {
-                        if (a.online !== b.online) return a.online ? -1 : 1;
-                        return (b.slots - b.occupied) - (a.slots - a.occupied);
-                    });
-                    var target = cand.length ? cand[0] : null;
-                    if (target) driveTo([target.block_no], 'BLOCK ' + target.block_no);
+                    // Block dich do SERVER chon, trang nay khong chon lai.
+                    //
+                    // Truoc day cho nay tu loc, tu sap xep va tu lay phan tu dau
+                    // tien trong danh sach block. Ket qua: trang van hanh chi vao
+                    // mot block, database ghi mot block khac, va khong ai biet ben
+                    // nao dung. Cung mot bo chon chay cho mo phong lan cho xe that.
+                    var target = d.block_no ? blockOf(d.block_no) : null;
+                    if (d.block_no) driveTo(d.block_no, d.route, 'BLOCK ' + d.block_no);
                     else resetMap();
 
                     var c = null;
                     for (var j = 0; j < zs.length; j++) if (zs[j].chosen) c = zs[j];
                     box('background:rgba(16,185,129,.10);border-color:rgba(16,185,129,.30);color:#a7f3d0;',
                         '<div class="font-bold text-sm mb-1">ZONE ' + d.zone_id +
-                        (target ? ' · block ' + target.block_no : '') + '</div>' +
+                        (d.block_no ? ' · block ' + d.block_no : '') + '</div>' +
                         '<div class="text-[11px] font-mono" style="color:rgba(110,231,183,.8);">' +
                         'hạng tải ' + d.weight_class +
                         (c ? ' · còn ' + c.free + ' chỗ · gần cổng hạng ' + c.gate_rank : '') +
-                        (target && !target.online ? ' · <span style="color:#fcd34d;">block này đang mất kết nối</span>' : '') +
+                        (d.block_no && !d.occupancy_verified ? ' · <span style="color:#fcd34d;">PLC chưa báo cáo block này trong 5 phút</span>' : '') +
+                        (d.block_no && !target ? ' · <span style="color:#fcd34d;">block này không có toạ độ trên sơ đồ</span>' : '') +
                         '</div>');
                 } else {
                     // KHONG to block nao khi xe khong vao duoc. Chi mot block cho

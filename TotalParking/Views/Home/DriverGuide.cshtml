@@ -1,0 +1,296 @@
+@{
+    Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+}
+
+@*
+    Màn hình treo cho tài xế đang dừng ở barrier.
+
+    ===================== TRANG NÀY KHÔNG QUYẾT ĐỊNH GÌ CẢ =====================
+    Không chọn block, không tính đường đi, không tự xét quyết định nào còn hạn.
+    Tất cả đến từ /Monitor/DriverRoute dưới dạng ba trạng thái ROUTE / MESSAGE /
+    WAITING, và trang chỉ vẽ đúng thứ được gửi tới. Nếu luật chọn block được chép
+    xuống đây thì màn hình và cơ sở dữ liệu sẽ nói hai điều khác nhau, đúng lúc
+    tài xế đang tin vào màn hình.
+
+    Cả `viewBox` cũng lấy từ `view_w`/`view_h` trong phản hồi chứ không ghi cứng:
+    khung toạ độ được khai báo đúng một chỗ, trong BlockMapRepository. Nhờ vậy lần
+    cắt lại ảnh nền vừa rồi không phải sửa một dòng nào trong tệp này.
+*@
+
+<div class="p-6 min-h-[calc(100vh-3.5rem)] text-slate-100"
+     style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+
+    @*
+        Bố cục đặt bằng inline style, không dùng class responsive của Tailwind.
+        `Content/scada.css` là bản CSS trích xuất sẵn và chỉ chứa đúng những class
+        mà giao diện gốc đã dùng: `lg:flex-row` và `lg:w-96` không có trong đó, nên
+        viết ra cũng không có tác dụng và bảng chữ sẽ rơi xuống dưới màn hình.
+    *@
+    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: stretch;">
+
+        @*
+            Sơ đồ phải nằm TRỌN trong màn hình. Đây là TV treo tường, không ai
+            cuộn trang được, nên để ảnh cao tự nhiên đồng nghĩa với việc nửa dưới
+            bãi xe — nơi có đầu dốc — biến mất khỏi tầm mắt.
+
+            `object-fit: contain` trên ảnh và `preserveAspectRatio="xMidYMid meet"`
+            trên SVG là cùng một phép co: cả hai thu ảnh vào khung theo đúng tỉ
+            lệ và canh giữa, nên lớp đường đi luôn chồng khít lên ảnh nền dù
+            khung có kích thước nào.
+        *@
+        <div class="rounded-lg border border-slate-700/60 overflow-hidden"
+             style="background: rgb(13, 27, 46); flex: 1 1 40rem; min-width: 0;">
+            <div id="dg-stage" class="relative w-full" style="height: calc(100vh - 7rem);">
+                <img src="@Url.Content("~/Images/plan_map.jpg")" alt="Sơ đồ bãi xe"
+                     class="absolute inset-0 w-full h-full" style="object-fit: contain; opacity: .85;" />
+                <svg id="dg-map" class="absolute inset-0 w-full h-full"
+                     preserveAspectRatio="xMidYMid meet"
+                     xmlns="http://www.w3.org/2000/svg"></svg>
+            </div>
+        </div>
+
+        <!-- Bảng chữ lớn, đọc được từ trong xe -->
+        <div style="flex: 0 0 22rem; display: flex; flex-direction: column; gap: 1rem;">
+            <div class="rounded-lg border border-slate-700/60 p-6" style="background: rgb(13, 27, 46);">
+                <div id="dg-kicker" class="text-xs font-mono uppercase tracking-widest text-slate-500">
+                    Đang chờ xe
+                </div>
+                <div id="dg-big" class="mt-3 font-bold leading-none text-slate-400" style="font-size: 3rem;">
+                    —
+                </div>
+                <div id="dg-sub" class="mt-4 text-sm text-slate-400 leading-relaxed">
+                    Màn hình sẽ hiện vị trí đỗ ngay khi camera nhận diện xe.
+                </div>
+                <div id="dg-warn" class="mt-4 hidden text-xs font-mono text-amber-400 leading-relaxed"></div>
+            </div>
+            <div class="text-[10px] font-mono text-slate-600 px-1">
+                Cập nhật lúc <span id="dg-now">--:--:--</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    'use strict';
+
+    var NS       = 'http://www.w3.org/2000/svg';
+    // D10: hỏi lại 2 giây một lần. Đủ để quyết định mới lên màn hình trong 3 giây
+    // mà không cần kênh đẩy; toàn bộ hệ thống hiện tại đều làm theo kiểu này.
+    var POLL_MS  = 2000;
+
+    // Khung ten cua ban ve CAD nam san trong plan_map.jpg o goc duoi-trai: ten
+    // cong ty, logo, bang thong ke model. Voi tai xe dang tim cho do thi do la
+    // nhieu. Che bang mot hinh chu nhat VE TRONG CHINH SVG, nen no dung chung
+    // he toa do voi anh va khop tuyet doi o moi kich thuoc man hinh.
+    //
+    // Vung nay da duoc doi chieu voi du lieu that truoc khi che: 0 block co toa
+    // do, 0 nut lan, va 0 canh lan di qua no. Khong the co doan duong nao bi
+    // giau mat ben duoi. Doi anh nen thi phai do lai vung nay.
+    var MASK = { x: 74, y: 903, w: 480, h: 310 };
+
+    // So block in san trong anh ban ve chi cao khoang 10 don vi khung, tuc ~7 px
+    // tren man hinh — khong doc noi. Ve de so block tu /Monitor/BlockMap, la CUNG
+    // nguon toa do ma so do dang dung, nen nhan luon roi dung cho.
+    var blocks = null;
+    // So cua chinh block dich bi dia xanh che mat mot phan, nen no hien ra nhu mot
+    // con so khac ngay canh nhan lon — doc nham rat de. Giau dung no trong luc no
+    // dang la diem den, va tra lai ngay khi khong con.
+    var hiddenBlockLabel = null;
+
+    var svg    = document.getElementById('dg-map');
+    var kicker = document.getElementById('dg-kicker');
+    var big    = document.getElementById('dg-big');
+    var sub    = document.getElementById('dg-sub');
+    var warn   = document.getElementById('dg-warn');
+    var nowEl  = document.getElementById('dg-now');
+
+    // Khung toạ độ và tấm che: dựng một lần, giữ nguyên qua mọi trạng thái.
+    // Lấy kích thước từ phản hồi chứ không ghi cứng, theo I1.
+    function ensureFrame(payload) {
+        svg.setAttribute('viewBox', '0 0 ' + payload.view_w + ' ' + payload.view_h);
+        if (document.getElementById('dg-mask')) { ensureBlocks(); return; }
+
+        var m = document.createElementNS(NS, 'rect');
+        m.setAttribute('id', 'dg-mask');
+        m.setAttribute('x', MASK.x);
+        m.setAttribute('y', MASK.y);
+        m.setAttribute('width', MASK.w);
+        m.setAttribute('height', MASK.h);
+        // Mau lay dung mau nen ban ve SAU khi da qua opacity .85 cua the <img>:
+        // trang (255,255,255) tren nen rgb(13,27,46) ra rgb(218,221,224). Dat mau
+        // toi o day thi tam che thanh mot o den giua to giay, trong nhu loi ve.
+        m.setAttribute('fill', 'rgb(218, 221, 224)');
+        svg.insertBefore(m, svg.firstChild);
+        ensureBlocks();
+    }
+
+    // Lớp số block: tĩnh như tấm che, dựng một lần và không bị xoá theo đường đi.
+    // Nằm ngay trên tấm che và dưới đường đi, nên đường xanh luôn vẽ đè lên số.
+    function ensureBlocks() {
+        if (!blocks || document.getElementById('dg-blocks')) return;
+
+        var g = document.createElementNS(NS, 'g');
+        g.setAttribute('id', 'dg-blocks');
+
+        for (var i = 0; i < blocks.length; i++) {
+            var t = document.createElementNS(NS, 'text');
+            t.setAttribute('x', blocks[i].x);
+            t.setAttribute('y', blocks[i].y);
+            t.setAttribute('text-anchor', 'middle');
+            t.setAttribute('dominant-baseline', 'central');
+            t.setAttribute('font-size', '22');
+            t.setAttribute('font-weight', 'bold');
+            t.setAttribute('fill', '#0f172a');
+            // Viền trắng vẽ TRƯỚC nét chữ (paint-order), để số nổi lên khỏi nét
+            // bản vẽ chi chít bên dưới mà không cần thêm một phần tử nền nào.
+            t.setAttribute('stroke', '#ffffff');
+            t.setAttribute('stroke-width', '5');
+            t.setAttribute('style', 'paint-order: stroke fill;');
+            t.setAttribute('id', 'dg-b' + blocks[i].block_no);
+            t.textContent = blocks[i].block_no;
+            g.appendChild(t);
+        }
+
+        var mask = document.getElementById('dg-mask');
+        if (mask && mask.nextSibling) svg.insertBefore(g, mask.nextSibling);
+        else svg.appendChild(g);
+    }
+
+    // Xoá đường và nhãn. Gọi ở MỌI nhánh không phải ROUTE.
+    //
+    // Đây là chỗ dễ sai nhất của một màn hình poll: khi không còn gì để vẽ, cách
+    // làm lười là "không vẽ nữa", và nét cũ nằm lại trên màn hình. Tài xế tiếp
+    // theo sẽ lái theo đường của chiếc xe trước.
+    //
+    // Xoá theo ID chứ không xoá sạch SVG, để tấm che không bị cuốn đi cùng.
+    function showAllBlockLabels() {
+        if (!hiddenBlockLabel) return;
+        hiddenBlockLabel.style.display = '';
+        hiddenBlockLabel = null;
+    }
+
+    function clearRoute() {
+        showAllBlockLabels();
+        ['dg-path', 'dg-dot', 'dg-label'].forEach(function (id) {
+            var e = document.getElementById(id);
+            if (e && e.parentNode) e.parentNode.removeChild(e);
+        });
+    }
+
+    function drawRoute(payload) {
+        clearRoute();
+        ensureFrame(payload);
+
+        var d = '';
+        for (var i = 0; i < payload.route.length; i++) {
+            var p = payload.route[i];
+            d += (i === 0 ? 'M' : 'L') + p.x + ' ' + p.y;
+        }
+
+        // ĐÚNG MỘT phần tử path. Độ tương phản với nền bản vẽ lấy bằng drop-shadow
+        // chứ không vẽ thêm một nét viền thứ hai: hai phần tử cùng hình dạng thì
+        // bất cứ ai soi DOM cũng phải dừng lại hỏi đâu mới là đường đi thật.
+        var path = document.createElementNS(NS, 'path');
+        path.setAttribute('id', 'dg-path');
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', '#22c55e');
+        path.setAttribute('stroke-width', '14');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-linejoin', 'round');
+        path.setAttribute('style', 'filter: drop-shadow(0 0 7px rgba(15,23,42,.95));');
+        svg.appendChild(path);
+
+        var last = payload.route[payload.route.length - 1];
+
+        var disc = document.createElementNS(NS, 'circle');
+        disc.setAttribute('id', 'dg-dot');
+        disc.setAttribute('cx', last.x);
+        disc.setAttribute('cy', last.y);
+        disc.setAttribute('r', '34');
+        disc.setAttribute('fill', '#22c55e');
+        svg.appendChild(disc);
+
+        var own = document.getElementById('dg-b' + payload.block_no);
+        if (own) { own.style.display = 'none'; hiddenBlockLabel = own; }
+
+        var label = document.createElementNS(NS, 'text');
+        label.setAttribute('id', 'dg-label');
+        label.setAttribute('x', last.x);
+        label.setAttribute('y', last.y);
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('dominant-baseline', 'central');
+        label.setAttribute('font-size', '34');
+        label.setAttribute('font-weight', 'bold');
+        label.setAttribute('fill', '#0f172a');
+        label.textContent = payload.block_no;
+        svg.appendChild(label);
+    }
+
+    function render(payload) {
+        nowEl.textContent = payload.now;
+
+        if (payload.state === 'ROUTE') {
+            drawRoute(payload);
+            kicker.textContent = 'Mời vào block';
+            big.textContent = payload.block_no;
+            big.className = 'mt-3 font-bold leading-none text-emerald-400';
+            big.style.fontSize = '7rem';
+            sub.textContent = 'Đi theo đường màu xanh trên sơ đồ.';
+
+            // Nói ra khi số ô trống là suy luận chứ không phải quan sát, thay vì
+            // im lặng để người xem tưởng con số nào cũng chắc như nhau.
+            if (payload.occupancy_verified) {
+                warn.classList.add('hidden');
+            } else {
+                warn.textContent = 'PLC chua bao cao block nay trong 5 phut — so o trong la uoc tinh.';
+                warn.classList.remove('hidden');
+            }
+            return;
+        }
+
+        clearRoute();
+        ensureFrame(payload);
+        warn.classList.add('hidden');
+        big.style.fontSize = '3rem';
+
+        if (payload.state === 'MESSAGE') {
+            kicker.textContent = 'Khong the dieu huong';
+            big.textContent = payload.outcome;
+            big.className = 'mt-3 font-bold leading-none text-amber-400';
+            sub.textContent = payload.reason || 'Moi lien he nhan vien dieu hanh.';
+            return;
+        }
+
+        kicker.textContent = 'Đang chờ xe';
+        big.textContent = '—';
+        big.className = 'mt-3 font-bold leading-none text-slate-400';
+        sub.textContent = 'Màn hình sẽ hiện vị trí đỗ ngay khi camera nhận diện xe.';
+    }
+
+    function poll() {
+        fetch('/Monitor/DriverRoute', { cache: 'no-store' })
+            .then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(render)
+            .catch(function () {
+                // Một nhịp hỏi hụt KHÔNG được xoá màn hình. Site khởi động lại mất
+                // vài giây; xoá đường đi vì lý do đó là biến sự cố của máy chủ
+                // thành một chỉ dẫn sai cho người đang đứng nhìn.
+            });
+    }
+
+    // Toa do block khong doi trong luc chay, nen doc dung MOT lan. Loi o day khong
+    // duoc lam hong man hinh: thieu so block van con duong di va so block dich.
+    fetch('/Monitor/BlockMap', { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { if (d && d.blocks) { blocks = d.blocks; ensureBlocks(); } })
+        .catch(function () { });
+
+    poll();
+    setInterval(poll, POLL_MS);
+})();
+</script>

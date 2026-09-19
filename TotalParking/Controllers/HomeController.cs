@@ -38,6 +38,14 @@ namespace TotalParking.Controllers
             return View();
         }
 
+        // Màn hình treo cho tài xế đang dừng ở barrier. Toàn bộ nội dung do
+        // /Monitor/DriverRoute quyết định; trang này không tự chọn block, không tự
+        // tính đường và không tự xét hạn hiển thị.
+        public ActionResult DriverGuide()
+        {
+            return View();
+        }
+
         public ActionResult Alarms()
         {
             return View();

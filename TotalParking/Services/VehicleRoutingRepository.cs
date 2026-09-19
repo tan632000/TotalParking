@@ -10,11 +10,14 @@ namespace TotalParking.Services
     public class VehicleRoutingRepository
     {
         private const string UpsertSql =
-            "INSERT INTO vehicle_routing (event_id, decided_at, zone_id, outcome, reason) " +
-            "VALUES (@event_id, @decided_at, @zone_id, @outcome, @reason) AS new " +
+            "INSERT INTO vehicle_routing " +
+            "  (event_id, decided_at, zone_id, outcome, reason, block_no, occupancy_verified) " +
+            "VALUES (@event_id, @decided_at, @zone_id, @outcome, @reason, " +
+            "        @block_no, @occupancy_verified) AS new " +
             "ON DUPLICATE KEY UPDATE " +
             "  decided_at = new.decided_at, zone_id = new.zone_id, " +
-            "  outcome = new.outcome, reason = new.reason";
+            "  outcome = new.outcome, reason = new.reason, " +
+            "  block_no = new.block_no, occupancy_verified = new.occupancy_verified";
 
         // Ghi đè khi trùng event_id: quyết định điều hướng là dữ liệu dẫn xuất,
         // tính lại được bất cứ lúc nào. Camera gửi lại cùng event_id thì kết quả
@@ -32,9 +35,60 @@ namespace TotalParking.Services
                 Add(cmd, "@zone_id",    routing.ZoneId);
                 Add(cmd, "@outcome",    routing.Outcome);
                 Add(cmd, "@reason",     routing.Reason);
+                Add(cmd, "@block_no",   routing.BlockNo);
+                // Cột NOT NULL DEFAULT 0, nên gửi 0/1 chứ không gửi DBNull.
+                cmd.Parameters.AddWithValue("@occupancy_verified", routing.OccupancyVerified ? 1 : 0);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
+            }
+        }
+
+        // Quyết định mới nhất còn nằm trong cửa sổ hiển thị.
+        //
+        // Mốc thời gian là `decided_at` — thời điểm điểm đến trở nên có hiệu lực —
+        // chứ KHÔNG phải `received_at` hay `camera_timestamp`. `camera_timestamp` có
+        // thể null vì tầng ingest quy 0 và "Unknown" về null. Còn `received_at` lệch
+        // kiểu khác: lúc app pool recycle, hai worker cùng sống tới 90 giây nên một
+        // loạt sự kiện có thể được quyết định muộn hơn lúc nhận nhiều phút, và khi đó
+        // một quyết định vừa ra một giây trước sẽ bị coi là cũ, đúng lúc tài xế đang
+        // đứng nhìn màn hình.
+        //
+        // So sánh bằng MICROSECOND để lấy đúng độ chính xác mili-giây của cột
+        // DATETIME(3); dùng TIMESTAMPDIFF thay vì trừ ngày tháng để biên 90.000 giây
+        // vẫn được tính là còn hiệu lực.
+        private const string CurrentSql =
+            "SELECT event_id, decided_at, zone_id, outcome, reason, block_no, occupancy_verified " +
+            "FROM   vehicle_routing " +
+            "WHERE  TIMESTAMPDIFF(MICROSECOND, decided_at, NOW(3)) <= @window_us " +
+            "ORDER  BY decided_at DESC, event_id DESC LIMIT 1";
+
+        // null nghĩa là không có quyết định nào còn hiệu lực — trạng thái chờ, không
+        // phải lỗi.
+        public VehicleRouting GetCurrentDecision(int windowSeconds)
+        {
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = CurrentSql;
+                cmd.Parameters.AddWithValue("@window_us", (long)windowSeconds * 1000000L);
+
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    if (!r.Read()) return null;
+
+                    return new VehicleRouting
+                    {
+                        EventId           = Str(r, "event_id"),
+                        DecidedAt         = Convert.ToDateTime(r["decided_at"]),
+                        ZoneId            = NullableInt(r, "zone_id"),
+                        Outcome           = Str(r, "outcome"),
+                        Reason            = Str(r, "reason"),
+                        BlockNo           = NullableInt(r, "block_no"),
+                        OccupancyVerified = Num(r, "occupancy_verified") == 1
+                    };
+                }
             }
         }
 

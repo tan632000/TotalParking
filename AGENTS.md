@@ -48,7 +48,9 @@ Do the work yourself when it takes a handful of tool calls. Delegate genuinely i
 
 ## Language Consistency <!-- cafekit:lang -->
 
-Match the language the user writes in. Technical terms, code identifiers, and file paths may remain in English.
+Always respond in **Tiếng Việt**. Technical terms, code identifiers, and file paths may remain in English, but explanations, comments directed at the user, and structured output must be in Tiếng Việt.
+
+
 <!-- CAFEKIT CORE END -->
 
 ## Project constraints — TotalParking SCADA

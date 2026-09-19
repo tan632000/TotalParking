@@ -1,0 +1,58 @@
+XOA THANH GHI CHUA MA THE TEST 62B2FEE0
+Cap nhat: 19/09/2026 17:35
+
+THE CAN XU LY (duy nhat)
+   Ma the : 62b2fee0      (thanh ghi luu dao word: FEE0 62B2)
+   Ten    : TEST.004       -- da dang ky trong he thong luc 17:19, dang hieu luc
+   Day la dung the khach vua quet thu o block 70 / 71.
+
+VI SAO PHAI XOA
+   Thang dieu khien ghi ma the vao o trong cua block NGAY TAI NOI QUET.
+   The nay da duoc quet o nhieu block khac nhau, nen he thong thay no dang
+   do o nhieu block cung luc -> khong xac dinh duoc xe o dau, tim xe tra ve 0.
+
+
+=========== PHAN CAN HIEN TRUONG XOA TAY TAI HMI (2 thanh ghi) ===========
+
+   block   o    thanh ghi   IP PLC            ghi luc            trang thai PLC
+   -----   --   ---------   ---------------   ----------------   --------------
+     62     4     D206      192.169.1.162     19/09 16:42:19     dang online
+    112     4     D206      192.169.1.212     19/09 15:44:34     dang online
+
+   Moi o chiem 2 word lien tiep -> xoa ca D206 VA D207 ve 0.
+
+   Hai PLC nay dang online, nen xoa xong khoang 45 giay la SCADA thay ngay.
+
+
+=========== PHAN SCADA DA TU XU LY (khong can lam gi ngay) ===========
+
+   Ba block duoi day cung dang giu ma the, nhung PLC mat ket noi nen SCADA
+   khong doc lai duoc. Da go ban sao trong SCADA (file 36_clear_stale_slot_cache.sql)
+   de khong chan viec test hom nay:
+
+     block  73   o 2   D202   192.169.1.173   mat ket noi
+     block  82   o 1   D400   192.169.1.182   mat ket noi
+     block 109   o 1   D400   192.169.1.209   mat ket noi
+     block 109   o 3   D204   192.169.1.209   mat ket noi
+
+   LUU Y: thanh ghi THAT trong ba PLC do VAN CON ma the. Khi nao ba PLC nay
+   noi lai duoc mang, SCADA se doc lai va van de tai dien. Nen van phai xoa
+   tay tai HMI cua ba block do, chi la khong gap.
+
+
+=========== KHONG DUOC DONG VAO ===========
+
+   Block 70 va 71: hien da sach, ca 10 thanh ghi deu 0000, PLC online.
+   De nguyen, day la cho se test.
+
+
+=========== SAU KHI XOA XONG - CACH TEST DUNG ===========
+
+   1. Quet the 62b2fee0 MOT LAN duy nhat tai block 71   (gui xe)
+   2. Cho khoang 45 giay cho he thong doc lai thanh ghi
+   3. Quet the do tai block 70                           (tim xe)
+      -> man hinh phai bao block 71
+
+   Khong quet the nay o bat ky block nao khac trong luc test. Moi lan quet o
+   mot block la mot lan ghi them ma the vao block do, va tinh trang "mot the
+   nam o nhieu block" lai tai dien ngay.

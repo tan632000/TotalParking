@@ -23,6 +23,15 @@ namespace TotalParking.Models
         public int?     ZoneId    { get; set; }
         public string   Outcome   { get; set; }
         public string   Reason    { get; set; }
+
+        // Block đích, do BlockAllocator chọn ở server. Cũng null với mọi outcome
+        // khác ROUTED, và database có trigger chặn cả hai chiều vi phạm.
+        public int?     BlockNo   { get; set; }
+
+        // false nghĩa là PLC chưa báo cáo block này trong 5 phút gần đây, nên số ô
+        // trống của nó là suy luận chứ không phải quan sát. Vẫn chọn block đó, nhưng
+        // bề mặt hiển thị phải nói ra điều này thay vì im lặng.
+        public bool     OccupancyVerified { get; set; }
     }
 
     // Sức chứa một zone, đọc từ view v_zone_capacity.
