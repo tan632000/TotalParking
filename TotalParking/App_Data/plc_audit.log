@@ -1,0 +1,110 @@
+﻿2026-09-19 15:55:08.052  ERROR  192.169.1.101     block 1     KET NOI  | Ket noi TCP toi PLC 192.169.1.101:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.071  ERROR  192.169.1.103     block 3     KET NOI  | Ket noi TCP toi PLC 192.169.1.103:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.082  ERROR  192.169.1.137     block 37    KET NOI  | Ket noi TCP toi PLC 192.169.1.137:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.092  ERROR  192.169.1.102     block 2     KET NOI  | Ket noi TCP toi PLC 192.169.1.102:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.121  ERROR  192.169.1.136     block 36    KET NOI  | Ket noi TCP toi PLC 192.169.1.136:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.153  ERROR  192.169.1.131     block 31    KET NOI  | Ket noi TCP toi PLC 192.169.1.131:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.185  ERROR  192.169.1.130     block 30    KET NOI  | Ket noi TCP toi PLC 192.169.1.130:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.211  ERROR  192.169.1.127     block 27    KET NOI  | Ket noi TCP toi PLC 192.169.1.127:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.249  ERROR  192.169.1.108     block 8     KET NOI  | Ket noi TCP toi PLC 192.169.1.108:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.272  ERROR  192.169.1.107     block 7     KET NOI  | Ket noi TCP toi PLC 192.169.1.107:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.312  ERROR  192.169.1.105     block 5     KET NOI  | Ket noi TCP toi PLC 192.169.1.105:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.329  ERROR  192.169.1.106     block 6     KET NOI  | Ket noi TCP toi PLC 192.169.1.106:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:08.352  ERROR  192.169.1.104     block 4     KET NOI  | Ket noi TCP toi PLC 192.169.1.104:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.131  ERROR  192.169.1.138     block 38    KET NOI  | Ket noi TCP toi PLC 192.169.1.138:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.173  ERROR  192.169.1.140     block 40    KET NOI  | Ket noi TCP toi PLC 192.169.1.140:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.191  ERROR  192.169.1.141     block 41    KET NOI  | Ket noi TCP toi PLC 192.169.1.141:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.212  ERROR  192.169.1.139     block 39    KET NOI  | Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.231  ERROR  192.169.1.142     block 42    KET NOI  | Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.251  ERROR  192.169.1.150     block 50    KET NOI  | Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.281  ERROR  192.169.1.143     block 43    KET NOI  | Ket noi TCP toi PLC 192.169.1.143:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.301  ERROR  192.169.1.158     block 58    KET NOI  | Ket noi TCP toi PLC 192.169.1.158:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.322  ERROR  192.169.1.159     block 59    KET NOI  | Ket noi TCP toi PLC 192.169.1.159:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.344  ERROR  192.169.1.151     block 51    KET NOI  | Ket noi TCP toi PLC 192.169.1.151:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.367  ERROR  192.169.1.161     block 61    KET NOI  | Ket noi TCP toi PLC 192.169.1.161:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.391  ERROR  192.169.1.164     block 64    KET NOI  | Ket noi TCP toi PLC 192.169.1.164:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.411  ERROR  192.169.1.163     block 63    KET NOI  | Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.441  ERROR  192.169.1.160     block 60    KET NOI  | Ket noi TCP toi PLC 192.169.1.160:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:11.471  ERROR  192.169.1.162     block 62    KET NOI  | Ket noi TCP toi PLC 192.169.1.162:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:13.101  ERROR  192.169.1.101     block 1     QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.101:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.157  ERROR  192.169.1.165     block 65    KET NOI  | Ket noi TCP toi PLC 192.169.1.165:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.206  ERROR  192.169.1.170     block 70    KET NOI  | Ket noi TCP toi PLC 192.169.1.170:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.222  ERROR  192.169.1.171     block 71    KET NOI  | Ket noi TCP toi PLC 192.169.1.171:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.241  ERROR  192.169.1.173     block 73    KET NOI  | Ket noi TCP toi PLC 192.169.1.173:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.287  ERROR  192.169.1.172     block 72    KET NOI  | Ket noi TCP toi PLC 192.169.1.172:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.303  ERROR  192.169.1.174     block 74    KET NOI  | Ket noi TCP toi PLC 192.169.1.174:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.321  ERROR  192.169.1.175     block 75    KET NOI  | Ket noi TCP toi PLC 192.169.1.175:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.387  ERROR  192.169.1.176     block 76    KET NOI  | Ket noi TCP toi PLC 192.169.1.176:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.405  ERROR  192.169.1.179     block 79    KET NOI  | Ket noi TCP toi PLC 192.169.1.179:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.412  ERROR  192.169.1.178     block 78    KET NOI  | Ket noi TCP toi PLC 192.169.1.178:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.444  ERROR  192.169.1.177     block 77    KET NOI  | Ket noi TCP toi PLC 192.169.1.177:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.461  ERROR  192.169.1.181     block 81    KET NOI  | Ket noi TCP toi PLC 192.169.1.181:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.461  ERROR  192.169.1.182     block 82    KET NOI  | Ket noi TCP toi PLC 192.169.1.182:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.487  ERROR  192.169.1.183     block 83    KET NOI  | Ket noi TCP toi PLC 192.169.1.183:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.511  ERROR  192.169.1.184     block 84    KET NOI  | Ket noi TCP toi PLC 192.169.1.184:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:14.540  ERROR  192.169.1.180     block 80    KET NOI  | Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:16.142  ERROR  192.169.1.102     block 2     QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.102:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.184  ERROR  192.169.1.185     block 85    KET NOI  | Ket noi TCP toi PLC 192.169.1.185:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.232  ERROR  192.169.1.186     block 86    KET NOI  | Ket noi TCP toi PLC 192.169.1.186:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.251  ERROR  192.169.1.187     block 87    KET NOI  | Ket noi TCP toi PLC 192.169.1.187:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.271  ERROR  192.169.1.191     block 91    KET NOI  | Ket noi TCP toi PLC 192.169.1.191:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.312  ERROR  192.169.1.192     block 92    KET NOI  | Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.344  ERROR  192.169.1.193     block 93    KET NOI  | Ket noi TCP toi PLC 192.169.1.193:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.361  ERROR  192.169.1.194     block 94    KET NOI  | Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.407  ERROR  192.169.1.196     block 96    KET NOI  | Ket noi TCP toi PLC 192.169.1.196:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.471  ERROR  192.169.1.212     block 112   KET NOI  | Ket noi TCP toi PLC 192.169.1.212:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.552  ERROR  192.169.1.203     block 103   KET NOI  | Ket noi TCP toi PLC 192.169.1.203:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:17.613  ERROR  192.169.1.209     block 109   KET NOI  | Ket noi TCP toi PLC 192.169.1.209:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:19.194  ERROR  192.169.1.103     block 3     QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.103:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:22.241  ERROR  192.169.1.104     block 4     QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.104:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:25.302  ERROR  192.169.1.105     block 5     QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.105:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:28.381  ERROR  192.169.1.106     block 6     QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.106:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.663  ERROR  192.169.1.107     block 7     QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.107:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.760  ERROR  192.169.1.108     block 8     QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.108:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.789  ERROR  192.169.1.127     block 27    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.127:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.810  ERROR  192.169.1.130     block 30    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.130:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.830  ERROR  192.169.1.131     block 31    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.131:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.852  ERROR  192.169.1.136     block 36    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.136:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.870  ERROR  192.169.1.137     block 37    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.137:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.890  ERROR  192.169.1.138     block 38    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.138:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.915  ERROR  192.169.1.139     block 39    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.931  ERROR  192.169.1.140     block 40    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.140:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.950  ERROR  192.169.1.141     block 41    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.141:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:29.978  ERROR  192.169.1.142     block 42    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.634  ERROR  192.169.1.143     block 43    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.143:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.720  ERROR  192.169.1.150     block 50    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.751  ERROR  192.169.1.151     block 51    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.151:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.790  ERROR  192.169.1.158     block 58    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.158:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.841  ERROR  192.169.1.159     block 59    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.159:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.878  ERROR  192.169.1.160     block 60    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.160:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.905  ERROR  192.169.1.161     block 61    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.161:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.940  ERROR  192.169.1.162     block 62    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.162:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.970  ERROR  192.169.1.163     block 63    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:32.990  ERROR  192.169.1.164     block 64    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.164:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:33.070  ERROR  192.169.1.165     block 65    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.165:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:33.090  ERROR  192.169.1.170     block 70    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.170:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:33.113  ERROR  192.169.1.171     block 71    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.171:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:33.130  ERROR  192.169.1.172     block 72    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.172:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:33.152  ERROR  192.169.1.173     block 73    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.173:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:33.180  ERROR  192.169.1.174     block 74    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.174:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:35.550  ERROR  192.169.1.175     block 75    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.175:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:35.640  ERROR  192.169.1.176     block 76    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.176:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:35.675  ERROR  192.169.1.177     block 77    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.177:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:35.740  ERROR  192.169.1.178     block 78    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.178:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.060  ERROR  192.169.1.179     block 79    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.179:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.140  ERROR  192.169.1.180     block 80    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.160  ERROR  192.169.1.181     block 81    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.181:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.180  ERROR  192.169.1.182     block 82    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.182:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.204  ERROR  192.169.1.183     block 83    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.183:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.220  ERROR  192.169.1.184     block 84    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.184:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.242  ERROR  192.169.1.185     block 85    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.185:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.260  ERROR  192.169.1.186     block 86    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.186:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.280  ERROR  192.169.1.187     block 87    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.187:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.310  ERROR  192.169.1.191     block 91    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.191:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.330  ERROR  192.169.1.192     block 92    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:36.354  ERROR  192.169.1.193     block 93    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.193:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:38.590  ERROR  192.169.1.194     block 94    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:38.630  ERROR  192.169.1.196     block 96    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.196:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:38.660  ERROR  192.169.1.203     block 103   QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.203:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:38.691  ERROR  192.169.1.209     block 109   QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.209:9600 qua thoi gian (3000ms).
+2026-09-19 15:55:38.730  ERROR  192.169.1.212     block 112   QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.212:9600 qua thoi gian (3000ms).

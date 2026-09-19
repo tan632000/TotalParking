@@ -88,3 +88,4 @@ plans/*
 *.rar
 *.zip
 *.7z
+.omp/

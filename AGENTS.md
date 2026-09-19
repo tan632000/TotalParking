@@ -4,7 +4,14 @@
 ## Shared CafeKit instructions
 
 - Deliver exactly what was asked. Do not expand, polish, or add optional work beyond the request. Match existing code style and structure.
-- For Specs v2.1, treat `spec.json` as machine authority and Markdown as human projections. Keep task status and plan synchronized with `task_registry`; derive ownership, dependencies, transitions, proof, and parallelism only from typed `coordination.boundaries`. Never invent proof, readiness, approval, or audit state.
+- For process-first Specs, `plan.md` and flat `task-NN-*.md` files are
+  canonical, hand-editable state. Each task has exactly one `Status:` field and
+  keeps canonical execution proof in its final inline `## Receipt`.
+- Specs uses three user decisions: C1 for scope, C2 for adversarial findings,
+  and C3 for completion. Planning never starts implementation; implementation
+  requires a new explicit user invocation.
+- Synchronize only observed task state with surgical edits. Never invent proof,
+  readiness, approval, review independence, or completed work.
 - `NO_TESTS` and `0 tests + exit 0` do not pass when the task requires automated tests.
 - When a hook blocks an action, that is an instruction boundary — do not work around it.
 - Use conventional commits. Do not add AI attribution unless requested.
@@ -29,32 +36,15 @@ Do the work yourself when it takes a handful of tool calls. Delegate genuinely i
 
 ## Commands
 
-**Windows-only.** This solution cannot be built on Linux, WSL, or a container: ASP.NET MVC 5 on .NET Framework 4.5 requires MSBuild and IIS Express.
-
-- Restore: `nuget restore TotalParking\TotalParking.sln`
-- Build: `msbuild TotalParking\TotalParking.sln /p:Configuration=Debug`
-- Run: open `TotalParking\TotalParking.sln` in Visual Studio 2022, press F5. App serves at `https://localhost:44327`.
-- Test: **none exist.** There is no test project and no test runner. Never report that tests passed.
-- Lint: none configured.
-
-React design source (only when explicitly asked — see "Do not touch"):
-
-- `cd TotalParkingLayout && pnpm install && pnpm dev`
+<!-- Add project-specific install, test, lint, and build commands here. Keep commands executable. -->
 
 ## Do not touch
 
-- `TotalParkingLayout/` — frozen React design source. Never run `pnpm export:mvc` or `pnpm build:mvc`: both regenerate and **overwrite every `Views/Home/*.cshtml`**, destroying hand edits made since the last export. Run only on explicit instruction.
-- `TotalParking/SCADALayout/assets/` — stale React bundle from a previous integration, unused.
-- `TotalParking/scratch/` — one-off Python geometry scripts, not part of the app.
-- `TotalParking/packages/`, `TotalParking/bin/`, `TotalParking/obj/`, `TotalParking/.vs/` — generated or restored.
-- `cloudflared-windows-amd64.exe` — 54 MB vendored binary.
-- `.claude/`, `.agent/` — CafeKit-managed toolkit. Edit only when the task is explicitly about tooling.
+<!-- List files, directories, generated artifacts, or secrets that tasks must leave unchanged. -->
 
 ## Slow or expensive
 
-- Do not run builds or publishes. The user verifies with F5 in Visual Studio and owns execution proof.
-- Large views — `ZoneDetail.cshtml` (1622 lines), `OperationControl.cshtml` (1578), `Maintenance.cshtml` (1436), `Reports.cshtml` (1402), `Index.cshtml` (1275). Read by line range, never load whole files.
-- `TotalParking/Content/scada.css` — 5968 lines of compiled Tailwind. Never read in full; grep for the class you need.
+<!-- Note commands, environments, or operations that need explicit planning before running. -->
 
 ## Language Consistency <!-- cafekit:lang -->
 
