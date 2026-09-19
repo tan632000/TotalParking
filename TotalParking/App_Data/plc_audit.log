@@ -908,3 +908,518 @@
 2026-09-19 22:55:11.380  ERROR  192.169.1.194     block 94    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
 2026-09-19 22:55:11.380  ERROR  192.169.1.196     block 96    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.196:9600 qua thoi gian (3000ms).
 2026-09-19 22:55:11.395  ERROR  192.169.1.209     block 109   QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.967  ERROR  192.169.1.131     block 31    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.968  ERROR  192.169.1.101     block 1     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.968  ERROR  192.169.1.127     block 27    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.968  ERROR  192.169.1.108     block 8     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.969  ERROR  192.169.1.130     block 30    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.967  ERROR  192.169.1.106     block 6     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.968  ERROR  192.169.1.107     block 7     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.972  ERROR  192.169.1.105     block 5     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.973  ERROR  192.169.1.140     block 40    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.974  ERROR  192.169.1.159     block 59    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.974  ERROR  192.169.1.141     block 41    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.974  ERROR  192.169.1.143     block 43    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.976  ERROR  192.169.1.165     block 65    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.976  ERROR  192.169.1.164     block 64    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.976  ERROR  192.169.1.170     block 70    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.978  ERROR  192.169.1.161     block 61    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.978  ERROR  192.169.1.172     block 72    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.979  ERROR  192.169.1.173     block 73    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.979  ERROR  192.169.1.174     block 74    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.980  READ   192.169.1.160     block 60    D1002      =  4980 62A8  | ma the: 62a84980
+2026-09-19 23:27:38.980  READ   192.169.1.162     block 62    D1002      =  FEE0 62B2  | ma the: 62b2fee0
+2026-09-19 23:27:38.981  ERROR  192.169.1.176     block 76    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.981  ERROR  192.169.1.177     block 77    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.981  ERROR  192.169.1.178     block 78    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.981  ERROR  192.169.1.179     block 79    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.984  ERROR  192.169.1.181     block 81    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.984  ERROR  192.169.1.182     block 82    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.986  ERROR  192.169.1.184     block 84    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.990  ERROR  192.169.1.191     block 91    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.990  ERROR  192.169.1.193     block 93    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.990  ERROR  192.169.1.186     block 86    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:38.994  ERROR  192.169.1.209     block 109   KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:39.025  WRITE  192.169.1.162     block 62    D1000      <- 0       OK
+2026-09-19 23:27:39.027  WRITE  192.169.1.160     block 60    D1000      <- 0       OK
+2026-09-19 23:27:41.972  ERROR  192.169.1.142     block 42    KET NOI  | Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:41.973  ERROR  192.169.1.139     block 39    KET NOI  | Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:41.973  ERROR  192.169.1.163     block 63    KET NOI  | Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:41.974  ERROR  192.169.1.150     block 50    KET NOI  | Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:41.997  ERROR  192.169.1.180     block 80    KET NOI  | Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:41.998  ERROR  192.169.1.194     block 94    KET NOI  | Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:41.997  ERROR  192.169.1.196     block 96    KET NOI  | Ket noi TCP toi PLC 192.169.1.196:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:41.997  ERROR  192.169.1.192     block 92    KET NOI  | Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:43.978  ERROR  192.169.1.101     block 1     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:44.032  ERROR  192.169.1.105     block 5     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:44.032  ERROR  192.169.1.106     block 6     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:44.034  ERROR  192.169.1.107     block 7     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:44.034  ERROR  192.169.1.108     block 8     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:44.034  ERROR  192.169.1.127     block 27    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:44.034  ERROR  192.169.1.130     block 30    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:44.035  ERROR  192.169.1.131     block 31    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.121  ERROR  192.169.1.139     block 39    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:46.124  ERROR  192.169.1.140     block 40    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.128  ERROR  192.169.1.141     block 41    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.128  ERROR  192.169.1.142     block 42    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:46.128  ERROR  192.169.1.143     block 43    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.128  ERROR  192.169.1.150     block 50    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:46.171  ERROR  192.169.1.159     block 59    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.189  ERROR  192.169.1.161     block 61    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.210  ERROR  192.169.1.163     block 63    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:46.211  ERROR  192.169.1.164     block 64    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.211  ERROR  192.169.1.165     block 65    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.211  ERROR  192.169.1.170     block 70    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.226  ERROR  192.169.1.172     block 72    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.226  ERROR  192.169.1.173     block 73    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.226  ERROR  192.169.1.174     block 74    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.242  ERROR  192.169.1.176     block 76    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.242  ERROR  192.169.1.177     block 77    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.242  ERROR  192.169.1.178     block 78    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.242  ERROR  192.169.1.179     block 79    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.242  ERROR  192.169.1.180     block 80    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:46.242  ERROR  192.169.1.181     block 81    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.242  ERROR  192.169.1.182     block 82    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.256  ERROR  192.169.1.184     block 84    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.277  ERROR  192.169.1.186     block 86    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.295  ERROR  192.169.1.191     block 91    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.296  ERROR  192.169.1.192     block 92    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:46.296  ERROR  192.169.1.193     block 93    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:27:46.296  ERROR  192.169.1.194     block 94    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:46.296  ERROR  192.169.1.196     block 96    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.196:9600 qua thoi gian (3000ms).
+2026-09-19 23:27:46.308  ERROR  192.169.1.209     block 109   QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.546  ERROR  192.169.1.106     block 6     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.546  ERROR  192.169.1.107     block 7     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.546  ERROR  192.169.1.101     block 1     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.546  ERROR  192.169.1.105     block 5     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.548  ERROR  192.169.1.130     block 30    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.546  ERROR  192.169.1.131     block 31    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.546  ERROR  192.169.1.108     block 8     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.546  ERROR  192.169.1.127     block 27    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.550  ERROR  192.169.1.140     block 40    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.550  ERROR  192.169.1.143     block 43    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.550  ERROR  192.169.1.141     block 41    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.555  ERROR  192.169.1.159     block 59    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.555  ERROR  192.169.1.165     block 65    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.556  ERROR  192.169.1.164     block 64    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.556  ERROR  192.169.1.161     block 61    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.556  ERROR  192.169.1.170     block 70    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.558  ERROR  192.169.1.172     block 72    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.558  ERROR  192.169.1.176     block 76    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.558  ERROR  192.169.1.177     block 77    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.559  READ   192.169.1.162     block 62    D1002      =  FEE0 62B2  | ma the: 62b2fee0
+2026-09-19 23:35:31.559  ERROR  192.169.1.178     block 78    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.559  ERROR  192.169.1.174     block 74    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.560  ERROR  192.169.1.179     block 79    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.559  READ   192.169.1.160     block 60    D1002      =  4980 62A8  | ma the: 62a84980
+2026-09-19 23:35:31.561  ERROR  192.169.1.173     block 73    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.561  ERROR  192.169.1.182     block 82    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.562  ERROR  192.169.1.181     block 81    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.562  ERROR  192.169.1.184     block 84    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.563  ERROR  192.169.1.186     block 86    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.565  ERROR  192.169.1.193     block 93    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.566  ERROR  192.169.1.191     block 91    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.569  ERROR  192.169.1.209     block 109   KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:31.602  WRITE  192.169.1.162     block 62    D1000      <- 0       OK
+2026-09-19 23:35:31.605  WRITE  192.169.1.160     block 60    D1000      <- 0       OK
+2026-09-19 23:35:34.550  ERROR  192.169.1.142     block 42    KET NOI  | Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:34.551  ERROR  192.169.1.139     block 39    KET NOI  | Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:34.550  ERROR  192.169.1.150     block 50    KET NOI  | Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:34.565  ERROR  192.169.1.163     block 63    KET NOI  | Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:34.565  ERROR  192.169.1.196     block 96    KET NOI  | Ket noi TCP toi PLC 192.169.1.196:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:34.565  ERROR  192.169.1.180     block 80    KET NOI  | Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:34.567  ERROR  192.169.1.192     block 92    KET NOI  | Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:34.567  ERROR  192.169.1.194     block 94    KET NOI  | Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:36.557  ERROR  192.169.1.101     block 1     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:36.610  ERROR  192.169.1.105     block 5     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:36.610  ERROR  192.169.1.106     block 6     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:36.610  ERROR  192.169.1.107     block 7     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:36.610  ERROR  192.169.1.108     block 8     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:36.611  ERROR  192.169.1.127     block 27    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:36.611  ERROR  192.169.1.130     block 30    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:36.611  ERROR  192.169.1.131     block 31    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.657  ERROR  192.169.1.139     block 39    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:38.661  ERROR  192.169.1.140     block 40    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.666  ERROR  192.169.1.141     block 41    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.667  ERROR  192.169.1.142     block 42    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:38.672  ERROR  192.169.1.143     block 43    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.672  ERROR  192.169.1.150     block 50    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:38.713  ERROR  192.169.1.159     block 59    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.730  ERROR  192.169.1.161     block 61    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.753  ERROR  192.169.1.163     block 63    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:38.753  ERROR  192.169.1.164     block 64    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.753  ERROR  192.169.1.165     block 65    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.755  ERROR  192.169.1.170     block 70    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.771  ERROR  192.169.1.172     block 72    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.771  ERROR  192.169.1.173     block 73    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.771  ERROR  192.169.1.174     block 74    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.787  ERROR  192.169.1.176     block 76    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.787  ERROR  192.169.1.177     block 77    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.787  ERROR  192.169.1.178     block 78    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.787  ERROR  192.169.1.179     block 79    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.787  ERROR  192.169.1.180     block 80    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:38.787  ERROR  192.169.1.181     block 81    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.787  ERROR  192.169.1.182     block 82    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.804  ERROR  192.169.1.184     block 84    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.819  ERROR  192.169.1.186     block 86    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.835  ERROR  192.169.1.191     block 91    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.835  ERROR  192.169.1.192     block 92    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:38.835  ERROR  192.169.1.193     block 93    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:35:38.835  ERROR  192.169.1.194     block 94    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:38.835  ERROR  192.169.1.196     block 96    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.196:9600 qua thoi gian (3000ms).
+2026-09-19 23:35:38.853  ERROR  192.169.1.209     block 109   QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.228  ERROR  192.169.1.106     block 6     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.228  ERROR  192.169.1.105     block 5     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.230  ERROR  192.169.1.107     block 7     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.228  ERROR  192.169.1.131     block 31    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.228  ERROR  192.169.1.130     block 30    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.228  ERROR  192.169.1.101     block 1     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.228  ERROR  192.169.1.127     block 27    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.228  ERROR  192.169.1.108     block 8     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.232  ERROR  192.169.1.140     block 40    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.233  ERROR  192.169.1.141     block 41    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.235  ERROR  192.169.1.159     block 59    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.235  ERROR  192.169.1.161     block 61    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.235  ERROR  192.169.1.165     block 65    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.236  ERROR  192.169.1.164     block 64    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.236  ERROR  192.169.1.170     block 70    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.236  ERROR  192.169.1.172     block 72    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.237  ERROR  192.169.1.143     block 43    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.237  ERROR  192.169.1.174     block 74    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.238  ERROR  192.169.1.173     block 73    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.239  ERROR  192.169.1.177     block 77    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.240  ERROR  192.169.1.178     block 78    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.241  ERROR  192.169.1.176     block 76    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.241  ERROR  192.169.1.179     block 79    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.243  READ   192.169.1.162     block 62    D1002      =  FEE0 62B2  | ma the: 62b2fee0
+2026-09-19 23:41:11.243  ERROR  192.169.1.186     block 86    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.243  ERROR  192.169.1.184     block 84    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.243  READ   192.169.1.160     block 60    D1002      =  4980 62A8  | ma the: 62a84980
+2026-09-19 23:41:11.243  ERROR  192.169.1.182     block 82    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.245  ERROR  192.169.1.181     block 81    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.245  ERROR  192.169.1.191     block 91    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.248  ERROR  192.169.1.193     block 93    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.250  ERROR  192.169.1.209     block 109   KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:11.290  WRITE  192.169.1.162     block 62    D1000      <- 0       OK
+2026-09-19 23:41:11.293  WRITE  192.169.1.160     block 60    D1000      <- 0       OK
+2026-09-19 23:41:14.206  ERROR  192.169.1.139     block 39    KET NOI  | Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:14.237  ERROR  192.169.1.150     block 50    KET NOI  | Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:14.237  ERROR  192.169.1.142     block 42    KET NOI  | Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:14.237  ERROR  192.169.1.163     block 63    KET NOI  | Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:14.255  ERROR  192.169.1.194     block 94    KET NOI  | Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:14.255  ERROR  192.169.1.192     block 92    KET NOI  | Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:14.255  ERROR  192.169.1.180     block 80    KET NOI  | Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:16.242  ERROR  192.169.1.101     block 1     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:16.300  ERROR  192.169.1.105     block 5     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:16.300  ERROR  192.169.1.106     block 6     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:16.300  ERROR  192.169.1.107     block 7     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:16.304  ERROR  192.169.1.108     block 8     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:16.304  ERROR  192.169.1.127     block 27    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:16.304  ERROR  192.169.1.130     block 30    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:16.304  ERROR  192.169.1.131     block 31    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.378  ERROR  192.169.1.139     block 39    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:18.382  ERROR  192.169.1.140     block 40    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.387  ERROR  192.169.1.141     block 41    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.387  ERROR  192.169.1.142     block 42    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:18.392  ERROR  192.169.1.143     block 43    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.392  ERROR  192.169.1.150     block 50    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:18.438  ERROR  192.169.1.159     block 59    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.455  ERROR  192.169.1.161     block 61    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.475  ERROR  192.169.1.163     block 63    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:18.475  ERROR  192.169.1.164     block 64    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.475  ERROR  192.169.1.165     block 65    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.475  ERROR  192.169.1.170     block 70    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.495  ERROR  192.169.1.172     block 72    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.495  ERROR  192.169.1.173     block 73    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.495  ERROR  192.169.1.174     block 74    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.511  ERROR  192.169.1.176     block 76    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.511  ERROR  192.169.1.177     block 77    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.512  ERROR  192.169.1.178     block 78    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.512  ERROR  192.169.1.179     block 79    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.512  ERROR  192.169.1.180     block 80    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:18.512  ERROR  192.169.1.181     block 81    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.512  ERROR  192.169.1.182     block 82    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.528  ERROR  192.169.1.184     block 84    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.546  ERROR  192.169.1.186     block 86    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.560  ERROR  192.169.1.191     block 91    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.565  ERROR  192.169.1.192     block 92    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:18.565  ERROR  192.169.1.193     block 93    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:41:18.565  ERROR  192.169.1.194     block 94    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:41:18.588  ERROR  192.169.1.209     block 109   QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.452  ERROR  192.169.1.107     block 7     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.453  ERROR  192.169.1.130     block 30    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.453  ERROR  192.169.1.106     block 6     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.452  ERROR  192.169.1.108     block 8     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.453  ERROR  192.169.1.131     block 31    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.453  ERROR  192.169.1.127     block 27    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.453  ERROR  192.169.1.101     block 1     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.453  ERROR  192.169.1.105     block 5     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.459  ERROR  192.169.1.143     block 43    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.462  ERROR  192.169.1.140     block 40    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.462  ERROR  192.169.1.141     block 41    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.463  ERROR  192.169.1.159     block 59    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.463  ERROR  192.169.1.164     block 64    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.463  ERROR  192.169.1.161     block 61    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.463  ERROR  192.169.1.165     block 65    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.466  ERROR  192.169.1.170     block 70    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.466  READ   192.169.1.162     block 62    D1002      =  FEE0 62B2  | ma the: 62b2fee0
+2026-09-19 23:50:19.467  ERROR  192.169.1.177     block 77    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.467  READ   192.169.1.160     block 60    D1002      =  4980 62A8  | ma the: 62a84980
+2026-09-19 23:50:19.467  ERROR  192.169.1.174     block 74    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.468  ERROR  192.169.1.179     block 79    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.468  ERROR  192.169.1.178     block 78    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.469  ERROR  192.169.1.172     block 72    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.470  ERROR  192.169.1.173     block 73    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.470  ERROR  192.169.1.182     block 82    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.471  ERROR  192.169.1.181     block 81    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.471  ERROR  192.169.1.176     block 76    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.472  ERROR  192.169.1.184     block 84    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.473  ERROR  192.169.1.186     block 86    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.474  ERROR  192.169.1.191     block 91    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.475  ERROR  192.169.1.193     block 93    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.477  ERROR  192.169.1.209     block 109   KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:19.510  WRITE  192.169.1.162     block 62    D1000      <- 0       OK
+2026-09-19 23:50:19.518  WRITE  192.169.1.160     block 60    D1000      <- 0       OK
+2026-09-19 23:50:22.461  ERROR  192.169.1.150     block 50    KET NOI  | Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:22.461  ERROR  192.169.1.163     block 63    KET NOI  | Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:22.462  ERROR  192.169.1.142     block 42    KET NOI  | Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:22.461  ERROR  192.169.1.139     block 39    KET NOI  | Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:22.476  ERROR  192.169.1.194     block 94    KET NOI  | Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:22.476  ERROR  192.169.1.192     block 92    KET NOI  | Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:22.476  ERROR  192.169.1.180     block 80    KET NOI  | Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:24.450  ERROR  192.169.1.101     block 1     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:24.508  ERROR  192.169.1.105     block 5     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:24.508  ERROR  192.169.1.106     block 6     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:24.508  ERROR  192.169.1.107     block 7     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:24.508  ERROR  192.169.1.108     block 8     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:24.508  ERROR  192.169.1.127     block 27    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:24.509  ERROR  192.169.1.130     block 30    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:24.509  ERROR  192.169.1.131     block 31    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.576  ERROR  192.169.1.139     block 39    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:26.579  ERROR  192.169.1.140     block 40    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.585  ERROR  192.169.1.141     block 41    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.586  ERROR  192.169.1.142     block 42    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:26.589  ERROR  192.169.1.143     block 43    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.589  ERROR  192.169.1.150     block 50    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:26.634  ERROR  192.169.1.159     block 59    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.649  ERROR  192.169.1.161     block 61    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.672  ERROR  192.169.1.163     block 63    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:26.672  ERROR  192.169.1.164     block 64    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.673  ERROR  192.169.1.165     block 65    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.673  ERROR  192.169.1.170     block 70    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.689  ERROR  192.169.1.172     block 72    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.689  ERROR  192.169.1.173     block 73    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.690  ERROR  192.169.1.174     block 74    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.705  ERROR  192.169.1.176     block 76    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.705  ERROR  192.169.1.177     block 77    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.705  ERROR  192.169.1.178     block 78    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.705  ERROR  192.169.1.179     block 79    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.707  ERROR  192.169.1.180     block 80    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:26.707  ERROR  192.169.1.181     block 81    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.707  ERROR  192.169.1.182     block 82    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.726  ERROR  192.169.1.184     block 84    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.743  ERROR  192.169.1.186     block 86    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.759  ERROR  192.169.1.191     block 91    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.759  ERROR  192.169.1.192     block 92    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:26.759  ERROR  192.169.1.193     block 93    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:50:26.759  ERROR  192.169.1.194     block 94    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:50:26.787  ERROR  192.169.1.209     block 109   QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.088  ERROR  192.169.1.108     block 8     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.088  ERROR  192.169.1.101     block 1     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.089  ERROR  192.169.1.105     block 5     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.088  ERROR  192.169.1.131     block 31    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.088  ERROR  192.169.1.130     block 30    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.089  ERROR  192.169.1.106     block 6     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.092  ERROR  192.169.1.140     block 40    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.092  ERROR  192.169.1.141     block 41    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.089  ERROR  192.169.1.127     block 27    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.092  ERROR  192.169.1.143     block 43    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.089  ERROR  192.169.1.107     block 7     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.100  ERROR  192.169.1.161     block 61    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.100  ERROR  192.169.1.165     block 65    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.100  ERROR  192.169.1.172     block 72    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.100  ERROR  192.169.1.164     block 64    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.100  ERROR  192.169.1.173     block 73    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.100  READ   192.169.1.162     block 62    D1002      =  FEE0 62B2  | ma the: 62b2fee0
+2026-09-19 23:56:08.100  ERROR  192.169.1.159     block 59    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.100  ERROR  192.169.1.174     block 74    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.100  READ   192.169.1.160     block 60    D1002      =  4980 62A8  | ma the: 62a84980
+2026-09-19 23:56:08.105  ERROR  192.169.1.177     block 77    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.105  ERROR  192.169.1.178     block 78    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.105  ERROR  192.169.1.170     block 70    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.105  ERROR  192.169.1.179     block 79    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.105  ERROR  192.169.1.182     block 82    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.105  ERROR  192.169.1.181     block 81    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.100  ERROR  192.169.1.176     block 76    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.108  ERROR  192.169.1.184     block 84    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.108  ERROR  192.169.1.186     block 86    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.110  ERROR  192.169.1.191     block 91    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.110  ERROR  192.169.1.193     block 93    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.112  ERROR  192.169.1.209     block 109   KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:08.147  WRITE  192.169.1.162     block 62    D1000      <- 0       OK
+2026-09-19 23:56:08.151  WRITE  192.169.1.160     block 60    D1000      <- 0       OK
+2026-09-19 23:56:11.081  ERROR  192.169.1.139     block 39    KET NOI  | Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:11.095  ERROR  192.169.1.150     block 50    KET NOI  | Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:11.095  ERROR  192.169.1.142     block 42    KET NOI  | Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:11.095  ERROR  192.169.1.163     block 63    KET NOI  | Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:11.110  ERROR  192.169.1.180     block 80    KET NOI  | Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:11.110  ERROR  192.169.1.194     block 94    KET NOI  | Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:11.110  ERROR  192.169.1.192     block 92    KET NOI  | Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:13.094  ERROR  192.169.1.101     block 1     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:13.147  ERROR  192.169.1.105     block 5     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:13.147  ERROR  192.169.1.106     block 6     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:13.147  ERROR  192.169.1.107     block 7     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:13.147  ERROR  192.169.1.108     block 8     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:13.154  ERROR  192.169.1.127     block 27    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:13.154  ERROR  192.169.1.130     block 30    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:13.155  ERROR  192.169.1.131     block 31    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.233  ERROR  192.169.1.139     block 39    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:15.235  ERROR  192.169.1.140     block 40    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.240  ERROR  192.169.1.141     block 41    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.240  ERROR  192.169.1.142     block 42    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:15.245  ERROR  192.169.1.143     block 43    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.245  ERROR  192.169.1.150     block 50    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:15.281  ERROR  192.169.1.159     block 59    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.301  ERROR  192.169.1.161     block 61    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.322  ERROR  192.169.1.163     block 63    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:15.322  ERROR  192.169.1.164     block 64    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.322  ERROR  192.169.1.165     block 65    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.323  ERROR  192.169.1.170     block 70    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.339  ERROR  192.169.1.172     block 72    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.339  ERROR  192.169.1.173     block 73    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.339  ERROR  192.169.1.174     block 74    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.355  ERROR  192.169.1.176     block 76    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.355  ERROR  192.169.1.177     block 77    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.355  ERROR  192.169.1.178     block 78    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.355  ERROR  192.169.1.179     block 79    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.355  ERROR  192.169.1.180     block 80    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:15.355  ERROR  192.169.1.181     block 81    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.355  ERROR  192.169.1.182     block 82    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.374  ERROR  192.169.1.184     block 84    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.391  ERROR  192.169.1.186     block 86    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.405  ERROR  192.169.1.191     block 91    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.405  ERROR  192.169.1.192     block 92    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:15.405  ERROR  192.169.1.193     block 93    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:56:15.405  ERROR  192.169.1.194     block 94    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:56:15.436  ERROR  192.169.1.209     block 109   QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:16.504  HETLOI  192.169.1.209     block 109   KET NOI  OK  | thiet bi da tro lai
+2026-09-19 23:59:16.505  HETLOI  192.169.1.209     block 109   QUET O  OK  | thiet bi da tro lai
+2026-09-19 23:59:20.125  ERROR  192.169.1.105     block 5     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.126  ERROR  192.169.1.127     block 27    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.126  ERROR  192.169.1.106     block 6     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.126  ERROR  192.169.1.108     block 8     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.126  ERROR  192.169.1.130     block 30    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.128  ERROR  192.169.1.131     block 31    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.132  ERROR  192.169.1.141     block 41    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.132  ERROR  192.169.1.101     block 1     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.134  ERROR  192.169.1.107     block 7     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.132  ERROR  192.169.1.140     block 40    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.135  ERROR  192.169.1.159     block 59    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.135  ERROR  192.169.1.143     block 43    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.137  ERROR  192.169.1.161     block 61    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.139  ERROR  192.169.1.164     block 64    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.139  ERROR  192.169.1.170     block 70    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.139  ERROR  192.169.1.173     block 73    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.141  ERROR  192.169.1.174     block 74    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.141  ERROR  192.169.1.165     block 65    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.141  ERROR  192.169.1.177     block 77    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.141  ERROR  192.169.1.176     block 76    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.143  ERROR  192.169.1.179     block 79    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.143  ERROR  192.169.1.178     block 78    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.143  ERROR  192.169.1.182     block 82    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.145  ERROR  192.169.1.181     block 81    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.145  ERROR  192.169.1.184     block 84    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.145  ERROR  192.169.1.186     block 86    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.145  ERROR  192.169.1.191     block 91    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.147  ERROR  192.169.1.193     block 93    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.148  ERROR  192.169.1.172     block 72    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:20.154  READ   192.169.1.162     block 62    D1002      =  FEE0 62B2  | ma the: 62b2fee0
+2026-09-19 23:59:20.154  READ   192.169.1.160     block 60    D1002      =  4980 62A8  | ma the: 62a84980
+2026-09-19 23:59:20.249  WRITE  192.169.1.160     block 60    D1000      <- 0       OK
+2026-09-19 23:59:20.252  WRITE  192.169.1.162     block 62    D1000      <- 0       OK
+2026-09-19 23:59:21.361  ERROR  192.169.1.139     block 39    KET NOI  | Object reference not set to an instance of an object.
+2026-09-19 23:59:21.362  ERROR  192.169.1.163     block 63    KET NOI  | Object reference not set to an instance of an object.
+2026-09-19 23:59:21.363  ERROR  192.169.1.180     block 80    KET NOI  | Object reference not set to an instance of an object.
+2026-09-19 23:59:21.363  ERROR  192.169.1.150     block 50    KET NOI  | Object reference not set to an instance of an object.
+2026-09-19 23:59:21.364  ERROR  192.169.1.194     block 94    KET NOI  | Object reference not set to an instance of an object.
+2026-09-19 23:59:21.364  ERROR  192.169.1.142     block 42    KET NOI  | Object reference not set to an instance of an object.
+2026-09-19 23:59:21.365  ERROR  192.169.1.192     block 92    KET NOI  | Cannot access a disposed object.
+Object name: 'System.Net.Sockets.Socket'.
+2026-09-19 23:59:27.961  ERROR  192.169.1.131     block 31    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.961  ERROR  192.169.1.101     block 1     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.963  ERROR  192.169.1.105     block 5     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.966  ERROR  192.169.1.108     block 8     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.965  ERROR  192.169.1.127     block 27    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.963  ERROR  192.169.1.106     block 6     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.967  ERROR  192.169.1.107     block 7     KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.965  ERROR  192.169.1.130     block 30    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.969  ERROR  192.169.1.140     block 40    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.969  ERROR  192.169.1.141     block 41    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.971  ERROR  192.169.1.143     block 43    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.971  ERROR  192.169.1.159     block 59    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.971  ERROR  192.169.1.161     block 61    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.971  ERROR  192.169.1.164     block 64    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.971  ERROR  192.169.1.170     block 70    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.976  ERROR  192.169.1.165     block 65    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.976  ERROR  192.169.1.174     block 74    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.976  ERROR  192.169.1.173     block 73    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.978  ERROR  192.169.1.176     block 76    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.979  ERROR  192.169.1.177     block 77    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.978  READ   192.169.1.160     block 60    D1002      =  4980 62A8  | ma the: 62a84980
+2026-09-19 23:59:27.980  ERROR  192.169.1.181     block 81    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.980  ERROR  192.169.1.179     block 79    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.978  READ   192.169.1.162     block 62    D1002      =  FEE0 62B2  | ma the: 62b2fee0
+2026-09-19 23:59:27.982  ERROR  192.169.1.182     block 82    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.982  ERROR  192.169.1.172     block 72    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.984  ERROR  192.169.1.186     block 86    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.984  ERROR  192.169.1.191     block 91    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.985  ERROR  192.169.1.178     block 78    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.986  ERROR  192.169.1.184     block 84    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.988  ERROR  192.169.1.193     block 93    KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:27.989  ERROR  192.169.1.209     block 109   KET NOI  | PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:28.048  WRITE  192.169.1.160     block 60    D1000      <- 0       OK
+2026-09-19 23:59:28.049  WRITE  192.169.1.162     block 62    D1000      <- 0       OK
+2026-09-19 23:59:30.968  ERROR  192.169.1.150     block 50    KET NOI  | Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:30.968  ERROR  192.169.1.142     block 42    KET NOI  | Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:30.968  ERROR  192.169.1.139     block 39    KET NOI  | Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:30.971  ERROR  192.169.1.163     block 63    KET NOI  | Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:30.988  ERROR  192.169.1.192     block 92    KET NOI  | Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:30.988  ERROR  192.169.1.194     block 94    KET NOI  | Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:30.990  ERROR  192.169.1.180     block 80    KET NOI  | Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:33.011  ERROR  192.169.1.101     block 1     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:33.073  ERROR  192.169.1.105     block 5     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:33.077  ERROR  192.169.1.106     block 6     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:33.080  ERROR  192.169.1.107     block 7     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:33.083  ERROR  192.169.1.108     block 8     QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:33.085  ERROR  192.169.1.127     block 27    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:33.085  ERROR  192.169.1.130     block 30    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:33.094  ERROR  192.169.1.131     block 31    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.084  ERROR  192.169.1.139     block 39    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.139:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:35.088  ERROR  192.169.1.140     block 40    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.092  ERROR  192.169.1.141     block 41    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.093  ERROR  192.169.1.142     block 42    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.142:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:35.097  ERROR  192.169.1.143     block 43    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.097  ERROR  192.169.1.150     block 50    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.150:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:35.136  ERROR  192.169.1.159     block 59    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.156  ERROR  192.169.1.161     block 61    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.177  ERROR  192.169.1.163     block 63    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.163:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:35.177  ERROR  192.169.1.164     block 64    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.177  ERROR  192.169.1.165     block 65    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.185  ERROR  192.169.1.170     block 70    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.207  ERROR  192.169.1.172     block 72    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.207  ERROR  192.169.1.173     block 73    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.208  ERROR  192.169.1.174     block 74    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.225  ERROR  192.169.1.176     block 76    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.225  ERROR  192.169.1.177     block 77    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.226  ERROR  192.169.1.178     block 78    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.226  ERROR  192.169.1.179     block 79    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.227  ERROR  192.169.1.180     block 80    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.180:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:35.227  ERROR  192.169.1.181     block 81    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.227  ERROR  192.169.1.182     block 82    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.241  ERROR  192.169.1.184     block 84    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.268  ERROR  192.169.1.186     block 86    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.285  ERROR  192.169.1.191     block 91    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.286  ERROR  192.169.1.192     block 92    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.192:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:35.286  ERROR  192.169.1.193     block 93    QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.
+2026-09-19 23:59:35.287  ERROR  192.169.1.194     block 94    QUET O  | Chua ket noi duoc toi PLC: Ket noi TCP toi PLC 192.169.1.194:9600 qua thoi gian (3000ms).
+2026-09-19 23:59:35.315  ERROR  192.169.1.209     block 109   QUET O  | Chua ket noi duoc toi PLC: PLC tu choi bat tay FINS/TCP, ma loi 0x00000020.

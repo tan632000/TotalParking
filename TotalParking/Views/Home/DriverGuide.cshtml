@@ -17,55 +17,64 @@
     cắt lại ảnh nền vừa rồi không phải sửa một dòng nào trong tệp này.
 *@
 
-<div class="p-6 min-h-[calc(100vh-3.5rem)] text-slate-100"
+<div class="p-2 text-slate-100"
      style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
 
     @*
-        Bố cục đặt bằng inline style, không dùng class responsive của Tailwind.
-        `Content/scada.css` là bản CSS trích xuất sẵn và chỉ chứa đúng những class
-        mà giao diện gốc đã dùng: `lg:flex-row` và `lg:w-96` không có trong đó, nên
-        viết ra cũng không có tác dụng và bảng chữ sẽ rơi xuống dưới màn hình.
+        Trang NAY DUOC PHEP CUON, nen khong ep so do vao chieu cao man hinh nua.
+        Ep vao thi phai chon: hoac de trong hai ben, hoac xen bot tren duoi. Bo
+        rang buoc do di thi so do lay TRON be ngang va cao tu nhien theo ti le —
+        to nhat va ro nhat co the, khong xen mat gi.
+
+        Bang chu chuyen thanh mot thanh ngang BAM TREN (`position: sticky`). Doi
+        lai 4rem chieu cao, so do duoc them ~232px be ngang, va so block van nam
+        trong tam mat ke ca khi tai xe cuon xuong.
+
+        Bo cuc dat bang inline style, khong dung class responsive cua Tailwind:
+        `Content/scada.css` la ban CSS trich xuat san va khong chua chung.
     *@
-    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: stretch;">
-
-        @*
-            Sơ đồ phải nằm TRỌN trong màn hình. Đây là TV treo tường, không ai
-            cuộn trang được, nên để ảnh cao tự nhiên đồng nghĩa với việc nửa dưới
-            bãi xe — nơi có đầu dốc — biến mất khỏi tầm mắt.
-
-            `object-fit: contain` trên ảnh và `preserveAspectRatio="xMidYMid meet"`
-            trên SVG là cùng một phép co: cả hai thu ảnh vào khung theo đúng tỉ
-            lệ và canh giữa, nên lớp đường đi luôn chồng khít lên ảnh nền dù
-            khung có kích thước nào.
-        *@
-        <div class="rounded-lg border border-slate-700/60 overflow-hidden"
-             style="background: rgb(13, 27, 46); flex: 1 1 40rem; min-width: 0;">
-            <div id="dg-stage" class="relative w-full" style="height: calc(100vh - 7rem);">
-                <img src="@Url.Content("~/Images/plan_map.jpg")" alt="Sơ đồ bãi xe"
-                     class="absolute inset-0 w-full h-full" style="object-fit: contain; opacity: .85;" />
-                <svg id="dg-map" class="absolute inset-0 w-full h-full"
-                     preserveAspectRatio="xMidYMid meet"
-                     xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="dg-bar"
+         class="rounded-lg border border-slate-700/60"
+         @* top = 3.5rem chu khong phai 0: header cua _ScadaLayout la `fixed` cao
+            h-14, nen dan thanh nay vao dinh cuon thi no truot xuong DUOI header va
+            so block bi cat mat nua tren. *@
+         style="position: sticky; top: 3.5rem; z-index: 20; background: rgb(13, 27, 46);
+                display: flex; align-items: center; gap: 1.5rem; padding: .5rem 1rem;">
+        <div style="min-width: 0;">
+            <div id="dg-kicker" class="text-xs font-mono uppercase tracking-widest text-slate-500">
+                Đang chờ xe
+            </div>
+            <div id="dg-big" class="font-bold leading-none text-slate-400" style="font-size: 3rem;">
+                —
             </div>
         </div>
+        <div style="flex: 1 1 0; min-width: 0;">
+            <div id="dg-sub" class="text-sm text-slate-400 leading-snug">
+                Màn hình sẽ hiện vị trí đỗ ngay khi camera nhận diện xe.
+            </div>
+            <div id="dg-warn" class="mt-1 hidden text-xs font-mono text-amber-400 leading-snug"></div>
+        </div>
+        <div class="text-[10px] font-mono text-slate-600" style="white-space: nowrap;">
+            Cập nhật lúc <span id="dg-now">--:--:--</span>
+        </div>
+    </div>
 
-        <!-- Bảng chữ lớn, đọc được từ trong xe -->
-        <div style="flex: 0 0 22rem; display: flex; flex-direction: column; gap: 1rem;">
-            <div class="rounded-lg border border-slate-700/60 p-6" style="background: rgb(13, 27, 46);">
-                <div id="dg-kicker" class="text-xs font-mono uppercase tracking-widest text-slate-500">
-                    Đang chờ xe
-                </div>
-                <div id="dg-big" class="mt-3 font-bold leading-none text-slate-400" style="font-size: 3rem;">
-                    —
-                </div>
-                <div id="dg-sub" class="mt-4 text-sm text-slate-400 leading-relaxed">
-                    Màn hình sẽ hiện vị trí đỗ ngay khi camera nhận diện xe.
-                </div>
-                <div id="dg-warn" class="mt-4 hidden text-xs font-mono text-amber-400 leading-relaxed"></div>
-            </div>
-            <div class="text-[10px] font-mono text-slate-600 px-1">
-                Cập nhật lúc <span id="dg-now">--:--:--</span>
-            </div>
+    <div class="rounded-lg border border-slate-700/60 overflow-hidden"
+         style="background: rgb(13, 27, 46); margin-top: .5rem;">
+        @*
+            Anh chiem tron be ngang, cao tu nhien. Lop SVG phu dung len tren voi
+            cung kich thuoc, va vi khung `viewBox` co dung ti le cua anh nen hai
+            lop luon chong khit — khong con phep xen nao de lech nhau.
+
+            Anh de nguyen do dam. Lam mo di chi de trang trong hon, doi lai net ve
+            nhat di dung luc tai xe dang phai doc no tu trong xe.
+        *@
+        <div id="dg-stage" class="relative w-full">
+            <img src="@Url.Content("~/Images/plan_map.jpg")" alt="Sơ đồ bãi xe"
+                 style="display: block; width: 100%; height: auto;" />
+            <svg id="dg-map" class="absolute inset-0 w-full h-full"
+                 preserveAspectRatio="xMidYMid meet"
+                 xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
     </div>
 </div>
@@ -128,10 +137,9 @@
         m.setAttribute('y', MASK.y);
         m.setAttribute('width', MASK.w);
         m.setAttribute('height', MASK.h);
-        // Mau lay dung mau nen ban ve SAU khi da qua opacity .85 cua the <img>:
-        // trang (255,255,255) tren nen rgb(13,27,46) ra rgb(218,221,224). Dat mau
-        // toi o day thi tam che thanh mot o den giua to giay, trong nhu loi ve.
-        m.setAttribute('fill', 'rgb(218, 221, 224)');
+        // Trang, dung bang mau nen to giay quanh khung ten (da do: 255,255,255).
+        // The <img> khong con opacity nen khong phai tinh mau pha nua.
+        m.setAttribute('fill', '#ffffff');
         svg.insertBefore(m, svg.firstChild);
     }
 
@@ -201,7 +209,7 @@
             kicker.textContent = 'Mời vào block';
             big.textContent = payload.block_no;
             big.className = 'mt-3 font-bold leading-none text-emerald-400';
-            big.style.fontSize = '7rem';
+            big.style.fontSize = '3rem';
             sub.textContent = 'Đi theo đường màu xanh trên sơ đồ.';
 
             // Nói ra khi số ô trống là suy luận chứ không phải quan sát, thay vì
@@ -223,6 +231,11 @@
         if (payload.state === 'MESSAGE') {
             kicker.textContent = 'Khong the dieu huong';
             big.textContent = payload.outcome;
+            // Bang chi rong 14rem. 'REJECTED' vua khit, nhung 'NO_CAPACITY' dai hon
+            // va se tran ra ngoai neu de nguyen co chu. Thu nho theo do dai thay vi
+            // cho chu bi cat: mot ma loi hien ra mot nua thi khong con la thong tin.
+            big.style.fontSize = (payload.outcome || '').length > 8 ? '1.75rem' : '2.5rem';
+            big.style.wordBreak = 'break-word';
             big.className = 'mt-3 font-bold leading-none text-amber-400';
             sub.textContent = payload.reason || 'Moi lien he nhan vien dieu hanh.';
             return;
