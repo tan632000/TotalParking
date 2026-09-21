@@ -1,0 +1,3 @@
+2026-09-21 17:28:43	192.169.1.195	block=95	D1000	0 -> 103	OK	ghi tay bang tools/plc_register.py
+2026-09-21 17:36:14	192.169.1.195	block=95	D1000	103 -> 96	OK	ghi tay bang tools/plc_register.py
+2026-09-21 17:39:49	192.169.1.195	block=95	D1000	96 -> 95	OK	ghi tay bang tools/plc_register.py
