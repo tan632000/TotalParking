@@ -89,3 +89,7 @@ plans/*
 *.zip
 *.7z
 .omp/
+
+# Python (cong cu trong tools/)
+__pycache__/
+*.pyc
