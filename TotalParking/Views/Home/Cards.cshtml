@@ -9,7 +9,12 @@
 
     Da thay bang du lieu that tu /Cards/List, va bo han ba nut gia (them / khoa /
     xoa). Them tung the la viec hiem, nhap theo lo moi la viec thuong -- nen lam
-    nhap CSV truoc, con sua tung the de sau khi that su can.                    *@
+    nhap theo lo truoc, con sua tung the de sau khi that su can.
+
+    Nhap doc thang file .xlsx khach xuat ra tu he thong DEC. Ban truoc doi CSV 8
+    cot theo mau rieng, nghia la moi lan co nguoi phai mo Excel xoa 14 cot roi
+    luu sang CSV -- mot buoc lam tay khong ai kiem tra. Bo doc khop cot theo TEN
+    nen khach them hay bot cot khong dung cung khong anh huong.                *@
 
 <div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
     <div class="space-y-6">
@@ -23,11 +28,11 @@
             <div class="flex flex-wrap items-center gap-2">
                 <a href="/Cards/Template" class="flex items-center gap-1.5 px-3 py-2 rounded text-xs border border-slate-700 text-slate-300 hover:border-slate-500 hover:text-white transition-colors font-bold" style="text-decoration:none;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
-                    Tải file mẫu
+                    Tải file mẫu (.xlsx)
                 </a>
                 <button onclick="openImport()" class="flex items-center gap-1.5 px-3 py-2 rounded text-xs bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/50 transition-colors font-bold shadow-md">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
-                    Nhập từ CSV
+                    Nhập từ Excel
                 </button>
             </div>
         </div>
@@ -39,7 +44,7 @@
             <div class="flex flex-wrap items-center gap-2">
                 <div class="flex items-center gap-2 bg-slate-900/50 border border-slate-800 rounded-lg px-3 py-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-                    <input id="cardSearch" class="bg-transparent text-xs text-slate-200 placeholder-slate-500 outline-none w-52 font-mono" placeholder="mã thẻ hoặc số thẻ...">
+                    <input id="cardSearch" class="bg-transparent text-xs text-slate-200 placeholder-slate-500 outline-none w-60 font-mono" placeholder="mã thẻ, số thẻ, biển số, tên khách...">
                 </div>
                 <select id="filterLabel" class="bg-slate-900/50 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none">
                     <option value="">tất cả lô nhập</option>
@@ -61,15 +66,19 @@
                         <tr>
                             <th class="text-left text-slate-500 px-4 py-3 font-bold">Mã thẻ</th>
                             <th class="text-left text-slate-500 px-4 py-3 font-bold">Số thẻ</th>
-                            <th class="text-left text-slate-500 px-4 py-3 font-bold">Loại khách</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold">Biển số</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold">Tên phương tiện</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold">Tên khách hàng</th>
                             <th class="text-left text-slate-500 px-4 py-3 font-bold">Hạng tải</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold">Hết hạn</th>
+                            <th class="text-left text-slate-500 px-4 py-3 font-bold">Loại khách</th>
                             <th class="text-left text-slate-500 px-4 py-3 font-bold">Lô nhập</th>
                             <th class="text-left text-slate-500 px-4 py-3 font-bold">Ngày tạo</th>
                             <th class="text-center text-slate-500 px-4 py-3 font-bold">Trạng thái</th>
                         </tr>
                     </thead>
                     <tbody id="cardRows">
-                        <tr><td colspan="7" class="text-center text-slate-600 py-10">Đang tải...</td></tr>
+                        <tr><td colspan="11" class="text-center text-slate-600 py-10">Đang tải...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -78,7 +87,7 @@
     </div>
 </div>
 
-<!-- ===================== HOP THOAI NHAP CSV ===================== -->
+<!-- ===================== HOP THOAI NHAP EXCEL ===================== -->
 <div id="importModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4"
      style="background:rgba(2,6,23,.78); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);">
     <div class="rounded-xl w-full max-w-3xl flex flex-col"
@@ -86,16 +95,21 @@
                     box-shadow:0 25px 60px rgba(0,0,0,.75), 0 0 0 1px rgba(148,163,184,.08);
                     max-height:88vh;">
         <div class="flex justify-between items-center px-5 py-4" style="background:#172033; border-bottom:1px solid #334155; border-radius:.75rem .75rem 0 0;">
-            <h3 class="text-white font-bold text-sm">Nhập thẻ từ file CSV</h3>
+            <h3 class="text-white font-bold text-sm">Nhập thẻ từ file Excel</h3>
             <button onclick="closeImport()" class="text-slate-500 hover:text-white text-lg leading-none">&times;</button>
         </div>
 
         <div class="p-5 space-y-4" style="overflow-y:auto; min-height:0;">
             <div class="flex items-center gap-3">
-                <input type="file" id="csvFile" accept=".csv,text/csv"
+                <input type="file" id="importFile"
+                       accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                        class="flex-1 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-slate-600 file:bg-slate-800 file:text-slate-200 file:text-xs file:font-bold file:cursor-pointer">
                 <button id="btnPreview" onclick="doPreview()" class="px-3 py-2 rounded text-xs border border-slate-600 text-slate-200 hover:border-blue-500 font-bold whitespace-nowrap">Kiểm tra file</button>
             </div>
+            <p class="text-[11px] text-slate-500">
+                Chọn file <b>.xlsx</b> xuất từ hệ thống thẻ (không cần xoá cột hay đổi tên cột).
+                Chỉ những dòng có <b>Mã nhóm định danh = THE THANG OTO</b> được nạp; các nhóm khác bỏ qua.
+            </p>
             <p class="text-[11px] text-slate-500">
                 Bấm <b>Kiểm tra file</b> để xem trước — chưa ghi gì vào hệ thống. Chỉ khi bấm nút xác nhận bên dưới thì dữ liệu mới được nạp.
             </p>
@@ -132,7 +146,7 @@ function loadCards() {
             if (d.error) {
                 document.getElementById('cardSummary').textContent = 'Lỗi: ' + d.error;
                 document.getElementById('cardRows').innerHTML =
-                    '<tr><td colspan="7" class="text-center text-red-400 py-10">' + esc(d.error) + '</td></tr>';
+                    '<tr><td colspan="11" class="text-center text-red-400 py-10">' + esc(d.error) + '</td></tr>';
                 return;
             }
             allCards = d.cards || [];
@@ -165,7 +179,13 @@ function render() {
     var rows = allCards.filter(function (c) {
         if (label && c.source_label !== label) return false;
         if (wc && c.weight_class !== wc) return false;
-        if (q && (c.card_code + ' ' + c.card_no).toLowerCase().indexOf(q) < 0) return false;
+        // Tim theo ca bien so va ten khach: o quay bao ve khach doc bien so chu
+        // khong doc so the, nen o tim khong nhan bien so la o tim khong dung duoc.
+        if (q) {
+            var hay = [c.card_code, c.card_no, c.plate, c.vehicle_name, c.customer_name]
+                        .join(' ').toLowerCase();
+            if (hay.indexOf(q) < 0) return false;
+        }
         return true;
     });
 
@@ -174,11 +194,33 @@ function render() {
     var shown = rows.slice(0, 500);
     var h = '';
     shown.forEach(function (c) {
+        // 487 the nap truoc khi co cac cot ho so nay nen chung deu null. Hien
+        // dau gach chu khong de trong: o trong nhin giong loi ve giao dien, con
+        // dau gach noi ro "chua co du lieu".
+        var dash = '<span class="text-slate-700">&mdash;</span>';
+        var opt  = function (v) { return v ? esc(v) : dash; };
+
+        // Hang tai doan duoc to vang kem dau *: con so hien ra la gia tri mac
+        // dinh, khong phai tai trong that. Nhan ra bang weight_text -- nguyen van
+        // chu cua khach -- chu khong bang lo nhap, vi the cap nhat sau nay van
+        // giu lo nhap cu ma weight_text thi luon dung theo lan nhap gan nhat.
+        var wcGuessed = c.weight_text === 'Chưa xác định' ||
+                        c.weight_text === 'Không phải ô tô';
+        var wcCell = wcGuessed
+            ? '<td class="px-4 py-2.5" style="color:#fcd34d;" title="' +
+              esc(c.weight_text) + ' — hạng tải là giá trị mặc định">' +
+              esc(c.weight_class) + ' *</td>'
+            : '<td class="px-4 py-2.5 text-slate-400">' + esc(c.weight_class) + '</td>';
+
         h += '<tr class="hover:bg-slate-800" style="border-bottom:1px solid #293548;">' +
              '<td class="px-4 py-2.5 text-blue-300 font-bold">' + esc(c.card_code) + '</td>' +
              '<td class="px-4 py-2.5 text-slate-200">' + esc(c.card_no) + '</td>' +
+             '<td class="px-4 py-2.5 text-slate-200">' + opt(c.plate) + '</td>' +
+             '<td class="px-4 py-2.5 text-slate-400">' + opt(c.vehicle_name) + '</td>' +
+             '<td class="px-4 py-2.5 text-slate-400">' + opt(c.customer_name) + '</td>' +
+             wcCell +
+             '<td class="px-4 py-2.5 text-slate-500">' + opt(c.expiry_date) + '</td>' +
              '<td class="px-4 py-2.5 text-slate-400">' + esc(c.customer_type) + '</td>' +
-             '<td class="px-4 py-2.5 text-slate-400">' + esc(c.weight_class) + '</td>' +
              '<td class="px-4 py-2.5 text-slate-500 text-[11px]">' + esc(c.source_label) + '</td>' +
              '<td class="px-4 py-2.5 text-slate-500">' + esc(c.created_at) + '</td>' +
              '<td class="px-4 py-2.5 text-center">' +
@@ -187,7 +229,7 @@ function render() {
                 : '<span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-slate-800 border-slate-700 text-slate-500">tắt</span>') +
              '</td></tr>';
     });
-    if (!h) h = '<tr><td colspan="7" class="text-center text-slate-600 py-10">Không có thẻ nào khớp bộ lọc</td></tr>';
+    if (!h) h = '<tr><td colspan="11" class="text-center text-slate-600 py-10">Không có thẻ nào khớp bộ lọc</td></tr>';
     document.getElementById('cardRows').innerHTML = h;
     document.getElementById('cardCount').textContent =
         'Hiện ' + shown.length + ' / ' + rows.length + ' thẻ khớp bộ lọc' +
@@ -198,7 +240,7 @@ document.getElementById('cardSearch').addEventListener('input', render);
 document.getElementById('filterLabel').addEventListener('change', render);
 document.getElementById('filterWeight').addEventListener('change', render);
 
-// ===================== NHAP CSV =====================
+// ===================== NHAP EXCEL =====================
 var lastPreview = null;
 
 function openImport() {
@@ -212,12 +254,12 @@ function closeImport() {
     document.getElementById('impRows').classList.add('hidden');
     document.getElementById('btnDownloadErr').classList.add('hidden');
     document.getElementById('btnCommit').disabled = true;
-    document.getElementById('csvFile').value = '';
+    document.getElementById('importFile').value = '';
     lastPreview = null;
 }
 
 function send(url, then) {
-    var f = document.getElementById('csvFile').files[0];
+    var f = document.getElementById('importFile').files[0];
     if (!f) { alert('Chưa chọn file.'); return; }
     var fd = new FormData();
     fd.append('file', f);
@@ -231,7 +273,13 @@ function doPreview() { send('/Cards/Preview', showResult); }
 
 function doImport() {
     if (!lastPreview || !lastPreview.accepted) return;
-    if (!confirm('Nạp ' + lastPreview.accepted + ' thẻ vào hệ thống?')) return;
+
+    // Noi ro ca hai con so truoc khi ghi. Cap nhat GHI DE ho so the da co, nen
+    // nguoi bam phai thay truoc con so do chu khong chi thay tong.
+    var msg = 'Nạp ' + lastPreview.to_insert + ' thẻ mới';
+    if (lastPreview.to_update > 0)
+        msg += ' và cập nhật hồ sơ ' + lastPreview.to_update + ' thẻ đã có';
+    if (!confirm(msg + ' vào hệ thống?')) return;
     send('/Cards/Import', function (d) {
         showResult(d);
         if (!d.error) { loadCards(); document.getElementById('btnCommit').disabled = true; }
@@ -260,12 +308,28 @@ function showResult(d) {
         : 'background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.30);';
     var hdColor = good ? '#6ee7b7' : '#fcd34d';
     var h = '<div class="p-3.5 rounded-lg border text-xs space-y-1.5" style="' + boxStyle + '">';
-    h += '<div class="font-bold text-sm" style="color:' + hdColor + ';">' +
-         (d.committed ? ('Đã nạp ' + d.written + ' thẻ') : ('Sẽ nạp được ' + d.accepted + ' thẻ')) + '</div>';
+
+    var title = d.committed
+        ? ('Đã nạp ' + d.written + ' thẻ mới' + (d.updated > 0 ? ', cập nhật ' + d.updated + ' thẻ' : ''))
+        : ('Sẽ nạp ' + d.to_insert + ' thẻ mới' + (d.to_update > 0 ? ', cập nhật ' + d.to_update + ' thẻ' : ''));
+    h += '<div class="font-bold text-sm" style="color:' + hdColor + ';">' + title + '</div>';
+
+    // Bao ca duong di cua tung dong: bao nhieu dong trong sheet, bao nhieu bi
+    // loai vi khac nhom, bao nhieu con lai. Khong co dong nay thi "994 dong
+    // thanh 128 the" nhin nhu mat du lieu.
     h += '<div class="font-mono text-[11px] text-slate-300">' +
-         'đọc ' + d.read_rows + ' dòng · hợp lệ ' + d.accepted + ' · bỏ qua ' + d.rejected +
-         ' · đã có sẵn ' + d.already_in_db + '</div>';
+         'sheet ' + d.total_data_rows + ' dòng · khác nhóm ' + d.other_group_rows +
+         ' · nhóm ' + esc(d.group) + ' ' + d.read_rows +
+         ' · hợp lệ ' + d.accepted + ' · bỏ qua ' + d.rejected + '</div>';
+
+    if (d.guessed_weight > 0) {
+        h += '<div class="font-mono text-[11px]" style="color:#fcd34d;">' +
+             d.guessed_weight + ' thẻ không có phân loại tải trọng → mặc định 2200KG, ' +
+             'gắn nhãn lô riêng để lọc lại sau</div>';
+    }
+
     h += '<div class="font-mono text-[11px] text-slate-500">lô nhập: ' + esc(d.label) + '</div>';
+    h += '<div class="font-mono text-[11px] text-slate-500">sheet: ' + esc(d.sheet_name) + '</div>';
     if ((d.by_reason || []).length) {
         h += '<div class="pt-1.5 mt-1.5 border-t border-slate-700 space-y-0.5">';
         d.by_reason.forEach(function (r) {
@@ -289,11 +353,16 @@ function showResult(d) {
         var t = '<div class="text-[11px] text-slate-400 mb-1.5 font-semibold">Dòng bị bỏ qua</div>' +
                 '<div style="max-height:14rem; overflow-y:auto; border:1px solid #334155; border-radius:.5rem;">' +
                 '<table class="w-full text-[11px] font-mono"><tbody>';
+        // Hien them bien so va ten khach: 7 dong trong file 21/09 KHONG co ma
+        // dinh danh lan ten dinh danh, nen thieu hai cot nay thi dong bao loi
+        // khong chi ra duoc no la the nao de con doi chieu voi khach.
         bad.forEach(function (r) {
             t += '<tr style="border-bottom:1px solid #293548;">' +
                  '<td class="px-2.5 py-1.5 text-slate-600">dòng ' + r.line + '</td>' +
                  '<td class="px-2.5 py-1.5 text-slate-300">' + esc(r.card_code || '(trống)') + '</td>' +
-                 '<td class="px-2.5 py-1.5 text-slate-500">' + esc(r.card_no) + '</td>' +
+                 '<td class="px-2.5 py-1.5 text-slate-500">' + esc(r.card_no || '(trống)') + '</td>' +
+                 '<td class="px-2.5 py-1.5 text-slate-400">' + esc(r.plate) + '</td>' +
+                 '<td class="px-2.5 py-1.5 text-slate-500">' + esc(r.customer_name) + '</td>' +
                  '<td class="px-2.5 py-1.5 text-amber-400">' + esc(r.reject) + '</td></tr>';
         });
         t += '</tbody></table></div>';
@@ -311,9 +380,15 @@ function showResult(d) {
 function downloadErrors() {
     if (!lastPreview) return;
     var bad = (lastPreview.rows || []).filter(function (r) { return !r.ok; });
-    var csv = '﻿dong,ma_the,so_the,bien_so,chu_xe,ly_do_bo_qua\r\n';
+
+    // Van xuat CSV chu khong xuat .xlsx: sinh file .xlsx phai lam o server (bo
+    // ghi nam trong C#), ma day la danh sach de gui lai cho ben cap du lieu, mo
+    // bang Excel la doc duoc. Giu BOM o dau de Excel khong lam hong dau tieng Viet.
+    var csv = '﻿dong,ma_dinh_danh,ten_dinh_danh,bien_so,ten_phuong_tien,' +
+              'ten_khach_hang,phan_loai_tai_trong,ngay_het_han,ly_do_bo_qua\r\n';
     bad.forEach(function (r) {
-        csv += [r.line, r.card_code, r.card_no, r.plate, r.owner, r.reject]
+        csv += [r.line, r.card_code, r.card_no, r.plate, r.vehicle_name,
+                r.customer_name, r.weight_text, r.expiry_date, r.reject]
                  .map(function (v) { return '"' + String(v === null || v === undefined ? '' : v).replace(/"/g, '""') + '"'; })
                  .join(',') + '\r\n';
     });

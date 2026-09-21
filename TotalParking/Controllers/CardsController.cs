@@ -12,9 +12,19 @@ namespace TotalParking.Controllers
     // API quản lý thẻ xe cho trang Home/Cards.
     //
     //   List      danh sách thẻ thật trong CSDL
-    //   Template  tải file CSV mẫu
+    //   Template  tải file Excel mẫu
     //   Preview   đọc file, lọc, BÁO TRƯỚC — chưa ghi gì
     //   Import    ghi thật, cả lô trong một giao dịch
+    //
+    // ===================== VÌ SAO ĐỌC XLSX CHỨ KHÔNG PHẢI CSV =====================
+    // Khách quản lý thẻ bằng Excel và xuất ra .xlsx từ hệ thống DEC của toà nhà.
+    // Bản trước đòi CSV 8 cột theo mẫu riêng, nghĩa là mỗi lần nhận danh sách
+    // lại có người phải mở Excel, xoá 14 cột, đổi tên 8 cột còn lại rồi lưu sang
+    // CSV. Một bước làm tay, không ai kiểm tra, và là chỗ dễ làm lệch dữ liệu
+    // nhất trong cả quy trình.
+    //
+    // Nay đọc thẳng file khách xuất ra, khớp cột theo TÊN nên thêm hay bớt cột
+    // không dùng cũng không ảnh hưởng.
     //
     // ===================== VÌ SAO TÁCH XEM TRƯỚC VÀ GHI =====================
     // `card_code` là khoá duy nhất. Nạp nhầm rồi thì gỡ ra không đơn giản: phải
@@ -22,16 +32,18 @@ namespace TotalParking.Controllers
     // phân biệt được dòng cũ với dòng mới.
     //
     // Nên bắt buộc đi qua hai bước: đọc file và báo cáo trước, người dùng nhìn
-    // con số rồi mới bấm nạp. Cùng một bộ luật chạy ở cả hai bước (CardCsvParser),
-    // nên con số ở bước xem trước luôn đúng bằng con số thật sự được ghi.
+    // con số rồi mới bấm nạp. Cùng một bộ luật chạy ở cả hai bước
+    // (CardImportParser), nên con số ở bước xem trước luôn đúng bằng con số thật
+    // sự được ghi.
     public class CardsController : Controller
     {
         private static readonly ParkingCardRepository _repo   = new ParkingCardRepository();
-        private static readonly CardCsvParser         _parser = new CardCsvParser();
+        private static readonly CardImportParser      _parser = new CardImportParser();
 
-        // Giới hạn cỡ file. 470 thẻ hiện tại ~ 40 KB, nên 2 MB đã rất rộng tay.
-        // Có giới hạn để một file nhầm (ảnh, video) không bị nuốt vào bộ nhớ.
-        private const int MaxBytes = 2 * 1024 * 1024;
+        // Giới hạn cỡ file. File khách hiện tại 994 dòng ~ 65 KB, nên 8 MB đã rất
+        // rộng tay. Có giới hạn để một file nhầm (ảnh, video) không bị nuốt vào
+        // bộ nhớ — và .xlsx là file nén nên phải rộng hơn mức của CSV trước đây.
+        private const int MaxBytes = 8 * 1024 * 1024;
 
         // GET /Cards/List
         public ActionResult List()
@@ -49,8 +61,16 @@ namespace TotalParking.Controllers
                     {
                         card_code     = r.CardCode,
                         card_no       = r.CardNo,
+                        card_type     = r.CardType,
+                        vehicle_name  = r.VehicleName,
                         customer_type = r.CustomerType,
                         weight_class  = r.WeightClass,
+                        weight_text   = r.WeightText,
+                        plate         = r.Plate,
+                        customer_name = r.CustomerName,
+                        expiry_date   = r.ExpiryDate.HasValue
+                                            ? r.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                                            : null,
                         source_label  = r.SourceLabel,
                         is_active     = r.IsActive,
                         created_at    = r.CreatedAt.ToString("dd/MM/yyyy")
@@ -65,18 +85,29 @@ namespace TotalParking.Controllers
 
         // GET /Cards/Template
         //
-        // Trả file mẫu TRẮNG để điền. Sinh tại chỗ chứ không đọc file trong docs/:
-        // file mẫu phải luôn khớp với bộ luật mà BẢN ĐANG CHẠY dùng. Đọc từ đĩa thì
-        // một lần deploy quên chép file là mẫu và bộ lọc nói hai chuyện khác nhau.
+        // Trả file mẫu TRẮNG để điền, đúng những cột mà bộ đọc thật sự dùng.
+        // Sinh tại chỗ chứ không đọc file trong docs/: file mẫu phải luôn khớp
+        // với bộ luật mà BẢN ĐANG CHẠY dùng. Đọc từ đĩa thì một lần deploy quên
+        // chép file là mẫu và bộ lọc nói hai chuyện khác nhau.
         public ActionResult Template()
         {
-            var sb = new StringBuilder();
-            sb.Append('﻿');   // BOM: Excel mở mới hiện đúng tiếng Việt
-            sb.Append("ma_the,so_the,loai_khach,hang_tai,lo_nhap,kich_hoat,bien_so,chu_xe\r\n");
-            sb.Append(",,,,,,,\r\n");
+            var rows = new List<IEnumerable<string>>
+            {
+                new[]
+                {
+                    "Mã định danh", "Tên định danh", "Loại", "Mã nhóm định danh",
+                    "Tên phương tiện", "Phân loại tải trọng xe", "Biển số hiện tại",
+                    "Ngày hết hạn", "Tên khách hàng"
+                },
+                // Điền sẵn mã nhóm vào dòng mẫu: bỏ trống cột này thì dòng bị coi
+                // là không thuộc nhóm thẻ tháng ô tô và bị loại im lặng — lỗi khó
+                // đoán nhất cho người lần đầu điền file.
+                new[] { "", "", "Thẻ", CardImportParser.TargetGroup, "", "", "", "", "" }
+            };
 
-            return File(Encoding.UTF8.GetBytes(sb.ToString()),
-                        "text/csv", "mau_import_the.csv");
+            return File(XlsxWriter.Build("Phương tiện trong hệ thống", rows),
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "mau_import_the.xlsx");
         }
 
         // POST /Cards/Preview   (multipart, field "file")
@@ -99,53 +130,72 @@ namespace TotalParking.Controllers
             if (file == null || file.ContentLength == 0)
                 return Json2(400, new { error = "Chua chon file." });
             if (file.ContentLength > MaxBytes)
-                return Json2(400, new { error = "File qua lon (toi da 2 MB)." });
+                return Json2(400, new { error = "File qua lon (toi da 8 MB)." });
 
-            string text;
+            XlsxReader.Sheet sheet;
             try
             {
-                // UTF-8 có phát hiện BOM. File Excel xuất ra hầu hết là UTF-8;
-                // nếu gặp file ANSI thì dấu tiếng Việt sẽ hỏng, nhưng các cột mình
-                // thật sự dùng (mã thẻ, số thẻ, mã tra cứu) đều là ASCII nên vẫn
-                // nạp đúng — chỉ tên chủ xe hiển thị sai, mà cột đó không được lưu.
-                using (var sr = new StreamReader(file.InputStream, new UTF8Encoding(true), true))
-                    text = sr.ReadToEnd();
+                sheet = XlsxReader.ReadFirstSheet(file.InputStream);
+            }
+            catch (XlsxReader.XlsxFormatException ex)
+            {
+                // Lỗi định dạng đã có câu tiếng Việt giải thích cách sửa, đưa
+                // nguyên văn cho người dùng.
+                return Json2(400, new { error = ex.Message });
             }
             catch (Exception ex)
             {
-                return Json2(400, new { error = "Khong doc duoc file: " + ex.Message });
+                return Json2(400, new { error = "Khong doc duoc file Excel: " + ex.Message });
             }
 
-            string label = Path.GetFileNameWithoutExtension(file.FileName);
-            if (string.IsNullOrWhiteSpace(label)) label = "IMPORT";
-            label = (label + " " + DateTime.Now.ToString("dd/MM")).Trim();
-            if (label.Length > 64) label = label.Substring(0, 64);
-
-            var parsed = _parser.Parse(text, label);
+            var parsed = _parser.Parse(sheet, BuildLabel(file.FileName));
             if (parsed.FatalError != null)
                 return Json2(400, new { error = parsed.FatalError });
 
-            // Loại thêm những dòng trùng với thẻ ĐÃ CÓ trong CSDL. Làm sau khi
-            // parse vì đây là luật phụ thuộc trạng thái hệ thống, không phải lỗi
-            // định dạng file — và nó phải chạy ở CẢ hai bước, nếu không thì bước
-            // xem trước sẽ hứa nhiều hơn bước ghi làm được.
+            // Đối chiếu với thẻ ĐÃ CÓ trong CSDL. Làm sau khi parse vì đây là luật
+            // phụ thuộc trạng thái hệ thống, không phải lỗi định dạng file — và nó
+            // phải chạy ở CẢ hai bước, nếu không thì bước xem trước sẽ hứa nhiều
+            // hơn bước ghi làm được.
             var codes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var nos   = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             try { _repo.LoadExistingKeys(codes, nos); }
             catch (Exception ex) { return Json2(500, new { error = "Khong doc duoc CSDL: " + ex.Message }); }
 
-            int already = 0;
+            var toInsert = new List<CardImportParser.Row>();
+            var toUpdate = new List<CardImportParser.Row>();
+
             foreach (var r in parsed.Rows.Where(x => x.Ok))
             {
-                if (codes.Contains(r.CardCode)) { r.Reject = "ma the da co trong he thong"; already++; }
-                else if (nos.Contains(r.CardNo)) { r.Reject = "so the da co trong he thong"; already++; }
+                if (codes.Contains(r.CardCode))
+                {
+                    // Thẻ đã có: cập nhật hồ sơ thay vì bỏ qua. 17 thẻ nạp ngày
+                    // 17/09 đang không có biển số, tên khách hay hạng tải thật,
+                    // mà file này có đủ — bỏ qua chúng là tự nguyện giữ dữ liệu cũ
+                    // thiếu hơn trong khi dữ liệu đúng đang nằm ngay trong file.
+                    toUpdate.Add(r);
+                }
+                else if (nos.Contains(r.CardNo))
+                {
+                    // Mã thẻ mới nhưng số thẻ đã thuộc một thẻ KHÁC. Không thêm
+                    // được (vướng khoá duy nhất) mà cũng không cập nhật được: hai
+                    // dòng khác nhau, không biết dòng nào đúng. Để người đối chiếu.
+                    r.Reject = "ten dinh danh da thuoc mot the khac trong he thong";
+                }
+                else
+                {
+                    toInsert.Add(r);
+                }
             }
 
-            var accepted = parsed.Accepted;
-            int written = 0;
-            if (commit && accepted.Count > 0)
+            int written = 0, updated = 0;
+            if (commit && (toInsert.Count > 0 || toUpdate.Count > 0))
             {
-                try { written = _repo.InsertBatch(accepted); }
+                try
+                {
+                    var res = _repo.WriteBatch(toInsert, toUpdate);
+                    written = res.Inserted;
+                    updated = res.Updated;
+                }
                 catch (Exception ex)
                 {
                     return Json2(500, new
@@ -167,26 +217,49 @@ namespace TotalParking.Controllers
             {
                 committed  = commit,
                 file_name  = file.FileName,
-                label,
-                read_rows  = parsed.Rows.Count,
-                accepted   = accepted.Count,
-                rejected   = parsed.Rejected.Count,
-                already_in_db = already,
+                sheet_name = parsed.SheetName,
+                label      = toInsert.Count > 0 ? toInsert[0].SourceLabel : BuildLabel(file.FileName),
+                group      = CardImportParser.TargetGroup,
+
+                total_data_rows  = parsed.TotalDataRows,
+                other_group_rows = parsed.OtherGroupRows,
+                read_rows        = parsed.Rows.Count,
+                accepted         = toInsert.Count + toUpdate.Count,
+                to_insert        = toInsert.Count,
+                to_update        = toUpdate.Count,
+                rejected         = parsed.Rejected.Count,
+                guessed_weight   = toInsert.Concat(toUpdate).Count(r => r.WeightGuessed),
                 written,
-                by_reason  = byReason,
+                updated,
+
+                by_reason = byReason,
                 rows = parsed.Rows.Select(r => new
                 {
                     line          = r.LineNo,
                     card_code     = r.CardCode,
                     card_no       = r.CardNo,
-                    customer_type = r.CustomerType,
+                    vehicle_name  = r.VehicleName,
                     weight_class  = r.WeightClass,
+                    weight_text   = r.WeightText,
                     plate         = r.Plate,
-                    owner         = r.Owner,
+                    customer_name = r.CustomerName,
+                    expiry_date   = r.ExpiryDate.HasValue
+                                        ? r.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                                        : null,
                     ok            = r.Ok,
                     reject        = r.Reject
                 }).ToArray()
             });
+        }
+
+        // Nhãn lô nhập = tên file + ngày. Dùng để lọc và gỡ theo lô, thứ cần nhất
+        // khi một lô nhập sai và phải rút lại. Parser tự thêm hậu tố cho những
+        // dòng phải đoán hạng tải, nên ở đây chỉ dựng phần gốc.
+        private static string BuildLabel(string fileName)
+        {
+            string label = Path.GetFileNameWithoutExtension(fileName ?? "");
+            if (string.IsNullOrWhiteSpace(label)) label = "IMPORT";
+            return (label + " " + DateTime.Now.ToString("dd/MM")).Trim();
         }
 
         // Cùng cách trả JSON với các controller giám sát khác: mã HTTP thật, và

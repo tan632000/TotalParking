@@ -80,6 +80,15 @@ namespace TotalParking.Services
             public string SourceLabel  { get; set; }
             public bool   IsActive     { get; set; }
             public DateTime CreatedAt  { get; set; }
+
+            // Ho so the lay tu file xuat DEC (xem Database/39_card_dec_fields.sql).
+            // Deu co the null: 487 the nap truoc khi co cac cot nay.
+            public string    CardType     { get; set; }
+            public string    VehicleName  { get; set; }
+            public string    WeightText   { get; set; }
+            public string    Plate        { get; set; }
+            public string    CustomerName { get; set; }
+            public DateTime? ExpiryDate   { get; set; }
         }
 
         public IList<CardRow> GetAllRows()
@@ -90,7 +99,9 @@ namespace TotalParking.Services
             {
                 cmd.CommandText =
                     "SELECT c.card_id, c.card_code, c.card_no, t.code AS customer_type, " +
-                    "       w.code AS weight_class, c.source_label, c.is_active, c.created_at " +
+                    "       w.code AS weight_class, c.source_label, c.is_active, c.created_at, " +
+                    "       c.card_type, c.vehicle_name, c.weight_text, c.plate, " +
+                    "       c.customer_name, c.expiry_date " +
                     "FROM   parking_card c " +
                     "JOIN   customer_type t ON t.customer_type_id = c.customer_type_id " +
                     "JOIN   weight_class  w ON w.weight_class_id  = c.weight_class_id " +
@@ -109,12 +120,27 @@ namespace TotalParking.Services
                             WeightClass  = Convert.ToString(r["weight_class"]),
                             SourceLabel  = Convert.ToString(r["source_label"]),
                             IsActive     = Convert.ToBoolean(r["is_active"]),
-                            CreatedAt    = Convert.ToDateTime(r["created_at"])
+                            CreatedAt    = Convert.ToDateTime(r["created_at"]),
+                            CardType     = Text(r["card_type"]),
+                            VehicleName  = Text(r["vehicle_name"]),
+                            WeightText   = Text(r["weight_text"]),
+                            Plate        = Text(r["plate"]),
+                            CustomerName = Text(r["customer_name"]),
+                            ExpiryDate   = r["expiry_date"] == DBNull.Value
+                                               ? (DateTime?)null
+                                               : Convert.ToDateTime(r["expiry_date"])
                         });
                     }
                 }
             }
             return list;
+        }
+
+        // Convert.ToString(DBNull) tra ve chuoi rong, nhung viet ro ra de nguoi
+        // doc sau khong phai tra lai tai lieu moi biet cot null thi ra gi.
+        private static string Text(object v)
+        {
+            return v == DBNull.Value || v == null ? null : Convert.ToString(v);
         }
 
         // Mã thẻ và số thẻ ĐÃ CÓ trong hệ thống. Dùng ở bước xem trước để báo
@@ -138,52 +164,166 @@ namespace TotalParking.Services
             }
         }
 
+        public class WriteResult
+        {
+            public int Inserted { get; set; }
+            public int Updated  { get; set; }
+        }
+
         // Ghi cả lô trong MỘT giao dịch.
         //
         // Hoặc vào hết, hoặc không dòng nào vào. Nạp nửa chừng rồi lỗi là trạng
         // thái tệ nhất: người dùng không biết dòng nào đã vào, nạp lại thì vướng
         // khoá duy nhất, mà gỡ ra cũng không biết gỡ tới đâu.
-        public int InsertBatch(IEnumerable<CardCsvParser.Row> rows)
+        //
+        // Thêm mới và cập nhật đi CHUNG một giao dịch chứ không phải hai, vì lý
+        // do trên áp cho cả lô: nếu 111 thẻ mới vào xong rồi 17 thẻ cập nhật mới
+        // lỗi, hệ thống đứng ở trạng thái không ai mô tả được bằng một câu.
+        public WriteResult WriteBatch(IList<CardImportParser.Row> toInsert,
+                                      IList<CardImportParser.Row> toUpdate)
         {
-            var list = rows.ToList();
-            if (list.Count == 0) return 0;
+            var result = new WriteResult();
+            if ((toInsert == null || toInsert.Count == 0) &&
+                (toUpdate == null || toUpdate.Count == 0)) return result;
 
             using (var conn = new MySqlConnection(Db.ConnectionString))
             {
                 conn.Open();
                 using (var tx = conn.BeginTransaction())
+                {
+                    result.Inserted = Insert(conn, tx, toInsert);
+                    result.Updated  = Update(conn, tx, toUpdate);
+                    tx.Commit();
+                }
+            }
+            return result;
+        }
+
+        private static int Insert(MySqlConnection conn, MySqlTransaction tx,
+                                  IList<CardImportParser.Row> list)
+        {
+            if (list == null || list.Count == 0) return 0;
+
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.Transaction = tx;
+                cmd.CommandText =
+                        "INSERT INTO parking_card " +
+                        "(card_code, card_no, card_type, vehicle_name, customer_type_id, " +
+                        " weight_class_id, weight_text, plate, customer_name, expiry_date, " +
+                        " source_label, is_active) " +
+                        "SELECT @code, @no, @ctype_txt, @veh, t.customer_type_id, " +
+                        "       w.weight_class_id, @wtext, @plate, @cust, @exp, @label, @act " +
+                        "FROM   customer_type t, weight_class w " +
+                        "WHERE  t.code = @ctype AND w.code = @wclass";
+
+                AddCardParams(cmd);
+                cmd.Parameters.Add("@code",  MySqlDbType.String);
+                cmd.Parameters.Add("@no",    MySqlDbType.String);
+                cmd.Parameters.Add("@ctype", MySqlDbType.String);
+                cmd.Parameters.Add("@label", MySqlDbType.String);
+                cmd.Parameters.Add("@act",   MySqlDbType.Byte);
+
+                int n = 0;
+                foreach (var row in list)
+                {
+                    BindCardParams(cmd, row);
+                    cmd.Parameters["@code"].Value  = row.CardCode;
+                    cmd.Parameters["@no"].Value    = row.CardNo;
+                    cmd.Parameters["@ctype"].Value = row.CustomerType;
+                    cmd.Parameters["@label"].Value = row.SourceLabel;
+                    cmd.Parameters["@act"].Value   = row.IsActive ? 1 : 0;
+                    n += cmd.ExecuteNonQuery();
+                }
+                return n;
+            }
+        }
+
+        // Cap nhat ho so cho the DA CO trong he thong, doi chieu bang card_code.
+        //
+        // ======================= KHONG SUA KHOA VA KHONG SUA LO NHAP =======================
+        // card_code la dieu kien tim dong nen khong doi duoc. card_no cung khong
+        // sua: no la so in tren mat the nhua, doi trong DB thi DB va cai the
+        // trong tui khach noi hai chuyen khac nhau, ma khong ai phat hien duoc
+        // cho den luc doi chieu tay.
+        //
+        // source_label giu nguyen vi no ghi lai the nay VAO he thong tu dau --
+        // do la lich su, khong phai trang thai. Rieng hang tai thi ghi de: 17
+        // the tu lo 17/09 dang mang gia tri doan (file do khong co cot hang tai),
+        // con file nay co, nen so trong file dung hon so dang luu.
+        private static int Update(MySqlConnection conn, MySqlTransaction tx,
+                                  IList<CardImportParser.Row> list)
+        {
+            if (list == null || list.Count == 0) return 0;
+
+            {
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.Transaction = tx;
                     cmd.CommandText =
-                        "INSERT INTO parking_card " +
-                        "(card_code, card_no, customer_type_id, weight_class_id, source_label, is_active) " +
-                        "SELECT @code, @no, t.customer_type_id, w.weight_class_id, @label, @act " +
-                        "FROM   customer_type t, weight_class w " +
-                        "WHERE  t.code = @ctype AND w.code = @wclass";
+                        "UPDATE parking_card c " +
+                        "JOIN   weight_class w ON w.code = @wclass " +
+                        "SET    c.card_type       = @ctype_txt, " +
+                        "       c.vehicle_name    = @veh, " +
+                        "       c.weight_class_id = w.weight_class_id, " +
+                        "       c.weight_text     = @wtext, " +
+                        "       c.plate           = @plate, " +
+                        "       c.customer_name   = @cust, " +
+                        "       c.expiry_date     = @exp " +
+                        "WHERE  c.card_code = @code";
 
-                    cmd.Parameters.Add("@code",   MySqlDbType.String);
-                    cmd.Parameters.Add("@no",     MySqlDbType.String);
-                    cmd.Parameters.Add("@ctype",  MySqlDbType.String);
-                    cmd.Parameters.Add("@wclass", MySqlDbType.String);
-                    cmd.Parameters.Add("@label",  MySqlDbType.String);
-                    cmd.Parameters.Add("@act",    MySqlDbType.Byte);
+                    AddCardParams(cmd);          // @wclass da nam trong nhom nay
+                    cmd.Parameters.Add("@code", MySqlDbType.String);
 
                     int n = 0;
                     foreach (var row in list)
                     {
-                        cmd.Parameters["@code"].Value   = row.CardCode;
-                        cmd.Parameters["@no"].Value     = row.CardNo;
-                        cmd.Parameters["@ctype"].Value  = row.CustomerType;
-                        cmd.Parameters["@wclass"].Value = row.WeightClass;
-                        cmd.Parameters["@label"].Value  = row.SourceLabel;
-                        cmd.Parameters["@act"].Value    = row.IsActive ? 1 : 0;
-                        n += cmd.ExecuteNonQuery();
+                        BindCardParams(cmd, row);
+                        cmd.Parameters["@code"].Value = row.CardCode;
+                        // ExecuteNonQuery tra 0 khi cac cot da dung y het gia tri
+                        // moi. Dem dong DA XU LY chu khong dem dong MySQL doi byte,
+                        // neu khong thi nap lai cung mot file se bao "0 the cap
+                        // nhat" trong khi 17 the that su da dung du lieu moi nhat.
+                        cmd.ExecuteNonQuery();
+                        n++;
                     }
-                    tx.Commit();
                     return n;
                 }
             }
+        }
+
+        // Bay tham so dung chung giua INSERT va UPDATE. Khai bao mot lan de hai
+        // lenh khong the lech nhau ve kieu du lieu hay ve cach xu ly null.
+        private static void AddCardParams(MySqlCommand cmd)
+        {
+            cmd.Parameters.Add("@ctype_txt", MySqlDbType.String);
+            cmd.Parameters.Add("@veh",       MySqlDbType.String);
+            cmd.Parameters.Add("@wtext",     MySqlDbType.String);
+            cmd.Parameters.Add("@plate",     MySqlDbType.String);
+            cmd.Parameters.Add("@cust",      MySqlDbType.String);
+            cmd.Parameters.Add("@exp",       MySqlDbType.Date);
+            cmd.Parameters.Add("@wclass",    MySqlDbType.String);
+        }
+
+        private static void BindCardParams(MySqlCommand cmd, CardImportParser.Row row)
+        {
+            // O trong trong Excel ve day la chuoi rong. Luu NULL chu khong luu
+            // chuoi rong: "chua co du lieu" va "co du lieu la rong" la hai y
+            // khac nhau, va chi NULL moi loc duoc bang IS NULL.
+            cmd.Parameters["@ctype_txt"].Value = Nullable(row.CardType);
+            cmd.Parameters["@veh"].Value       = Nullable(row.VehicleName);
+            cmd.Parameters["@wtext"].Value     = Nullable(row.WeightText);
+            cmd.Parameters["@plate"].Value     = Nullable(row.Plate);
+            cmd.Parameters["@cust"].Value      = Nullable(row.CustomerName);
+            cmd.Parameters["@exp"].Value       = row.ExpiryDate.HasValue
+                                                     ? (object)row.ExpiryDate.Value
+                                                     : DBNull.Value;
+            cmd.Parameters["@wclass"].Value    = row.WeightClass;
+        }
+
+        private static object Nullable(string s)
+        {
+            return string.IsNullOrWhiteSpace(s) ? (object)DBNull.Value : s;
         }
 
         private static ParkingCard Map(IDataRecord r)
