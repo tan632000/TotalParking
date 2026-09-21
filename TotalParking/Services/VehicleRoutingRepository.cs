@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using MySqlConnector;
@@ -44,34 +44,32 @@ namespace TotalParking.Services
             }
         }
 
-        // Quyết định mới nhất còn nằm trong cửa sổ hiển thị.
+        // Quyết định điều hướng MỚI NHẤT, không giới hạn thời gian.
         //
-        // Mốc thời gian là `decided_at` — thời điểm điểm đến trở nên có hiệu lực —
-        // chứ KHÔNG phải `received_at` hay `camera_timestamp`. `camera_timestamp` có
-        // thể null vì tầng ingest quy 0 và "Unknown" về null. Còn `received_at` lệch
-        // kiểu khác: lúc app pool recycle, hai worker cùng sống tới 90 giây nên một
-        // loạt sự kiện có thể được quyết định muộn hơn lúc nhận nhiều phút, và khi đó
-        // một quyết định vừa ra một giây trước sẽ bị coi là cũ, đúng lúc tài xế đang
-        // đứng nhìn màn hình.
+        // Trước đây chỗ này lọc theo cửa sổ 90 giây: quá hạn thì màn hình tài xế
+        // quay về trạng thái chờ. Người vận hành muốn ngược lại — chỉ dẫn ở lại
+        // trên màn hình cho tới khi có xe kế tiếp được quét, rồi mới đổi.
         //
-        // So sánh bằng MICROSECOND để lấy đúng độ chính xác mili-giây của cột
-        // DATETIME(3); dùng TIMESTAMPDIFF thay vì trừ ngày tháng để biên 90.000 giây
-        // vẫn được tính là còn hiệu lực.
+        // Lưu ý: cửa sổ 90 giây VẪN CÒN, nhưng chỉ ở một chỗ khác và cho một việc
+        // khác — BlockAllocator dùng nó để trừ các suất vừa phát đi. Hai thứ đó
+        // từng dùng chung một hằng số; gỡ nhầm cái kia thì phép trừ sẽ đếm mọi
+        // quyết định từ trước tới nay và mọi block đều trông như đã đầy.
+        //
+        // Mốc sắp xếp là `decided_at` — thời điểm điểm đến trở nên có hiệu lực —
+        // chứ KHÔNG phải `received_at`: lúc app pool recycle, hai worker cùng sống
+        // tới 90 giây nên thứ tự nhận có thể khác thứ tự quyết định.
         private const string CurrentSql =
             "SELECT event_id, decided_at, zone_id, outcome, reason, block_no, occupancy_verified " +
             "FROM   vehicle_routing " +
-            "WHERE  TIMESTAMPDIFF(MICROSECOND, decided_at, NOW(3)) <= @window_us " +
             "ORDER  BY decided_at DESC, event_id DESC LIMIT 1";
 
-        // null nghĩa là không có quyết định nào còn hiệu lực — trạng thái chờ, không
-        // phải lỗi.
-        public VehicleRouting GetCurrentDecision(int windowSeconds)
+        // null chỉ xảy ra khi bảng chưa có quyết định nào — bãi vừa dựng xong.
+        public VehicleRouting GetCurrentDecision()
         {
             using (var conn = new MySqlConnection(Db.ConnectionString))
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = CurrentSql;
-                cmd.Parameters.AddWithValue("@window_us", (long)windowSeconds * 1000000L);
 
                 conn.Open();
                 using (var r = cmd.ExecuteReader())

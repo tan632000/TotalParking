@@ -284,7 +284,11 @@ namespace TotalParking.Controllers
         //
         //   ROUTE   — có block đã lưu VÀ có đường đi ít nhất hai điểm
         //   MESSAGE — có quyết định nhưng không có điểm đến vẽ được; chỉ hiện chữ
-        //   WAITING — không có quyết định nào còn hiệu lực; xoá đường đang vẽ
+        //   WAITING — chưa từng có quyết định nào trong bảng; xoá đường đang vẽ
+        //
+        // Chỉ dẫn KHÔNG tự hết hạn. Nó ở lại trên màn hình cho tới khi camera quét
+        // được xe kế tiếp, rồi bị thay. Trước đây có cửa sổ 90 giây, nhưng như vậy
+        // màn hình về trạng thái chờ trong lúc tài xế vẫn đang trên đường tới block.
         //
         // Không có trạng thái thứ tư nào kiểu "vẽ tạm". Một nét vẽ trên màn hình này
         // là một mệnh lệnh lái xe; khi hệ thống không biết đường thì nó phải im lặng
@@ -295,7 +299,7 @@ namespace TotalParking.Controllers
             {
                 string now = DateTime.Now.ToString("HH:mm:ss");
 
-                var decision = _routings.GetCurrentDecision(BlockAllocator.DisplayWindowSeconds);
+                var decision = _routings.GetCurrentDecision();
 
                 if (decision == null)
                     return Json2(200, Waiting(now));

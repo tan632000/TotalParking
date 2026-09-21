@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using MySqlConnector;
 
 namespace TotalParking.Services
@@ -17,10 +17,15 @@ namespace TotalParking.Services
     // tại. Lọc theo hạng cân vẫn nằm ở mức ZONE trong ZoneRouter, không chuyển xuống đây.
     public class BlockAllocator
     {
-        // Cửa sổ hiển thị một quyết định điều hướng. Cùng một con số dùng cho hai việc:
-        // trừ suất đã phát đi (bên dưới) và lọc quyết định còn hiệu lực ở endpoint route.
-        // Khai báo một lần ở đây để hai chỗ không lệch nhau.
-        public const int DisplayWindowSeconds = 90;
+        // Cửa sổ trừ suất đã phát đi. CHỈ dùng cho việc đó.
+        //
+        // Trước đây hằng số này còn được endpoint route dùng để lọc quyết định nào
+        // còn hiển thị được. Hai việc đã tách: màn hình tài xế giữ chỉ dẫn cho tới
+        // khi có xe mới, còn phép trừ dưới đây vẫn cần một cửa sổ — không có nó thì
+        // mọi quyết định từ trước tới nay đều bị trừ và mọi block đều trông như đầy.
+        //
+        // 90 giây là khoảng đủ để một xe đi từ barrier tới block được chỉ.
+        public const int PendingDebitWindowSeconds = 90;
 
         // Một block được coi là "có người xác nhận" khi PLC đọc nó trong 5 phút gần đây.
         // Cùng ngưỡng mà BlockMapRepository đang dùng cho cột `fresh`.
@@ -62,7 +67,7 @@ namespace TotalParking.Services
                 cmd.CommandText = PickSql;
                 cmd.Parameters.AddWithValue("@zone_id",    zoneId);
                 cmd.Parameters.AddWithValue("@event_id",   eventId ?? string.Empty);
-                cmd.Parameters.AddWithValue("@window",     DisplayWindowSeconds);
+                cmd.Parameters.AddWithValue("@window",     PendingDebitWindowSeconds);
                 cmd.Parameters.AddWithValue("@plc_fresh",  PlcFreshMinutes);
 
                 conn.Open();
