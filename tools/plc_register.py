@@ -57,6 +57,11 @@ AUDIT_LOG = os.path.join(REPO_ROOT, "TotalParking", "App_Data", "plc_manual_writ
 
 DM_AREA_WORD = 0x82          # ma vung nho DM khi truy cap theo WORD
 
+# Ma vung nho khi truy cap theo WORD. Khac han ma khi truy cap theo BIT.
+# Chuyen the tu OmronFinsClient.WordAreaCode.
+AREA_WORD = {"D": 0x82, "DM": 0x82, "CIO": 0xB0, "W": 0xB1, "WR": 0xB1,
+             "H": 0xB2, "HR": 0xB2, "A": 0xB3, "AR": 0xB3}
+
 # Thanh ghi ghi duoc ma khong can co gi them.
 SAFE_TO_WRITE = {1000}       # D1000 = so block tra loi tim xe (SCADA -> PLC)
 
@@ -138,10 +143,11 @@ class FinsClient:
             finally:
                 self.sock = None
 
-    def read_words(self, start, count):
-        """Doc `count` word lien tiep tu D<start>. Tra list[int] 0..65535."""
+    def read_words(self, start, count, area="D"):
+        """Doc `count` word lien tiep tu <area><start>. Tra list[int] 0..65535."""
+        ma_vung = AREA_WORD[area.upper()]
         frame = self._header(0x01, 0x01) + struct.pack(
-            ">BHBH", DM_AREA_WORD, start, 0x00, count)
+            ">BHBH", ma_vung, start, 0x00, count)
         body = self._transact(frame)
 
         # Du lieu bat dau sau 10 byte header + 2 byte MRC/SRC + 2 byte End Code.
@@ -149,6 +155,27 @@ class FinsClient:
         if len(data) < count * 2:
             raise FinsError("PLC tra ve %d byte du lieu, can %d." % (len(data), count * 2))
         return list(struct.unpack(">%dH" % count, data[:count * 2]))
+
+    def cpu_status(self):
+        """CONTROLLER STATUS READ (MRC 06, SRC 01).
+
+        Tra loi cau hoi "ladder co dang chay khong". Day la lenh cua tang truyen
+        thong trong CPU, hoat dong doc lap voi chuong trinh — nen doc duoc ca khi
+        ladder da dung. Do chinh la luc can no nhat."""
+        body = self._transact(self._header(0x06, 0x01))
+        if len(body) < 16:
+            raise FinsError("Phan hoi trang thai CPU thieu byte (%d)." % len(body))
+
+        status = body[14]   # 00 = dung, 01 = dang chay
+        mode   = body[15]   # 00 = PROGRAM, 02 = MONITOR, 04 = RUN
+        ten_mode = {0x00: "PROGRAM (ladder KHONG chay)",
+                    0x01: "DEBUG",
+                    0x02: "MONITOR (ladder dang chay)",
+                    0x04: "RUN (ladder dang chay)"}.get(mode, "khong ro (0x%02X)" % mode)
+        loi_nang = (body[16] << 8 | body[17]) if len(body) >= 18 else 0
+        loi_nhe  = (body[18] << 8 | body[19]) if len(body) >= 20 else 0
+        return {"chay": status == 1, "mode": ten_mode,
+                "loi_nang": loi_nang, "loi_nhe": loi_nhe}
 
     def write_words(self, start, values):
         """Ghi list[int] vao D<start> tro di."""
