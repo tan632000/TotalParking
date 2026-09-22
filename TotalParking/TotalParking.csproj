@@ -169,6 +169,7 @@
     <Compile Include="Models\PlcDevice.cs" />
     <Compile Include="Models\CardScanDecision.cs" />
     <Compile Include="Services\PlcDeviceRepository.cs" />
+    <Compile Include="Services\WeightBandService.cs" />
     <Compile Include="Models\VehicleRouting.cs" />
     <Compile Include="Services\ZoneRouter.cs" />
     <Compile Include="Services\BlockAllocator.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Services\Plc\SlotOccupancyReader.cs" />
     <Compile Include="Services\Plc\SlotScanHost.cs" />
     <Compile Include="Services\Plc\PlcAuditLog.cs" />
+    <Compile Include="Services\Plc\PlcRegisterLog.cs" />
     <Compile Include="Controllers\SlotStatusController.cs" />
     <Compile Include="Services\Led\LedPublisher.cs" />
     <Compile Include="Services\Led\LedHost.cs" />

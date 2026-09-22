@@ -31,6 +31,15 @@ namespace TotalParking.Services.Plc
         // chi can tra "xe dang o block nao", nen dung CarLocatorService.
         private readonly CarLocatorService    _locator  = new CarLocatorService();
         private readonly PlcRequestRepository _requests = new PlcRequestRepository();
+        private readonly WeightBandService    _bands    = new WeightBandService();
+
+        // Gia tri da ghi xuong D1004 lan gan nhat. -1 = chua ghi lan nao, nen nhip
+        // poll dau tien luon ghi mot lan — vua de dong bo, vua don gia tri con sot
+        // tu lan chay truoc, cung ly do voi ClearStaleAnswerAsync.
+        //
+        // Khong co bien nay thi moi nhip poll lai ghi lai cung mot con so: 55 block
+        // x 2 lenh/giay la luu luong ghi thuong truc xuong thiet bi that.
+        private int _lastBandWritten = -1;
 
         private OmronFinsClient _client;
         private int      _failStreak;
@@ -335,6 +344,14 @@ namespace TotalParking.Services.Plc
             // không: đây là hẹn giờ tính từ lúc GHI, đúng như yêu cầu vận hành.
             await ResetAnswerIfDueAsync().ConfigureAwait(false);
 
+            // Bước 0b — băng tải trọng: đọc D106, trả 1/2/3 xuống D1004.
+            //
+            // Làm ở đây, TRƯỚC bước kiểm tra bit yêu cầu, là có chủ ý: D106 được
+            // ghi ở MỌI lượt quẹt thẻ — gửi xe lẫn tìm xe — còn bit yêu cầu và
+            // D1002 chỉ nói về lượt tìm xe. Đặt sau bước 1 thì lượt gửi xe sẽ bị
+            // `return` sớm bỏ qua, và D1004 không bao giờ được cập nhật.
+            await UpdateWeightBandAsync().ConfigureAwait(false);
+
             // Bước 1 — có lượt quẹt mới không?
             if (Device.HasRequestBit)
             {
@@ -354,6 +371,16 @@ namespace TotalParking.Services.Plc
                 .ConfigureAwait(false);
 
             MarkOk();
+
+            // Theo dõi D1002 TRƯỚC nhánh rỗng: lúc ladder xoá thẻ khỏi thanh ghi
+            // cũng là một thay đổi đáng ghi — nếu chỉ ghi ở nhánh có thẻ thì nhật
+            // ký chỉ thấy lúc thẻ xuất hiện, không bao giờ thấy lúc nó biến mất.
+            PlcRegisterLog.Track(Device.IpAddress, Device.BlockNo,
+                                 "D" + Device.FindCardWord,
+                                 CardCodeDecoder.ToRawHex(words),
+                                 CardCodeDecoder.IsEmpty(words, wordCount)
+                                     ? "khong co yeu cau tim xe"
+                                     : ("ma the: " + (Decode(words) ?? "khong giai ma duoc")));
 
             if (CardCodeDecoder.IsEmpty(words, wordCount))
             {
@@ -439,6 +466,78 @@ namespace TotalParking.Services.Plc
             }
         }
 
+        // Đọc mã thẻ ở D106, tra hạng tải, ghi băng 1/2/3 xuống D1004.
+        //
+        // ======================= HỢP ĐỒNG =======================
+        //   D106 trống          -> D1004 = 0
+        //   D106 có thẻ đã biết -> D1004 = 1 (<2200) / 2 (2200-2600) / 3 (>2600)
+        //   D106 có thẻ lạ      -> D1004 = 0
+        //
+        // Thẻ lạ và không có thẻ cùng ra 0 là cố ý: cả hai đều là "không đủ thông
+        // tin". Xem khối chú thích trong WeightBandService.
+        //
+        // ======================= CHỈ GHI KHI ĐỔI =======================
+        // Vòng poll chạy mỗi 500ms. Ghi mù mỗi nhịp là 2 lệnh ghi/giây/block,
+        // nhân 55 block — tải ghi thường trực xuống thiết bị thật mà không đổi gì.
+        // Nên so với giá trị đã ghi lần trước và chỉ ghi khi khác.
+        //
+        // ======================= NUỐT LỖI =======================
+        // Băng tải trọng là thông tin phụ trợ. Đọc/ghi hỏng thì ghi nhật ký rồi
+        // đi tiếp, KHÔNG được ném lên trên — ném sẽ kéo sập cả lượt tìm xe của
+        // block này, tức làm hỏng chức năng đang chạy tốt vì một chức năng mới.
+        private async Task UpdateWeightBandAsync()
+        {
+            try
+            {
+                int len = Device.ScanCardLen > 0 ? Device.ScanCardLen : 2;
+
+                ushort[] words = await _client.ReadWordsAsync(
+                    PlcMemoryArea.DM, (ushort)Device.ScanCardWord, (ushort)len, Device.TimeoutMs)
+                    .ConfigureAwait(false);
+
+                MarkOk();
+
+                bool empty = CardCodeDecoder.IsEmpty(words, len);
+                string card = empty ? null : Decode(words);
+
+                // Ghi nhận mọi thay đổi của D106, kể cả khi băng không đổi: hai mã
+                // thẻ khác nhau cùng hạng tải cho ra cùng một băng, nhưng đó vẫn là
+                // hai lượt quẹt khác nhau và nhật ký phải thấy được.
+                PlcRegisterLog.Track(Device.IpAddress, Device.BlockNo,
+                                     "D" + Device.ScanCardWord,
+                                     CardCodeDecoder.ToRawHex(words),
+                                     empty ? "khong co the" : ("ma the: " + (card ?? "khong giai ma duoc")));
+
+                int band = empty ? WeightBandService.Unknown : _bands.BandFor(card);
+
+                if (band == _lastBandWritten) return;
+
+                await _client.WriteWordsAsync(
+                    PlcMemoryArea.DM, (ushort)Device.WeightBandWord,
+                    new[] { (ushort)band }, Device.TimeoutMs).ConfigureAwait(false);
+
+                _lastBandWritten = band;
+                MarkOk();
+
+                PlcRegisterLog.Track(Device.IpAddress, Device.BlockNo,
+                                     "D" + Device.WeightBandWord,
+                                     band.ToString(), "bang tai trong SCADA ghi xuong");
+
+                PlcAuditLog.Write(Device.IpAddress, Device.BlockNo,
+                                  "D" + Device.WeightBandWord, band, true,
+                                  "bang tai trong tu D" + Device.ScanCardWord
+                                  + " = " + CardCodeDecoder.ToRawHex(words));
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại _lastBandWritten về -1 để lượt sau ghi lại từ đầu: nếu
+                // không, một lệnh ghi hỏng sẽ bị nhớ nhầm là đã ghi thành công.
+                _lastBandWritten = -1;
+                PlcAuditLog.Error(Device.IpAddress, Device.BlockNo,
+                                  "BANG TAI D" + Device.WeightBandWord, ex.Message);
+            }
+        }
+
         // Ghi SO BLOCK noi xe dang dau xuong D1000.
         //
         // Thay cho cap D402 + W75.0 cua hop dong cu. Khac biet ve ban chat: W75.0
@@ -458,6 +557,11 @@ namespace TotalParking.Services.Plc
                     PlcMemoryArea.DM, (ushort)Device.FindAnswerWord,
                     new[] { (ushort)blockNo }, Device.TimeoutMs)
                     .ConfigureAwait(false);
+
+                PlcRegisterLog.Track(Device.IpAddress, Device.BlockNo, reg,
+                                     blockNo.ToString(),
+                                     blockNo == 0 ? "khong tim thay xe"
+                                                  : "xe dang o block " + blockNo);
             }
             catch (Exception ex)
             {

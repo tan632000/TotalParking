@@ -127,6 +127,15 @@ namespace TotalParking.Services.Plc
                     string raw  = CardCodeDecoder.ToRawHex(words);
                     string card = Decode(words);
 
+                    // Theo dõi theo giá trị THÔ, khác với `changed` bên dưới vốn so
+                    // theo mã đã giải. Hai word đổi mà vẫn giải ra cùng một mã — hoặc
+                    // cùng ra null — là thay đổi thật trong PLC mà phép so mã không
+                    // thấy. Đúng loại việc nhật ký thanh ghi sinh ra để bắt.
+                    PlcRegisterLog.Track(conn.Device.IpAddress, conn.Device.BlockNo,
+                                         "D" + slot.WordAddr, raw,
+                                         "o " + slot.SlotIndex + ": "
+                                         + (card ?? "khong giai ma duoc / trong"));
+
                     bool changed = !string.Equals(card, slot.CardCode, StringComparison.OrdinalIgnoreCase);
                     if (changed)
                     {

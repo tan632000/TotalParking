@@ -52,6 +52,16 @@ namespace TotalParking.Models
         // SCADA ghi SO BLOCK noi xe dang dau vao day. 0 = khong tim thay.
         public int FindAnswerWord { get; set; }
 
+        // ---- HOP DONG MOI: bang tai trong ----
+        // Khach quet RFID -> PLC ghi ma the vao day (D106). Khac FindCardWord:
+        // day la MOI luot quet, con FindCardWord rieng cho yeu cau tim xe.
+        public int ScanCardWord { get; set; }
+        // So word cua ma the o ScanCardWord. Ma the 32 bit = 2 word.
+        public int ScanCardLen  { get; set; }
+        // SCADA ghi bang tai trong vao day (D1004):
+        //   1 duoi 2200 kg, 2 tu 2200 den 2600, 3 tren 2600, 0 khong biet.
+        public int WeightBandWord { get; set; }
+
         public bool IsActive { get; set; }
 
         public bool HasRequestBit
