@@ -508,7 +508,18 @@ namespace TotalParking.Services.Plc
                                      CardCodeDecoder.ToRawHex(words),
                                      empty ? "khong co the" : ("ma the: " + (card ?? "khong giai ma duoc")));
 
-                int band = empty ? WeightBandService.Unknown : _bands.BandFor(card);
+                // Ba nhánh, cố ý tách rời:
+                //   D106 trống                 -> 0, không có ai quẹt
+                //   có giá trị, giải mã không ra -> 3, coi như quá tải
+                //   giải mã ra mã thẻ          -> BandFor: 1/2/3, hoặc 3 nếu mã
+                //                                 không có trong danh bạ
+                //
+                // Nhánh giữa cũng phải ra 3: thanh ghi khác 0 nghĩa là CÓ người
+                // quẹt thật. Không đọc được mã thì càng không dám xếp xe đó lên
+                // pallet — cùng lý lẽ với thẻ lạ.
+                int band = empty            ? WeightBandService.Unknown
+                         : card == null     ? WeightBandService.Overweight
+                                            : _bands.BandFor(card);
 
                 if (band == _lastBandWritten) return;
 

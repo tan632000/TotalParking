@@ -7,8 +7,15 @@
 --
 --     1  duoi 2200 kg
 --     2  tu 2200 den 2600 kg
---     3  tren 2600 kg
---     0  khong co the o D106, hoac khong phan loai duoc
+--     3  tren 2600 kg -- VA cung la gia tri cho moi truong hop the khong hop le:
+--        ma the khong co trong danh ba, the da bi khoa, hoac doc duoc gia tri
+--        nhung khong giai ma duoc. Huong an toan ve co khi: xe khong ro trong
+--        luong thi do nen, khong len pallet co khi.
+--     0  khong co the o D106, hoac khong hoi duoc DB
+--
+-- Phan biet 0 va 3 o cho mat DB: "the khong co trong danh ba" la da hoi duoc va
+-- biet chac; "mat ket noi DB" la khong hoi duoc gi. Tra 3 khi mat DB se day MOI
+-- xe xuong do nen suot thoi gian su co, ke ca xe hop le.
 --
 -- ======================= VI SAO KHONG HARD-CODE =======================
 -- Cung ly do voi card_word / find_card_word: ladder tung block co the khac nhau,

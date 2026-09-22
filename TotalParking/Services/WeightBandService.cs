@@ -18,20 +18,31 @@ namespace TotalParking.Services
     // THUONG co max_weight_kg = NULL — qua tai, khong len duoc pallet nao — nen
     // roi vao bang 3.
     //
-    // ======================= VI SAO KHONG BIET THI TRA 0 =======================
-    // The la, the het hieu luc, hoac mat DB deu tra 0 chu KHONG tra 3.
+    // ======================= THE LA THI COI LA QUA TAI =======================
+    // Quyet dinh cua nguoi van hanh: ma the doc duoc o D106 nhung KHONG co trong
+    // parking_card thi tra 3 — qua tai, do nen, khong len pallet co khi.
     //
-    // Tra 3 nghia la khang dinh "xe nay tren 2600 kg" — mot dieu ta khong he biet.
-    // Ladder co the dua vao do de chon cho do. Con 0 la "chua co cau tra loi", dung
-    // nghia voi luc D106 trong, nen ladder xu ly ca hai truong hop bang cung mot
-    // nhanh: khong du thong tin thi khong hanh dong.
+    // Day la huong AN TOAN VE CO KHI: mot chiec xe khong ro trong luong ma bi xep
+    // len pallet 2200 kg co the lam qua tai pallet. Dua xuong do nen thi khong.
     //
-    // Day cung la nguyen tac fail-closed ma CardScanService da dat ra: cho qua khi
-    // khong biet chinh la loi ma toan bo co che sinh ra de chan.
+    // ======================= NHUNG MAT DB THI VAN TRA 0 =======================
+    // Hai tinh huong nghe giong nhau nhung khac han:
+    //
+    //   the khong co trong danh ba  -> 3. Da HOI DUOC DB va biet chac no khong co.
+    //   mat ket noi DB              -> 0. KHONG hoi duoc, nen khong biet gi ca.
+    //
+    // Tra 3 khi mat DB la khang dinh "xe nay tren 2600 kg" dua tren mot su co ha
+    // tang, khong dua tren du lieu. Neu DB chet ca buoi thi MOI xe deu bi day
+    // xuong do nen, ke ca xe co the hop le. 0 nghia la "chua co cau tra loi",
+    // trung nghia voi luc D106 trong, nen ladder xu ly bang cung mot nhanh.
     public class WeightBandService
     {
-        // Gia tri ghi xuong D1004 khi khong phan loai duoc.
+        // Khong co the o D106, hoac khong hoi duoc DB.
         public const int Unknown = 0;
+
+        // Doc duoc ma the nhung no khong co trong danh ba, hoac the da bi khoa.
+        // Cung la bang cua hang tai THUONG.
+        public const int Overweight = 3;
 
         private const string BandSql =
             "SELECT CASE WHEN w.max_weight_kg IS NULL  THEN 3 " +
@@ -42,7 +53,9 @@ namespace TotalParking.Services
             "JOIN   weight_class w ON w.weight_class_id = c.weight_class_id " +
             "WHERE  c.card_code = @code AND c.is_active = 1";
 
-        // Tra 0 khi ma the rong, khong co trong he thong, the da khoa, hoac mat DB.
+        // 1/2/3 theo hang tai khi the co trong danh ba va con hieu luc.
+        // 3 khi hoi duoc DB nhung the khong co trong danh ba hoac da bi khoa.
+        // 0 khi ma the rong, hoac khong hoi duoc DB.
         public int BandFor(string cardCode)
         {
             if (string.IsNullOrWhiteSpace(cardCode)) return Unknown;
@@ -57,7 +70,11 @@ namespace TotalParking.Services
 
                     conn.Open();
                     object v = cmd.ExecuteScalar();
-                    return v == null || v == DBNull.Value ? Unknown : Convert.ToInt32(v);
+
+                    // Truy van CHAY XONG ma khong co dong nao = da biet chac the
+                    // khong co trong danh ba. Khac han voi nhanh catch ben duoi,
+                    // noi ta khong hoi duoc gi ca.
+                    return v == null || v == DBNull.Value ? Overweight : Convert.ToInt32(v);
                 }
             }
             catch (MySqlException)
