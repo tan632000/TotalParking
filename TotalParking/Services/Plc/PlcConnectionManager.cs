@@ -27,7 +27,15 @@ namespace TotalParking.Services.Plc
         // đủ lớn để một PLC chậm không chặn phần còn lại.
         private const int MaxConcurrentPolls = 16;
 
-        private readonly List<PlcConnection> _connections = new List<PlcConnection>();
+        // MẢNG BẤT BIẾN, không phải List. Vòng poll duyệt tập này mỗi nhịp, còn
+        // Reload() thay cả tập trong lúc đó. Sửa tại chỗ một List đang bị duyệt là
+        // lỗi chắc chắn; thay nguyên tử cả tham chiếu thì vòng đang chạy vẫn dùng
+        // trọn vẹn tập cũ của nó rồi nhịp sau mới thấy tập mới.
+        //
+        // volatile để nhịp sau chắc chắn đọc được tham chiếu mới, không dính bản
+        // sao trong cache của luồng.
+        private volatile PlcConnection[] _connections = new PlcConnection[0];
+
         private readonly SemaphoreSlim _throttle = new SemaphoreSlim(MaxConcurrentPolls);
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
@@ -55,13 +63,10 @@ namespace TotalParking.Services.Plc
         // cũng phải bật vòng chạy 500ms.
         public void Load()
         {
-            if (_connections.Count > 0) return;
+            if (_connections.Length > 0) return;
 
             var devices = new PlcDeviceRepository().GetAll();
-            foreach (var d in devices)
-            {
-                _connections.Add(new PlcConnection(d));
-            }
+            _connections = devices.Select(d => new PlcConnection(d)).ToArray();
 
             if (devices.Count > 0)
             {
@@ -69,6 +74,86 @@ namespace TotalParking.Services.Plc
                 // trong DB nhưng ở quy mô này một nhịp chung đơn giản hơn và đủ dùng.
                 _pollMs = Math.Max(100, devices.Min(d => d.PollMs));
             }
+        }
+
+        // Kết quả một lượt nạp lại, để endpoint trả về cho người gọi.
+        public class ReloadResult
+        {
+            public int Added   { get; set; }   // block mới được đưa vào vòng poll
+            public int Removed { get; set; }   // block bị gỡ khỏi vòng poll
+            public int Kept    { get; set; }   // giữ nguyên kết nối đang có
+            public int Total   { get; set; }
+        }
+
+        // Nạp lại danh sách thiết bị từ DB mà KHÔNG khởi động lại ứng dụng.
+        //
+        // ===================== VÌ SAO GIỮ LẠI KẾT NỐI CŨ =====================
+        // Block nào đã có kết nối và cấu hình không đổi thì dùng lại nguyên đối
+        // tượng PlcConnection. Dựng mới tất cả nghĩa là 55 phiên FINS cùng đóng
+        // rồi cùng mở lại — đúng kiểu gây loạt lỗi 0x20 "hết khe kết nối" đã thấy
+        // mỗi lần app khởi động. Nạp lại để THÊM một block thì không có lý do gì
+        // làm gián đoạn 55 block đang chạy tốt.
+        //
+        // Đổi IP hoặc cổng thì phải dựng mới, vì kết nối cũ đang trỏ tới thiết bị
+        // khác. So theo Endpoint chứ không so từng trường: chỉ địa chỉ mới quyết
+        // định kết nối có còn đúng chỗ hay không.
+        public ReloadResult Reload()
+        {
+            var devices = new PlcDeviceRepository().GetAll();
+            var dangCo  = _connections.ToDictionary(c => c.Device.BlockNo);
+            var ketQua  = new ReloadResult();
+            var tapMoi  = new List<PlcConnection>(devices.Count);
+
+            foreach (var d in devices)
+            {
+                PlcConnection cu;
+                if (dangCo.TryGetValue(d.BlockNo, out cu) && cu.Device.Endpoint == d.Endpoint)
+                {
+                    tapMoi.Add(cu);
+                    dangCo.Remove(d.BlockNo);
+                    ketQua.Kept++;
+                }
+                else
+                {
+                    tapMoi.Add(new PlcConnection(d));
+                    ketQua.Added++;
+                }
+            }
+
+            // Thay nguyên tử. Nhịp poll đang chạy vẫn dùng trọn tập cũ của nó.
+            _connections = tapMoi.ToArray();
+
+            // HOÃN đóng những kết nối không còn trong danh sách.
+            //
+            // Thay tham chiếu là nguyên tử, nhưng một nhịp poll đã bắt đầu trước đó
+            // vẫn đang giữ tập CŨ và có thể đang gọi PollAsync trên chính những đối
+            // tượng này. PlcConnection.Dispose() giải phóng cả semaphore nội bộ mà
+            // không chờ ai, nên đóng ngay sẽ làm nhịp đó ném ObjectDisposedException.
+            //
+            // Lỗi đó sẽ bị nuốt ở vòng lặp nên không gây hậu quả, nhưng nó tạo ra
+            // một dòng nhật ký khó hiểu cho người truy vết sau này. Chờ quá một chu
+            // kỳ poll thì nhịp cũ chắc chắn đã xong.
+            //
+            // Gỡ block là việc hiếm, nên độ trễ vài giây ở đây không đáng kể.
+            var canDong = dangCo.Values.ToArray();
+            ketQua.Removed = canDong.Length;
+            if (canDong.Length > 0)
+            {
+                int cho = Math.Max(2000, _pollMs * 3);
+                Task.Delay(cho).ContinueWith(_ =>
+                {
+                    foreach (var bo in canDong)
+                    {
+                        try { bo.Dispose(); } catch (Exception) { }
+                    }
+                });
+            }
+
+            if (devices.Count > 0)
+                _pollMs = Math.Max(100, devices.Min(d => d.PollMs));
+
+            ketQua.Total = tapMoi.Count;
+            return ketQua;
         }
 
         // Quét một lượt dọn câu trả lời còn sót ở D1000 trên mọi PLC.
@@ -104,7 +189,7 @@ namespace TotalParking.Services.Plc
 
         public void StartLoop()
         {
-            if (_loop != null || _connections.Count == 0) return;
+            if (_loop != null || _connections.Length == 0) return;
             _loop = Task.Run(() => LoopAsync(_cts.Token));
         }
 
@@ -165,7 +250,7 @@ namespace TotalParking.Services.Plc
         {
             Stop();
             foreach (var c in _connections) c.Dispose();
-            _connections.Clear();
+            _connections = new PlcConnection[0];
             _throttle.Dispose();
             _cts.Dispose();
         }

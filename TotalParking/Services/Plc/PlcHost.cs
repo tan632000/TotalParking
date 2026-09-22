@@ -66,6 +66,11 @@ namespace TotalParking.Services.Plc
                 {
                     host._manager = new PlcConnectionManager();
                     host._manager.Load();
+
+                    // Bộ dò khả dụng chạy ĐỘC LẬP với plc:enabled. Tắt vòng poll
+                    // là quyết định không điều khiển PLC nữa; nó không có nghĩa là
+                    // thôi cần biết thiết bị nào đang có mặt trên mạng.
+                    PlcReachabilityScanner.Start();
                     if (Enabled)
                     {
                         host._manager.StartLoop();
@@ -104,6 +109,7 @@ namespace TotalParking.Services.Plc
         {
             lock (Sync)
             {
+                PlcReachabilityScanner.Stop();
                 if (_manager != null)
                 {
                     _manager.Dispose();

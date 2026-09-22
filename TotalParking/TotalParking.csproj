@@ -196,6 +196,7 @@
     <Compile Include="Services\Plc\SlotScanHost.cs" />
     <Compile Include="Services\Plc\PlcAuditLog.cs" />
     <Compile Include="Services\Plc\PlcRegisterLog.cs" />
+    <Compile Include="Services\Plc\PlcReachabilityScanner.cs" />
     <Compile Include="Controllers\SlotStatusController.cs" />
     <Compile Include="Services\Led\LedPublisher.cs" />
     <Compile Include="Services\Led\LedHost.cs" />

@@ -50,6 +50,10 @@ namespace TotalParking.Controllers
                     poll_enabled = PlcHost.Enabled,
                     poll_running = manager.IsRunning,
                     manual_write_allowed = PlcHost.AllowManualWrite,
+                    // PLC co mat tren mang nhung KHONG nam trong vong poll.
+                    // Day la khoang cach giua thuc te bai va thu SCADA dang quan
+                    // ly — thu truoc day chi phat hien duoc bang cach quet mang tay.
+                    chua_dua_vao_van_hanh = ChuaVanHanh(),
                     // So PLC bi don D1000 con sot luc khoi dong. -1 = dang chay.
                     startup_cleared = PlcHost.LastStartupCleared,
                     now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -178,6 +182,69 @@ namespace TotalParking.Controllers
             catch (Exception ex)
             {
                 return Json2(502, new { error = ex.Message });
+            }
+        }
+
+        // Bao cao khoang cach: PLC nao dang song ma SCADA khong doc.
+        private static object ChuaVanHanh()
+        {
+            var rows = PlcReachabilityScanner.AliveButNotPolled();
+            return new
+            {
+                quet_luc = PlcReachabilityScanner.LastScan.HasValue
+                    ? PlcReachabilityScanner.LastScan.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                    : null,
+                so_luong = rows.Count,
+                ghi_chu = rows.Count == 0
+                    ? "khong co PLC nao bi bo sot"
+                    : "PLC dang song nhung is_active = 0. Bat bang cach sua DB roi "
+                      + "goi POST /PlcStatus/Reload — khong can khoi dong lai app.",
+                blocks = rows.Select(r => new
+                {
+                    block_no = r.BlockNo,
+                    endpoint = r.Endpoint,
+                    thay_luc = r.LastSeen.HasValue
+                        ? r.LastSeen.Value.ToString("yyyy-MM-dd HH:mm:ss") : null
+                }).ToArray()
+            };
+        }
+
+        // POST /PlcStatus/Reload
+        //
+        // Nap lai danh sach thiet bi tu DB ma khong khoi dong lai ung dung.
+        //
+        // Truoc day doi is_active phai khoi dong lai app: PlcHost.Initialize() chi
+        // chay mot lan. Khoi dong lai lam dut toan bo phien FINS cua 55 PLC cung
+        // luc va sinh loat loi 0x20 "het khe ket noi" — mot cai gia rat dat chi de
+        // them mot block. Reload giu nguyen ket noi cua nhung block khong doi.
+        //
+        // Chi POST va chi tu loopback, giong moi endpoint cham toi tang PLC. Khong
+        // can plc:allowManualWrite vi day KHONG ghi gi xuong thiet bi.
+        [HttpPost]
+        public ActionResult Reload()
+        {
+            if (!IsLoopbackClient()) return Forbidden();
+
+            var manager = PlcHost.Manager;
+            if (manager == null)
+                return Json2(503, new { error = "Tang PLC chua nap duoc, khong co gi de nap lai." });
+
+            try
+            {
+                var kq = manager.Reload();
+                return Json2(200, new
+                {
+                    them_moi = kq.Added,
+                    go_bo    = kq.Removed,
+                    giu_nguyen = kq.Kept,
+                    tong     = kq.Total,
+                    poll_running = manager.IsRunning,
+                    note = "Block moi se duoc doc o nhip poll ke tiep."
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(500, new { error = ex.Message });
             }
         }
 
