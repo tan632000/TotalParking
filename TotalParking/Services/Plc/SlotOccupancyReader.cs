@@ -131,10 +131,19 @@ namespace TotalParking.Services.Plc
                     // theo mã đã giải. Hai word đổi mà vẫn giải ra cùng một mã — hoặc
                     // cùng ra null — là thay đổi thật trong PLC mà phép so mã không
                     // thấy. Đúng loại việc nhật ký thanh ghi sinh ra để bắt.
+                    // Phân biệt RÕ "ô trống" với "không giải mã được": cả hai đều
+                    // cho card = null, nhưng một cái là bình thường còn một cái là
+                    // dấu hiệu bố cục mã thẻ sai. Gộp chung thì đọc nhật ký không
+                    // biết thanh ghi khác 0 mà giải không ra, tức giấu mất đúng thứ
+                    // cần chú ý nhất.
+                    string moTa = card != null      ? card
+                                : CardCodeDecoder.IsEmpty(words, SlotWordCount)
+                                                    ? "trong"
+                                                    : "KHONG GIAI MA DUOC";
+
                     PlcRegisterLog.Track(conn.Device.IpAddress, conn.Device.BlockNo,
                                          "D" + slot.WordAddr, raw,
-                                         "o " + slot.SlotIndex + ": "
-                                         + (card ?? "khong giai ma duoc / trong"));
+                                         "o " + slot.SlotIndex + ": " + moTa);
 
                     bool changed = !string.Equals(card, slot.CardCode, StringComparison.OrdinalIgnoreCase);
                     if (changed)
