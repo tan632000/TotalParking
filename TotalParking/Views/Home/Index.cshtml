@@ -34,10 +34,10 @@
             </div>
             <div class="min-w-0">
                 <div style="color: rgb(148, 163, 184); font-size: 12px;">
-                    Tổng Pallet
+                    Tổng chỗ đỗ
                 </div>
-                <div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
-                    184
+                <div id="kpi-total" style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
+                    —
                 </div>
             </div>
         </div>
@@ -55,14 +55,18 @@
                 </svg>
             </div>
             <div class="min-w-0">
+                @* Nhãn là "Phiên đang mở", KHÔNG phải "Có xe". in_use đếm phiên gửi
+                   xe trong v_zone_capacity, không phải ô đang giữ thẻ. Hai con số
+                   này lệch nhau thật: đo lúc lập kế hoạch là in_use=0 trong khi
+                   SlotStatus.occupied=16. Xem plan.md mục Từ vựng hiển thị. *@
                 <div style="color: rgb(148, 163, 184); font-size: 12px;">
-                    Có xe
+                    Phiên đang mở
                 </div>
-                <div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
-                    91
+                <div id="kpi-inuse" style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
+                    —
                 </div>
-                <div style="color: rgb(100, 116, 139); font-size: 11px;">
-                    49%
+                <div id="kpi-pct" style="color: rgb(100, 116, 139); font-size: 11px;">
+                    —
                 </div>
             </div>
         </div>
@@ -79,8 +83,11 @@
                 <div style="color: rgb(148, 163, 184); font-size: 12px;">
                     Còn trống
                 </div>
-                <div style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
-                    69
+                @* Σtotal − Σin_use. KHÔNG cộng free_mech + free_tier0 + free_ground:
+                   xem VehicleRouting.cs:61-65, mỗi trường đã trừ InUse một lần nên
+                   cộng lại là trừ hai tới ba lần, và Total không gồm TotalTier0. *@
+                <div id="kpi-free" style="color: rgb(248, 250, 252); font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;">
+                    —
                 </div>
             </div>
         </div>
@@ -127,6 +134,33 @@
                     54
                 </div>
             </div>
+        </div>
+    </div>
+    @* specs/monitoring-real-data task-01 — thanh trạng thái nguồn dữ liệu và
+       bảng xe vào gần nhất. Cả hai được đổ bởi khối script ở cuối file. *@
+    <div class="rounded-lg p-4" style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85);">
+        <div class="flex items-center justify-between mb-3">
+            <span style="color: rgb(248, 250, 252); font-size: 14px; font-weight: 600;">
+                Xe vào gần nhất
+            </span>
+            @* Lỗi nguồn dữ liệu hiện ở đây. Không nuốt lỗi: người trực phải biết
+               con số trên màn hình đang cũ hay đang sống. *@
+            <span id="dash-status" class="font-mono text-[11px]" style="color: rgb(148, 163, 184);">
+                đang tải…
+            </span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                    <tr class="border-b border-slate-700">
+                        <th class="py-1.5 pr-2 text-slate-500 font-medium text-[10px] uppercase tracking-wider">Lúc</th>
+                        <th class="py-1.5 pr-2 text-slate-500 font-medium text-[10px] uppercase tracking-wider">Phương tiện</th>
+                        <th class="py-1.5 pr-2 text-slate-500 font-medium text-[10px] uppercase tracking-wider">Hạng tải</th>
+                        <th class="py-1.5 text-slate-500 font-medium text-[10px] uppercase tracking-wider">Kết quả</th>
+                    </tr>
+                </thead>
+                <tbody id="dash-recent-tbody"></tbody>
+            </table>
         </div>
     </div>
     <div id="global-alarm-banner" class="flex items-center gap-3 p-3 rounded-lg border animate-pulse hidden" style="background: rgba(220, 38, 38, 0.082); border-color: rgb(220, 38, 38);">
@@ -505,50 +539,56 @@
                     </span>
                 </div>
                 <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
+                    @* "phản hồi mạng" chứ không phải "online": DeviceStatus/Summary
+                       chỉ dò TCP tới host (DeviceProbeService), còn PlcStatus/Index
+                       mới là bắt tay FINS thật. Hai số lệch nhau rất xa — đo lúc lập
+                       kế hoạch là 82/86 so với 25/86. *@
                     <span style="color: rgb(203, 213, 225); font-size: 12px;">
-                        PLC Block
+                        PLC — phản hồi mạng
                     </span>
                     <div class="flex items-center gap-2">
-                        <span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;">
+                        <span id="dev-plc-dot" class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(100, 116, 139);">
                         </span>
-                        <span style="color: rgb(134, 239, 172); font-size: 11px;">
-                            Kết nối
+                        <span id="dev-plc-text" style="color: rgb(148, 163, 184); font-size: 11px;">
+                            —
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
+                    @* SCADA khong co nguon du lieu nao cho HMI. Hien "chua giam sat"
+                       chu khong to xanh: to xanh la bia ra mot su that. *@
+                    <span style="color: rgb(203, 213, 225); font-size: 12px;">
+                        HMI Block — chưa giám sát
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <span id="dev-hmi-dot" class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(100, 116, 139);">
+                        </span>
+                        <span id="dev-hmi-text" style="color: rgb(148, 163, 184); font-size: 11px;">
+                            —
                         </span>
                     </div>
                 </div>
                 <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
                     <span style="color: rgb(203, 213, 225); font-size: 12px;">
-                        HMI Block
+                        Camera AI — phản hồi mạng
                     </span>
                     <div class="flex items-center gap-2">
-                        <span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;">
+                        <span id="dev-camera-dot" class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(100, 116, 139);">
                         </span>
-                        <span style="color: rgb(134, 239, 172); font-size: 11px;">
-                            Kết nối
+                        <span id="dev-camera-text" style="color: rgb(148, 163, 184); font-size: 11px;">
+                            —
                         </span>
                     </div>
                 </div>
                 <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
                     <span style="color: rgb(203, 213, 225); font-size: 12px;">
-                        AI-VDS
+                        LED + PGS — phản hồi mạng
                     </span>
                     <div class="flex items-center gap-2">
-                        <span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;">
+                        <span id="dev-ledpgs-dot" class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(100, 116, 139);">
                         </span>
-                        <span style="color: rgb(134, 239, 172); font-size: 11px;">
-                            Kết nối
-                        </span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
-                    <span style="color: rgb(203, 213, 225); font-size: 12px;">
-                        LED/PGS
-                    </span>
-                    <div class="flex items-center gap-2">
-                        <span class="inline-flex w-2.5 h-2.5 rounded-full" style="background: rgb(22, 163, 74); box-shadow: rgba(22, 163, 74, 0.533) 0px 0px 6px;">
-                        </span>
-                        <span style="color: rgb(134, 239, 172); font-size: 11px;">
-                            Kết nối
+                        <span id="dev-ledpgs-text" style="color: rgb(148, 163, 184); font-size: 11px;">
+                            —
                         </span>
                     </div>
                 </div>
@@ -1274,3 +1314,185 @@
     });
 </script>
 </div>
+
+@* =====================================================================
+   DỮ LIỆU THẬT CHO DASHBOARD — specs/monitoring-real-data task-01
+
+   Khối này đặt SAU toàn bộ khối alarm ở trên và không chạm vào nó.
+   Alarm vẫn là dữ liệu mô phỏng; đổi nguồn alarm là việc riêng vì
+   activeAlarms là hợp đồng localStorage liên trang (CLAUDE.md mục 2).
+
+   Khuôn fetch/render/poll sao chép từ FloorPlan.cshtml:471,581-600,
+   KHÁC một điểm: khi lỗi phải đặt ô số về em dash chứ không giữ số cũ.
+   Giữ số cũ khi mất nguồn là nói dối người trực.
+   ===================================================================== *@
+<script>
+    (function () {
+        "use strict";
+
+        var URL_CAPACITY = "@Url.Action("RoutingState", "Monitor")";
+        var URL_DEVICE   = "@Url.Action("Summary", "DeviceStatus")";
+        var POLL_MS      = 5000;
+        var GACH         = "—";   // em dash, dùng làm dấu "chưa có số"
+
+        var timer = null;
+
+        function el(id) { return document.getElementById(id); }
+
+        function dat(id, giaTri) {
+            var e = el(id);
+            if (e) e.textContent = giaTri;
+        }
+
+        // Xoá sạch mọi ô số. Gọi khi mất nguồn — xem chú thích đầu khối.
+        function xoaHet() {
+            dat("kpi-total", GACH);
+            dat("kpi-inuse", GACH);
+            dat("kpi-free", GACH);
+            dat("kpi-pct", GACH);
+        }
+
+        function datTrangThai(chu, mau) {
+            var e = el("dash-status");
+            if (!e) return;
+            e.textContent = chu;
+            e.style.color = mau;
+        }
+
+        // ---------------------------------------------------------- sức chứa
+        function veSucChua(zones) {
+            var tong = 0, dangDung = 0;
+            for (var i = 0; i < zones.length; i++) {
+                tong     += zones[i].total  || 0;
+                dangDung += zones[i].in_use || 0;
+            }
+
+            // tong = 0 nghĩa là chưa khai báo block, không phải bãi hết chỗ.
+            // Chia cho 0 ở đây sẽ ra NaN và hiện "NaN%" trên màn hình vận hành.
+            if (tong === 0) { xoaHet(); return; }
+
+            dat("kpi-total", tong);
+            dat("kpi-inuse", dangDung);
+            // Σtotal − Σin_use. Không dùng free_mech + free_tier0 + free_ground:
+            // ba trường đó mỗi cái đã trừ InUse rồi (VehicleRouting.cs:61-65).
+            dat("kpi-free", tong - dangDung);
+            dat("kpi-pct", Math.round(dangDung / tong * 100) + "%");
+        }
+
+        function veXeVao(recent) {
+            var tbody = el("dash-recent-tbody");
+            if (!tbody) return;
+            tbody.innerHTML = "";
+            for (var i = 0; i < recent.length; i++) {
+                var r = recent[i];
+                var tr = document.createElement("tr");
+                tr.setAttribute("data-event-id", r.event_id || "");
+                tr.className = "border-b border-slate-800/60";
+                tr.innerHTML =
+                    '<td class="py-1.5 pr-2 text-slate-400 font-mono text-[10px]">' + (r.at || "") + '</td>' +
+                    '<td class="py-1.5 pr-2 text-slate-200">' + (r.vehicle || "") + '</td>' +
+                    '<td class="py-1.5 pr-2 text-slate-400">' + (r.weight_class || "") + '</td>' +
+                    '<td class="py-1.5 text-slate-400">' + (r.outcome || "") + '</td>';
+                tbody.appendChild(tr);
+            }
+        }
+
+        // ------------------------------------------------------ sức khoẻ thiết bị
+        var MAU = {
+            ok:          { nen: "rgb(22, 163, 74)",   chu: "rgb(134, 239, 172)" },
+            partial:     { nen: "rgb(217, 119, 6)",   chu: "rgb(253, 224, 71)"  },
+            down:        { nen: "rgb(220, 38, 38)",   chu: "rgb(252, 165, 165)" },
+            unmonitored: { nen: "rgb(100, 116, 139)", chu: "rgb(148, 163, 184)" }
+        };
+
+        function veMotThietBi(slug, nhom) {
+            var dot  = el("dev-" + slug + "-dot");
+            var text = el("dev-" + slug + "-text");
+            if (!dot || !text) return;
+
+            if (!nhom) {
+                dot.style.background = MAU.unmonitored.nen;
+                text.style.color     = MAU.unmonitored.chu;
+                text.textContent     = "chưa giám sát";
+                return;
+            }
+            var m = MAU[nhom.health] || MAU.unmonitored;
+            dot.style.background = m.nen;
+            text.style.color     = m.chu;
+            text.textContent     = nhom.detail || nhom.health || GACH;
+        }
+
+        function veThietBi(groups) {
+            var theoKhoa = {};
+            for (var i = 0; i < groups.length; i++) theoKhoa[groups[i].key] = groups[i];
+
+            veMotThietBi("plc", theoKhoa.plc);
+            veMotThietBi("camera", theoKhoa.camera);
+            // HMI không có nguồn dữ liệu nào trong SCADA -> luôn "chưa giám sát".
+            veMotThietBi("hmi", null);
+
+            // LED và PGS là hai nhóm riêng nhưng dùng chung một hàng hiển thị.
+            var led = theoKhoa.led, pgs = theoKhoa.pgs;
+            if (led || pgs) {
+                var xau = (led && led.health === "down") || (pgs && pgs.health === "down")
+                    ? "down"
+                    : ((led && led.health === "partial") || (pgs && pgs.health === "partial")
+                        ? "partial" : "ok");
+                veMotThietBi("ledpgs", {
+                    health: xau,
+                    detail: "LED " + (led ? led.online + "/" + led.total : "?") +
+                            " · PGS " + (pgs ? pgs.online + "/" + pgs.total : "?")
+                });
+            } else {
+                veMotThietBi("ledpgs", null);
+            }
+        }
+
+        // ---------------------------------------------------------------- poll
+        function tick() {
+            var xongSucChua = fetch(URL_CAPACITY, { cache: "no-store" })
+                .then(function (res) {
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    return res.json();
+                })
+                .then(function (d) {
+                    if (d.error) throw new Error(d.error);
+                    veSucChua(d.zones || []);
+                    veXeVao(d.recent || []);
+                    return d.now;
+                });
+
+            var xongThietBi = fetch(URL_DEVICE, { cache: "no-store" })
+                .then(function (res) {
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    return res.json();
+                })
+                .then(function (d) { veThietBi(d.groups || []); });
+
+            Promise.all([xongSucChua, xongThietBi])
+                .then(function (kq) {
+                    datTrangThai("cập nhật " + (kq[0] || ""), "rgb(52, 211, 153)");
+                })
+                .catch(function (err) {
+                    // KHÁC FloorPlan: xoá số chứ không giữ lại. Số cũ trông y hệt
+                    // số đúng, nên để nguyên là để người trực tin vào dữ liệu chết.
+                    xoaHet();
+                    datTrangThai("lỗi: " + err.message, "rgb(251, 191, 36)");
+                });
+        }
+
+        function batDau() { if (!timer) { tick(); timer = setInterval(tick, POLL_MS); } }
+        function dungLai() { if (timer) { clearInterval(timer); timer = null; } }
+
+        // Tab ở nền thì ngừng poll — trang này hay được mở rồi để cả ngày.
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) dungLai(); else batDau();
+        });
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", batDau);
+        } else {
+            batDau();
+        }
+    })();
+</script>

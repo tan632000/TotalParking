@@ -134,6 +134,39 @@
                         </h2>
                         <span class="text-[10px] font-mono bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-750">Mô phỏng thời gian thực</span>
                     </div>
+                    @* specs/monitoring-real-data task-02 — thanh số liệu THẬT.
+                       Lưới block bên dưới vẫn là mô phỏng (dùng occBlockStates trong
+                       localStorage) và giữ nhãn "Mô phỏng thời gian thực" của nó.
+                       Thanh này tách riêng để không lẫn hai loại dữ liệu. *@
+                    <div class="mb-4 p-3 rounded-lg bg-slate-950/60 border border-slate-800">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                                Số liệu thật từ PLC
+                            </span>
+                            <span id="occ-status" class="text-[10px] font-mono text-slate-500">đang tải…</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                @* "đọc được dữ liệu" chứ không phải "online": đây là
+                                   bắt tay FINS thật, khác hẳn dò TCP của DeviceStatus.
+                                   Xem plan.md mục Từ vựng hiển thị. *@
+                                <div class="text-[10px] text-slate-500">Block đọc được dữ liệu</div>
+                                <div id="occ-block-doc-duoc" class="text-lg font-bold text-slate-100 font-mono">—</div>
+                            </div>
+                            <div>
+                                @* PLC sống trên mạng nhưng is_active = 0 nên không nằm
+                                   trong vòng poll. Bỏ qua nhóm này sẽ khiến kỹ thuật
+                                   viên vừa đấu nối một block, không thấy nó, và kết
+                                   luận nhầm là hỏng phần cứng. *@
+                                <div class="text-[10px] text-slate-500">Chờ kích hoạt</div>
+                                <div id="occ-block-cho-kich-hoat" class="text-lg font-bold text-amber-400 font-mono">—</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-slate-500">Ô đang có xe</div>
+                                <div id="occ-o-co-xe" class="text-lg font-bold text-slate-100 font-mono">—</div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- Blocks Summary Grid -->
                     <div id="occ-blocks-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1575,4 +1608,99 @@
         // Trigger initial zone load (Zone 1)
         onZoneChanged();
     });
+</script>
+
+@* =====================================================================
+   SỐ LIỆU THẬT CHO ĐIỀU KHIỂN VẬN HÀNH — specs/monitoring-real-data task-02
+
+   Khối này CHỈ ĐỌC và chỉ ghi vào ba ô số của thanh "Số liệu thật từ PLC".
+   Không đụng tầng điều khiển (btn-action-*, btn-mode-*, btn-plc-send,
+   chk-bypass-*), không đọc/ghi localStorage, không sửa lưới mô phỏng.
+
+   Hai nhịp poll khác nhau, cố ý:
+     PlcStatus/Index  ~4 KB   -> 2 giây
+     SlotStatus/Index ~121 KB -> 20 giây, vì chu kỳ quét ô đỗ của chính nó là
+                                 45 giây; poll nhanh hơn là lãng phí thuần.
+   ===================================================================== *@
+<script>
+    (function () {
+        "use strict";
+
+        var URL_PLC  = "@Url.Action("Index", "PlcStatus")";
+        var URL_SLOT = "@Url.Action("Index", "SlotStatus")";
+        var POLL_PLC_MS  = 2000;
+        var POLL_SLOT_MS = 20000;
+        var GACH = "—";
+
+        var timerPlc = null, timerSlot = null;
+
+        function el(id) { return document.getElementById(id); }
+        function dat(id, v) { var e = el(id); if (e) e.textContent = v; }
+
+        function datTrangThai(chu, mau) {
+            var e = el("occ-status");
+            if (!e) return;
+            e.textContent = chu;
+            e.style.color = mau;
+        }
+
+        function tickPlc() {
+            fetch(URL_PLC, { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    var blocks = d.blocks || [];
+                    var song = 0;
+                    for (var i = 0; i < blocks.length; i++) if (blocks[i].online) song++;
+                    dat("occ-block-doc-duoc", song + "/" + blocks.length);
+
+                    // chua_dua_vao_van_hanh la mang RIENG, khong nam trong blocks[].
+                    var cho = d.chua_dua_vao_van_hanh;
+                    dat("occ-block-cho-kich-hoat", cho ? (cho.so_luong || 0) : 0);
+
+                    datTrangThai("cập nhật " + (d.now || ""), "rgb(52, 211, 153)");
+                })
+                .catch(function (err) {
+                    // Xoá số chứ không giữ lại — số cũ trông y hệt số đúng.
+                    dat("occ-block-doc-duoc", GACH);
+                    dat("occ-block-cho-kich-hoat", GACH);
+                    datTrangThai("lỗi: " + err.message, "rgb(251, 191, 36)");
+                });
+        }
+
+        function tickSlot() {
+            fetch(URL_SLOT, { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    dat("occ-o-co-xe",
+                        (d.occupied != null ? d.occupied : GACH) +
+                        (d.total_slots != null ? "/" + d.total_slots : ""));
+                })
+                .catch(function () { dat("occ-o-co-xe", GACH); });
+        }
+
+        function batDau() {
+            if (!timerPlc)  { tickPlc();  timerPlc  = setInterval(tickPlc,  POLL_PLC_MS); }
+            if (!timerSlot) { tickSlot(); timerSlot = setInterval(tickSlot, POLL_SLOT_MS); }
+        }
+        function dungLai() {
+            if (timerPlc)  { clearInterval(timerPlc);  timerPlc  = null; }
+            if (timerSlot) { clearInterval(timerSlot); timerSlot = null; }
+        }
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) dungLai(); else batDau();
+        });
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", batDau);
+        } else {
+            batDau();
+        }
+    })();
 </script>

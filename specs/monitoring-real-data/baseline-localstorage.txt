@@ -1,0 +1,36 @@
+# Moc localStorage truoc khi sua — specs/monitoring-real-data
+#
+# Index.cshtml       : lay tu git show HEAD (truoc task-01)
+# OperationControl   : lay tu ban sao luu truoc task-02
+#
+# Hai view nay GHI cac khoa localStorage la hop dong lien trang
+# (CLAUDE.md muc 2): Diagnostics va cac trang khac DOC chung. Dem so lan
+# khong du — dem khong doi ma shape doi van pha. Nen so NGUYEN VAN ca dong,
+# da trim hai dau.
+
+## Index.cshtml
+const storedAlarms = localStorage.getItem('activeAlarms');
+const storedCycles = localStorage.getItem('palletCycleData');
+localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
+localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
+localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
+
+## OperationControl.cshtml
+const storedBlockStates = localStorage.getItem('occBlockStates');
+const storedOccupancy = localStorage.getItem('occPalletOccupancy');
+const storedAlarms = localStorage.getItem('activeAlarms');
+localStorage.setItem('occBlockStates', JSON.stringify(blockStates));
+localStorage.setItem('occPalletOccupancy', JSON.stringify(palletOccupancy));
+localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
+const isAdminOverride = localStorage.getItem('occAdminOverride') === 'true';
+const activeRecovery = localStorage.getItem('occActiveRecovery');
+const storedCycles = localStorage.getItem('palletCycleData');
+localStorage.setItem('palletCycleData', JSON.stringify(cycleData));
+localStorage.setItem('occActiveRecovery', JSON.stringify(checklistState));
+localStorage.setItem('occActiveRecovery', JSON.stringify(checklistState));
+localStorage.removeItem('occActiveRecovery');
+const currentOverride = localStorage.getItem('occAdminOverride') === 'true';
+localStorage.setItem('occAdminOverride', newOverride ? 'true' : 'false');
+const storedBypasses = localStorage.getItem('occBypassedSensors');
+const storedBypasses = localStorage.getItem('occBypassedSensors');
+localStorage.setItem('occBypassedSensors', JSON.stringify(bypasses));
