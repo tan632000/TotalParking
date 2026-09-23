@@ -80,7 +80,7 @@
             </div>
             <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800 rounded px-3 py-1.5">
                 <span class="w-2 h-2 rounded-full bg-blue-500 glowing-led text-blue-500"></span>
-                <span class="text-xs font-mono text-slate-300">Operator Session</span>
+                <span class="text-xs font-mono text-slate-300">Phiên vận hành</span>
             </div>
         </div>
     </div>
@@ -428,7 +428,7 @@
                     <div class="space-y-3">
                         <div class="flex gap-2">
                             <input type="text" id="plc-raw-cmd" placeholder="Mã lệnh (Ví dụ: CMD_ROTATE_P03)" class="flex-1 bg-slate-900 border border-slate-700/60 rounded px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 font-mono">
-                            <button id="btn-plc-send" onclick="confirmAndSendPlcCommand()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs px-3.5 py-1.5 rounded font-bold transition-all">Send</button>
+                            <button id="btn-plc-send" onclick="confirmAndSendPlcCommand()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs px-3.5 py-1.5 rounded font-bold transition-all">Gửi</button>
                         </div>
                         
                         <!-- LED Pipeline Status Sequence -->
@@ -436,22 +436,22 @@
                             <div class="flex justify-between items-center gap-1.5 text-[9px] font-mono text-slate-500 mb-3">
                                 <div class="flex flex-col items-center gap-1 flex-1">
                                     <span id="led-sent" class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all"></span>
-                                    <span>Sent</span>
+                                    <span>Đã gửi</span>
                                 </div>
                                 <div class="w-4 h-[1px] bg-slate-800 mb-3"></div>
                                 <div class="flex flex-col items-center gap-1 flex-1">
                                     <span id="led-accepted" class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all"></span>
-                                    <span>Accepted</span>
+                                    <span>Đã nhận</span>
                                 </div>
                                 <div class="w-4 h-[1px] bg-slate-800 mb-3"></div>
                                 <div class="flex flex-col items-center gap-1 flex-1">
                                     <span id="led-running" class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all"></span>
-                                    <span>Running</span>
+                                    <span>Đang chạy</span>
                                 </div>
                                 <div class="w-4 h-[1px] bg-slate-800 mb-3"></div>
                                 <div class="flex flex-col items-center gap-1 flex-1">
                                     <span id="led-done" class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all"></span>
-                                    <span id="led-done-lbl">Done</span>
+                                    <span id="led-done-lbl">Xong</span>
                                 </div>
                             </div>
                             
@@ -1151,7 +1151,7 @@
             led.className = "w-3 h-3 rounded-full bg-slate-800 border border-slate-700 transition-all";
             led.style.boxShadow = "none";
         });
-        document.getElementById('led-done-lbl').innerText = "Done";
+        document.getElementById('led-done-lbl').innerText = "Xong";
         document.getElementById('plc-progress-bar').style.width = "0%";
         document.getElementById('plc-error-alert').classList.add('hidden');
     }
@@ -1192,14 +1192,14 @@
                                     const ledDone = document.getElementById('led-done');
                                     ledDone.className = "w-3 h-3 rounded-full bg-emerald-500 border border-emerald-400 glowing-led transition-all";
                                     ledDone.style.color = "rgb(16, 185, 129)";
-                                    document.getElementById('led-done-lbl').innerText = "Done";
+                                    document.getElementById('led-done-lbl').innerText = "Xong";
                                     
                                     onComplete();
                                 } else {
                                     const ledDone = document.getElementById('led-done');
                                     ledDone.className = "w-3 h-3 rounded-full bg-red-500 border border-red-400 glowing-led transition-all alarm-flash";
                                     ledDone.style.color = "rgb(239, 68, 68)";
-                                    document.getElementById('led-done-lbl').innerText = "Failed";
+                                    document.getElementById('led-done-lbl').innerText = "Thất bại";
 
                                     // Display error code
                                     const errAlert = document.getElementById('plc-error-alert');

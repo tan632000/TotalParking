@@ -285,7 +285,7 @@
                     <button onclick="toggleHold('${item.plate}', 'entry')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-600/20 text-amber-400 hover:bg-amber-600/40 border border-amber-500/25 transition-colors">
                         ${item.status === "Held" ? "Resume" : "Hold"}
                     </button>
-                    <button onclick="openRejectModal('${item.plate}', 'entry')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600/20 text-red-400 hover:bg-red-600/40 border border-red-500/25 transition-colors">Reject</button>
+                    <button onclick="openRejectModal('${item.plate}', 'entry')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600/20 text-red-400 hover:bg-red-600/40 border border-red-500/25 transition-colors">Từ chối</button>
                 </td>
             `;
             entryBody.appendChild(tr);
@@ -312,7 +312,7 @@
                     <button onclick="toggleHold('${item.plate}', 'exit')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-600/20 text-amber-400 hover:bg-amber-600/40 border border-amber-500/25 transition-colors">
                         ${item.status === "Held" ? "Resume" : "Hold"}
                     </button>
-                    <button onclick="openRejectModal('${item.plate}', 'exit')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600/20 text-red-400 hover:bg-red-600/40 border border-red-500/25 transition-colors">Reject</button>
+                    <button onclick="openRejectModal('${item.plate}', 'exit')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600/20 text-red-400 hover:bg-red-600/40 border border-red-500/25 transition-colors">Từ chối</button>
                 </td>
             `;
             exitBody.appendChild(tr);
