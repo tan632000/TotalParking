@@ -44,6 +44,28 @@ namespace TotalParking.Services.Plc
     // rồi trả về số byte đọc dở, và luồng gọi cứ thế đọc tiếp.
     public class FinsFramingException : Exception
     {
+        // Mã lỗi của lớp FINS/TCP khi PLC từ chối bắt tay. 0 = lỗi khung tin
+        // thông thường, không phải PLC từ chối.
+        //
+        // Để ở đây thay vì bắt phía trên đọc chuỗi thông báo: phân loại lỗi bằng
+        // cách so chuỗi là thứ vỡ im lặng ngay lần đầu ai đó sửa câu thông báo.
+        public uint HandshakeError { get; private set; }
+
+        // PLC hết khe kết nối. Đo thực tế trên CP-series tại bãi này: mỗi PLC
+        // cấp đúng BA khe, node 251/252/253. Khe thứ tư bị từ chối tức thì.
+        //
+        // Đây là lỗi TÀI NGUYÊN, không phải lỗi mạng — thử lại dày không giúp gì
+        // mà còn đốt cổng tạm: mỗi lần thử để lại một socket TIME_WAIT sống vài
+        // phút. Đo được 278 socket như vậy khi 60 block cùng hỏng.
+        public const uint AllConnectionsInUse = 0x00000020;
+
+        public bool HetKheKetNoi { get { return HandshakeError == AllConnectionsInUse; } }
+
         public FinsFramingException(string message) : base(message) { }
+
+        public FinsFramingException(string message, uint handshakeError) : base(message)
+        {
+            HandshakeError = handshakeError;
+        }
     }
 }

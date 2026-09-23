@@ -96,7 +96,8 @@ namespace TotalParking.Services.Plc
             {
                 Close();
                 throw new FinsFramingException(
-                    string.Format("PLC tu choi bat tay FINS/TCP, ma loi 0x{0:X8}.", errorCode));
+                    string.Format("PLC tu choi bat tay FINS/TCP, ma loi 0x{0:X8}.", errorCode),
+                    errorCode);
             }
 
             byte assignedClient = res[19];
