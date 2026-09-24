@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using MySqlConnector;
 using Newtonsoft.Json;
 using TotalParking.Models;
+using TotalParking.Services;
 using TotalParking.Services.Plc;
 
 namespace TotalParking.Controllers
@@ -54,6 +57,7 @@ namespace TotalParking.Controllers
                     // Day la khoang cach giua thuc te bai va thu SCADA dang quan
                     // ly — thu truoc day chi phat hien duoc bang cach quet mang tay.
                     chua_dua_vao_van_hanh = ChuaVanHanh(),
+                    cong_van_hanh = CongVanHanh(),
                     // So PLC bi don D1000 con sot luc khoi dong. -1 = dang chay.
                     startup_cleared = PlcHost.LastStartupCleared,
                     now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -183,6 +187,64 @@ namespace TotalParking.Controllers
             {
                 return Json2(502, new { error = ex.Message });
             }
+        }
+
+        // Trang thai dich vu tu ha/bat cong van hanh, va danh sach khoi dang
+        // lech giua hai tang.
+        //
+        // Khong co cho nay thi viec tach vai chi tao them mot cot phai tu nho ma
+        // tra: mot khoi co PLC chet van duoc xep xe, va khong ai biet cho toi khi
+        // co su co. View v_plc_lech_tang tra loi dung mot cau hoi do.
+        private static object CongVanHanh()
+        {
+            var lech = new List<object>();
+            string loiDoc = null;
+            try
+            {
+                using (var conn = new MySqlConnection(Db.ConnectionString))
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText =
+                        "SELECT block_no, dang_van_hanh, plc_ket_noi, tinh_trang, " +
+                        "       so_lan_doi_hom_nay, tu_dong_ha_luc " +
+                        "FROM v_plc_lech_tang ORDER BY block_no";
+                    conn.Open();
+                    using (var r = cmd.ExecuteReader())
+                    {
+                        while (r.Read())
+                            lech.Add(new
+                            {
+                                block_no      = Convert.ToInt32(r[0]),
+                                dang_van_hanh = Convert.ToBoolean(r[1]),
+                                plc_ket_noi   = r[2] == DBNull.Value ? (bool?)null : Convert.ToBoolean(r[2]),
+                                tinh_trang    = Convert.ToString(r[3]),
+                                so_lan_doi_hom_nay = Convert.ToInt32(r[4]),
+                                tu_dong_ha_luc = r[5] == DBNull.Value
+                                    ? null : Convert.ToDateTime(r[5]).ToString("yyyy-MM-dd HH:mm:ss")
+                            });
+                    }
+                }
+            }
+            catch (Exception ex) { loiDoc = ex.Message; }
+
+            return new
+            {
+                bat_tinh_nang = CongVanHanhService.BatTinhNang,
+                dang_chay     = CongVanHanhService.IsRunning,
+                ha_sau_phut   = CongVanHanhService.HaSauPhut,
+                bat_sau_phut  = CongVanHanhService.BatSauPhut,
+                tran_doi_co_moi_ngay = CongVanHanhService.TranDoiCo,
+                so_lan_ha     = CongVanHanhService.SoLanHa,
+                so_lan_bat    = CongVanHanhService.SoLanBat,
+                so_lan_loi    = CongVanHanhService.SoLanLoi,
+                loi_cuoi      = CongVanHanhService.LoiCuoi,
+                chay_cuoi_cach_day_giay = CongVanHanhService.ChayCuoiUtc.HasValue
+                    ? (int)(DateTime.UtcNow - CongVanHanhService.ChayCuoiUtc.Value).TotalSeconds
+                    : (int?)null,
+                loi_doc_view = loiDoc,
+                so_khoi_lech = lech.Count,
+                khoi_lech    = lech.ToArray()
+            };
         }
 
         // Bao cao khoang cach: PLC nao dang song ma SCADA khong doc.

@@ -75,6 +75,18 @@ namespace TotalParking.Services.Plc
                     {
                         host._manager.StartLoop();
 
+                        // Bản chiếu trạng thái kết nối xuống CSDL, chạy trên
+                        // luồng RIÊNG. Không nhét vào vòng poll: một lỗi CSDL ném
+                        // ra từ trong LoopAsync sẽ giết vòng poll vĩnh viễn mà
+                        // IsRunning vẫn báo true — cả 112 PLC ngừng đọc trong khi
+                        // giao diện nói "đang chạy".
+                        PlcTrangThaiWriter.Start(host._manager);
+
+                        // Tu ha/bat cong van hanh. Cong tac tong nam trong
+                        // Web.config va mac dinh TAT: bat nham mot tinh nang tu
+                        // doi suc chua thi te hon nhieu so voi quen bat no.
+                        CongVanHanhService.Start();
+
                         // Don cau tra loi con sot o D1000 tu lan chay truoc.
                         //
                         // Chay NEN, khong chan khoi dong: quet 112 PLC co the mat
@@ -110,6 +122,8 @@ namespace TotalParking.Services.Plc
             lock (Sync)
             {
                 PlcReachabilityScanner.Stop();
+                PlcTrangThaiWriter.Stop();
+                CongVanHanhService.Stop();
                 if (_manager != null)
                 {
                     _manager.Dispose();

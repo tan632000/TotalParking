@@ -1,0 +1,52 @@
+{
+ "thoi_diem": "2026-09-24T12:54:47.164Z",
+ "block_tat_truoc": [],
+ "khoi_thu": {
+  "A": {
+   "block_no": "2",
+   "port": "9600",
+   "slot_count": 5,
+   "zone_id": "4"
+  },
+  "B": {
+   "block_no": "3",
+   "port": "9600",
+   "slot_count": 5,
+   "zone_id": "4"
+  },
+  "C": {
+   "block_no": "4",
+   "port": "9600",
+   "slot_count": 5,
+   "zone_id": "4"
+  }
+ },
+ "zone_total_mech_truoc": 122,
+ "sau_khi_cho_ha": {
+  "A": [
+   "0",
+   "co"
+  ],
+  "B": [
+   "1",
+   "trong"
+  ],
+  "C": [
+   "0",
+   "trong"
+  ]
+ },
+ "suc_chua": {
+  "zoneTruoc": 122,
+  "zoneSau": 117,
+  "tongConBat": 117,
+  "aConTinh": 0
+ },
+ "sau_khi_cho_bat": {
+  "A": [
+   "1",
+   "trong"
+  ]
+ },
+ "block_tat_sau": []
+}

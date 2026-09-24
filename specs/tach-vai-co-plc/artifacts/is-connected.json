@@ -1,0 +1,34 @@
+{
+ "thoi_diem": "2026-09-24T13:05:33.264Z",
+ "moc_quan_sat": {
+  "tong": 112,
+  "coTrangThaiKhongMoc": 0,
+  "dangBatMaKhongMoc": 0,
+  "tatMaVanCoTrangThai": 0
+ },
+ "cua_so_khong_doi": {
+  "giay": 30,
+  "doiTrangThai": 0,
+  "doiMocMaKhongDoiTrangThai": 0
+ },
+ "ep_chuyen_trang_thai": {
+  "block_no": "2",
+  "plc_id": "136",
+  "port_goc": "9600",
+  "moc_truoc": "2026-09-24 20:00:35.032",
+  "sau_khi_rot": {
+   "is_connected": "0",
+   "moc": "2026-09-24 20:06:16.384"
+  },
+  "sau_khi_noi_lai": {
+   "is_connected": "1",
+   "moc": "2026-09-24 20:06:46.501"
+  }
+ },
+ "mat_cot": {
+  "ok_truoc": 105,
+  "ok_sau": 105,
+  "poll_running": true,
+  "co_log_loi": true
+ }
+}

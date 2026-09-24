@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using MySqlConnector;
 using TotalParking.Models;
 
@@ -9,10 +10,21 @@ namespace TotalParking.Services
     // Đọc cấu hình PLC. Bảng này đổi rất hiếm nên chỉ nạp lúc khởi động và khi
     // có thao tác cấu hình — không truy vấn mỗi vòng poll.
     //
-    // Trạng thái kết nối (online, lần bắt tay cuối) KHÔNG nằm ở đây: 112 PLC
-    // poll 500ms sẽ thành hàng chục UPDATE mỗi giây vào một bảng cấu hình, và
-    // mọi truy vấn đọc cấu hình phải chờ khoá hàng. Trạng thái sống giữ trong
-    // bộ nhớ ở PlcConnectionManager.
+    // ===================== TRẠNG THÁI KẾT NỐI CŨNG NẰM Ở ĐÂY =====================
+    // Trước đây chú thích này nói trạng thái kết nối KHÔNG được để trong bảng
+    // cấu hình, vì 112 PLC poll 500ms sẽ thành hàng chục UPDATE mỗi giây. Lo ngại
+    // đó vẫn đúng, nhưng ngày 24/09 người dùng chọn đưa nó vào bảng để truy vấn
+    // được bằng SQL cùng chỗ với cấu hình.
+    //
+    // Nên cách ghi phải gánh lấy lo ngại đó, và nó gánh bằng ba lớp:
+    //   1. PlcTrangThaiWriter chiếu mỗi 5 giây, không phải mỗi nhịp poll;
+    //   2. chỉ ghi khi trạng thái đổi, và phải ổn định vài lượt mới được ghi;
+    //   3. last_probe_at cập nhật cả bảng bằng MỘT câu, để cột không nói dối khi
+    //      site chết — đó là thứ duy nhất phân biệt "online ổn định ba ngày" với
+    //      "site chết năm phút trước".
+    //
+    // Nguồn sự thật lúc chạy vẫn là PlcConnection.IsOnline trong bộ nhớ; ba cột
+    // này là bản chiếu, hệ thống không đọc ngược lại chúng để ra quyết định.
     public class PlcDeviceRepository
     {
         private const string SelectSql =
@@ -35,8 +47,20 @@ namespace TotalParking.Services
             using (var conn = new MySqlConnection(Db.ConnectionString))
             using (var cmd = conn.CreateCommand())
             {
+                // CHỈ lọc theo cờ của thiết bị, KHÔNG lọc theo cờ của khối.
+                //
+                // Hai cờ mang hai nghĩa khác hẳn nhau:
+                //   plc_device.is_active  "có kết nối và đọc thiết bị này không"
+                //   block.is_active       "khối này có nhận xe và tính vào sức chứa không"
+                //
+                // Trộn chúng ở đây làm khối bị tắt vận hành cũng biến mất khỏi
+                // vòng poll, nên không ai còn biết PLC của nó sống hay chết —
+                // đúng lúc cần biết nhất. Ngược lại, tách ra thì một khối đang
+                // sửa chữa vẫn được giám sát, và vẫn trả xe ra được: đường lấy
+                // xe (CarLocatorService) không đọc block.is_active, chỉ
+                // BlockAllocator đọc để thôi xếp xe MỚI vào đó.
                 cmd.CommandText = SelectSql +
-                    (activeOnly ? "WHERE p.is_active = 1 AND b.is_active = 1 " : "") +
+                    (activeOnly ? "WHERE p.is_active = 1 " : "") +
                     "ORDER BY b.block_no";
 
                 conn.Open();
@@ -88,6 +112,66 @@ namespace TotalParking.Services
         {
             object v = r[column];
             return v == DBNull.Value ? null : Convert.ToString(v);
+        }
+
+        // ===================== GHI BẢN CHIẾU TRẠNG THÁI KẾT NỐI =====================
+        // Ba phương thức dưới đây chỉ được gọi từ PlcTrangThaiWriter, chạy trên
+        // luồng riêng. Chúng KHÔNG được gọi từ vòng poll: một MySqlException ném
+        // ra trong LoopAsync sẽ giết vòng poll vĩnh viễn mà IsRunning vẫn báo true.
+
+        // Cập nhật mốc quan sát cho toàn bộ thiết bị đang trong vòng poll, bằng
+        // MỘT câu lệnh. Chạy mỗi lượt chiếu kể cả khi không có gì đổi — đó chính
+        // là điều làm nó hữu ích: cột này cũ nghĩa là số liệu đang đóng băng.
+        public void GhiMocQuanSat(ICollection<int> plcIds)
+        {
+            if (plcIds == null || plcIds.Count == 0) return;
+
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                // plcIds đến từ danh sách kết nối trong bộ nhớ, không phải từ đầu
+                // vào người dùng, nhưng vẫn nối bằng số nguyên đã ép kiểu để
+                // không mở đường chèn SQL nếu sau này nguồn đổi.
+                var ids = string.Join(",", plcIds.Select(x => x.ToString()));
+                cmd.CommandText = "UPDATE plc_device SET last_probe_at = NOW(3) " +
+                                  "WHERE plc_id IN (" + ids + ")";
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void GhiTrangThaiKetNoi(int plcId, bool ketNoiDuoc)
+        {
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText =
+                    "UPDATE plc_device " +
+                    "SET is_connected = @noi, connected_changed_at = NOW(3), last_probe_at = NOW(3) " +
+                    "WHERE plc_id = @id";
+                cmd.Parameters.AddWithValue("@noi", ketNoiDuoc ? 1 : 0);
+                cmd.Parameters.AddWithValue("@id", plcId);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        // Thiết bị rời vòng poll thì không còn quan sát được. NULL nghĩa là
+        // "không biết", khác hẳn 0 nghĩa là "biết chắc đang chết".
+        public void XoaTrangThaiKetNoi(ICollection<int> plcIds)
+        {
+            if (plcIds == null || plcIds.Count == 0) return;
+
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                var ids = string.Join(",", plcIds.Select(x => x.ToString()));
+                cmd.CommandText = "UPDATE plc_device " +
+                                  "SET is_connected = NULL, connected_changed_at = NOW(3) " +
+                                  "WHERE plc_id IN (" + ids + ")";
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

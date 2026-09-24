@@ -181,6 +181,7 @@
     <Compile Include="Services\LedPanelRepository.cs" />
     <Compile Include="Services\Led\LedFrame.cs" />
     <Compile Include="Services\Led\LedSocket.cs" />
+    <Compile Include="Services\Led\StandardFreeSource.cs" />
     <Compile Include="Services\Led\LedFrameBuilder.cs" />
     <Compile Include="Models\VehicleLocation.cs" />
     <Compile Include="Services\VehicleFinderRepository.cs" />
@@ -195,6 +196,8 @@
     <Compile Include="Services\Plc\SlotOccupancyReader.cs" />
     <Compile Include="Services\Plc\SlotScanHost.cs" />
     <Compile Include="Services\Plc\PlcAuditLog.cs" />
+    <Compile Include="Services\Plc\CongVanHanhService.cs" />
+    <Compile Include="Services\Plc\PlcTrangThaiWriter.cs" />
     <Compile Include="Services\Plc\PlcRegisterLog.cs" />
     <Compile Include="Services\Plc\PlcReachabilityScanner.cs" />
     <Compile Include="Controllers\SlotStatusController.cs" />
@@ -206,8 +209,8 @@
     <Compile Include="Services\XlsxReader.cs" />
     <Compile Include="Services\XlsxWriter.cs" />
     <Compile Include="Services\BlockMapRepository.cs" />
-    <Compile Include="Services\Pgs\PgsFrame.cs" />
-    <Compile Include="Services\Pgs\PgsConnection.cs" />
+    <Compile Include="Services\Pgs\CcuFrame.cs" />
+    <Compile Include="Services\Pgs\CcuConnection.cs" />
     <Compile Include="Services\Pgs\PgsHost.cs" />
     <Compile Include="Services\Plc\PlcTypes.cs" />
     <Compile Include="Services\Plc\OmronFinsClient.cs" />
@@ -340,6 +343,8 @@
     <None Include="Database\34_block_map_xy.sql" />
     <None Include="Database\35_test_cards_70_71.sql" />
     <None Include="Database\36_clear_stale_slot_cache.sql" />
+    <None Include="Database\42_is_connected.sql" />
+    <None Include="Database\43_tu_ha_bat.sql" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
