@@ -40,9 +40,14 @@ namespace TotalParking.Services.Led
 
             // X9.X10 — Standard
             //
-            // KHÔNG áp độ phủ cho dòng này. Chỗ đỗ thường do cảm biến PGS báo, mà
-            // phần đó chưa giải được gói tin — con số 80 là tĩnh, độ phủ luôn 0.
-            // Bật vàng vĩnh viễn thì cảnh báo mất hết ý nghĩa.
+            // KHÔNG áp độ phủ cho dòng này. Độ phủ đo bằng số ô cơ khí vừa được
+            // PLC đọc lại, mà chỗ đỗ thường không đi qua PLC — nó đến từ cảm
+            // biến PGS qua CCU (xem StandardFreeSource). Áp một thước đo của
+            // tầng khác vào đây thì dòng này bật vàng vĩnh viễn và cảnh báo mất
+            // hết ý nghĩa.
+            //
+            // Con số này chỉ thật ở cổng TOTAL. Cổng ZONES vẫn lấy từ CSDL vì
+            // chưa biết cảm biến nào thuộc zone nào.
             hub.Position3.Value = capacity.FreeStandard;
             hub.Position3.Color = ColorFor(capacity.FreeStandard, capacity.TotalStandard, true);
 

@@ -104,7 +104,7 @@ namespace TotalParking.Services
                 {
                     if (!r.Read()) return new LedCapacity();
 
-                    return new LedCapacity
+                    var cap = new LedCapacity
                     {
                         FreeL5m        = Num(r, "free_l5m"),
                         FreeL48m       = Num(r, "free_l48m"),
@@ -116,6 +116,23 @@ namespace TotalParking.Services
                         SlotsTotal     = Num(r, "slots_total"),
                         SlotsFresh     = Num(r, "slots_fresh")
                     };
+
+                    // Chỗ đỗ thường: cảm biến biết rõ hơn CSDL.
+                    //
+                    // free_standard trong view tính bằng "tổng ô - số phiên gửi
+                    // xe", mà khu đỗ thường không phát thẻ nên không có phiên
+                    // nào. Con số đó đứng yên ở tổng sức chứa trong khi cảm biến
+                    // đếm được xe đang đỗ thật.
+                    //
+                    // Chỉ ghi đè khi cảm biến CÓ dữ liệu; chưa đọc được gói nào
+                    // thì giữ số cũ chứ không đẩy 0 — 0 nghĩa là "hết chỗ".
+                    //
+                    // TotalStandard giữ nguyên theo CSDL: đó là sức chứa thật của
+                    // bãi, không phải số cảm biến đã lắp.
+                    int? theoCamBien = Led.StandardFreeSource.SoOTrong();
+                    if (theoCamBien.HasValue) cap.FreeStandard = theoCamBien.Value;
+
+                    return cap;
                 }
             }
         }
