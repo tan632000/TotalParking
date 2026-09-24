@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Threading;
 using System.Web.Hosting;
 
@@ -11,23 +9,33 @@ namespace TotalParking.Services.Pgs
     // với PlcHost và LedHost.
     //
     // ===================== KHÁC HAI TẦNG KIA Ở MỘT ĐIỂM =====================
-    // Tầng này CHỈ ĐỌC. Không gửi byte nào xuống ZCU, không ghi thanh ghi, không
-    // điều khiển gì. Nên không cần công tắc "cho phép ghi tay" như plc:allowManualWrite.
+    // Tầng này gần như chỉ đọc: byte duy nhất gửi xuống là lệnh giữ nhịp
+    // $CCU,01,LIVE*42#, không ghi cấu hình, không điều khiển gì. Nên không cần
+    // công tắc "cho phép ghi tay" như plc:allowManualWrite.
+    //
+    // ===================== VÌ SAO MỘT LUỒNG RIÊNG CHO CCU =====================
+    // Bản cũ chạy một luồng tuần tự cho cả 5 ZCU, mỗi lần đọc chặn tới TimeoutMs.
+    // Với ZCU thì được, vì chúng tự đẩy khung và không đòi hỏi gì từ mình.
+    //
+    // CCU thì có hạn chót: quá 30 giây không nhận được lệnh nào là nó ngừng đẩy
+    // dữ liệu và đóng socket (tài liệu mục 2.2.1). Nếu nhét CCU vào vòng chung,
+    // vài thiết bị im tiếng mỗi con chặn 4 giây là đủ đẩy khe giữa hai lệnh LIVE
+    // vượt 30 giây — và hỏng theo kiểu tệ nhất: số đứng im, không lỗi nào trong log.
+    //
+    // Nên đồng hồ LIVE phải độc lập với mọi thiết bị khác.
     //
     // ===================== CHƯA NỐI VÀO BẢNG LED =====================
-    // Đếm được bao nhiêu cảm biến đang khác trạng thái nền, nhưng CHƯA biết bit
-    // nào ứng với ô đỗ nào, cũng chưa biết bit bật nghĩa là có xe hay trống.
-    // Thiếu hai thứ đó thì không chia được số theo zone, mà bảng chỉ hướng cần
-    // số theo zone.
+    // Đã biết chính xác ô nào có xe, nhưng CHƯA biết cảm biến nào thuộc zone nào
+    // — bảng ánh xạ đó là thứ cấu hình riêng cho từng ZCU (tài liệu mục 4.4).
+    // Bảng chỉ hướng cần số theo zone, nên chưa nối được.
     //
-    // Nên giai đoạn này chỉ đọc, lọc nhiễu và phơi ra ở /PgsStatus. Nối vào
-    // v_led_capacity.used_standard sau khi có bảng ánh xạ cảm biến -> ô đỗ.
+    // Giai đoạn này chỉ đọc và phơi ra ở /PgsStatus để đối chiếu thực địa.
     public class PgsHost : IRegisteredObject
     {
         private static readonly object Sync = new object();
         private static PgsHost _instance;
 
-        private readonly List<PgsConnection> _conns = new List<PgsConnection>();
+        private CcuConnection _ccu;
         private Thread _loop;
         private volatile bool _stop;
 
@@ -36,37 +44,23 @@ namespace TotalParking.Services.Pgs
             get { return ReadBool("pgs:enabled", false); }
         }
 
-        // Thời gian trạng thái phải giữ nguyên trước khi được chấp nhận.
-        // Mặc định 10 giây: ZCU 2 có cảm biến hỏng sinh 4.121 lần đổi một ngày,
-        // có lúc hai lần trong một giây. Ngưỡng thấp hơn thì nhiễu vẫn lọt.
-        public static int DebounceMs
-        {
-            get { return ReadInt("pgs:debounceMs", 10000); }
-        }
+        public static int TimeoutMs      { get { return ReadInt("pgs:timeoutMs", 4000); } }
+        public static int LiveIntervalMs { get { return ReadInt("pgs:liveIntervalMs", 5000); } }
+        public static int ZcuQuaHanMs    { get { return ReadInt("pgs:zcuQuaHanMs", 10000); } }
+        public static int CcuPort        { get { return ReadInt("pgs:ccuPort", 2000); } }
 
-        public static int TimeoutMs { get { return ReadInt("pgs:timeoutMs", 4000); } }
-        public static int Port      { get { return ReadInt("pgs:port", 2000); } }
-
-        public static string[] Hosts
+        public static string CcuHost
         {
             get
             {
-                string v = ConfigurationManager.AppSettings["pgs:hosts"];
-                if (string.IsNullOrWhiteSpace(v)) return new string[0];
-                return v.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => x.Trim())
-                        .Where(x => x.Length > 0)
-                        .ToArray();
+                string v = ConfigurationManager.AppSettings["pgs:ccuHost"];
+                return string.IsNullOrWhiteSpace(v) ? null : v.Trim();
             }
         }
 
-        public static IEnumerable<PgsConnection> Connections
+        public static CcuConnection Ccu
         {
-            get
-            {
-                var i = _instance;
-                return i == null ? new PgsConnection[0] : i._conns.ToArray();
-            }
+            get { var i = _instance; return i == null ? null : i._ccu; }
         }
 
         public static bool IsRunning
@@ -85,37 +79,25 @@ namespace TotalParking.Services.Pgs
                 _instance = host;
 
                 if (!Enabled) return;
+                if (CcuHost == null) return;
 
-                foreach (var h in Hosts)
-                    host._conns.Add(new PgsConnection(h, Port, DebounceMs));
-
-                if (host._conns.Count == 0) return;
-
+                host._ccu = new CcuConnection(CcuHost, CcuPort, LiveIntervalMs, ZcuQuaHanMs);
                 host._loop = new Thread(host.Run) { IsBackground = true, Name = "PgsHost" };
                 host._loop.Start();
             }
         }
 
-        // Một luồng cho tất cả ZCU, không phải một luồng mỗi con.
-        //
-        // Số thiết bị nhỏ (5) và mỗi lần đọc chặn tối đa TimeoutMs, nên vòng tuần
-        // tự vẫn theo kịp: ZCU đẩy 2-3 gói mỗi giây, mà mỗi gói là trạng thái đầy
-        // đủ nên lỡ vài gói không mất gì.
         private void Run()
         {
             while (!_stop)
             {
-                foreach (var c in _conns)
+                try { _ccu.Poll(TimeoutMs); }
+                catch (Exception)
                 {
-                    if (_stop) break;
-                    try { c.Poll(TimeoutMs); }
-                    catch (Exception)
-                    {
-                        // PgsConnection đã tự nuốt lỗi của nó. Tới đây chỉ còn lỗi
-                        // của chính vòng lặp — không được để nó kết thúc vòng.
-                    }
+                    // CcuConnection đã tự nuốt lỗi của nó. Tới đây chỉ còn lỗi của
+                    // chính vòng lặp — không được để nó kết thúc vòng.
                 }
-                if (!_stop) Thread.Sleep(50);
+                if (!_stop) Thread.Sleep(20);
             }
         }
 
@@ -128,10 +110,7 @@ namespace TotalParking.Services.Pgs
             }
             catch (Exception) { }
 
-            foreach (var c in _conns)
-            {
-                try { c.Dispose(); } catch (Exception) { }
-            }
+            try { if (_ccu != null) _ccu.Dispose(); } catch (Exception) { }
 
             HostingEnvironment.UnregisterObject(this);
             lock (Sync) { if (_instance == this) _instance = null; }

@@ -1,0 +1,178 @@
+{
+ "led_capacity": {
+  "free_l5m": 751,
+  "total_l5m": 755,
+  "free_l48m": 751,
+  "total_l48m": 755,
+  "free_standard": 48,
+  "total_standard": 80,
+  "free_total": 1550,
+  "has_data": true,
+  "used_unassigned": 0,
+  "slots_total": 755,
+  "slots_fresh": 537,
+  "coverage_pct": 71
+ },
+ "led_zones": [
+  {
+   "zone_id": 1,
+   "free_l5m": 126,
+   "total_l5m": 126,
+   "slots_fresh": 105,
+   "slots_total": 126,
+   "coverage_pct": 83
+  },
+  {
+   "zone_id": 2,
+   "free_l5m": 210,
+   "total_l5m": 211,
+   "slots_fresh": 178,
+   "slots_total": 211,
+   "coverage_pct": 84
+  },
+  {
+   "zone_id": 3,
+   "free_l5m": 100,
+   "total_l5m": 102,
+   "slots_fresh": 57,
+   "slots_total": 102,
+   "coverage_pct": 56
+  },
+  {
+   "zone_id": 4,
+   "free_l5m": 152,
+   "total_l5m": 152,
+   "slots_fresh": 120,
+   "slots_total": 152,
+   "coverage_pct": 79
+  },
+  {
+   "zone_id": 5,
+   "free_l5m": 109,
+   "total_l5m": 109,
+   "slots_fresh": 48,
+   "slots_total": 109,
+   "coverage_pct": 44
+  },
+  {
+   "zone_id": 6,
+   "free_l5m": 54,
+   "total_l5m": 55,
+   "slots_fresh": 29,
+   "slots_total": 55,
+   "coverage_pct": 53
+  }
+ ],
+ "pgs": {
+  "now": "15:57:51",
+  "enabled": true,
+  "running": true,
+  "ccu_host": "192.169.1.75:2000",
+  "ccu_online": true,
+  "ccu_loi": null,
+  "ccu_tra_loi_cach_day_giay": 0,
+  "nguong_qua_han_giay": 10,
+  "goi_du_lieu": 662,
+  "khung_sai_crc": 0,
+  "khung_nhip_song": 64,
+  "khung_bo_qua_khac": 0,
+  "dang_ket_noi": {
+   "so_zcu": 5,
+   "zcu_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "khong_co_xe": 48,
+   "co_xe": 27,
+   "loi": 4,
+   "khong_lap": 241,
+   "khong_hieu": 0,
+   "da_lap": 79
+  },
+  "dong_bang": {
+   "so_zcu": 0,
+   "zcu_ids": [],
+   "khong_co_xe": 0,
+   "co_xe": 0,
+   "loi": 0,
+   "khong_lap": 0,
+   "khong_hieu": 0,
+   "da_lap": 0
+  },
+  "zcus": [
+   {
+    "zcu_id": 0,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 1,
+    "tuoi_ket_noi_s": 1,
+    "so_goi": 132,
+    "khong_co_xe": 8,
+    "co_xe": 9,
+    "loi": 4,
+    "khong_lap": 43,
+    "da_lap": 21,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 1,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 0,
+    "tuoi_ket_noi_s": 0,
+    "so_goi": 133,
+    "khong_co_xe": 10,
+    "co_xe": 7,
+    "loi": 0,
+    "khong_lap": 47,
+    "da_lap": 17,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 2,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 0,
+    "tuoi_ket_noi_s": 0,
+    "so_goi": 133,
+    "khong_co_xe": 13,
+    "co_xe": 5,
+    "loi": 0,
+    "khong_lap": 46,
+    "da_lap": 18,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 3,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 2,
+    "tuoi_ket_noi_s": 2,
+    "so_goi": 132,
+    "khong_co_xe": 11,
+    "co_xe": 5,
+    "loi": 0,
+    "khong_lap": 48,
+    "da_lap": 16,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 4,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 1,
+    "tuoi_ket_noi_s": 1,
+    "so_goi": 132,
+    "khong_co_xe": 6,
+    "co_xe": 1,
+    "loi": 0,
+    "khong_lap": 57,
+    "da_lap": 7,
+    "khong_hieu": 0
+   }
+  ]
+ }
+}

@@ -1,0 +1,227 @@
+{
+ "truoc": {
+  "now": "15:11:06",
+  "enabled": true,
+  "running": true,
+  "ccu_host": "192.169.1.75:2000",
+  "ccu_online": true,
+  "ccu_loi": null,
+  "ccu_tra_loi_cach_day_giay": 0,
+  "nguong_qua_han_giay": 10,
+  "goi_du_lieu": 127,
+  "khung_sai_crc": 0,
+  "khung_nhip_song": 13,
+  "khung_bo_qua_khac": 0,
+  "dang_ket_noi": {
+   "so_zcu": 5,
+   "zcu_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "khong_co_xe": 44,
+   "co_xe": 31,
+   "loi": 4,
+   "khong_lap": 241,
+   "khong_hieu": 0,
+   "da_lap": 79
+  },
+  "dong_bang": {
+   "so_zcu": 0,
+   "zcu_ids": [],
+   "khong_co_xe": 0,
+   "co_xe": 0,
+   "loi": 0,
+   "khong_lap": 0,
+   "khong_hieu": 0,
+   "da_lap": 0
+  },
+  "zcus": [
+   {
+    "zcu_id": 0,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 1,
+    "tuoi_ket_noi_s": 1,
+    "so_goi": 25,
+    "khong_co_xe": 9,
+    "co_xe": 8,
+    "loi": 4,
+    "khong_lap": 43,
+    "da_lap": 21,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 1,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 1,
+    "tuoi_ket_noi_s": 1,
+    "so_goi": 25,
+    "khong_co_xe": 10,
+    "co_xe": 7,
+    "loi": 0,
+    "khong_lap": 47,
+    "da_lap": 17,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 2,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 0,
+    "tuoi_ket_noi_s": 0,
+    "so_goi": 26,
+    "khong_co_xe": 12,
+    "co_xe": 6,
+    "loi": 0,
+    "khong_lap": 46,
+    "da_lap": 18,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 3,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 0,
+    "tuoi_ket_noi_s": 0,
+    "so_goi": 26,
+    "khong_co_xe": 10,
+    "co_xe": 6,
+    "loi": 0,
+    "khong_lap": 48,
+    "da_lap": 16,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 4,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 2,
+    "tuoi_ket_noi_s": 2,
+    "so_goi": 25,
+    "khong_co_xe": 3,
+    "co_xe": 4,
+    "loi": 0,
+    "khong_lap": 57,
+    "da_lap": 7,
+    "khong_hieu": 0
+   }
+  ]
+ },
+ "sau": {
+  "now": "15:11:36",
+  "enabled": true,
+  "running": true,
+  "ccu_host": "192.169.1.75:2000",
+  "ccu_online": true,
+  "ccu_loi": null,
+  "ccu_tra_loi_cach_day_giay": 2,
+  "nguong_qua_han_giay": 1,
+  "goi_du_lieu": 57,
+  "khung_sai_crc": 0,
+  "khung_nhip_song": 6,
+  "khung_bo_qua_khac": 0,
+  "dang_ket_noi": {
+   "so_zcu": 4,
+   "zcu_ids": [
+    0,
+    1,
+    3,
+    4
+   ],
+   "khong_co_xe": 32,
+   "co_xe": 25,
+   "loi": 4,
+   "khong_lap": 195,
+   "khong_hieu": 0,
+   "da_lap": 61
+  },
+  "dong_bang": {
+   "so_zcu": 1,
+   "zcu_ids": [
+    2
+   ],
+   "khong_co_xe": 12,
+   "co_xe": 6,
+   "loi": 0,
+   "khong_lap": 46,
+   "khong_hieu": 0,
+   "da_lap": 18
+  },
+  "zcus": [
+   {
+    "zcu_id": 0,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 0,
+    "tuoi_ket_noi_s": 0,
+    "so_goi": 12,
+    "khong_co_xe": 9,
+    "co_xe": 8,
+    "loi": 4,
+    "khong_lap": 43,
+    "da_lap": 21,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 1,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 0,
+    "tuoi_ket_noi_s": 0,
+    "so_goi": 12,
+    "khong_co_xe": 10,
+    "co_xe": 7,
+    "loi": 0,
+    "khong_lap": 47,
+    "da_lap": 17,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 2,
+    "dang_ket_noi": true,
+    "qua_han": true,
+    "tuoi_goi_s": 2,
+    "tuoi_ket_noi_s": 2,
+    "so_goi": 11,
+    "khong_co_xe": 12,
+    "co_xe": 6,
+    "loi": 0,
+    "khong_lap": 46,
+    "da_lap": 18,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 3,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 1,
+    "tuoi_ket_noi_s": 1,
+    "so_goi": 11,
+    "khong_co_xe": 10,
+    "co_xe": 6,
+    "loi": 0,
+    "khong_lap": 48,
+    "da_lap": 16,
+    "khong_hieu": 0
+   },
+   {
+    "zcu_id": 4,
+    "dang_ket_noi": true,
+    "qua_han": false,
+    "tuoi_goi_s": 1,
+    "tuoi_ket_noi_s": 1,
+    "so_goi": 11,
+    "khong_co_xe": 3,
+    "co_xe": 4,
+    "loi": 0,
+    "khong_lap": 57,
+    "da_lap": 7,
+    "khong_hieu": 0
+   }
+  ]
+ }
+}

@@ -79,7 +79,7 @@ namespace TotalParking.Services
             result.Add(CameraGroup());
             result.Add(ProbeGroup("plc", "PLC khối đỗ", PlcEndpoints()));
             result.Add(ProbeGroup("led", "Bảng LED", LedEndpoints()));
-            result.Add(ProbeGroup("pgs", "Hệ thống PGS", PgsEndpoints()));
+            result.Add(PgsGroup());
 
             // Máy phát thẻ: không có bảng, không có IP, không có giao thức nào đã
             // biết. Bản cũ ghi cứng "Giữ thẻ (Hold)" — một trạng thái nghiệp vụ
@@ -171,24 +171,45 @@ namespace TotalParking.Services
             catch { return null; }
         }
 
-        // PGS chưa có bảng trong CSDL (ZCU/CCU đấu nối sau, giao thức cổng 2000
-        // vẫn chưa có tài liệu). Để trong Web.config thay vì ghi cứng trong C#,
-        // để đổi dải IP không phải build lại.
-        private IList<Endpoint> PgsEndpoints()
+        // PGS KHÔNG tự mở socket thăm dò, khác ba nhóm còn lại.
+        //
+        // Vì sao: vòng nền đã giữ sẵn một kết nối tới CCU và biết chính xác nó
+        // sống hay chết. Thăm dò thêm nghĩa là cứ mỗi lần hết hạn bộ nhớ đệm
+        // (15 giây) lại mở một socket nữa tới đúng địa chỉ đó — chính là cách
+        // 33 socket FinWait2 tích tụ ở .75 hồi tháng 9, vì CCU không hoàn tất
+        // bắt tay đóng khi bị nối rồi cắt ngay.
+        //
+        // Đọc lại từ vòng nền vừa chính xác hơn vừa không tốn socket nào.
+        private DeviceGroupStatus PgsGroup()
         {
-            string hosts = ConfigurationManager.AppSettings["pgs:hosts"];
-            string portText = ConfigurationManager.AppSettings["pgs:port"];
+            var g = new DeviceGroupStatus { Key = "pgs", Name = "Hệ thống PGS" };
+            var ccu = Services.Pgs.PgsHost.Ccu;
 
-            if (string.IsNullOrWhiteSpace(hosts)) return null;
+            if (ccu == null)
+            {
+                g.Monitored = false;
+                g.Detail    = "Chưa cấu hình CCU";
+                return g;
+            }
 
-            int port;
-            if (!int.TryParse(portText, out port) || port <= 0) port = 2000;
+            g.Monitored = true;
+            g.Total     = 1;
+            g.Online    = ccu.IsOnline ? 1 : 0;
 
-            return hosts.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(h => h.Trim())
-                        .Where(h => h.Length > 0)
-                        .Select(h => new Endpoint(h, port, h))
-                        .ToList();
+            var zcus = ccu.Snapshot();
+            int song = zcus.Count(z => z.DangKetNoi && z.TuoiGoiGiay <= ccu.ZcuQuaHanGiay);
+
+            if (ccu.IsOnline)
+            {
+                g.Detail = "CCU " + ccu.Host + " · " + song + "/" + zcus.Count + " ZCU đang kết nối";
+            }
+            else
+            {
+                g.Detail = ccu.LastError ?? "CCU không phản hồi";
+                g.Offline.Add(ccu.Host);
+            }
+
+            return g;
         }
 
         // ------------------------------------------------------------- tham do TCP

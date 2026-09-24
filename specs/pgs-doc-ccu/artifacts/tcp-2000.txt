@@ -1,0 +1,19 @@
+--- lan 1 ---
+
+RemoteAddress       State
+-------------       -----
+192.169.1.75     FinWait2
+192.169.1.75  Established
+
+
+
+
+--- lan 2 (sau 20s) ---
+
+RemoteAddress       State
+-------------       -----
+192.169.1.75     FinWait2
+192.169.1.75  Established
+
+
+
