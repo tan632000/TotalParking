@@ -1,6 +1,6 @@
 {
- "thoi_diem": "2026-09-25T14:48:05.604Z",
- "dau": "TUH2SBFO",
+ "thoi_diem": "2026-09-25T15:00:49.485Z",
+ "dau": "TUH38OUL",
  "modal": {
   "cat_duoc": 4597,
   "so_o_nhap": 8,
@@ -16,13 +16,13 @@
   "so_o_do": 755
  },
  "the_thu": {
-  "idA": 641,
-  "maA": "CC09AF1B"
+  "idA": 644,
+  "maA": "CC155708"
  },
  "o_chon": {
   "loai": 3,
   "hang": 3,
-  "ma": "CC09AF1B",
+  "ma": "CC155708",
   "loaiThat": 3,
   "hangThat": 3
  },
@@ -33,10 +33,10 @@
    "1",
    "0"
   ],
-  "tren_bang": "CC09AF1B\tTUH2SBFO-A\t99Z-12345\tXe thu giao dien\tKhach Da Sua\tTHUONG\t—\tVANG\tTUH2SBFO\t25/09/2026\tbật\tSửa Ngừng dùng"
+  "tren_bang": "CC155708\tTUH38OUL-A\t99Z-12345\tXe thu giao dien\tKhach Da Sua\tTHUONG\t—\tVANG\tTUH38OUL\t25/09/2026\tbật\tSửa Ngừng dùng"
  },
  "xac_nhan": {
-  "noi_dung": "Ngừng dùng thẻ CC09AF1B (số thẻ TUH2SBFO-A, biển số 99Z-12345)?\n\nThẻ sẽ bị từ chối ở cổng cho tới khi được dùng lại.",
+  "noi_dung": "Ngừng dùng thẻ CC155708 (số thẻ TUH38OUL-A, biển số 99Z-12345)?\n\nThẻ sẽ bị từ chối ở cổng cho tới khi được dùng lại.",
   "is_active_sau_huy": "1"
  },
  "tu_choi": {

@@ -232,22 +232,22 @@ Với `SetActive` phải đọc dòng **trước** khi ghi — sau đó thì kh�
 Verification: PASS
 Command: `& "C:\Program Files\nodejs\node.exe" "specs\sua-xoa-the\verify-api-the.mjs"`
 Exit: 0
-Base: e2ef8ac07838eb6f22a7f4e95fa7ce5ef69a51b9
-Head: b21e85bac4946d594d61ce2dd62a0e1c978648ad
+Base: 8ff7cd30588c81b15f02485fb1bb55a74fcc27ae
+Head: 5051ac02b2e94ae7ceff468fa5311712b71218fc
 
 ```text
-  PASS  deploy_khop_source  | 33fe7e26a50e
-  PASS  list_co_card_id  | card_id=638 (mong 638), loai_khach 3/3, hang_tai 3/3
+  PASS  deploy_khop_source  | 939973b8292b
+  PASS  list_co_card_id  | card_id=642 (mong 642), loai_khach 3/3, hang_tai 3/3
   PASS  sua_luu_duoc  | HTTP 200; doc lai: 51H-99999 | Khach Thu A sua | 2 | 1 | 31/12/2027
   PASS  khong_the_nao_khac_bi_dung  | van tay toan bang (tru the thu) khong doi: 613 dong
-  PASS  ma_the_khong_doi_duoc  | ma the AAF4DC5B -> AAF4DC5B
+  PASS  ma_the_khong_doi_duoc  | ma the AA153A4D -> AA153A4D
   PASS  tat_va_bat_lai_duoc  | tat HTTP 200 -> is_active=0; bat HTTP 200 -> 1
   PASS  chan_tat_khi_trong_o_do  | HTTP 409, is_active=1; khoi 6 con 10 cho; xep xe trong cua so do: 0
   PASS  khong_o_do_nao_bien_mat  | so o trong plc_slot_state: 755 -> 755
   PASS  chan_tat_khi_co_phien  | HTTP 409, is_active=1, ly_do=CoPhienDangMo
   PASS  chan_tat_khi_vua_quet_24h  | vua quet: HTTP 409, is_active=1
   PASS  quet_cu_hon_24h_khong_chan  | quet 30h truoc: HTTP 200, is_active=0 (0 = tat duoc, dung)
-  PASS  loi_csdl_thanh_cau_doc_duoc  | trung=409 "So the TCH1Z2FB-B da thuoc ve mot the khac."; id la=409; qua dai=400
+  PASS  loi_csdl_thanh_cau_doc_duoc  | trung=409 "So the TCH38J5D-B da thuoc ve mot the khac."; id la=409; qua dai=400
   PASS  thieu_truong_khong_xoa_du_lieu  | HTTP 200; sau khi POST thieu 4 truong, doc lai: Xe can giu | 1800KG | TAI | 31/01/2028
   PASS  nhat_ky_ghi_du  | 12 dong mang ma the thu; co dong OK: true; co dong TU_CHOI: true; moi dong deu co ten nguoi: true
   PASS  khoi_phuc_nguyen_trang  | the 613->613, o do 755->755, van tay toan bang khop
@@ -255,6 +255,13 @@ Head: b21e85bac4946d594d61ce2dd62a0e1c978648ad
 15/15 PASS
 EXIT=0
 ```
+
+### Chạy lại sau khi sửa lỗi hiển thị ô chọn
+
+Sau khi packet đã commit, người dùng báo dropdown "Hạng tải" trong modal sửa
+không đọc được giá trị. Sửa nằm ở `Cards.cshtml` (task 02), nhưng vì lần
+`Rebuild` sinh DLL mới nên **cả hai** bộ kiểm chứng được chạy lại trên đúng bản
+deploy sau đó. Số liệu trong khối trên là của lần chạy lại này.
 
 ### Chứng minh ngược phép kiểm quan trọng nhất
 

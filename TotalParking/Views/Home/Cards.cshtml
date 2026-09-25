@@ -90,6 +90,18 @@
 </div>
 
 <!-- ===================== HOP THOAI NHAP EXCEL ===================== -->
+<style>
+    /* Mau NEN va CHU dat tuong minh, khong dua vao lop Tailwind.
+       scada.css la ban trich xuat: do duoc bg-slate-900 KHONG co trong file
+       (nen o chon ra trong suot), trong khi bg-slate-900/50 thi co. Va the
+       <option> khong co nen rieng thi popup cua Chrome tren Windows dung nen
+       trang he thong, con chu thi thua text-slate-200 sang mau — chu sang tren
+       nen trang, khong doc duoc gia tri nao. */
+    #editModal select,
+    #editModal input { background: #0f172a; color: #e2e8f0; }
+    #editModal select option { background: #0f172a; color: #e2e8f0; }
+</style>
+
 <!-- Modal sua thong tin the -->
 <div id="editModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4"
      style="background:rgba(2,6,23,.78); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);">

@@ -1,16 +1,16 @@
 {
- "thoi_diem": "2026-09-25T14:25:20.903Z",
- "dau": "TCH1Z2FB",
+ "thoi_diem": "2026-09-25T15:00:42.097Z",
+ "dau": "TCH38J5D",
  "buoc": [],
  "truoc": {
   "so_the": 613,
   "so_o_do": 755,
-  "nhat_ky": 16
+  "nhat_ky": 32
  },
  "the_thu": {
-  "idA": 638,
-  "idB": 639,
-  "maA": "AAF4DC5B"
+  "idA": 642,
+  "idB": 643,
+  "maA": "AA153A4D"
  },
  "list": {
   "co_card_id": true,
@@ -32,8 +32,8 @@
   "sau": "613:7cad4c58cea9e60f790755fb07ef8dc0"
  },
  "ma_the": {
-  "truoc": "AAF4DC5B",
-  "sau": "AAF4DC5B",
+  "truoc": "AA153A4D",
+  "sau": "AA153A4D",
   "van_tay_khop": true
  },
  "tat_bat": {
@@ -65,7 +65,7 @@
  "loi": {
   "trung": {
    "http": 409,
-   "error": "Số thẻ TCH1Z2FB-B đã thuộc về một thẻ khác."
+   "error": "Số thẻ TCH38J5D-B đã thuộc về một thẻ khác."
   },
   "id_la": {
    "http": 409,
@@ -86,8 +86,8 @@
   ]
  },
  "nhat_ky": {
-  "truoc": 16,
-  "sau": 28,
+  "truoc": 32,
+  "sau": 44,
   "dong_cua_the_thu": 12,
   "co_tu_choi": true,
   "co_ok": true

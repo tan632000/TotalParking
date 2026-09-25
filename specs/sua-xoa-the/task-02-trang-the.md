@@ -143,16 +143,16 @@ phân biệt được bằng mắt và nút đổi thành "Dùng lại".
 Verification: PASS
 Command: `& "C:\Program Files\nodejs\node.exe" "specs\sua-xoa-the\verify-trang-the.mjs"`
 Exit: 0
-Base: e2ef8ac07838eb6f22a7f4e95fa7ce5ef69a51b9
-Head: d1c251f5ecec49d5f689696896a238466de859cb
+Base: 8ff7cd30588c81b15f02485fb1bb55a74fcc27ae
+Head: 5051ac02b2e94ae7ceff468fa5311712b71218fc
 
 ```text
-  PASS  deploy_khop_source  | 13c99cbb2214
+  PASS  deploy_khop_source  | 0986a5c144d3
   PASS  khong_co_o_nhap_ma_the  | khoi modal 4597 ky tu, 8 o nhap, khong o nao cho ma the
   PASS  nhan_noi_dung_tat_khong_phai_xoa  | vung o thao tac 830 ky tu: co "Ngung dung"/"Dung lai"=true, co chu "Xoa"=false
-  PASS  o_chon_lay_tu_may_chu  | loai_khach 3/3, hang_tai 3/3, ma the trong modal="CC09AF1B"
+  PASS  o_chon_lay_tu_may_chu  | loai_khach 3/3, hang_tai 3/3, ma the trong modal="CC155708"
   PASS  sua_tu_giao_dien_ghi_duoc  | CSDL: bien so="99Z-12345", khach="Khach Da Sua", loai_khach_id=1, hang_tai_id=0; bang co hien bien so moi: true
-  PASS  xac_nhan_co_hien_ma_the  | hop thoai: "Ngung dung the CC09AF1B (so the TUH2SBFO-A, bien so 99Z-12345)?"
+  PASS  xac_nhan_co_hien_ma_the  | hop thoai: "Ngung dung the CC155708 (so the TUH38OUL-A, bien so 99Z-12345)?"
   PASS  huy_thi_khong_doi  | sau khi huy hop thoai, is_active=1 (1 = chua doi, dung)
   PASS  tu_choi_hien_ly_do  | bao: "The nay dang gan voi mot xe trong o do. Tat the thi tai xe quet o cong se bi tu "; is_active=1
   PASS  don_sach_du_lieu_thu  | the 613->613, o do 755->755
@@ -182,6 +182,27 @@ thay vì gọi hàm lưu.
 | Probe nhãn: khẳng định dương quét **cả file**, khẳng định âm quét cửa sổ theo offset cố định, kèm một biến chết | Cắt vùng ô thao tác bằng hai mốc có thật, chạy cả hai khẳng định trong đúng vùng đó |
 | AC-11 đòi "bảng hiện giá trị mới **và** CSDL khớp" nhưng probe chỉ đọc CSDL | Đọc cả hai, và đọc thêm `customer_type_id`/`weight_class_id` |
 
+### Sửa sau khi bàn giao: dropdown không đọc được giá trị
+
+Người dùng báo ô chọn "Hạng tải" trong modal sửa không nhìn ra giá trị. Đo bằng
+`getComputedStyle` cho thấy **hai** lỗi chồng nhau:
+
+```text
+truoc:  modal_select { color: rgb(226,232,240), bg: rgba(0,0,0,0) }
+        modal_option { color: rgb(226,232,240), bg: rgba(0,0,0,0) }
+sau:    modal_select { color: rgb(226,232,240), bg: rgb(15,23,42) }
+        modal_option { color: rgb(226,232,240), bg: rgb(15,23,42) }
+```
+
+1. Lớp `bg-slate-900` **không có** trong `scada.css` (bản Tailwind trích xuất)
+   nên nền ô chọn ra trong suốt — trong khi `bg-slate-900/50` mà bộ lọc sẵn có
+   đang dùng thì có.
+2. Thẻ `<option>` không có nền riêng, nên popup của Chrome trên Windows dùng nền
+   trắng hệ thống trong khi chữ thừa kế `text-slate-200` màu sáng.
+
+Sửa bằng một khối `<style>` đặt nền và màu chữ **tường minh** cho
+`#editModal select/input/option`, không phụ thuộc lớp Tailwind nào còn hay mất.
+
 ## Hạn chế còn lại
 
 1. **Chỉ đo trên một thẻ do script tự tạo.** 613 thẻ thật không bị đụng — đúng
@@ -197,5 +218,8 @@ thay vì gọi hàm lưu.
    trong modal cho đường sửa. Hai cách khác nhau, và cả hai đều là tên tự khai.
 5. **Bảng vẫn giới hạn 500 dòng hiển thị** (nợ có sẵn). Với 613 thẻ, một thẻ nằm
    ngoài 500 dòng đầu chỉ tìm được qua ô tìm kiếm.
-6. **Không có bộ lọc "chỉ xem thẻ đã tắt".** Thẻ tắt phân biệt được bằng nhãn
+6. **Hai ô lọc ở đầu trang (`filterLabel`, `filterWeight`) có cùng lỗi hiển
+   thị** và **chưa sửa** — đo được `loc_option` vẫn là nền trong suốt. Đó là nợ
+   có sẵn từ trước packet này; khối `<style>` mới chỉ phủ `#editModal`.
+7. **Không có bộ lọc "chỉ xem thẻ đã tắt".** Thẻ tắt phân biệt được bằng nhãn
    trạng thái và nút "Dùng lại", nhưng muốn tìm nhanh thì vẫn phải gõ tay.
