@@ -218,8 +218,8 @@ Sửa bằng một khối `<style>` đặt nền và màu chữ **tường minh*
    trong modal cho đường sửa. Hai cách khác nhau, và cả hai đều là tên tự khai.
 5. **Bảng vẫn giới hạn 500 dòng hiển thị** (nợ có sẵn). Với 613 thẻ, một thẻ nằm
    ngoài 500 dòng đầu chỉ tìm được qua ô tìm kiếm.
-6. **Hai ô lọc ở đầu trang (`filterLabel`, `filterWeight`) có cùng lỗi hiển
-   thị** và **chưa sửa** — đo được `loc_option` vẫn là nền trong suốt. Đó là nợ
-   có sẵn từ trước packet này; khối `<style>` mới chỉ phủ `#editModal`.
+6. ~~Hai ô lọc ở đầu trang chưa sửa~~ — **đã sửa** sau khi người dùng xác nhận
+   chúng cũng khó đọc. Đo lại: `filterLabel option` và `filterWeight option` đều
+   là `rgb(226,232,240)` trên `rgb(15,23,42)`.
 7. **Không có bộ lọc "chỉ xem thẻ đã tắt".** Thẻ tắt phân biệt được bằng nhãn
    trạng thái và nút "Dùng lại", nhưng muốn tìm nhanh thì vẫn phải gõ tay.
