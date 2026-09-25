@@ -67,6 +67,36 @@ namespace TotalParking.Controllers
             }
         }
 
+        // GET /Alarm/Summary
+        //
+        // ===================== KÍCH THƯỚC PHẢI CỐ ĐỊNH =====================
+        // Header nằm trong layout dùng chung của 22 trang. Nếu nó poll
+        // /Alarm/List thì mỗi chu kỳ kéo cả danh sách chỉ để lấy hai con số —
+        // đo được 7.950 byte cho 16 cảnh báo, và phần chưa xác nhận không có
+        // trần nên con số đó chỉ lớn lên đúng lúc hệ thống đang có sự cố.
+        //
+        // Vì vậy endpoint này KHÔNG được trả kèm mảng, kể cả "vài dòng gần
+        // nhất cho tiện". Thêm một mảng vào đây là xoá bỏ toàn bộ lý do nó tồn
+        // tại, và phép kiểm kich_thuoc_khong_tang_theo_so_canh_bao sẽ bắt.
+        public ActionResult Summary()
+        {
+            try
+            {
+                var t = _repo.TomTat();
+                return Json2(200, new
+                {
+                    now           = DateTime.Now.ToString("HH:mm:ss"),
+                    chua_xac_nhan = t.ChuaXacNhan,
+                    dang_mo       = t.DangMo,
+                    muc_cao_nhat  = t.MucCaoNhat
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(503, new { error = ex.Message });
+            }
+        }
+
         // POST /Alarm/Ack   body: id=123&nguoi=Nguyen Van A
         [HttpPost]
         public ActionResult Ack(long id, string nguoi)

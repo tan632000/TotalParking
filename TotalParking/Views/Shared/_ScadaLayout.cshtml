@@ -99,22 +99,19 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="inline-flex items-center gap-1 rounded border font-mono font-medium px-3 py-1 text-xs bg-red-950/60 text-red-400 border-red-700/50">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>Lỗi
+                            <span id="hdr-tinh-trang" class="inline-flex items-center gap-1 rounded border font-mono font-medium px-3 py-1 text-xs bg-slate-800/50 text-slate-400 border-slate-700/60">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg><span id="hdr-tinh-trang-chu">Đang đọc…</span>
                             </span>
-                            <div class="flex items-center gap-1.5 px-2 py-1 rounded border border-red-700/60 bg-red-950/60 animate-pulse">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell text-red-400"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg><span class="text-red-300 text-xs font-mono font-medium">4 Alarm</span>
+                            <div id="hdr-so-alarm" class="flex items-center gap-1.5 px-2 py-1 rounded border bg-slate-800/50 text-slate-400 border-slate-700/60">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg><span id="hdr-so-alarm-chu" class="text-xs font-mono font-medium text-slate-400">—</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="text-right hidden sm:block">
-                                <div class="text-slate-100 font-mono text-sm font-semibold">16:02:42</div>
-                                <div class="text-slate-500 text-[10px] font-mono">08/06/2026</div>
+                                <div id="hdr-gio" class="text-slate-100 font-mono text-sm font-semibold">--:--:--</div>
+                                <div id="hdr-ngay" class="text-slate-500 text-[10px] font-mono">--/--/----</div>
                             </div>
                             <div class="w-px h-6 bg-slate-700"></div>
-                            <div class="flex items-center gap-1.5 text-slate-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span class="text-xs font-mono hidden sm:inline">supervisor01</span>
-                            </div>
                             <button class="flex items-center gap-1.5 px-2 py-1 rounded border border-slate-600/60 hover:border-blue-500/60 text-slate-300 hover:text-blue-300 transition-colors text-xs font-mono">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>EN
                             </button>
@@ -333,6 +330,126 @@
             apply(on);
             try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) { }
         });
+    })();
+    </script>
+
+    <script>
+    // ===================== HEADER NOI SO THAT =====================
+    // Truoc day bon thu tren header deu VIET CUNG: so canh bao, chip tinh trang,
+    // dong ho, va ten nguoi dung. Chung hien y het nhau
+    // tren ca 22 trang dung layout nay, ke ca khi he thong hoan toan binh
+    // thuong — va chip do nhap nhay vinh vien day nguoi van hanh cach phot lo
+    // canh bao that.
+    //
+    // KHOI NAY PHAI TACH ROI khoi khoi <script> goi lucide.createIcons() o
+    // tren. lucide nap tu CDN khong ghim; o mang OT co lap no nem
+    // ReferenceError, va neu viet chung khoi thi loi do nuot luon phan con lai
+    // — header se dung im vinh vien trong khi chip cu da bi xoa.
+    (function () {
+        'use strict';
+
+        var API = "@Url.Action("Summary", "Alarm")";
+        var NHIP_MS = 15000;
+        var GACH = "\u2014";
+
+        var oTinhTrang    = document.getElementById('hdr-tinh-trang');
+        var oTinhTrangChu = document.getElementById('hdr-tinh-trang-chu');
+        var oSo           = document.getElementById('hdr-so-alarm');
+        var oSoChu        = document.getElementById('hdr-so-alarm-chu');
+        var oGio          = document.getElementById('hdr-gio');
+        var oNgay         = document.getElementById('hdr-ngay');
+
+        // Thoat som neu header doi hinh. Mot ngoai le o day hong ca 22 trang,
+        // ke ca nhung trang khong lien quan gi toi canh bao.
+        if (!oTinhTrang || !oSo) return;
+
+        var LOP_CHIP = "inline-flex items-center gap-1 rounded border font-mono font-medium px-3 py-1 text-xs ";
+        var LOP_SO   = "flex items-center gap-1.5 px-2 py-1 rounded border ";
+
+        var TRANG_THAI = {
+            sach: { vien: "bg-green-950/60 text-green-300 border-green-700/50", chu: "B\u00ecnh th\u01b0\u1eddng", so: "text-green-300" },
+            nhe:  { vien: "bg-amber-950 text-amber-400 border-amber-800",       chu: "C\u1ea3nh b\u00e1o",      so: "text-amber-400" },
+            nang: { vien: "bg-red-950/60 text-red-400 border-red-700/50",       chu: "S\u1ef1 c\u1ed1",          so: "text-red-300"   },
+            mu:   { vien: "bg-slate-800/50 text-slate-400 border-slate-700/60", chu: "M\u1ea5t k\u1ebft n\u1ed1i", so: "text-slate-400" }
+        };
+
+        function ve(khoa, soChu, nhapNhay) {
+            var t = TRANG_THAI[khoa];
+            oTinhTrang.className = LOP_CHIP + t.vien;
+            if (oTinhTrangChu) oTinhTrangChu.textContent = t.chu;
+
+            // animate-pulse CHI khi nghiem trong. Nhap nhay vinh vien thi nguoi
+            // van hanh hoc cach phot lo, va luc co su co that no trong y het.
+            oSo.className = LOP_SO + t.vien + (nhapNhay ? " animate-pulse" : "");
+            if (oSoChu) {
+                oSoChu.className = "text-xs font-mono font-medium " + t.so;
+                oSoChu.textContent = soChu;
+            }
+        }
+
+        // Thieu truong bat buoc = KHONG DOC DUOC, khong phai "bang 0".
+        //
+        // Khong dung `d.chua_xac_nhan || 0`: mot than {} tra ve cung HTTP 200 se
+        // cho ra 0 va header sang chip xanh "Binh thuong" dung luc may chu dang
+        // mu. Do la loi nguy hiem nhat co the mac o day.
+        function apDung(d) {
+            // muc_cao_nhat cung phai hop le. Thieu no thi MOI gia tri khac
+            // "critical" deu roi ve chip ho phach \u2014 mot su co NGHIEM TRONG se
+            // hien thanh "Canh bao" chi vi mot truong bi rot doc duong.
+            var mucHopLe = !!d && (d.muc_cao_nhat === null || typeof d.muc_cao_nhat === "string");
+            if (!d || typeof d.chua_xac_nhan !== "number" ||
+                typeof d.dang_mo !== "number" || !mucHopLe)
+                throw new Error("thi\u1ebfu s\u1ed1 li\u1ec7u");
+
+            // Xanh doi HAI dieu kien: khong con gi dang mo VA khong con gi cho
+            // xac nhan. Mot canh bao da duoc xac nhan nhung thiet bi van hong
+            // thi he thong VAN chua binh thuong.
+            var khoa = (d.dang_mo === 0 && d.chua_xac_nhan === 0) ? "sach"
+                     : (d.muc_cao_nhat === "critical" ? "nang" : "nhe");
+            ve(khoa, d.chua_xac_nhan + " Alarm", khoa === "nang");
+        }
+
+        function doc() {
+            return fetch(API, { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(apDung)
+                .catch(function () {
+                    // Xoa so chu khong giu lai: so cu trong y het so dung.
+                    ve("mu", GACH, false);
+                });
+        }
+
+        function veDongHo() {
+            var d = new Date();
+            function hai(n) { return (n < 10 ? "0" : "") + n; }
+            if (oGio)  oGio.textContent  = hai(d.getHours()) + ":" + hai(d.getMinutes()) + ":" + hai(d.getSeconds());
+            if (oNgay) oNgay.textContent = hai(d.getDate()) + "/" + hai(d.getMonth() + 1) + "/" + d.getFullYear();
+        }
+
+        // Guard `if (!timer)` / `timer = null` la bat buoc, khong phai cho gon.
+        // Thieu no thi moi lan visibilitychange bao hien ma khong co lan an
+        // tuong ung (khoi phuc bfcache, doi man hinh, khoa/mo may) se sinh them
+        // mot interval va mat handle cu. Man hinh tuong mo vai ngay se co hang
+        // chuc poller chay song song, va khong co gi tren giao dien cho thay.
+        var timerPoll = null, timerDongHo = null;
+
+        function batDau() {
+            if (!timerPoll)   { doc();      timerPoll   = setInterval(doc, NHIP_MS); }
+            if (!timerDongHo) { veDongHo(); timerDongHo = setInterval(veDongHo, 1000); }
+        }
+        function dungLai() {
+            if (timerPoll)   { clearInterval(timerPoll);   timerPoll   = null; }
+            if (timerDongHo) { clearInterval(timerDongHo); timerDongHo = null; }
+        }
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) dungLai(); else batDau();
+        });
+
+        batDau();
     })();
     </script>
 </body>

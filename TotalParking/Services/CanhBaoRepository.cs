@@ -28,6 +28,15 @@ namespace TotalParking.Services
         public bool ChuaXacNhan { get { return !XacNhanLuc.HasValue; } }
     }
 
+    // Vài con số cho header. Kích thước cố định: không có mảng nào ở đây, và đó
+    // là điều kiện để header poll được từ 22 trang mà không thành gánh nặng.
+    public class TomTatCanhBao
+    {
+        public int    ChuaXacNhan { get; set; }
+        public int    DangMo      { get; set; }
+        public string MucCaoNhat  { get; set; }   // null = không có cảnh báo nào đang mở
+    }
+
     // Đọc và ghi cảnh báo thiết bị.
     //
     // ===================== GIỚI HẠN TRẢ VỀ LÀ BẮT BUỘC =====================
@@ -154,6 +163,54 @@ namespace TotalParking.Services
                 cmd.Parameters.AddWithValue("@khoa", khoaChongTrung);
                 conn.Open();
                 return cmd.ExecuteNonQuery();
+            }
+        }
+
+        // Vài con số tóm tắt cho header, KHÔNG kéo dòng nào về.
+        //
+        // Header nằm trong layout dùng chung của 22 trang, nên hàm này chạy nhiều
+        // lượt hơn hẳn Doc(). Nếu tóm tắt bằng cách gọi Doc() rồi đếm trong C#,
+        // mỗi lượt sẽ kéo toàn bộ cảnh báo chưa xác nhận cộng 200 dòng nữa về bộ
+        // nhớ web — đúng cái gánh nặng mà endpoint tóm tắt sinh ra để tránh.
+        //
+        // MucCaoNhat dùng FIELD(): nó trả 1 cho critical, 4 cho low, nên MIN()
+        // cho ra mức NGHIÊM TRỌNG NHẤT trong số đang mở. So chuỗi trực tiếp thì
+        // phải xếp hạng bằng tay và dễ sai thứ tự.
+        public TomTatCanhBao TomTat()
+        {
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText =
+                    "SELECT COALESCE(SUM(xac_nhan_luc IS NULL), 0), " +
+                    "       COALESCE(SUM(het_luc IS NULL), 0), " +
+                    "       MIN(IF(het_luc IS NULL, " +
+                    "              FIELD(muc_do,'critical','high','medium','low'), NULL)) " +
+                    "FROM   canh_bao";
+
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    if (!r.Read()) return new TomTatCanhBao();
+                    return new TomTatCanhBao
+                    {
+                        ChuaXacNhan = Convert.ToInt32(r[0]),
+                        DangMo      = Convert.ToInt32(r[1]),
+                        MucCaoNhat  = r[2] == DBNull.Value ? null : TenMuc(Convert.ToInt32(r[2]))
+                    };
+                }
+            }
+        }
+
+        private static string TenMuc(int hang)
+        {
+            switch (hang)
+            {
+                case 1:  return "critical";
+                case 2:  return "high";
+                case 3:  return "medium";
+                case 4:  return "low";
+                default: return null;
             }
         }
 
