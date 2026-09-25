@@ -238,6 +238,10 @@ namespace TotalParking.Controllers
                     now = DateTime.Now.ToString("HH:mm:ss"),
                     latest_zone     = latest == null ? (int?)null : latest.ZoneId,
                     latest_event_id = latest == null ? null : latest.EventId,
+                    // Số KHỐI đang vận hành, khác hẳn tổng số Ô ở zones[].total.
+                    // Ô "Tổng Block" trên Dashboard trước đây ghi cứng số 9 từ bản
+                    // demo vì thiếu id nên không ai cập nhật nó.
+                    so_khoi = _routings.DemKhoiDangVanHanh(),
                     zones = zones.Select(z => new
                     {
                         zone_id    = z.ZoneId,

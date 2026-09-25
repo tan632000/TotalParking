@@ -90,6 +90,23 @@ namespace TotalParking.Services
             }
         }
 
+        // Số khối đang vận hành. Đếm từ bảng block chứ không cộng từ zone: sức
+        // chứa tính theo Ô, còn đây là số KHỐI — hai con số khác nhau, và ghép
+        // chúng vào cùng một truy vấn là cách chắc chắn để lẫn về sau.
+        //
+        // Dùng chính cờ block.is_active mà BlockAllocator dùng, nên khối bị đưa
+        // ra khỏi vận hành sẽ biến mất khỏi con số này — đúng như mong đợi.
+        public int DemKhoiDangVanHanh()
+        {
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "SELECT COUNT(*) FROM block WHERE is_active = 1";
+                conn.Open();
+                return Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+
         public IList<ZoneCapacity> GetZoneCapacity()
         {
             var result = new List<ZoneCapacity>();
