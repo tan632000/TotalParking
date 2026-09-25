@@ -1,0 +1,93 @@
+{
+ "thoi_diem": "2026-09-25T15:42:06.329Z",
+ "dau": "DB-MUH4PRZT",
+ "tinh": {
+  "con_sot": [],
+  "so_lan_doc_localstorage": 1,
+  "opc_con_nguyen": true
+ },
+ "so_dong_truoc": 16,
+ "gieo_rac": {
+  "thay_rac_tren_bang": false,
+  "so_dong": 19
+ },
+ "ma_loi": {
+  "tren": [
+   "DB-MUH4PRZT-1",
+   "DB-MUH4PRZT-2",
+   "DB-MUH4PRZT-3",
+   "PLC-CONN-01"
+  ],
+  "thieu": [],
+  "thua": []
+ },
+ "nguon_phat": {
+  "thieu_block": "Bo phan thu",
+  "du_ba_phan": "Z2 · Block 21 · PLC 21"
+ },
+ "bo_dem": {
+  "mong": {
+   "op": 1,
+   "sys": 17,
+   "mnt": 1
+  },
+  "thay": {
+   "op": 1,
+   "sys": 17,
+   "mnt": 1
+  },
+  "tong": 19,
+  "so_dong": 19
+ },
+ "bieu_ngu": {
+  "so": "19 cảnh báo đang hoạt động:",
+  "chi_tiet": "[DB-MUH4PRZT-1] Canh bao thu thiet bi (Z2 · Block 21 · PLC 21)",
+  "an": false,
+  "mong_doi": 19
+ },
+ "don_rac": {
+  "co_khoa": true,
+  "so": 3,
+  "ds": [
+   "SU-CO-KHAN",
+   "(khong co code)",
+   "(khong co code)"
+  ]
+ },
+ "tu_lam_moi": {
+  "goi_truoc": 1,
+  "goi_sau": 5,
+  "trong_65s": 4,
+  "nhip_15s_trong_ma_nguon": true
+ },
+ "xac_nhan": {
+  "boi": "Nguoi Kiem Thu",
+  "luc": "co"
+ },
+ "bieu_ngu_an": {
+  "an": true,
+  "than": "Không có cảnh báo hoạt động. Hệ thống vận hành an toàn.",
+  "so_dong": 0
+ },
+ "mat_ket_noi": [
+  {
+   "dang": "503",
+   "co_cau_loi": true,
+   "noi_sach": false,
+   "bieu_ngu_an": false
+  },
+  {
+   "dang": "200 + HTML",
+   "co_cau_loi": true,
+   "noi_sach": false,
+   "bieu_ngu_an": false
+  },
+  {
+   "dang": "200 + {}",
+   "co_cau_loi": true,
+   "noi_sach": false,
+   "bieu_ngu_an": false
+  }
+ ],
+ "so_dong_sau": 16
+}
