@@ -65,7 +65,9 @@ All runtime behaviour is client-side JavaScript inlined in `.cshtml` files, back
 
 ### Hard rules
 
-1. **Adding or removing a `.cshtml` requires updating `TotalParking.csproj`.** Razor compiles views at runtime, so a missing `<Content Include>` still works under F5 but is silently excluded from Publish, producing a 404 in the deployed app. Ten views are already missing: `Assets`, `Backup`, `Cctv`, `Diagnostics`, `Energy`, `Historian`, `OperationControl`, `Queue`, `Safety`, `Tracking`.
+1. **Adding or removing a `.cshtml` requires updating `TotalParking.csproj`.** Razor compiles views at runtime, so a missing `<Content Include>` still works under F5 but is silently excluded from Publish, producing a 404 in the deployed app.
+
+   All 24 `Views/Home/*.cshtml` and `Views/Shared/_ScadaLayout.cshtml` are currently listed. An earlier version of this rule named ten views as missing (`Assets`, `Backup`, `Cctv`, `Diagnostics`, `Energy`, `Historian`, `OperationControl`, `Queue`, `Safety`, `Tracking`); they have since been added, so do not treat that list as a live gap. Verified 25/09/2026 with `grep -F 'Include="Views\Home\' TotalParking/TotalParking.csproj` — re-run that rather than trusting this sentence.
 
 2. **These `localStorage` keys are a cross-page contract.** Changing a shape in one view breaks the others, and no test will catch it:
 
