@@ -542,6 +542,28 @@ namespace TotalParking.Services.Plc
                                      CardCodeDecoder.ToRawHex(words),
                                      empty ? "khong co the" : ("ma the: " + (card ?? "khong giai ma duoc")));
 
+                // ===================== NỬA VỜI THÌ BỎ QUA VÒNG NÀY =====================
+                // Mã thẻ chiếm hai word, nhưng ladder ghi — và xoá — chúng ở hai chu
+                // kỳ quét khác nhau. Đọc FINS nguyên tử ở mức giao thức vẫn bắt trúng
+                // được khoảnh khắc dở dang đó. Mã ghép từ nửa giá trị gần như chắc
+                // chắn không có trong danh bạ, nên rơi vào nhánh "thẻ lạ" phía dưới và
+                // báo quá tải cho một chiếc xe hoàn toàn bình thường.
+                //
+                // Đo trên nhật ký 22-25/09: 5 lần, block 75/103/103/64/103. Cả 5 đều
+                // làm D1004 nhảy 1 -> 3, và cả 5 đều có dạng 0000 XXXX — ladder xoá
+                // word thấp trước.
+                //
+                // Giữ nguyên giá trị cũ chứ không ghi 0: trạng thái nửa vời quan sát
+                // được luôn xuất hiện lúc đang XOÁ thẻ vừa quẹt, nên băng cũ vẫn đúng
+                // với chiếc xe đó cho tới khi D106 sạch hẳn và nhánh `empty` đưa về 0.
+                //
+                // Đặt SAU PlcRegisterLog.Track là có chủ ý: nhật ký phải thấy được
+                // giá trị nửa vời, nếu không thì chính cái lỗi này thành vô hình.
+                //
+                // Chỉ áp cho mã hai word. Mã dài hơn có thể có word 0 ở giữa một cách
+                // hợp lệ, lúc đó luật này sẽ chặn nhầm thẻ thật.
+                if (len == 2 && (words[0] == 0) != (words[1] == 0)) return;
+
                 // Ba nhánh, cố ý tách rời:
                 //   D106 trống                 -> 0, không có ai quẹt
                 //   có giá trị, giải mã không ra -> 3, coi như quá tải

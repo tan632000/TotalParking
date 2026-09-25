@@ -1,0 +1,25 @@
+KIEM CHUNG CHAN DOC HUT D106 -> D1004
+Chay luc : 2026-09-25 14:59:34
+Block    : 20 (192.169.1.120)
+Lenh     : python tools/kiem_chung_doc_hut.py --block 20   (Exit 0)
+
+==========================================================
+NHAT KY DOI THANH GHI — block 20, cua so chay (bang chung doc lap)
+==========================================================
+2026-09-25 14:59:35.055 192.169.1.120 block 20 D106 0000 0000 -> 7660 A0F3 | ma the: a0f37660
+2026-09-25 14:59:35.058 192.169.1.120 block 20 D1004 0 -> 1 | bang tai trong SCADA ghi xuong
+2026-09-25 14:59:35.557 192.169.1.120 block 20 D106 7660 A0F3 -> 0000 A0F3 | ma the: a0f30000
+2026-09-25 14:59:40.157 192.169.1.120 block 20 D106 0000 A0F3 -> 0000 0000 | khong co the
+2026-09-25 14:59:40.157 192.169.1.120 block 20 D1004 1 -> 0 | bang tai trong SCADA ghi xuong
+
+So dong 'D1004 -> 3' cho block 20: 0
+
+==========================================================
+DOI CHIEU — cung chuyen trang thai D106, TRUOC khi va
+==========================================================
+2026-09-25 12:54:59.897 192.169.1.203 block 103 D106 7660 A0F3 -> 0000 A0F3 | ma the: a0f30000
+2026-09-25 12:54:59.899 192.169.1.203 block 103 D1004 1 -> 3 | bang tai trong SCADA ghi xuong
+
+=> Cung 7660 A0F3 -> 0000 A0F3.
+   Truoc va: D1004 1 -> 3 (qua tai sai).
+   Sau  va: khong co dong D1004 nao, giu nguyen 1.
