@@ -1,0 +1,32 @@
+{
+ "thoi_diem": "2026-09-25T16:08:26.837Z",
+ "tinh": {
+  "so_demo": [],
+  "nhan_cu": 0
+ },
+ "binh_thuong": {
+  "so_zone_api": 6,
+  "sai": [],
+  "mau": {
+   "zone": "1",
+   "dong": [
+    "+ Pallet trống: 126",
+    "+ Tầng dưới: 0",
+    "Mật độ: 0/139 (0%)"
+   ]
+  }
+ },
+ "duong_loi": {
+  "co_so_that_truoc": true,
+  "con_so_sau_khi_loi": 0,
+  "mau_sau": {
+   "zone": "1",
+   "dong": [
+    "+ Pallet trống: —",
+    "+ Tầng dưới: —",
+    "Mất kết nối máy chủ"
+   ]
+  },
+  "feed": "Không đọc được dữ liệu điều hướng từ máy chủ."
+ }
+}
