@@ -145,9 +145,27 @@ namespace TotalParking.Services
             using (var conn = new MySqlConnection(Db.ConnectionString))
             using (var cmd = conn.CreateCommand())
             {
+                // connected_changed_at CHỈ nhích khi giá trị thật sự đổi.
+                //
+                // Trước đây nó được đặt NOW(3) vô điều kiện, và điều đó làm cột
+                // nói dối sau mỗi lần ứng dụng khởi động lại: PlcTrangThaiWriter
+                // giữ trạng thái đã ghi trong RAM, nên sau recycle nó coi mọi
+                // thiết bị là "chưa biết" và ghi lại cả 112 dòng. Đo được ngày
+                // 24/09: toàn bộ 112 dòng cùng một mốc 22:56, trong khi vài PLC
+                // đã chết từ hôm trước.
+                //
+                // Hệ quả không chỉ là hiển thị sai: CongVanHanhService dùng đúng
+                // cột này để đếm "mất kết nối bao lâu rồi", nên mỗi lần recycle
+                // là đồng hồ đó bị đặt lại từ đầu.
+                //
+                // <=> là toán tử so sánh an-toàn-NULL của MySQL: NULL <=> NULL
+                // cho TRUE, nên thiết bị vừa rời vòng poll rồi quay lại cũng
+                // không bị nhích mốc oan.
                 cmd.CommandText =
                     "UPDATE plc_device " +
-                    "SET is_connected = @noi, connected_changed_at = NOW(3), last_probe_at = NOW(3) " +
+                    "SET connected_changed_at = IF(is_connected <=> @noi, connected_changed_at, NOW(3)), " +
+                    "    is_connected  = @noi, " +
+                    "    last_probe_at = NOW(3) " +
                     "WHERE plc_id = @id";
                 cmd.Parameters.AddWithValue("@noi", ketNoiDuoc ? 1 : 0);
                 cmd.Parameters.AddWithValue("@id", plcId);
@@ -165,9 +183,13 @@ namespace TotalParking.Services
             using (var conn = new MySqlConnection(Db.ConnectionString))
             using (var cmd = conn.CreateCommand())
             {
+                // Cùng lý do như GhiTrangThaiKetNoi: chỉ nhích mốc khi thật sự
+                // đổi. Thiết bị đã là NULL rồi mà gọi lại thì không được coi là
+                // một lần đổi trạng thái.
                 var ids = string.Join(",", plcIds.Select(x => x.ToString()));
                 cmd.CommandText = "UPDATE plc_device " +
-                                  "SET is_connected = NULL, connected_changed_at = NOW(3) " +
+                                  "SET connected_changed_at = IF(is_connected IS NULL, connected_changed_at, NOW(3)), " +
+                                  "    is_connected = NULL " +
                                   "WHERE plc_id IN (" + ids + ")";
                 conn.Open();
                 cmd.ExecuteNonQuery();
