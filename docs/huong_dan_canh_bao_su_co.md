@@ -1,7 +1,7 @@
 # Hướng dẫn vận hành — cảnh báo và sự cố
 
 **Dành cho:** người vận hành SCADA TotalParking
-**Cập nhật:** 25/09/2026
+**Cập nhật:** 25/09/2026 (bổ sung mục 4 và 5)
 
 ---
 
@@ -17,6 +17,16 @@ Có **hai nguồn** sinh ra cảnh báo:
 | `Lỗi thao tác` | Người bấm | Bấm nút **BÁO SỰ CỐ** trên trang Điều khiển vận hành |
 
 Chưa có cảnh báo tự động cho LED, CCU hay camera. Những thiết bị đó hỏng thì trang Cảnh báo **không** báo gì.
+
+### Ba nơi hiện cảnh báo, cùng một nguồn
+
+| Nơi | Hiện gì | Mục |
+|---|---|---|
+| **Thanh trên cùng** (mọi trang) | Chip tình trạng + số cảnh báo chờ xử lý | 4 |
+| **Trang chủ** (Dashboard) | Bảng cảnh báo, ba bộ đếm, biểu ngữ đỏ | 5 |
+| **Trang Cảnh báo** | Danh sách đầy đủ, bộ lọc, nút xác nhận | 3 |
+
+Cả ba đọc cùng một bảng trong cơ sở dữ liệu. **Ba nơi lệch nhau nghĩa là có chỗ đang hỏng** — xem mục 10.
 
 ---
 
@@ -68,11 +78,82 @@ Bốn thẻ số liệu phía trên đếm theo nguồn và theo trạng thái x
 
 ### Giới hạn số dòng
 
-Trang trả về **tất cả** cảnh báo chưa xác nhận, cộng tối đa **200** dòng đã xác nhận gần nhất. Muốn xem xa hơn phải tra bằng SQL (mục 6).
+Trang trả về **tất cả** cảnh báo chưa xác nhận, cộng tối đa **200** dòng đã xác nhận gần nhất. Muốn xem xa hơn phải tra bằng SQL (mục 8).
 
 ---
 
-## 4. Xác nhận một cảnh báo
+## 4. Thanh trên cùng — chip tình trạng
+
+Thanh này có ở **mọi trang**, nên nó là thứ nhìn thấy nhiều nhất.
+
+### Chip bên trái — tình trạng hệ thống
+
+| Màu | Chữ | Nghĩa là |
+|---|---|---|
+| 🟢 Xanh | Bình thường | Không còn cảnh báo nào đang mở **và** không còn cảnh báo nào chờ xác nhận |
+| 🟠 Hổ phách | Cảnh báo | Có cảnh báo đang mở, nhưng không có cảnh báo mức *Nghiêm trọng* |
+| 🔴 Đỏ nhấp nháy | Sự cố | Có ít nhất một cảnh báo mức *Nghiêm trọng* đang mở |
+| ⚪ Xám | Mất kết nối | **Không đọc được máy chủ** — đừng tin con số bên cạnh |
+
+> Chip xanh đòi **cả hai** điều kiện. Một cảnh báo đã có người xác nhận nhưng thiết bị vẫn hỏng thì hệ thống **chưa** bình thường, nên chip vẫn không xanh.
+
+### Chip bên phải — số cảnh báo
+
+Số cảnh báo **chưa ai xác nhận**. Nó nhấp nháy **chỉ khi** có sự cố nghiêm trọng.
+
+Trước đây chip này luôn ghi cứng "4 Alarm" và nhấp nháy vĩnh viễn kể cả lúc hệ thống hoàn toàn bình thường. Nhấp nháy mãi thì người ta học cách phớt lờ, và lúc có sự cố thật nó trông không khác gì.
+
+Khi mất kết nối, số đổi thành `—`. **Số cũ không được giữ lại** — số cũ trông y hệt số đúng.
+
+### Đồng hồ
+
+Chạy theo giờ máy chủ SCADA. Trước đây nó đứng im ở `16:02:42 · 08/06/2026`.
+
+---
+
+## 5. Trang chủ — bảng cảnh báo
+
+Bảng này tự làm mới **15 giây một lần** và hiện **mọi cảnh báo chưa xác nhận**.
+
+### Ba con số phía trên
+
+Ba bộ đếm *Lỗi Thao Tác*, *Lỗi Thiết Bị*, *Đến Hạn Bảo Trì* và biểu ngữ đỏ trên cùng đều tính trên **cùng một tập** với bảng bên dưới: cảnh báo chưa xác nhận.
+
+**Tổng ba bộ đếm luôn bằng số dòng trong bảng.** Thấy chúng lệch nhau nghĩa là có chỗ đang hỏng — báo lại kỹ thuật, đừng tự suy luận.
+
+### Cột "Nguồn phát"
+
+Ghép từ ba phần, **bỏ qua phần nào không có**:
+
+- `Z2` — khu vực
+- `Block 21` — số khối
+- `PLC 21` — thiết bị
+
+Cảnh báo do người bấm nút BÁO SỰ CỐ **không có số khối** (lý do ở mục 7), nên nó chỉ hiện khu vực và tên khối trên màn hình.
+
+### Cột "Thời gian" hiện đủ ngày
+
+Bảng này chứa **mọi** cảnh báo chưa ai xác nhận, không giới hạn tuổi. Một sự cố từ ba hôm trước vẫn nằm đó. Vì vậy cột Thời gian hiện đủ `yyyy-MM-dd HH:mm:ss` — chỉ hiện giờ thì dễ đọc nhầm sự cố cũ thành "sáng nay".
+
+### Ba trạng thái của bảng, đừng nhầm
+
+| Thân bảng hiện | Nghĩa là |
+|---|---|
+| Danh sách cảnh báo | Bình thường |
+| *"Không có cảnh báo hoạt động. Hệ thống vận hành an toàn."* | Tin tốt — **máy chủ đã trả lời** và không có gì |
+| *"Không đọc được cảnh báo từ máy chủ: ..."* (chữ đỏ) | Trang đang mù. Biểu ngữ đỏ trên cùng vẫn hiện và cũng báo lỗi |
+
+Hai câu cuối **khác nhau hoàn toàn**. Câu giữa nghĩa là an toàn thật; câu cuối nghĩa là không biết gì cả.
+
+### Nút Xác nhận
+
+Bấm → hệ thống hỏi tên → ghi vào cơ sở dữ liệu → dòng biến khỏi bảng. Cảnh báo **không** bị xoá, chỉ được đánh dấu đã có người thấy; xem lại ở trang Cảnh báo hoặc bằng SQL.
+
+> ⚠️ **Trang chủ trước đây bịa ra cảnh báo.** Cho tới 25/09/2026, trang này tự sinh cảnh báo ngẫu nhiên mỗi 15 giây từ một danh sách câu viết sẵn — ví dụ *"Mất kết nối truyền thông Modbus TCP với PLC chính"*. Hệ thống này **không dùng Modbus TCP**. Còn thấy những câu như vậy ở đâu nghĩa là màn hình đó chưa được cập nhật.
+
+---
+
+## 6. Xác nhận một cảnh báo
 
 Bấm **ACK** trên dòng cảnh báo → hệ thống hỏi tên người xác nhận.
 
@@ -84,7 +165,7 @@ Xác nhận **không** làm sự cố biến mất. Nó chỉ ghi rằng đã c�
 
 ---
 
-## 5. Nút BÁO SỰ CỐ
+## 7. Nút BÁO SỰ CỐ
 
 Trên trang **Điều khiển vận hành**, ô nút chế độ có nút đỏ ngoài cùng bên phải, trước đây ghi `ESTOP`.
 
@@ -113,7 +194,7 @@ Danh sách khối trên trang này (`Block A-01`, `Block A-02`...) là **tên hi
 
 ---
 
-## 6. Tra cứu bằng SQL
+## 8. Tra cứu bằng SQL
 
 Cảnh báo đang mở, mới nhất trước:
 
@@ -139,14 +220,14 @@ ORDER  BY xay_ra_luc DESC;
 |---|---|
 | `het_luc` | `NULL` = sự cố đang diễn ra; có giá trị = đã qua |
 | `xac_nhan_luc` | `NULL` = chưa ai nhìn thấy |
-| `xac_nhan_boi` | Tên **tự khai**, xem cảnh báo ở mục 4 |
+| `xac_nhan_boi` | Tên **tự khai**, xem cảnh báo ở mục 6 |
 | `khoa_chong_trung` | Dấu kỹ thuật, chỉ có giá trị khi cảnh báo đang mở. **Đừng sửa tay.** |
 
 > ⚠️ **Đừng xoá dòng** để "dọn" bảng. Sự cố đã qua được đánh dấu bằng `het_luc`, và lịch sử là thứ cần nhất khi điều tra.
 
 ---
 
-## 7. Những việc hệ thống KHÔNG làm
+## 9. Những việc hệ thống KHÔNG làm
 
 Đọc kỹ mục này — hiểu sai một dòng ở đây là hiểu sai cả hệ thống.
 
@@ -155,14 +236,15 @@ ORDER  BY xay_ra_luc DESC;
 | Không dừng máy | Không nút nào trên SCADA dừng được thiết bị |
 | Không gửi cảnh báo ra ngoài | Không SMS, không email, không còi. Phải có người nhìn màn hình |
 | Không cảnh báo cho LED / CCU / camera | Chỉ PLC mới có cảnh báo tự động |
+| Không giới hạn số dòng trên trang chủ | Cảnh báo tồn đọng nhiều thì bảng dài ra, chưa có phân trang |
 | Không tự đóng sự cố do người báo | Chỉ cảnh báo PLC mới tự đóng khi thiết bị nối lại |
 | Không xác thực người xác nhận | Tên là tự khai |
 | Không sinh cảnh báo khi tắt vòng poll PLC | `plc:enabled = false` thì `is_connected` ngừng cập nhật, nên không rà nữa |
 
 ---
 
-## 8. Khi nghi ngờ trang đang hiện số sai
+## 10. Khi nghi ngờ trang đang hiện số sai
 
 1. Mở trang Cảnh báo, xem dòng *"Cập nhật hh:mm:ss"* — nếu đứng yên quá 15 giây thì trang đang mất kết nối máy chủ.
 2. Nếu thân bảng là chữ đỏ *"Không đọc được..."* → sự cố ở máy chủ hoặc CSDL, **không phải** là không có cảnh báo.
-3. Đối chiếu bằng SQL ở mục 6. Cơ sở dữ liệu là nguồn đúng; màn hình chỉ là bản chiếu.
+3. Đối chiếu bằng SQL ở mục 8. Cơ sở dữ liệu là nguồn đúng; màn hình chỉ là bản chiếu.
