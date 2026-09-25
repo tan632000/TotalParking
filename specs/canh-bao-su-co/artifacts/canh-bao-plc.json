@@ -1,0 +1,75 @@
+{
+ "thoi_diem": "2026-09-24T23:59:47.538Z",
+ "moc_thoi_gian": [
+  {
+   "giay": 0,
+   "nhan": "bat dau chu trinh 1"
+  },
+  {
+   "giay": 17,
+   "nhan": "da rot lan 1"
+  },
+  {
+   "giay": 27,
+   "nhan": "co canh bao lan 1"
+  },
+  {
+   "giay": 122,
+   "nhan": "da cho 95 giay"
+  },
+  {
+   "giay": 135,
+   "nhan": "da noi lai lan 1"
+  },
+  {
+   "giay": 145,
+   "nhan": "bat dau chu trinh 2"
+  },
+  {
+   "giay": 175,
+   "nhan": "co canh bao lan 2"
+  },
+  {
+   "giay": 205,
+   "nhan": "da dong canh bao lan 2"
+  },
+  {
+   "giay": 280,
+   "nhan": "da thu NULL 75 giay"
+  }
+ ],
+ "nguong_phut": 5,
+ "khoi_thu": {
+  "plc_id": "136",
+  "block_no": "2",
+  "khoa": "PLC_MAT_KET_NOI:2",
+  "port_goc": "9600",
+  "connected_changed_at_goc": "2026-09-24 22:56:28.953",
+  "is_connected_goc": "1"
+ },
+ "canh_bao_id_truoc": 222,
+ "canh_bao_lan_1": 230,
+ "noi_dung_lan_1": [
+  "hardware",
+  "critical",
+  "4",
+  "PLC 2",
+  "PLC kh?i 2 (192.169.1.102) m?t k?t n?i 7 ph�t."
+ ],
+ "so_canh_bao_sau_95_giay": 1,
+ "sau_khi_dong_lan_1": {
+  "con_dong": true,
+  "khoa": "NULL"
+ },
+ "canh_bao_lan_2": 269,
+ "null_khong_sinh": {
+  "is_connected_luc_do": "-1",
+  "so_canh_bao_moi": 0
+ },
+ "khoi_phuc": {
+  "port": "9600",
+  "is_connected": "1",
+  "moc": "2026-09-24 22:56:28.953",
+  "da_xoa": 2
+ }
+}

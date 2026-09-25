@@ -1,0 +1,41 @@
+{
+ "thoi_diem": "2026-09-24T16:56:10.030Z",
+ "dau_nhan_dien": "TEST-MUFRX63Y",
+ "so_dong_truoc": 0,
+ "tu_vung": {
+  "typeHtml": [
+   "hardware",
+   "maintenance",
+   "operation"
+  ],
+  "nguon": [
+   "hardware",
+   "maintenance",
+   "operation"
+  ],
+  "sevHtml": [
+   "critical",
+   "high",
+   "low",
+   "medium"
+  ],
+  "mucDo": [
+   "critical",
+   "high",
+   "low",
+   "medium"
+  ]
+ },
+ "xac_nhan": {
+  "http": 200,
+  "boi": "Nguoi Kiem Thu",
+  "ip": "::1",
+  "luc": "co"
+ },
+ "gioi_han": {
+  "tra_ve": 200,
+  "da_xac_nhan": 200,
+  "gioi_han": 200
+ },
+ "so_dong_sau": 0
+}

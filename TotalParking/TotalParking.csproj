@@ -168,6 +168,7 @@
     <Compile Include="Services\ParkingCardRepository.cs" />
     <Compile Include="Models\PlcDevice.cs" />
     <Compile Include="Models\CardScanDecision.cs" />
+    <Compile Include="Services\CanhBaoRepository.cs" />
     <Compile Include="Services\PlcDeviceRepository.cs" />
     <Compile Include="Services\WeightBandService.cs" />
     <Compile Include="Models\VehicleRouting.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Models\DeviceStatus.cs" />
     <Compile Include="Services\DeviceProbeService.cs" />
     <Compile Include="Controllers\DeviceStatusController.cs" />
+    <Compile Include="Controllers\AlarmController.cs" />
     <Compile Include="Controllers\CardsController.cs" />
     <Compile Include="Controllers\PgsStatusController.cs" />
     <Compile Include="Models\SlotState.cs" />
@@ -197,6 +199,7 @@
     <Compile Include="Services\Plc\SlotScanHost.cs" />
     <Compile Include="Services\Plc\PlcAuditLog.cs" />
     <Compile Include="Services\Plc\CongVanHanhService.cs" />
+    <Compile Include="Services\Plc\CanhBaoPlcService.cs" />
     <Compile Include="Services\Plc\PlcTrangThaiWriter.cs" />
     <Compile Include="Services\Plc\PlcRegisterLog.cs" />
     <Compile Include="Services\Plc\PlcReachabilityScanner.cs" />
@@ -345,6 +348,8 @@
     <None Include="Database\36_clear_stale_slot_cache.sql" />
     <None Include="Database\42_is_connected.sql" />
     <None Include="Database\43_tu_ha_bat.sql" />
+    <None Include="Database\44_poll_du.sql" />
+    <None Include="Database\45_canh_bao.sql" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />

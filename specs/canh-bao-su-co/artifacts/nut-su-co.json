@@ -1,0 +1,25 @@
+{
+ "thoi_diem": "2026-09-25T00:09:05.569Z",
+ "nhan": {
+  "con_sot": [],
+  "co_giai_thich": true
+ },
+ "guard_bao_tri": true,
+ "id_truoc": 222,
+ "dong_moi": {
+  "id": "363",
+  "muc_do": "critical",
+  "nguon": "operation",
+  "thiet_bi": "Block A-01",
+  "zone_id": "1"
+ },
+ "api_thay": true,
+ "context_hai": {
+  "thay_dau_su_co": true,
+  "localStorage_rong": true
+ },
+ "so_dong": {
+  "truoc": 7,
+  "sau": 7
+ }
+}

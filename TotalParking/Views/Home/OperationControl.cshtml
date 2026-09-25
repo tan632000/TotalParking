@@ -342,7 +342,11 @@
                         <button id="btn-mode-auto" onclick="setBlockMode('Auto')" class="text-[10px] font-bold py-2 rounded transition-all border bg-slate-800 border-slate-750 text-slate-300 hover:bg-slate-700/30">AUTO</button>
                         <button id="btn-mode-manual" onclick="setBlockMode('Manual')" class="text-[10px] font-bold py-2 rounded transition-all border bg-slate-800 border-slate-750 text-slate-300 hover:bg-slate-700/30">MANUAL</button>
                         <button id="btn-mode-maintenance" onclick="setBlockMode('Maintenance')" class="text-[10px] font-bold py-2 rounded transition-all border bg-slate-800 border-slate-750 text-slate-300 hover:bg-slate-700/30">MAINT</button>
-                        <button id="btn-mode-emergency" onclick="setBlockMode('Emergency')" class="text-[10px] font-bold py-2 rounded transition-all border bg-red-950/20 border-red-900/30 text-red-400 hover:bg-red-900/20">ESTOP</button>
+                        <!-- Nut nay CHI GHI NHAN su co vao CSDL de may khac doc duoc. No khong gui
+                             lenh dung nao xuong thiet bi. Nhan cu hua dung khan cap: nguoi van hanh bam,
+                             thay o chuyen do, va tin rang da xu ly — trong khi khong co gi xay ra
+                             va khong ai khac biet. Dung khan that la nut co khi ngoai hien truong. -->
+                        <button id="btn-bao-su-co" onclick="baoSuCoKhan()" title="Chỉ ghi nhận sự cố để các máy khác thấy. Hệ thống không gửi lệnh dừng xuống thiết bị." class="text-[10px] font-bold py-2 rounded transition-all border bg-red-950/20 border-red-900/30 text-red-400 hover:bg-red-900/20">BÁO SỰ CỐ</button>
                     </div>
                 </div>
 
@@ -669,6 +673,8 @@
         // Set value of block dropdown to match selection
         document.getElementById('occ-block-select').value = blockId;
 
+        capNhatNutSuCo();
+
         // Update Cockpit View
         const blockData = blockStates[blockId] || { status: "Normal", mode: "Auto", locked: false };
         document.getElementById('cockpit-block-name').innerText = `${blockId} Control Panel`;
@@ -810,7 +816,9 @@
     }
 
     function highlightActiveModeButtons(activeMode) {
-        const modes = ['Auto', 'Manual', 'Maintenance', 'Emergency'];
+        // 'Emergency' khong con la mot CHE DO: bao su co la mot hanh dong ghi
+        // nhan, khong phai trang thai van hanh cua khoi.
+        const modes = ['Auto', 'Manual', 'Maintenance'];
         modes.forEach(mode => {
             const btn = document.getElementById(`btn-mode-${mode.toLowerCase()}`);
             if (mode === activeMode) {
@@ -864,6 +872,11 @@
 
             card.onclick = () => selectBlock(blockId);
 
+            // Dau su co lay tu MAY CHU chu khong tu occBlockStates. Chinh o do
+            // chi-co-o-mot-trinh-duyet la thu tao cam giac "da xu ly" sai lech.
+            const dangBaoSuCo = suCoKhanDangMo.has(blockId);
+            if (dangBaoSuCo) card.classList.add('border-red-500', 'occ-the-su-co');
+
             card.innerHTML = `
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-xs font-bold text-slate-200">${blockId}</span>
@@ -884,6 +897,13 @@
                     </div>
                 </div>
             `;
+            if (dangBaoSuCo) {
+                const nhan = document.createElement('div');
+                nhan.className = "occ-su-co-badge mt-2 text-[9px] font-bold text-center " +
+                                 "text-red-300 bg-red-950/60 border border-red-800 rounded px-2 py-1";
+                nhan.textContent = "ĐANG BÁO SỰ CỐ";
+                card.appendChild(nhan);
+            }
             grid.appendChild(card);
         });
     }
@@ -943,6 +963,105 @@
         }
     }
 
+    // ===================== SU CO KHAN DOC TU MAY CHU =====================
+    // Nut cu hua dung khan cap va goi setBlockMode('Emergency'): no chi ghi
+    // occBlockStates trong localStorage cua CHINH trinh duyet dang mo. Khong gui
+    // gi xuong PLC, khong ghi CSDL, may ben canh khong thay gi.
+    //
+    // Day la rui ro an toan chu khong phai thieu tinh nang: nguoi van hanh bam
+    // mot nut mang nhan dung khan cap, thay o chuyen do, va tin rang da xu ly.
+    //
+    // Nen trang thai "dang bao su co" gio suy ra tu GET /Alarm/List. Moi may dang
+    // mo trang deu thay nhu nhau, va tat trinh duyet di thi no van con.
+    var API_ALARM_LIST = "@Url.Action("List", "Alarm")";
+    var API_SU_CO_KHAN = "@Url.Action("SuCoKhan", "Alarm")";
+    var MA_SU_CO_KHAN  = "SU-CO-KHAN";
+    var NHIP_SU_CO_MS  = 15000;
+
+    // Ten khoi (nhu hien tren man hinh) dang co su co chua ai xac nhan.
+    let suCoKhanDangMo = new Set();
+
+    function taiSuCoKhan() {
+        return fetch(API_ALARM_LIST, { cache: "no-store" })
+            .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            })
+            .then(function (d) {
+                const moi = new Set();
+                (d.canh_bao || []).forEach(function (c) {
+                    if (c.ma_loi === MA_SU_CO_KHAN && c.chua_xac_nhan && c.thiet_bi)
+                        moi.add(c.thiet_bi);
+                });
+                suCoKhanDangMo = moi;
+                refreshOCCView();
+            })
+            .catch(function () {
+                // Giu nguyen tap cu khi khong goi duoc may chu. Xoa dau su co vi
+                // mat mang thi nguy hiem hon la de no hien thua mot lat.
+            });
+    }
+
+    // Nut doi hinh dang theo du lieu MAY CHU, khong theo occBlockStates.
+    function capNhatNutSuCo() {
+        const nut = document.getElementById('btn-bao-su-co');
+        if (!nut) return;
+        const dangBao = suCoKhanDangMo.has(selectedBlockId);
+        nut.innerText = dangBao ? "ĐÃ BÁO SỰ CỐ" : "BÁO SỰ CỐ";
+        nut.className = "text-[10px] font-bold py-2 rounded transition-all border " +
+            (dangBao ? "bg-red-600 border-red-500 text-white status-pulse"
+                     : "bg-red-950/20 border-red-900/30 text-red-400 hover:bg-red-900/20");
+    }
+
+    // Ghi nhan mot su co khan. KHONG dung may — nhan va hop xac nhan deu phai noi
+    // ro dieu do, neu khong thi viec ghi duoc CSDL con lam te hon nut cu: no tao
+    // cam giac he thong vua "nhan lenh".
+    function baoSuCoKhan() {
+        const khoi = selectedBlockId;
+        if (!confirm("Ghi nhận sự cố khẩn tại " + khoi + "?\n\n" +
+                     "Thao tác này CHỈ ghi nhận để người khác thấy. " +
+                     "Hệ thống KHÔNG gửi lệnh dừng nào xuống thiết bị. " +
+                     "Việc dừng máy khẩn cấp phải dùng nút cơ khí tại chỗ.")) return;
+
+        const zoneId = document.getElementById('occ-zone-select').value;
+        const than = new URLSearchParams();
+        than.append("khoi", khoi);
+        than.append("zoneId", zoneId);
+
+        fetch(API_SU_CO_KHAN, { method: "POST", body: than })
+            .then(function (r) {
+                return r.json().then(function (d) { return { ok: r.ok, d: d }; });
+            })
+            .then(function (kq) {
+                if (!kq.ok) {
+                    alert("Không ghi được sự cố: " + (kq.d && kq.d.error ? kq.d.error : "lỗi máy chủ"));
+                    return;
+                }
+
+                // VAN ghi activeAlarms voi chuoi chua "E-Stop". Safety.cshtml do
+                // dung chuoi do de dung dong khoa lien dong trong ma tran an toan;
+                // bo di thi ma tran do se mai bao OK. Dung go neu chua sua Safety.
+                activeAlarms.unshift({
+                    id: "ALM-" + kq.d.id,
+                    time: new Date().toTimeString().split(' ')[0],
+                    code: MA_SU_CO_KHAN,
+                    type: 1,
+                    typeName: "Lỗi Thao Tác",
+                    source: "Z" + zoneId + " · " + khoi,
+                    msg: "Ghi nhận sự cố khẩn (E-Stop) tại " + khoi + " — đã lưu về máy chủ"
+                });
+                saveActiveAlarms();
+
+                return taiSuCoKhan().then(function () {
+                    alert("Đã ghi nhận sự cố tại " + khoi +
+                          ". Các máy khác sẽ thấy trong vòng một chu kỳ làm mới.");
+                });
+            })
+            .catch(function (e) {
+                alert("Không gọi được máy chủ: " + e.message);
+            });
+    }
+
     // Set operation Mode (Auto, Manual, Maint, Emergency)
     function setBlockMode(mode) {
         if (blockStates[selectedBlockId].status === "Disabled" && mode !== "Maintenance") {
@@ -952,15 +1071,6 @@
 
         blockStates[selectedBlockId].mode = mode;
         saveBlockStates();
-
-        // If Emergency, trigger system failure/warning visual
-        if (mode === "Emergency") {
-            blockStates[selectedBlockId].status = "Warning";
-            saveBlockStates();
-        } else if (blockStates[selectedBlockId].status === "Warning") {
-            blockStates[selectedBlockId].status = "Normal";
-            saveBlockStates();
-        }
 
         // Refresh Grid and Cockpit
         refreshOCCView();
@@ -1604,6 +1714,11 @@
     // Initialize layout on DOM load
     document.addEventListener("DOMContentLoaded", () => {
         loadInitialStates();
+
+        // Doc su co khan tu may chu ngay khi mo trang, roi lam moi dinh ky: mot
+        // su co do may KHAC ghi phai hien len day ma khong can ai bam tai lai.
+        taiSuCoKhan();
+        setInterval(taiSuCoKhan, NHIP_SU_CO_MS);
         
         // Trigger initial zone load (Zone 1)
         onZoneChanged();

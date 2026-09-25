@@ -87,6 +87,12 @@ namespace TotalParking.Services.Plc
                         // doi suc chua thi te hon nhieu so voi quen bat no.
                         CongVanHanhService.Start();
 
+                        // Sinh canh bao khi PLC mat ket noi qua nguong. Chay
+                        // trong nhanh Enabled vi no doc is_connected — cot do chi
+                        // duoc cap nhat khi vong poll chay; tat poll ma van sinh
+                        // canh bao thi do la canh bao tu du lieu cu.
+                        CanhBaoPlcService.Start();
+
                         // Don cau tra loi con sot o D1000 tu lan chay truoc.
                         //
                         // Chay NEN, khong chan khoi dong: quet 112 PLC co the mat
@@ -124,6 +130,7 @@ namespace TotalParking.Services.Plc
                 PlcReachabilityScanner.Stop();
                 PlcTrangThaiWriter.Stop();
                 CongVanHanhService.Stop();
+                CanhBaoPlcService.Stop();
                 if (_manager != null)
                 {
                     _manager.Dispose();

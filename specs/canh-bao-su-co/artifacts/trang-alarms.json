@@ -1,0 +1,22 @@
+{
+ "thoi_diem": "2026-09-24T16:59:53.915Z",
+ "dau": "TEST-MUFS1YUZ",
+ "du_lieu_cung": {
+  "tr_tinh": 0,
+  "con_sot": []
+ },
+ "so_dong_truoc": 0,
+ "so_dong": {
+  "trang": 3,
+  "api": 3
+ },
+ "bo_loc": {
+  "da_thu": [
+   "critical",
+   "high",
+   "low"
+  ],
+  "sai": []
+ },
+ "so_dong_sau": 0
+}

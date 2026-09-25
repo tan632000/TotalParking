@@ -10,32 +10,37 @@
                 <h1 class="text-2xl font-bold tracking-tight">Nhật ký Cảnh báo & Sự cố (Alarms & Events)</h1>
                 <p class="text-slate-400 text-sm mt-1">Giám sát toàn bộ sự cố thời gian thực, lỗi vận hành và cảnh báo bảo trì thiết bị nâng trượt.</p>
             </div>
-            <button onclick="window.location.reload();" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors font-semibold">
+            <div class="flex items-center gap-3">
+                @* Dau hieu do lieu tuoi hay cu. Khong co no thi mot trang dung
+                   hinh vi mat ket noi trong y het mot trang binh thuong. *@
+                <span id="alarm-cap-nhat" class="text-[10px] font-mono text-slate-500">Đang tải…</span>
+            <button onclick="taiCanhBao();" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors font-semibold">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
                 Làm mới
             </button>
+            </div>
         </div>
 
         <!-- Alarm KPI Widgets -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-red-950/30 border border-red-500/30 rounded-xl p-4 shadow-md">
                 <div class="text-red-400 text-[10px] font-mono uppercase tracking-wider">LỖI THIẾT BỊ / HỆ THỐNG</div>
-                <div class="text-red-300 text-2xl font-mono font-bold mt-1">4 hoạt động</div>
+                <div class="text-red-300 text-2xl font-mono font-bold mt-1" id="kpi-thiet-bi">—</div>
                 <div class="text-[10px] text-red-500 font-mono mt-1">Yêu cầu can thiệp kỹ thuật</div>
             </div>
             <div class="bg-blue-950/30 border border-blue-500/30 rounded-xl p-4 shadow-md">
                 <div class="text-blue-400 text-[10px] font-mono uppercase tracking-wider">LỖI THAO TÁC VẬN HÀNH</div>
-                <div class="text-blue-300 text-2xl font-mono font-bold mt-1">2 hoạt động</div>
+                <div class="text-blue-300 text-2xl font-mono font-bold mt-1" id="kpi-thao-tac">—</div>
                 <div class="text-[10px] text-blue-500 font-mono mt-1">Nhấn E-Stop hoặc mở cửa tủ</div>
             </div>
             <div class="bg-purple-950/30 border border-purple-500/30 rounded-xl p-4 shadow-md">
                 <div class="text-purple-400 text-[10px] font-mono uppercase tracking-wider">THIẾT BỊ ĐẾN HẠN BẢO TRÌ</div>
-                <div class="text-purple-300 text-2xl font-mono font-bold mt-1">1 cảnh báo</div>
+                <div class="text-purple-300 text-2xl font-mono font-bold mt-1" id="kpi-bao-tri">—</div>
                 <div class="text-[10px] text-purple-500 font-mono mt-1">Dựa trên chu kỳ và giờ chạy</div>
             </div>
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
                 <div class="text-slate-400 text-[10px] font-mono uppercase tracking-wider">ĐÃ XÁC NHẬN (ACKNOWLEDGED)</div>
-                <div class="text-slate-300 text-2xl font-mono font-bold mt-1">3 sự cố</div>
+                <div class="text-slate-300 text-2xl font-mono font-bold mt-1" id="kpi-da-ack">—</div>
                 <div class="text-[10px] text-emerald-400 font-mono mt-1">Nhân viên đang xử lý</div>
             </div>
         </div>
@@ -88,143 +93,9 @@
                         </tr>
                     </thead>
                     <tbody id="alarmsTableBody">
-                        <!-- Alarm 1: E-0401 (System Error) -->
-                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors bg-red-950/15" data-type="hardware" data-severity="critical">
-                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">08:42:15</td>
-                            <td class="px-3 py-3">
-                                <span class="px-2 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-[10px] font-bold">Lỗi thiết bị</span>
-                            </td>
-                            <td class="px-3 py-3">
-                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600">Nghiêm trọng</span>
-                            </td>
-                            <td class="px-3 py-3 text-slate-400 font-bold">A</td>
-                            <td class="px-3 py-3 text-slate-300 font-bold">A-04</td>
-                            <td class="px-3 py-3 text-slate-300">Motor-Lift-01</td>
-                            <td class="px-3 py-3 font-bold text-red-400">E-0401</td>
-                            <td class="px-3 py-3 text-slate-200">Motor nâng hạ quá dòng - quá tải nhiệt cơ cấu truyền động</td>
-                            <td class="px-3 py-3">
-                                <span class="status-badge text-[10px] font-bold text-red-500">Đang hoạt động</span>
-                            </td>
-                            <td class="ack-operator px-3 py-3 text-slate-500">—</td>
-                            <td class="px-3 py-3 text-center">
-                                <button onclick="acknowledgeAlarm(this, 'operator01')" class="ack-btn px-2 py-1 rounded bg-blue-700/60 hover:bg-blue-600/70 border border-blue-500/50 text-blue-200 font-bold transition-all">ACK</button>
-                            </td>
-                        </tr>
-
-                        <!-- Alarm 2: E-0408 (Operation Error) -->
-                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors bg-blue-950/10" data-type="operation" data-severity="critical">
-                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">06:12:33</td>
-                            <td class="px-3 py-3">
-                                <span class="px-2 py-0.5 rounded border border-blue-500/40 bg-blue-500/10 text-blue-400 text-[10px] font-bold">Lỗi thao tác</span>
-                            </td>
-                            <td class="px-3 py-3">
-                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-red-950/80 text-red-300 border-red-600">Nghiêm trọng</span>
-                            </td>
-                            <td class="px-3 py-3 text-slate-400 font-bold">A</td>
-                            <td class="px-3 py-3 text-slate-300 font-bold">A-04</td>
-                            <td class="px-3 py-3 text-slate-300">Safety-Relay</td>
-                            <td class="px-3 py-3 font-bold text-red-400">E-0408</td>
-                            <td class="px-3 py-3 text-slate-200">Nút nhấn khẩn cấp E-Stop đang được kích hoạt cơ học</td>
-                            <td class="px-3 py-3">
-                                <span class="status-badge text-[10px] font-bold text-red-500">Đang hoạt động</span>
-                            </td>
-                            <td class="ack-operator px-3 py-3 text-slate-500">—</td>
-                            <td class="px-3 py-3 text-center">
-                                <button onclick="acknowledgeAlarm(this, 'supervisor01')" class="ack-btn px-2 py-1 rounded bg-blue-700/60 hover:bg-blue-600/70 border border-blue-500/50 text-blue-200 font-bold transition-all">ACK</button>
-                            </td>
-                        </tr>
-
-                        <!-- Alarm 3: W-0302 (Operation Warning) -->
-                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors bg-blue-950/10" data-type="operation" data-severity="high">
-                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">08:38:02</td>
-                            <td class="px-3 py-3">
-                                <span class="px-2 py-0.5 rounded border border-blue-500/40 bg-blue-500/10 text-blue-400 text-[10px] font-bold">Lỗi thao tác</span>
-                            </td>
-                            <td class="px-3 py-3">
-                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-orange-950/70 text-orange-400 border-orange-700/50">Cao</span>
-                            </td>
-                            <td class="px-3 py-3 text-slate-400 font-bold">A</td>
-                            <td class="px-3 py-3 text-slate-300 font-bold">A-03</td>
-                            <td class="px-3 py-3 text-slate-300">HMI-Panel</td>
-                            <td class="px-3 py-3 font-bold text-amber-400">W-0302</td>
-                            <td class="px-3 py-3 text-slate-200">Cửa tủ điều khiển tại trạm đang mở - Cảnh báo an ninh</td>
-                            <td class="px-3 py-3">
-                                <span class="status-badge text-[10px] font-bold text-red-500">Đang hoạt động</span>
-                            </td>
-                            <td class="ack-operator px-3 py-3 text-slate-500">—</td>
-                            <td class="px-3 py-3 text-center">
-                                <button onclick="acknowledgeAlarm(this, 'operator01')" class="ack-btn px-2 py-1 rounded bg-blue-700/60 hover:bg-blue-600/70 border border-blue-500/50 text-blue-200 font-bold transition-all">ACK</button>
-                            </td>
-                        </tr>
-
-                        <!-- Alarm 4: E-0405 (System Error) -->
-                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors" data-type="hardware" data-severity="high">
-                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">07:55:10</td>
-                            <td class="px-3 py-3">
-                                <span class="px-2 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-[10px] font-bold">Lỗi thiết bị</span>
-                            </td>
-                            <td class="px-3 py-3">
-                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-orange-950/70 text-orange-400 border-orange-700/50">Cao</span>
-                            </td>
-                            <td class="px-3 py-3 text-slate-400 font-bold">A</td>
-                            <td class="px-3 py-3 text-slate-300 font-bold">A-04</td>
-                            <td class="px-3 py-3 text-slate-300">Sensor-LS-03</td>
-                            <td class="px-3 py-3 font-bold text-amber-400">E-0405</td>
-                            <td class="px-3 py-3 text-slate-200">Công tắc giới hạn hành trình dưới không phản hồi - Khay P05</td>
-                            <td class="px-3 py-3">
-                                <span class="status-badge text-[10px] font-bold text-slate-400">Đã xác nhận</span>
-                            </td>
-                            <td class="ack-operator px-3 py-3 text-slate-300">operator02</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="text-slate-500 text-[10px] font-bold">—</span>
-                            </td>
-                        </tr>
-
-                        <!-- Alarm 5: W-0701 (System Warning) -->
-                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors" data-type="hardware" data-severity="medium">
-                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">08:15:44</td>
-                            <td class="px-3 py-3">
-                                <span class="px-2 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-[10px] font-bold">Lỗi thiết bị</span>
-                            </td>
-                            <td class="px-3 py-3">
-                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-amber-950/60 text-amber-400 border-amber-700/50">Trung bình</span>
-                            </td>
-                            <td class="px-3 py-3 text-slate-400 font-bold">B</td>
-                            <td class="px-3 py-3 text-slate-300 font-bold">B-03</td>
-                            <td class="px-3 py-3 text-slate-300">AI-VDS</td>
-                            <td class="px-3 py-3 font-bold text-amber-400">W-0701</td>
-                            <td class="px-3 py-3 text-slate-200">Camera AI-VDS cổng vào mất kết nối - Hệ thống chuyển Fallback</td>
-                            <td class="px-3 py-3">
-                                <span class="status-badge text-[10px] font-bold text-slate-400">Đã xác nhận</span>
-                            </td>
-                            <td class="ack-operator px-3 py-3 text-slate-300">operator01</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="text-slate-500 text-[10px] font-bold">—</span>
-                            </td>
-                        </tr>
-
-                        <!-- Alarm 6: M-0501 (Maintenance Warning) -->
-                        <tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors" data-type="maintenance" data-severity="low">
-                            <td class="px-3 py-3 text-slate-300 whitespace-nowrap">07:30:00</td>
-                            <td class="px-3 py-3">
-                                <span class="px-2 py-0.5 rounded border border-purple-500/40 bg-purple-500/10 text-purple-400 text-[10px] font-bold">Đến hạn bảo trì</span>
-                            </td>
-                            <td class="px-3 py-3">
-                                <span class="inline-flex items-center gap-1 rounded border font-bold px-1.5 py-0.5 text-[10px] bg-sky-950/60 text-sky-400 border-sky-700/50">Thấp</span>
-                            </td>
-                            <td class="px-3 py-3 text-slate-400 font-bold">B</td>
-                            <td class="px-3 py-3 text-slate-300 font-bold">B-01</td>
-                            <td class="px-3 py-3 text-slate-300">Motor-Slide-02</td>
-                            <td class="px-3 py-3 font-bold text-purple-400">M-0501</td>
-                            <td class="px-3 py-3 text-slate-200">Số chu kỳ chạy nâng trượt đạt ngưỡng mài mòn cao (85% giới hạn)</td>
-                            <td class="px-3 py-3">
-                                <span class="status-badge text-[10px] font-bold text-slate-400">Đã xác nhận</span>
-                            </td>
-                            <td class="ack-operator px-3 py-3 text-slate-300">maintenance01</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="text-slate-500 text-[10px] font-bold">—</span>
-                            </td>
-                        </tr>
+                        @* Than bang do JavaScript dung tu GET /Alarm/List.
+                           Truoc day o day co 6 dong viet cung trong HTML — chung
+                           hien ra ke ca khi khong co su co nao. *@
                     </tbody>
                 </table>
             </div>
@@ -254,25 +125,142 @@
         });
     }
 
-    // Acknowledge alarm action
-    function acknowledgeAlarm(btn, operatorName) {
-        const row = btn.closest("tr");
-        
-        // 1. Update text/style for Acknowledge column
-        const statusBadge = row.querySelector(".status-badge");
-        statusBadge.innerText = "Đã xác nhận";
-        statusBadge.className = "status-badge text-[10px] font-bold text-slate-400";
-        
-        // 2. Set operator name
-        const operatorCell = row.querySelector(".ack-operator");
-        operatorCell.innerText = operatorName;
-        operatorCell.className = "ack-operator px-3 py-3 text-slate-300";
-        
-        // 3. Remove action button
-        const actionCell = btn.parentNode;
-        actionCell.innerHTML = '<span class="text-slate-500 text-[10px] font-bold">—</span>';
-        
-        // 4. Toast notification
-        alert("Đã xác nhận xử lý cảnh báo thành công cho tài khoản " + operatorName + "!");
+    // ===================== NGUON DU LIEU =====================
+    // Truoc day trang nay co 6 dong va 4 the so lieu VIET CUNG trong HTML. Chung
+    // hien ra ke ca khi khong co su co nao, va khong doi khi co su co that.
+    //
+    // Gio moi thu den tu GET /Alarm/List. Bo loc filterAlarms() o tren giu nguyen,
+    // nen moi dong render ra BAT BUOC phai mang data-type va data-severity dung
+    // tu vung ma bang canh_bao dung (ENUM cua cot nguon va muc_do).
+    var NHIP_LAM_MOI_MS = 15000;
+    var API_LIST = "@Url.Action("List", "Alarm")";
+    var API_ACK  = "@Url.Action("Ack", "Alarm")";
+
+    // Nhan tieng Viet cho tung gia tri. Gia tri KY THUAT giu nguyen trong
+    // data-* de bo loc so khop; chi phan hien ra cho nguoi doc moi dich.
+    var NHAN_NGUON = { hardware: "Lỗi thiết bị", operation: "Lỗi thao tác", maintenance: "Bảo trì" };
+    var NHAN_MUC_DO = { critical: "Nghiêm trọng", high: "Cao", medium: "Trung bình", low: "Thấp" };
+    var MAU_MUC_DO = {
+        critical: "bg-red-950/15", high: "bg-orange-950/10",
+        medium: "bg-blue-950/10", low: ""
+    };
+
+    function thoat(v) {
+        return String(v === null || v === undefined ? "" : v)
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
     }
+    function o(v, lop) {
+        return '<td class="px-3 py-3 ' + (lop || "text-slate-300") + '">' + thoat(v) + "</td>";
+    }
+
+    function veMotDong(c) {
+        var daAck = !c.chua_xac_nhan;
+        var nut = daAck
+            ? '<span class="text-slate-500 text-[10px] font-bold">—</span>'
+            : '<button onclick="xacNhan(this, ' + c.id + ')" class="ack-btn px-2 py-1 rounded bg-blue-700/60 hover:bg-blue-600/70 border border-blue-500/50 text-blue-200 font-bold transition-all">ACK</button>';
+
+        // data-type va data-severity mang gia tri KY THUAT — bo loc so bang chuoi.
+        return '<tr class="alarm-row border-b border-slate-850 hover:bg-slate-800/20 transition-colors '
+            + (MAU_MUC_DO[c.muc_do] || "") + '"'
+            + ' data-type="' + thoat(c.nguon) + '" data-severity="' + thoat(c.muc_do) + '">'
+            + o((c.xay_ra_luc || "").replace("T", " "), "text-slate-400 font-mono text-[10px]")
+            + o(NHAN_NGUON[c.nguon] || c.nguon)
+            + o(NHAN_MUC_DO[c.muc_do] || c.muc_do,
+                c.muc_do === "critical" ? "text-red-400 font-bold" : "text-slate-300")
+            + o(c.zone_id === null ? "—" : "Z" + c.zone_id)
+            + o(c.block_no === null ? "—" : c.block_no)
+            + o(c.thiet_bi || "—")
+            + o(c.ma_loi, "font-mono text-[10px] text-slate-400")
+            + o(c.mo_ta, "text-slate-200")
+            + '<td class="px-3 py-3"><span class="status-badge text-[10px] font-bold '
+            + (daAck ? "text-slate-400" : "text-amber-400") + '">'
+            + (daAck ? "Đã xác nhận" : "Chờ xác nhận") + "</span></td>"
+            + o(c.xac_nhan_boi || "—", "ack-operator text-slate-300")
+            + '<td class="px-3 py-3">' + nut + "</td></tr>";
+    }
+
+    function datSo(ma, v) {
+        var e = document.getElementById(ma);
+        if (e) e.textContent = v;
+    }
+
+    function veTrang(d) {
+        var ds = d.canh_bao || [];
+        var than = document.getElementById("alarmsTableBody");
+
+        // Trang RONG khac trang LOI. Rong nghia la khong co su co nao — tin tot.
+        than.innerHTML = ds.length
+            ? ds.map(veMotDong).join("")
+            : '<tr><td colspan="11" class="px-3 py-8 text-center text-slate-500 text-xs">'
+              + "Không có cảnh báo nào.</td></tr>";
+
+        var dem = function (loc) { return ds.filter(loc).length; };
+        var chuaAck = function (c) { return c.chua_xac_nhan; };
+        datSo("kpi-thiet-bi", dem(function (c) { return c.nguon === "hardware" && chuaAck(c); }) + " hoạt động");
+        datSo("kpi-thao-tac", dem(function (c) { return c.nguon === "operation" && chuaAck(c); }) + " hoạt động");
+        datSo("kpi-bao-tri",  dem(function (c) { return c.nguon === "maintenance" && chuaAck(c); }) + " cảnh báo");
+        datSo("kpi-da-ack",   dem(function (c) { return !c.chua_xac_nhan; }) + " sự cố");
+
+        datSo("alarm-cap-nhat", "Cập nhật " + (d.now || ""));
+        filterAlarms();
+    }
+
+    function veLoi(thongBao) {
+        // KHONG de bang rong im lang khi loi: rong trong nghia la "khong co su co",
+        // va nguoi van hanh se tuong he thong binh thuong trong khi no dang mu.
+        document.getElementById("alarmsTableBody").innerHTML =
+            '<tr><td colspan="11" class="px-3 py-8 text-center text-red-400 text-xs" id="alarm-loi">'
+            + "Không đọc được danh sách cảnh báo: " + thoat(thongBao) + "</td></tr>";
+        ["kpi-thiet-bi", "kpi-thao-tac", "kpi-bao-tri", "kpi-da-ack"].forEach(function (m) { datSo(m, "—"); });
+        datSo("alarm-cap-nhat", "Mất kết nối máy chủ");
+    }
+
+    function taiCanhBao() {
+        return fetch(API_LIST, { cache: "no-store" })
+            .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            })
+            .then(function (d) {
+                if (d.error) throw new Error(d.error);
+                veTrang(d);
+            })
+            .catch(function (e) { veLoi(e.message); });
+    }
+
+    // Xac nhan mot canh bao. Ten la do nguoi van hanh TU KHAI — he thong chua co
+    // dang nhap, nen khong duoc trinh bay no nhu mot danh tinh da xac thuc.
+    function xacNhan(nut, id) {
+        var ten = prompt("Tên người xác nhận:");
+        if (!ten || !ten.trim()) return;
+
+        nut.disabled = true;
+        var than = new URLSearchParams();
+        than.append("id", id);
+        than.append("nguoi", ten.trim());
+
+        fetch(API_ACK, { method: "POST", body: than })
+            .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+            .then(function (kq) {
+                if (kq.ok) return taiCanhBao();
+                if (kq.status === 409) {
+                    alert("Cảnh báo này đã được người khác xác nhận trước đó.");
+                    return taiCanhBao();
+                }
+                alert("Không xác nhận được: " + (kq.d && kq.d.error ? kq.d.error : kq.status));
+                nut.disabled = false;
+            })
+            .catch(function (e) {
+                alert("Không gọi được máy chủ: " + e.message);
+                nut.disabled = false;
+            });
+    }
+
+    // Tu lam moi. Khong co no thi man hinh tuong phong dieu khien hien du lieu
+    // cua luc mo trang cho toi khi co nguoi bam — va moi canh bao sinh tu dong
+    // deu vo nghia o dung be mat phuc vu no.
+    taiCanhBao();
+    setInterval(taiCanhBao, NHIP_LAM_MOI_MS);
+
 </script>
