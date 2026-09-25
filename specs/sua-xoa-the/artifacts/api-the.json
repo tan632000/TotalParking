@@ -1,0 +1,99 @@
+{
+ "thoi_diem": "2026-09-25T14:25:20.903Z",
+ "dau": "TCH1Z2FB",
+ "buoc": [],
+ "truoc": {
+  "so_the": 613,
+  "so_o_do": 755,
+  "nhat_ky": 16
+ },
+ "the_thu": {
+  "idA": 638,
+  "idB": 639,
+  "maA": "AAF4DC5B"
+ },
+ "list": {
+  "co_card_id": true,
+  "loai_khach": 3,
+  "hang_tai": 3
+ },
+ "sua": {
+  "http": 200,
+  "doc_lai": [
+   "51H-99999",
+   "Khach Thu A sua",
+   "2",
+   "1",
+   "31/12/2027"
+  ]
+ },
+ "van_tay": {
+  "truoc": "613:7cad4c58cea9e60f790755fb07ef8dc0",
+  "sau": "613:7cad4c58cea9e60f790755fb07ef8dc0"
+ },
+ "ma_the": {
+  "truoc": "AAF4DC5B",
+  "sau": "AAF4DC5B",
+  "van_tay_khop": true
+ },
+ "tat_bat": {
+  "tat": 200,
+  "sauTat": "0",
+  "bat": 200,
+  "sauBat": "1"
+ },
+ "o_do": {
+  "0": "138",
+  "1": "1",
+  "2": "6",
+  "3": "10",
+  "http": 409,
+  "routing_trong_cua_so": 0
+ },
+ "so_o_do_sau_khi_muon": 755,
+ "phien": {
+  "http": 409,
+  "is_active": "1",
+  "ly_do": "CoPhienDangMo"
+ },
+ "quet": {
+  "moi": 409,
+  "sau_moi": "1",
+  "cu": 200,
+  "sau_cu": "0"
+ },
+ "loi": {
+  "trung": {
+   "http": 409,
+   "error": "Số thẻ TCH1Z2FB-B đã thuộc về một thẻ khác."
+  },
+  "id_la": {
+   "http": 409,
+   "error": "Loại khách hoặc hạng tải không tồn tại trong danh mục."
+  },
+  "dai_qua": {
+   "http": 400,
+   "error": "Trường plate dài 40 ký tự, tối đa 16."
+  }
+ },
+ "thieu_truong": {
+  "http": 200,
+  "doc_lai": [
+   "Xe can giu",
+   "1800KG",
+   "TAI",
+   "31/01/2028"
+  ]
+ },
+ "nhat_ky": {
+  "truoc": 16,
+  "sau": 28,
+  "dong_cua_the_thu": 12,
+  "co_tu_choi": true,
+  "co_ok": true
+ },
+ "sau": {
+  "so_the": 613,
+  "so_o_do": 755
+ }
+}

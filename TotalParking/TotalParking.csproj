@@ -169,6 +169,7 @@
     <Compile Include="Models\PlcDevice.cs" />
     <Compile Include="Models\CardScanDecision.cs" />
     <Compile Include="Services\CanhBaoRepository.cs" />
+    <Compile Include="Services\CardAdminLog.cs" />
     <Compile Include="Services\PlcDeviceRepository.cs" />
     <Compile Include="Services\WeightBandService.cs" />
     <Compile Include="Models\VehicleRouting.cs" />

@@ -57,8 +57,19 @@ namespace TotalParking.Controllers
                     total = rows.Count,
                     active = rows.Count(r => r.IsActive),
                     labels = rows.Select(r => r.SourceLabel).Distinct().OrderBy(s => s).ToArray(),
+                    // Hai bảng tra cứu đi kèm để giao diện dựng ô chọn từ dữ liệu
+                    // thật. Viết cứng id trong view thì thêm một hàng vào bảng tra
+                    // cứu là view ghi sai id mà không có gì báo.
+                    loai_khach = _repo.DanhSachTraCuu("customer_type")
+                                      .Select(k => new { id = k.Key, ma = k.Value }).ToArray(),
+                    hang_tai   = _repo.DanhSachTraCuu("weight_class")
+                                      .Select(k => new { id = k.Key, ma = k.Value }).ToArray(),
                     cards = rows.Select(r => new
                     {
+                        // card_id là thứ giao diện dùng để chỉ đúng dòng. Thiếu nó
+                        // thì chỉ còn card_code, mà định danh bằng mã nhận từ thân
+                        // POST là đường dẫn tới ghi đè nhầm thẻ của khách khác.
+                        card_id       = r.CardId,
                         card_code     = r.CardCode,
                         card_no       = r.CardNo,
                         card_type     = r.CardType,
@@ -264,6 +275,197 @@ namespace TotalParking.Controllers
 
         // Cùng cách trả JSON với các controller giám sát khác: mã HTTP thật, và
         // không để MVC tự bọc thêm lớp nào.
+        // Độ dài cột theo đúng schema parking_card. Kiểm ở đây để người vận hành
+        // nhận một câu tiếng Việt thay vì "Data too long for column 'plate' at
+        // row 1" — sql_mode có STRICT_TRANS_TABLES nên CSDL ném lỗi chứ không cắt.
+        private static readonly Dictionary<string, int> DoDaiCot = new Dictionary<string, int>
+        {
+            { "card_no", 16 }, { "card_type", 16 }, { "plate", 16 },
+            { "weight_text", 32 }, { "vehicle_name", 64 }, { "customer_name", 128 }
+        };
+
+        private static string QuaDai(string ten, string giaTri)
+        {
+            int max;
+            if (giaTri == null || !DoDaiCot.TryGetValue(ten, out max)) return null;
+            return giaTri.Length > max
+                ? string.Format("Trường {0} dài {1} ký tự, tối đa {2}.", ten, giaTri.Length, max)
+                : null;
+        }
+
+        private static string Goi(string s)
+        {
+            if (s == null) return null;
+            s = s.Trim();
+            return s.Length == 0 ? null : s;
+        }
+
+        // POST /Cards/Update
+        //   card_id, nguoi, card_no, card_type, vehicle_name, plate, customer_name,
+        //   weight_text, expiry_date (dd/MM/yyyy), customer_type_id, weight_class_id
+        //
+        // KHÔNG nhận card_code. Xem ParkingCardRepository.CapNhat.
+        [HttpPost]
+        public ActionResult Update(int card_id, string nguoi)
+        {
+            if (string.IsNullOrWhiteSpace(nguoi))
+                return Json2(400, new { error = "Thiếu tên người thao tác." });
+
+            var cu = _repo.DocTheoId(card_id);
+            if (cu == null) return Json2(404, new { error = "Không tìm thấy thẻ." });
+
+            // Trường VẮNG MẶT trong form khác hẳn trường GỬI LÊN RỖNG.
+            //
+            // Goi() trả null cho cả hai, và CapNhat luôn đặt đủ 9 cột, nên nếu
+            // lấy thẳng thì một POST thiếu vài khoá sẽ xoá trắng hồ sơ DEC của
+            // thẻ khách — dữ liệu không nhập lại được từ trong ứng dụng. Vắng mặt
+            // thì giữ nguyên giá trị cũ; chỉ khoá có mặt mới được ghi.
+            Func<string, string, string> lay = (khoa, cu_) =>
+                Request.Form.AllKeys.Contains(khoa) ? Goi(Request.Form[khoa]) : cu_;
+
+            var e = new ParkingCardRepository.CardEdit
+            {
+                CardNo       = lay("card_no",       cu.CardNo),
+                CardType     = lay("card_type",     cu.CardType),
+                VehicleName  = lay("vehicle_name",  cu.VehicleName),
+                Plate        = lay("plate",         cu.Plate),
+                CustomerName = lay("customer_name", cu.CustomerName),
+                WeightText   = lay("weight_text",   cu.WeightText)
+            };
+
+            if (string.IsNullOrEmpty(e.CardNo))
+                return Json2(400, new { error = "Số thẻ không được để trống." });
+
+            foreach (var cap in new[] {
+                QuaDai("card_no", e.CardNo), QuaDai("card_type", e.CardType),
+                QuaDai("plate", e.Plate), QuaDai("weight_text", e.WeightText),
+                QuaDai("vehicle_name", e.VehicleName), QuaDai("customer_name", e.CustomerName) })
+            {
+                if (cap != null) return Json2(400, new { error = cap });
+            }
+
+            DateTime ngay;
+            string exp = Request.Form.AllKeys.Contains("expiry_date")
+                             ? Goi(Request.Form["expiry_date"]) : null;
+            if (!Request.Form.AllKeys.Contains("expiry_date")) e.ExpiryDate = cu.ExpiryDate;
+            else if (exp == null) e.ExpiryDate = null;
+            else if (DateTime.TryParseExact(exp, "dd/MM/yyyy",
+                         System.Globalization.CultureInfo.InvariantCulture,
+                         System.Globalization.DateTimeStyles.None, out ngay))
+                e.ExpiryDate = ngay;
+            else
+                return Json2(400, new { error = "Hạn dùng phải theo dạng dd/MM/yyyy." });
+
+            int ctid, wcid;
+            if (!int.TryParse(Request.Form["customer_type_id"], out ctid) ||
+                !int.TryParse(Request.Form["weight_class_id"], out wcid))
+                return Json2(400, new { error = "Thiếu loại khách hoặc hạng tải." });
+            e.CustomerTypeId = ctid;
+            e.WeightClassId  = wcid;
+
+            try
+            {
+                int n = _repo.CapNhat(card_id, e);
+                CardAdminLog.Ghi("SUA", card_id, cu.CardCode, nguoi, Request.UserHostAddress,
+                    n > 0 ? "OK" : "KHONG_DOI",
+                    string.Format("so_the {0}->{1}; bien_so {2}->{3}; khach {4}->{5}",
+                        cu.CardNo, e.CardNo, cu.Plate ?? "-", e.Plate ?? "-",
+                        cu.CustomerName ?? "-", e.CustomerName ?? "-"));
+
+                return Json2(200, new { card_id, card_code = cu.CardCode, doi = n });
+            }
+            catch (MySqlConnector.MySqlException ex)
+            {
+                string cau = DichLoi(ex, e);
+                CardAdminLog.Ghi("SUA", card_id, cu.CardCode, nguoi, Request.UserHostAddress,
+                                 "TU_CHOI", cau);
+                return Json2(409, new { error = cau });
+            }
+            catch (Exception ex)
+            {
+                CardAdminLog.Ghi("SUA", card_id, cu.CardCode, nguoi, Request.UserHostAddress,
+                                 "LOI", ex.Message);
+                return Json2(503, new { error = "Không ghi được: " + ex.Message });
+            }
+        }
+
+        // Dịch mã lỗi CSDL thành câu người vận hành đọc được. Trả nguyên văn lỗi
+        // MySQL là đẩy việc hiểu sang người không có cách nào hiểu.
+        private static string DichLoi(MySqlConnector.MySqlException ex,
+                                      ParkingCardRepository.CardEdit e)
+        {
+            switch (ex.Number)
+            {
+                case 1062:
+                    return string.Format("Số thẻ {0} đã thuộc về một thẻ khác.", e.CardNo);
+                case 1452:
+                    return "Loại khách hoặc hạng tải không tồn tại trong danh mục.";
+                case 1406:
+                    return "Một trường nhập vào dài quá giới hạn của cột.";
+                default:
+                    return "Không ghi được (mã lỗi " + ex.Number + ").";
+            }
+        }
+
+        // POST /Cards/SetActive   card_id, bat (0|1), nguoi
+        [HttpPost]
+        public ActionResult SetActive(int card_id, int bat, string nguoi)
+        {
+            if (string.IsNullOrWhiteSpace(nguoi))
+                return Json2(400, new { error = "Thiếu tên người thao tác." });
+
+            // Đọc TRƯỚC khi đổi: sau đó thì không còn giá trị cũ để ghi nhật ký.
+            var cu = _repo.DocTheoId(card_id);
+            if (cu == null) return Json2(404, new { error = "Không tìm thấy thẻ." });
+
+            try
+            {
+                var kq = _repo.DatTrangThai(card_id, bat == 1);
+                string thaoTac = bat == 1 ? "BAT_LAI" : "NGUNG_DUNG";
+
+                if (kq == ParkingCardRepository.KetQuaDoiTrangThai.Ok)
+                {
+                    CardAdminLog.Ghi(thaoTac, card_id, cu.CardCode, nguoi,
+                        Request.UserHostAddress, "OK",
+                        "is_active " + (cu.IsActive ? "1" : "0") + "->" + bat);
+                    return Json2(200, new { card_id, card_code = cu.CardCode, is_active = bat == 1 });
+                }
+
+                string cau = LyDo(kq);
+                CardAdminLog.Ghi(thaoTac, card_id, cu.CardCode, nguoi,
+                                 Request.UserHostAddress, "TU_CHOI", cau);
+                return Json2(409, new { error = cau, ly_do = kq.ToString() });
+            }
+            catch (Exception ex)
+            {
+                CardAdminLog.Ghi(bat == 1 ? "BAT_LAI" : "NGUNG_DUNG", card_id, cu.CardCode,
+                                 nguoi, Request.UserHostAddress, "LOI", ex.Message);
+                return Json2(503, new { error = "Không đổi được: " + ex.Message });
+            }
+        }
+
+        private static string LyDo(ParkingCardRepository.KetQuaDoiTrangThai kq)
+        {
+            switch (kq)
+            {
+                case ParkingCardRepository.KetQuaDoiTrangThai.DangTrongODo:
+                    return "Thẻ này đang gắn với một xe trong ô đỗ. Tắt thẻ thì tài xế " +
+                           "quẹt ở cổng sẽ bị từ chối và không lấy được xe ra.";
+                case ParkingCardRepository.KetQuaDoiTrangThai.CoPhienDangMo:
+                    return "Thẻ này đang có phiên gửi xe chưa kết thúc.";
+                case ParkingCardRepository.KetQuaDoiTrangThai.VuaQuet:
+                    return "Thẻ này vừa được quẹt trong 24 giờ qua. Chờ qua 24 giờ " +
+                           "hoặc kiểm tra lại xe của khách trước khi tắt.";
+                case ParkingCardRepository.KetQuaDoiTrangThai.KhongThay:
+                    return "Không tìm thấy thẻ.";
+                case ParkingCardRepository.KetQuaDoiTrangThai.KhongDoiDuoc:
+                    return "Trạng thái thẻ vừa thay đổi bởi một thao tác khác. " +
+                           "Tải lại danh sách rồi thử lại.";
+                default:
+                    return "Không đổi được trạng thái thẻ.";
+            }
+        }
+
         private ActionResult Json2(int status, object body)
         {
             Response.StatusCode = status;

@@ -1,0 +1,50 @@
+{
+ "thoi_diem": "2026-09-25T14:48:05.604Z",
+ "dau": "TUH2SBFO",
+ "modal": {
+  "cat_duoc": 4597,
+  "so_o_nhap": 8,
+  "co_o_ma_the": false
+ },
+ "nhan": {
+  "vung_ky_tu": 830,
+  "co_ngung_dung": true,
+  "co_chu_xoa": false
+ },
+ "truoc": {
+  "so_the": 613,
+  "so_o_do": 755
+ },
+ "the_thu": {
+  "idA": 641,
+  "maA": "CC09AF1B"
+ },
+ "o_chon": {
+  "loai": 3,
+  "hang": 3,
+  "ma": "CC09AF1B",
+  "loaiThat": 3,
+  "hangThat": 3
+ },
+ "sua": {
+  "doc_csdl": [
+   "99Z-12345",
+   "Khach Da Sua",
+   "1",
+   "0"
+  ],
+  "tren_bang": "CC09AF1B\tTUH2SBFO-A\t99Z-12345\tXe thu giao dien\tKhach Da Sua\tTHUONG\t—\tVANG\tTUH2SBFO\t25/09/2026\tbật\tSửa Ngừng dùng"
+ },
+ "xac_nhan": {
+  "noi_dung": "Ngừng dùng thẻ CC09AF1B (số thẻ TUH2SBFO-A, biển số 99Z-12345)?\n\nThẻ sẽ bị từ chối ở cổng cho tới khi được dùng lại.",
+  "is_active_sau_huy": "1"
+ },
+ "tu_choi": {
+  "thong_bao": "Thẻ này đang gắn với một xe trong ô đỗ. Tắt thẻ thì tài xế quẹt ở cổng sẽ bị từ chối và không lấy được xe ra.",
+  "is_active": "1"
+ },
+ "sau": {
+  "so_the": 613,
+  "so_o_do": 755
+ }
+}
