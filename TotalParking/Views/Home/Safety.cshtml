@@ -255,11 +255,34 @@
         let blockStates = localStorage.getItem("occBlockStates") ? JSON.parse(localStorage.getItem("occBlockStates")) : {};
         let alarms = localStorage.getItem("activeAlarms") ? JSON.parse(localStorage.getItem("activeAlarms")) : [];
 
-        // Determine if any block has emergency/fault
-        let hasEStop = alarms.some(a => a.type === "operator" && a.message.includes("E-Stop"));
-        let hasPhotogateError = alarms.some(a => a.type === "system" && a.message.includes("quang") || a.message.includes("Photogate"));
-        let hasMotorError = alarms.some(a => a.type === "system" && a.message.includes("motor") || a.message.includes("động cơ"));
-        let hasLimitSwitchError = alarms.some(a => a.type === "system" && a.message.includes("hành trình") || a.message.includes("LS-T3"));
+        // ===================== BA LOI DA SUA O KHOI NAY =====================
+        // Truoc day bon dong duoi day deu hong, va hong theo cach lam ca ma tran
+        // khoa lien dong KHONG DUNG DUOC — khong phai chi sai mot dong.
+        //
+        //   1. Doc a.message, nhung noi ghi dung a.msg (Index.cshtml:1093,
+        //      OperationControl.cshtml:1318). a.message la undefined.
+        //   2. So a.type voi chuoi "operator"/"system", nhung type la SO:
+        //      1 = loi thao tac, 2 = loi he thong/thiet bi, 3 = den han bao tri.
+        //      Index.cshtml:1180-1182 so dung bang so.
+        //   3. Thu tu toan tu: `a.type === "system" && a.msg.includes(X) || a.msg.includes(Y)`
+        //      duoc hieu la `(A && B) || C`, nen ve C chay VO DIEU KIEN.
+        //
+        // Ket hop lai: moi khi localStorage co bat ky canh bao nao, dong dau tien
+        // goi undefined.includes(...) va nem TypeError, renderMatrix() dung giua
+        // chung, va toan bo ma tran an toan khong duoc dung. Nguoi van hanh nhin
+        // vao mot trang trong ma tuong la binh thuong.
+        //
+        // Doc qua chuoi() de mot canh bao thieu truong msg khong lam hong ca trang.
+        const chuoi = a => String(a && a.msg ? a.msg : "");
+        const LOI_THAO_TAC = 1, LOI_HE_THONG = 2;
+
+        let hasEStop = alarms.some(a => a.type === LOI_THAO_TAC && chuoi(a).includes("E-Stop"));
+        let hasPhotogateError = alarms.some(a => a.type === LOI_HE_THONG &&
+            (chuoi(a).includes("quang") || chuoi(a).includes("Photogate")));
+        let hasMotorError = alarms.some(a => a.type === LOI_HE_THONG &&
+            (chuoi(a).includes("motor") || chuoi(a).includes("động cơ")));
+        let hasLimitSwitchError = alarms.some(a => a.type === LOI_HE_THONG &&
+            (chuoi(a).includes("hành trình") || chuoi(a).includes("LS-T3")));
 
         baseInterlocks.forEach(item => {
             let status = item.status;

@@ -83,7 +83,14 @@
     function initDiagnostics() {
         // Read from local storage to check if Block B-04 error has been resolved or not
         let alarms = localStorage.getItem("activeAlarms") ? JSON.parse(localStorage.getItem("activeAlarms")) : [];
-        let hasMotorError = alarms.some(a => a.type === "system" && a.message.includes("động cơ") || a.message.includes("motor"));
+        // Cung ba loi nhu Safety.cshtml, da sua o do voi giai thich day du:
+        // truong that la a.msg (khong phai a.message), a.type la SO (2 = loi he
+        // thong), va `A && B || C` lam ve C chay vo dieu kien nen dong nay nem
+        // TypeError moi khi localStorage co canh bao — initDiagnostics() dung
+        // giua chung va bang lich su su co ben duoi khong bao gio duoc dung.
+        const chuoi = a => String(a && a.msg ? a.msg : "");
+        let hasMotorError = alarms.some(a => a.type === 2 &&
+            (chuoi(a).includes("động cơ") || chuoi(a).includes("motor")));
 
         const activeCount = document.getElementById("activeAlarmsCount");
         const activeWarning = document.getElementById("activeAlarmsWarning");
