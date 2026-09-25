@@ -1,0 +1,62 @@
+{
+ "thoi_diem": "2026-09-25T17:03:28.372Z",
+ "zone": 2,
+ "tinh": {
+  "moc_con_lai": [],
+  "bien_so_gia": []
+ },
+ "html_phuc_vu": {
+  "so_san": [],
+  "den_san": 0
+ },
+ "luoi_khoi": {
+  "so_khoi_api": 37,
+  "so_khoi_dom": 37,
+  "tom_tat": "37 khối · 0/211 ô có xe · 0%",
+  "phan_tram": "0%",
+  "sai": [],
+  "mau_block": 72
+ },
+ "modal": {
+  "block": 72,
+  "dem": "1/5",
+  "so_the": 5,
+  "o_co_xe_da_do": 1,
+  "co_xe": [
+   "Ô 01 | D400 | TEST.015 | chưa có biển số | đọc 00:03:28"
+  ],
+  "sai": []
+ },
+ "uu_tien_plate": {
+  "the": [
+   {
+    "dau": "Ô 01",
+    "sau": [
+     "D400",
+     "99Z-99999",
+     "KIEMTHU.A",
+     "đọc 00:00:00"
+    ]
+   },
+   {
+    "dau": "Ô 02",
+    "sau": [
+     "D202",
+     "KIEMTHU.B",
+     "Xe kiem thu B",
+     "chưa có biển số",
+     "đọc 00:00:01"
+    ]
+   }
+  ],
+  "sai": []
+ },
+ "duong_loi": {
+  "co_so_that_truoc": true,
+  "khoi_truoc": 37,
+  "khoi_sau": 0,
+  "tom_tat_sau": "Mất kết nối máy chủ",
+  "phan_tram_sau": "—",
+  "thanh_sau": "0%"
+ }
+}

@@ -58,6 +58,10 @@ namespace TotalParking.Controllers
                         register  = s.Register,
                         card_code = s.CardCode,
                         card_known = s.CardKnown,
+                        // Ho so xe: chi khac null khi ma the khop danh muc.
+                        plate = s.Plate,
+                        card_no = s.CardNo,
+                        vehicle_name = s.VehicleName,
                         suspect   = s.IsSuspect,
                         raw       = s.RawWords,
                         occupied  = s.IsOccupied,

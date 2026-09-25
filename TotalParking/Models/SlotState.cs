@@ -36,6 +36,16 @@ namespace TotalParking.Models
         // xe. Đếm nó vào số ô đã dùng sẽ làm bảng LED báo thiếu chỗ.
         public bool CardKnown { get; set; }
 
+        // Ho so the cua chiec xe dang nam trong o. Chi co gia tri khi card_code
+        // khop mot dong trong parking_card; the la (CardKnown = false) thi ba
+        // truong nay deu null.
+        //
+        // Nguoi van hanh doc BIEN SO, khong doc ma the 8 ky tu — man hinh chi
+        // hien ma the thi ho phai tu tra nguoc, va luc can gap thi khong ai tra.
+        public string Plate       { get; set; }
+        public string CardNo      { get; set; }
+        public string VehicleName { get; set; }
+
         // Chỉ tính là có xe khi mã khớp thẻ thật.
         public bool IsOccupied { get { return !string.IsNullOrEmpty(CardCode) && CardKnown; } }
 

@@ -29,7 +29,17 @@ namespace TotalParking.Services.Plc
             "SELECT s.block_id, s.slot_index, s.word_addr, s.card_code, " +
             "       s.raw_words, s.read_at, s.changed_at, " +
             "       b.block_no, b.zone_id, " +
-            "       (c.card_id IS NOT NULL) AS card_known " +
+            "       (c.card_id IS NOT NULL) AS card_known, " +
+            // Ba cot ho so the: LEFT JOIN da co san nen khong them phep noi nao.
+            //
+            // CAN THAN: Load() KHONG chi phuc vu duong hien thi. ScanAsync cung
+            // goi no de dung ban do slot theo block. Ba cot nay khong tham gia
+            // giai ma hay ghi xuong PLC, nhung neu cau SELECT hong thi ca vong
+            // quet chet theo, va SlotScanHost chi nuot loi vao LastError nen
+            // ben ngoai khong thay gi. plate va vehicle_name den tu migration
+            // 39_card_dec_fields.sql chu khong phai schema goc: mot CSDL chua
+            // chay migration do se lam ca bai ngung cap nhat trang thai o.
+            "       c.plate, c.card_no, c.vehicle_name " +
             "FROM   plc_slot_state s " +
             "JOIN   block b ON b.block_id = s.block_id " +
             "LEFT   JOIN parking_card c ON c.card_code = s.card_code " +
@@ -269,7 +279,10 @@ namespace TotalParking.Services.Plc
                 RawWords  = r["raw_words"] == DBNull.Value ? null : Convert.ToString(r["raw_words"]),
                 ReadAt    = r["read_at"]    == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(r["read_at"]),
                 ChangedAt = r["changed_at"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(r["changed_at"]),
-                CardKnown = Convert.ToBoolean(r["card_known"])
+                CardKnown = Convert.ToBoolean(r["card_known"]),
+                Plate       = r["plate"]        == DBNull.Value ? null : Convert.ToString(r["plate"]),
+                CardNo      = r["card_no"]      == DBNull.Value ? null : Convert.ToString(r["card_no"]),
+                VehicleName = r["vehicle_name"] == DBNull.Value ? null : Convert.ToString(r["vehicle_name"])
             };
         }
 

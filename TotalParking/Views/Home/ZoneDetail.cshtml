@@ -1,110 +1,42 @@
 @{ Layout = "~/Views/Shared/_ScadaLayout.cshtml";
-
     int zoneId = ViewBag.ZoneId ?? 1;
 
+    // Ten, vi tri va mau cua zone la DAC DIEM VAT LY co dinh cua toa nha, nen
+    // giu o day. Moi CON SO (tong o, dang dung, con trong, loi, danh sach khoi)
+    // deu den tu may chu — truoc day chung la 8 dong gan cung va 18 khoi bia
+    // mang ten theo khuon "Block <chu cai>-<so>", trong khi bai that co 118 khoi.
     string zoneName = "Zone " + zoneId;
-
     string zoneLocation = "";
-
-    string zoneColor = "rgb(37, 99, 235)"; // default blue
-
+    string zoneColor = "rgb(37, 99, 235)";
     string zoneColorMuted = "rgba(37, 99, 235, 0.15)";
-
-    int totalSlots = 0;
-
-    int occupiedSlots = 0;
-
-    int availableSlots = 0;
-
-    int errorSlots = 0;
-
-
 
     switch (zoneId)
     {
         case 1:
-            zoneName = "Zone 1 (Zone A)";
-            zoneLocation = "Hầm B1";
-            zoneColor = "rgb(234, 179, 8)"; // yellow
-            zoneColorMuted = "rgba(234, 179, 8, 0.15)";
-            totalSlots = 34; occupiedSlots = 23; availableSlots = 11; errorSlots = 1;
+            zoneName = "Zone 1 (Zone A)"; zoneLocation = "Hầm B1";
+            zoneColor = "rgb(234, 179, 8)"; zoneColorMuted = "rgba(234, 179, 8, 0.15)";
             break;
         case 2:
-            zoneName = "Zone 2 (Zone B)";
-            zoneLocation = "Hầm B2";
-            zoneColor = "rgb(148, 163, 184)"; // grey
-            zoneColorMuted = "rgba(148, 163, 184, 0.15)";
-            totalSlots = 38; occupiedSlots = 20; availableSlots = 18; errorSlots = 2;
+            zoneName = "Zone 2 (Zone B)"; zoneLocation = "Hầm B2";
+            zoneColor = "rgb(148, 163, 184)"; zoneColorMuted = "rgba(148, 163, 184, 0.15)";
             break;
         case 3:
-            zoneName = "Zone 3 (Zone C)";
-            zoneLocation = "Hầm B3";
-            zoneColor = "rgb(249, 115, 22)"; // orange
-            zoneColorMuted = "rgba(249, 115, 22, 0.15)";
-            totalSlots = 40; occupiedSlots = 10; availableSlots = 30; errorSlots = 0;
+            zoneName = "Zone 3 (Zone C)"; zoneLocation = "Hầm B3";
+            zoneColor = "rgb(249, 115, 22)"; zoneColorMuted = "rgba(249, 115, 22, 0.15)";
             break;
         case 4:
-            zoneName = "Zone 4 (Zone D)";
-            zoneLocation = "Tầng 1";
-            zoneColor = "rgb(168, 85, 247)"; // purple
-            zoneColorMuted = "rgba(168, 85, 247, 0.15)";
-            totalSlots = 44; occupiedSlots = 10; availableSlots = 34; errorSlots = 1;
+            zoneName = "Zone 4 (Zone D)"; zoneLocation = "Tầng 1";
+            zoneColor = "rgb(168, 85, 247)"; zoneColorMuted = "rgba(168, 85, 247, 0.15)";
             break;
         case 5:
-            zoneName = "Zone 5 (Zone E)";
-            zoneLocation = "Hầm B4";
-            zoneColor = "rgb(6, 182, 212)"; // cyan
-            zoneColorMuted = "rgba(6, 182, 212, 0.15)";
-            totalSlots = 30; occupiedSlots = 15; availableSlots = 15; errorSlots = 0;
+            zoneName = "Zone 5 (Zone E)"; zoneLocation = "Hầm B4";
+            zoneColor = "rgb(6, 182, 212)"; zoneColorMuted = "rgba(6, 182, 212, 0.15)";
             break;
         case 6:
         default:
-            zoneName = "Zone 6 (Zone F)";
-            zoneLocation = "Tầng 2";
-            zoneColor = "rgb(34, 197, 94)"; // green
-            zoneColorMuted = "rgba(34, 197, 94, 0.15)";
-            totalSlots = 35; occupiedSlots = 25; availableSlots = 10; errorSlots = 1;
+            zoneName = "Zone 6 (Zone F)"; zoneLocation = "Tầng 2";
+            zoneColor = "rgb(34, 197, 94)"; zoneColorMuted = "rgba(34, 197, 94, 0.15)";
             break;
-    }
-
-    int occupancyRate = (int)Math.Round((double)occupiedSlots / totalSlots * 100);
-
-    var blocks = new List<dynamic>();
-    if (zoneId == 1)
-    {
-        blocks.Add(new { Name = "Block A-01", Status = "Running", StatusText = "Đang chạy", Capacity = 12, Parked = 9, Suv = 4, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(37, 99, 235)", ProgressRate = 75, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block A-02", Status = "Normal", StatusText = "Bình thường", Capacity = 12, Parked = 6, Suv = 2, Sedan = 4, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block A-03", Status = "Warning", StatusText = "Cảnh báo", Capacity = 10, Parked = 8, Suv = 3, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(245, 158, 11)", ProgressRate = 80, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-    }
-    else if (zoneId == 2)
-    {
-        blocks.Add(new { Name = "Block A-04", Status = "Error", StatusText = "Lỗi", Capacity = 10, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(220, 38, 38)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-rose-500" });
-        blocks.Add(new { Name = "Block B-01", Status = "Normal", StatusText = "Bình thường", Capacity = 14, Parked = 7, Suv = 3, Sedan = 4, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block B-02", Status = "Normal", StatusText = "Bình thường", Capacity = 14, Parked = 8, Suv = 3, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 57, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-    }
-    else if (zoneId == 3)
-    {
-        blocks.Add(new { Name = "Block B-03", Status = "Maintenance", StatusText = "Bảo trì", Capacity = 12, Parked = 0, Suv = 0, Sedan = 0, Mode = "Bằng tay", ProgressColor = "rgb(124, 58, 237)", ProgressRate = 0, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block B-04", Status = "Normal", StatusText = "Bình thường", Capacity = 12, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 42, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block C-01", Status = "Normal", StatusText = "Bình thường", Capacity = 16, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 31, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-    }
-    else if (zoneId == 4)
-    {
-        blocks.Add(new { Name = "Block C-02", Status = "Normal", StatusText = "Bình thường", Capacity = 16, Parked = 6, Suv = 2, Sedan = 4, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 38, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block C-03", Status = "Offline", StatusText = "Offline", Capacity = 14, Parked = 0, Suv = 0, Sedan = 0, Mode = "Bằng tay", ProgressColor = "rgb(100, 116, 139)", ProgressRate = 0, Dot1 = "bg-slate-500", Dot2 = "bg-slate-500" });
-        blocks.Add(new { Name = "Block C-04", Status = "Normal", StatusText = "Bình thường", Capacity = 14, Parked = 4, Suv = 2, Sedan = 2, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 29, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-    }
-    else if (zoneId == 5)
-    {
-        blocks.Add(new { Name = "Block D-01", Status = "Normal", StatusText = "Bình thường", Capacity = 10, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block D-02", Status = "Normal", StatusText = "Bình thường", Capacity = 10, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block D-03", Status = "Normal", StatusText = "Bình thường", Capacity = 10, Parked = 5, Suv = 2, Sedan = 3, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 50, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-    }
-    else
-    {
-        blocks.Add(new { Name = "Block E-01", Status = "Normal", StatusText = "Bình thường", Capacity = 15, Parked = 10, Suv = 4, Sedan = 6, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 66, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block E-02", Status = "Normal", StatusText = "Bình thường", Capacity = 10, Parked = 8, Suv = 3, Sedan = 5, Mode = "Tự động", ProgressColor = "rgb(34, 197, 94)", ProgressRate = 80, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
-        blocks.Add(new { Name = "Block E-03", Status = "Warning", StatusText = "Cảnh báo", Capacity = 10, Parked = 7, Suv = 3, Sedan = 4, Mode = "Tự động", ProgressColor = "rgb(245, 158, 11)", ProgressRate = 70, Dot1 = "bg-emerald-500", Dot2 = "bg-emerald-500" });
     }
 }
 
@@ -160,7 +92,7 @@
 
                     <span class="text-slate-500 shrink-0">|</span>
 
-                    <span class="text-xs text-slate-300 font-medium shrink-0">3 blocks · @occupiedSlots/@totalSlots pallets · @occupancyRate%</span>
+                    <span id="zoneTomTat" class="text-xs text-slate-300 font-medium shrink-0">đang đọc…</span>
 
                 </div>
 
@@ -170,11 +102,11 @@
 
                     <div class="w-24 bg-slate-800 h-1.5 rounded-full overflow-hidden" style="border-radius: 9999px; height: 6px;">
 
-                        <div class="h-full rounded-full transition-all duration-500" style="width: @occupancyRate%; background-color: rgb(245, 158, 11); border-radius: 9999px; height: 6px;"></div>
+                        <div class="h-full rounded-full transition-all duration-500" id="zoneThanh" style="width: 0%; background-color: rgb(245, 158, 11); border-radius: 9999px; height: 6px;"></div>
 
                     </div>
 
-                    <span class="text-xs font-bold text-amber-500">@occupancyRate%</span>
+                    <span id="zonePhanTram" class="text-xs font-bold text-amber-500">—</span>
 
                 </div>
 
@@ -186,176 +118,8 @@
 
             <div class="px-4 pb-4 border-t border-slate-700/40">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-3">
-
-                    @foreach (var block in blocks)
-
-                    {
-
-                        string cardClass = "";
-
-                        string badgeStyle = "";
-
-                        string modeStyle = "color: rgb(96, 165, 250);"; // blue for Tự động
-
-
-
-                        switch ((string)block.Status)
-
-                        {
-
-                            case "Running":
-
-                                cardClass = "status-running";
-
-                                badgeStyle = "border: 1px solid rgba(37, 99, 235, 0.4); background: rgba(37, 99, 235, 0.1); color: rgb(96, 165, 250);";
-
-                                break;
-
-                            case "Normal":
-
-                                cardClass = "status-normal";
-
-                                badgeStyle = "border: 1px solid rgba(22, 163, 74, 0.4); background: rgba(22, 163, 74, 0.1); color: rgb(74, 222, 128);";
-
-                                break;
-
-                            case "Warning":
-
-                                cardClass = "status-warning";
-
-                                badgeStyle = "border: 1px solid rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.1); color: rgb(251, 146, 60);";
-
-                                break;
-
-                            case "Error":
-
-                                cardClass = "status-error";
-
-                                badgeStyle = "border: 1px solid rgba(220, 38, 38, 0.4); background: rgba(220, 38, 38, 0.1); color: rgb(252, 165, 165);";
-
-                                modeStyle = "color: rgb(148, 163, 184);"; // grey for Bằng tay
-
-                                break;
-
-                            case "Maintenance":
-
-                                cardClass = "status-maintenance";
-
-                                badgeStyle = "border: 1px solid rgba(124, 58, 237, 0.4); background: rgba(124, 58, 237, 0.1); color: rgb(192, 132, 252);";
-
-                                modeStyle = "color: rgb(148, 163, 184);"; // grey for Bằng tay
-
-                                break;
-
-                            case "Offline":
-
-                                cardClass = "status-offline";
-
-                                badgeStyle = "border: 1px solid rgba(100, 116, 139, 0.4); background: rgba(100, 116, 139, 0.1); color: rgb(148, 163, 184);";
-
-                                modeStyle = "color: rgb(148, 163, 184);";
-
-                                break;
-
-                        }
-
-
-
-        <button onclick="openBlockModal('@block.Name', '@block.StatusText', '@block.Status', @block.Capacity, @block.Parked, @block.Suv, @block.Sedan, '@block.Mode', @block.ProgressRate, '@block.ProgressColor')"
-
-                class="block-card-btn @cardClass">
-
-            <div>
-
-                <!-- Card Header (Block name & status badge) -->
-
-                <div class="flex items-center justify-between mb-3.5">
-
-                    <span class="font-bold text-white text-xs">@block.Name</span>
-
-                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold" style="@badgeStyle">@block.StatusText</span>
-
-                </div>
-
-
-
-                <!-- Inner telemetry fields (Sức chứa, Có xe, SUV/Sedan, Chế độ) -->
-
-                <div class="space-y-2 text-[11px]">
-
-                    <div class="flex justify-between items-center">
-
-                        <span class="text-slate-400">Sức chứa</span>
-
-                        <span class="font-semibold" style="color: rgb(248, 250, 252);">@block.Capacity</span>
-
-                    </div>
-
-                    <div class="flex justify-between items-center">
-
-                        <span class="text-slate-400">Có xe</span>
-
-                        <span class="font-bold" style="color: rgb(34, 197, 94);">@block.Parked</span>
-
-                    </div>
-
-                    <div class="flex justify-between items-center">
-
-                        <span class="text-slate-400">SUV / Sedan</span>
-
-                        <span class="font-semibold" style="color: rgb(248, 250, 252);">@block.Suv / @block.Sedan</span>
-
-                    </div>
-
-                    <div class="flex justify-between items-center">
-
-                        <span class="text-slate-400">Chế độ</span>
-
-                        <span style="@modeStyle" class="font-bold">@block.Mode</span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- Progress Bar & Ratio/Percent (matches mockup details exactly) -->
-
-            <div class="mt-4 pt-2 border-t border-[#23354E]/30">
-
-                <div class="w-full bg-[#1E293B] h-1.5 rounded-full overflow-hidden" style="border-radius: 9999px; height: 6px;">
-
-                    <div class="h-full rounded-full" style="width: @(block.ProgressRate)%; background-color: @block.ProgressColor; border-radius: 9999px; height: 6px;"></div>
-
-                </div>
-
-                <div class="flex justify-between text-[10px] font-semibold mt-1">
-
-                    <span class="text-slate-500">@block.Parked/@block.Capacity</span>
-
-                    <span style="color: @block.ProgressColor">@block.ProgressRate%</span>
-
-                </div>
-
-
-
-                <!-- PLC & HMI Status Dots -->
-
-                <div class="flex gap-1.5 mt-2.5">
-
-                    <span class="w-2.5 h-2.5 rounded-full inline-block" style="border-radius: 9999px; width: 8px; height: 8px; background-color: rgb(34, 197, 94);"></span>
-
-                    <span class="w-2.5 h-2.5 rounded-full inline-block" style="border-radius: 9999px; width: 8px; height: 8px; background-color: rgb(34, 197, 94);"></span>
-
-                </div>
-
-            </div>
-
-        </button>}
-
+                <div id="blocksGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-3">
+                    <div class="col-span-full text-center text-slate-500 text-xs py-8">Đang đọc danh sách khối…</div>
                 </div>
 
             </div>
@@ -396,7 +160,7 @@
 
         <div class="flex items-center gap-3 pb-3 border-b border-[#23354E]/55">
 
-            <h2 id="modalBlockName" class="text-base font-bold text-white">Block A-01</h2>
+            <h2 id="modalBlockName" class="text-base font-bold text-white">—</h2>
 
             <span id="modalBlockStatus" class="px-2 py-0.5 rounded text-[10px] font-semibold border flex items-center gap-1">
 
@@ -416,7 +180,7 @@
 
                 <span class="text-slate-500 text-[10px] font-mono uppercase">ZONE</span>
 
-                <span id="modalZoneVal" class="block text-xs font-bold text-white mt-0.5">Zone A</span>
+                <span id="modalZoneVal" class="block text-xs font-bold text-white mt-0.5">—</span>
 
             </div>
 
@@ -424,7 +188,7 @@
 
                 <span class="text-slate-500 text-[10px] font-mono uppercase">CHẾ ĐỘ</span>
 
-                <span id="modalModeVal" class="block text-xs font-bold text-white mt-0.5">Tự động</span>
+                <span id="modalModeVal" class="block text-xs font-bold text-white mt-0.5">—</span>
 
             </div>
 
@@ -432,7 +196,7 @@
 
                 <span class="text-slate-500 text-[10px] font-mono uppercase">SỨC CHỨA</span>
 
-                <span id="modalCapacityVal" class="block text-xs font-bold text-white mt-0.5">12 pallet</span>
+                <span id="modalCapacityVal" class="block text-xs font-bold text-white mt-0.5">—</span>
 
             </div>
 
@@ -440,7 +204,7 @@
 
                 <span class="text-slate-500 text-[10px] font-mono uppercase">CÓ XE</span>
 
-                <span id="modalParkedVal" class="block text-xs font-bold text-white mt-0.5">9 (75%)</span>
+                <span id="modalParkedVal" class="block text-xs font-bold text-white mt-0.5">—</span>
 
             </div>
 
@@ -448,7 +212,7 @@
 
                 <span class="text-slate-500 text-[10px] font-mono uppercase">SUV</span>
 
-                <span id="modalSuvVal" class="block text-xs font-bold text-white mt-0.5">4</span>
+                <span id="modalSuvVal" class="block text-xs font-bold text-white mt-0.5">—</span>
 
             </div>
 
@@ -456,7 +220,7 @@
 
                 <span class="text-slate-500 text-[10px] font-mono uppercase">SEDAN</span>
 
-                <span id="modalSedanVal" class="block text-xs font-bold text-white mt-0.5">5</span>
+                <span id="modalSedanVal" class="block text-xs font-bold text-white mt-0.5">—</span>
 
             </div>
 
@@ -464,7 +228,7 @@
 
                 <span class="text-slate-500 text-[10px] font-mono uppercase">CHU KỲ</span>
 
-                <span id="modalCycleVal" class="block text-xs font-bold text-white mt-0.5">3,820</span>
+                <span id="modalCycleVal" class="block text-xs font-bold text-white mt-0.5">—</span>
 
             </div>
 
@@ -472,7 +236,7 @@
 
                 <span class="text-slate-500 text-[10px] font-mono uppercase">RUNTIME MOTOR</span>
 
-                <span id="modalRuntimeVal" class="block text-xs font-bold text-white mt-0.5">1240h</span>
+                <span id="modalRuntimeVal" class="block text-xs font-bold text-white mt-0.5">—</span>
 
             </div>
 
@@ -494,7 +258,7 @@
 
                 </svg>
 
-                <span class="text-xs font-bold text-slate-300">Trạng thái Pallet (<span id="modalPalletCount">12 pallet</span>)</span>
+                <span class="text-xs font-bold text-slate-300">Trạng thái Pallet (<span id="modalPalletCount">—</span>)</span>
 
             </div>
 
@@ -516,65 +280,7 @@
 
         <div class="flex flex-wrap gap-4 text-[10px] mt-4 pt-2 border-t border-[#23354E]/40 font-semibold">
 
-            <div class="flex items-center gap-1.5">
-
-                <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(22, 163, 74);"></span>
-
-                <span class="text-slate-300">Có xe (Xanh lá)</span>
-
-            </div>
-
-            <div class="flex items-center gap-1.5">
-
-                <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(226, 232, 240); border: 1px solid rgb(203, 213, 225);"></span>
-
-                <span class="text-slate-300">Trống</span>
-
-            </div>
-
-            <div class="flex items-center gap-1.5">
-
-                <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(220, 38, 38);"></span>
-
-                <span class="text-slate-300">Lỗi (Đỏ)</span>
-
-            </div>
-
-            @if (zoneId == 3)
-
-            {
-
-                <div class="flex items-center gap-1.5">
-
-                    <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(132, 204, 22);"></span>
-
-                    <span class="text-slate-300">Xanh mạ</span>
-
-                </div>
-
-                <div class="flex items-center gap-1.5">
-
-                    <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(6, 182, 212);"></span>
-
-                    <span class="text-slate-300">Xanh cyan</span>
-
-                </div>
-
-            }
-
-            else
-
-            {
-
-                <div class="flex items-center gap-1.5">
-
-                    <span class="w-3 h-3 rounded inline-block" style="background-color: rgb(124, 58, 237);"></span>
-
-                    <span class="text-slate-300">Khóa</span>
-
-                </div>
-
-            }
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded inline-block" style="background-color: rgba(37, 99, 235, 0.12); border: 1px solid rgba(37, 99, 235, 0.45);"></span><span class="text-[10px] text-slate-400">Có xe</span></div><div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded inline-block" style="background-color: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.45);"></span><span class="text-[10px] text-slate-400">Thẻ lạ</span></div><div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded inline-block" style="background-color: rgba(15, 23, 42, 0.6); border: 1px solid rgba(51, 65, 85, 0.8);"></span><span class="text-[10px] text-slate-400">Trống</span></div>
 
         </div>
 
@@ -600,17 +306,9 @@
 
                 <div class="flex items-center gap-1.5">
 
-                    <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: rgb(34, 197, 94); box-shadow: rgba(34, 197, 94, 0.4) 0px 0px 6px;"></span>
+                    <span id="modalDenPlc" class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: rgb(71, 85, 105);"></span>
 
                     <span class="text-slate-300">PLC</span>
-
-                </div>
-
-                <div class="flex items-center gap-1.5">
-
-                    <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: rgb(34, 197, 94); box-shadow: rgba(34, 197, 94, 0.4) 0px 0px 6px;"></span>
-
-                    <span class="text-slate-300">HMI</span>
 
                 </div>
 
@@ -1304,297 +1002,273 @@
 
 <script>
 
-    function openBlockModal(blockName, statusText, statusType, capacity, parked, suv, sedan, mode, progressRate, progressColor) {
-
-        // 1. Set text values
-
-        document.getElementById("modalBlockName").innerText = blockName;
-
-
-
-        // 2. Set status badge
-
-        var statusBadge = document.getElementById("modalBlockStatus");
-
-        statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-semibold border flex items-center gap-1";
-
-
-
-        // Pulse/Activity zig-zag SVG line icon
-
-        var pulseIcon = `<svg class="h-3 w-3 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`;
-
-
-
-        if (statusType === "Running") {
-
-            statusBadge.innerHTML = pulseIcon + " " + statusText;
-
-            statusBadge.className += " border-[#2563eb]/40 bg-[#2563eb]/10 text-[#60a5fa]";
-
-        } else if (statusType === "Normal") {
-
-            statusBadge.innerHTML = "● " + statusText;
-
-            statusBadge.className += " border-[#16a34a]/40 bg-[#16a34a]/10 text-[#4ade80]";
-
-        } else if (statusType === "Warning") {
-
-            statusBadge.innerHTML = "▲ " + statusText;
-
-            statusBadge.className += " border-[#d97706]/40 bg-[#d97706]/10 text-[#fb923c]";
-
-        } else if (statusType === "Error") {
-
-            statusBadge.innerHTML = "⚠ " + statusText;
-
-            statusBadge.className += " border-[#dc2626]/40 bg-[#dc2626]/10 text-[#fca5a5]";
-
-        } else if (statusType === "Maintenance") {
-
-            statusBadge.innerHTML = "🔧 " + statusText;
-
-            statusBadge.className += " border-[#7c3aed]/40 bg-[#7c3aed]/10 text-[#c084fc]";
-
-        } else if (statusType === "Offline") {
-
-            statusBadge.innerHTML = "🔌 " + statusText;
-
-            statusBadge.className += " border-[#64748b]/40 bg-[#64748b]/10 text-[#94a3b8]";
-
-        }
-
-
-
-        // 3. Stats Grid
-
-        document.getElementById("modalZoneVal").innerText = "@zoneName";
-
-        document.getElementById("modalModeVal").innerText = mode;
-
-        document.getElementById("modalCapacityVal").innerText = capacity + " pallet";
-
-        document.getElementById("modalParkedVal").innerText = parked + " (" + progressRate + "%)";
-
-        document.getElementById("modalSuvVal").innerText = suv;
-
-        document.getElementById("modalSedanVal").innerText = sedan;
-
-
-
-        // Cycles & Runtime simulation
-
-        var isBlock1 = blockName.endsWith("-01");
-
-        var isBlock2 = blockName.endsWith("-02");
-
-        var isBlock3 = blockName.endsWith("-03");
-
-
-
-        var cycleVal = isBlock1 ? "3,820" : (isBlock2 ? "2,450" : (isBlock3 ? "1,980" : "890"));
-
-        var runtimeVal = isBlock1 ? "1240h" : (isBlock2 ? "850h" : (isBlock3 ? "640h" : "310h"));
-
-
-
-        document.getElementById("modalCycleVal").innerText = cycleVal;
-
-        document.getElementById("modalRuntimeVal").innerText = runtimeVal;
-
-        document.getElementById("modalPalletCount").innerText = capacity + " pallet";
-
-
-
-        // 4. Generate Pallets Grid
-
-        var grid = document.getElementById("modalPalletsGrid");
-
-        grid.innerHTML = "";
-
-
-
-        // Standard plate lists to display beautiful Vietnamese licenses
-
-        var plates = ["51G-12345", "30H-88877", "43A-56789", "92B-11223", "79C-44556", "51K-99001", "34A-65432", "51F-77788", "29A-99999"];
-
-        var times = ["06:00", "08:13", "10:26", "12:39", "14:52", "16:05", "06:18", "08:31", "10:44"];
-
-
-
-        for (var i = 1; i <= capacity; i++) {
-
-            var slotNumber = i;
-
-            var numStr = slotNumber < 10 ? "0" + slotNumber : slotNumber;
-
-            var pCode = "P" + numStr;
-
-
-
-            var type = "";
-
-            var plate = "";
-
-            var time = "";
-
-
-
-            var isOccupied = false;
-
-            var isError = false;
-
-            var isLocked = false;
-
-
-
-            if (i <= parked) {
-
-                isOccupied = true;
-
-                // Distribute SUV and Sedan based on block stats
-
-                type = (i <= suv) ? "SUV" : "Sedan";
-
-                plate = plates[(i - 1) % plates.length];
-
-                time = times[(i - 1) % times.length];
-
-            } else if (statusType === "Error" && i === capacity) {
-
-                isError = true;
-
-            } else if (statusType === "Maintenance" || statusType === "Offline") {
-
-                isLocked = true;
-
-            } else if (statusType === "Warning" && i === capacity - 1) {
-
-                isError = true;
-
-            } else if (i === capacity) {
-
-                isLocked = true;
-
-            }
-
-
-
-            var card = document.createElement("div");
-
-
-
-            if (isOccupied) {
-
-                card.className = "pallet-card occupied";
-
-                card.innerHTML = `
-
-                    <div class="pallet-header">
-
-                        <svg style="width: 12px; height: 12px; flex-shrink: 0; display: inline-block; color: rgb(74, 222, 128);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
-
-                            <circle cx="7" cy="17" r="2" />
-
-                            <circle cx="17" cy="17" r="2" />
-
-                        </svg>
-
-                        <span>${pCode}</span>
-
-                    </div>
-
-                    <div class="pallet-type">${type}</div>
-
-                    <div class="pallet-plate" style="color: rgb(74, 222, 128);">${plate}</div>
-
-                    <div class="pallet-time" style="color: rgb(22, 163, 74);">${time}</div>
-
-                `;
-
-            } else if (isError) {
-
-                card.className = "pallet-card error";
-
-                card.innerHTML = `
-
-                    <div class="pallet-header" style="height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
-
-                        <svg style="width: 14px; height: 14px; flex-shrink: 0; display: inline-block; color: rgb(248, 113, 113);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-
-                        </svg>
-
-                        <span>${pCode}</span>
-
-                    </div>
-
-                `;
-
-            } else if (isLocked) {
-
-                card.className = "pallet-card locked";
-
-                card.innerHTML = `
-
-                    <div class="pallet-header" style="height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
-
-                        <svg style="width: 14px; height: 14px; flex-shrink: 0; display: inline-block; color: rgb(192, 132, 252);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z" />
-
-                        </svg>
-
-                        <span>${pCode}</span>
-
-                    </div>
-
-                `;
-
-            } else {
-
-                card.className = "pallet-card empty";
-
-                card.innerHTML = `
-
-                    <div class="pallet-header" style="height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
-
-                        <svg style="width: 12px; height: 12px; flex-shrink: 0; display: inline-block; color: rgb(203, 213, 225);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-
-                            <circle cx="12" cy="12" r="10" />
-
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7h4a3 3 0 0 1 0 6H9" />
-
-                        </svg>
-
-                        <span>${pCode}</span>
-
-                    </div>
-
-                `;
-
-            }
-
-
-
-            grid.appendChild(card);
-
-        }
-
-
-
-        // 5. Open modal
-
-        var modal = document.getElementById("blockDetailModal");
-
-        modal.classList.add("active");
-
+    // ===================== DU LIEU THAT =====================
+    // Truoc day trang nay gia tu tren xuong duoi: 8 dong gan so cung cho thong
+    // ke zone, 18 khoi bia dat ten theo khuon "Block <chu cai>-<so>" (bai that co 118
+    // khoi), va 9 bien so xe khong ton tai gan cho cac o do.
+    //
+    // Gio: danh sach khoi tu /Monitor/BlockMap, o do tu /SlotStatus.
+    var ZONE_ID = @zoneId;
+    var URL_BLOCKMAP = "@Url.Action("BlockMap", "Monitor")";
+    var URL_SLOT = "@Url.Action("Index", "SlotStatus")";
+    var NHIP_KHOI_MS = 15000;
+
+    var khoiTheoSo = {};
+
+    function escZ(v) {
+        return String(v === null || v === undefined ? "" : v)
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
     }
 
+    function veThongKeZone(ds) {
+        var tongO = 0, coXe = 0, mat = 0;
+        ds.forEach(function (b) {
+            tongO += b.slots || 0;
+            coXe += b.occupied || 0;
+            if (!b.online) mat++;
+        });
+        var pct = tongO > 0 ? Math.round(coXe / tongO * 100) : 0;
 
+        var tt = document.getElementById("zoneTomTat");
+        if (tt) tt.textContent = ds.length + " khối · " + coXe + "/" + tongO +
+                                 " ô có xe · " + pct + "%" +
+                                 (mat ? "  ·  " + mat + " khối mất kết nối" : "");
+        var th = document.getElementById("zoneThanh");
+        if (th) th.style.width = pct + "%";
+        var pt = document.getElementById("zonePhanTram");
+        if (pt) pt.textContent = pct + "%";
+    }
+
+    function veKhoi(ds) {
+        var grid = document.getElementById("blocksGrid");
+        if (!grid) return;
+
+        if (ds.length === 0) {
+            grid.innerHTML = '<div class="col-span-full text-center text-slate-500 text-xs py-8">' +
+                             'Zone này chưa có khối nào trong cơ sở dữ liệu.</div>';
+            return;
+        }
+
+        grid.innerHTML = ds.map(function (b) {
+            var trong = (b.slots || 0) - (b.occupied || 0);
+            var pct = b.slots > 0 ? Math.round(b.occupied / b.slots * 100) : 0;
+
+            // Mat ket noi KHAC voi trong. Mot khoi khong doc duoc thi so o cua no
+            // la so doc duoc LAN CUOI, khong phai hien trang.
+            var nhan = b.online
+                ? '<span class="px-2 py-0.5 rounded text-[10px] font-semibold border" ' +
+                  'style="border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.1);color:rgb(74,222,128);">Đang đọc được</span>'
+                : '<span class="px-2 py-0.5 rounded text-[10px] font-semibold border" ' +
+                  'style="border-color:rgba(220,38,38,.4);background:rgba(220,38,38,.1);color:rgb(248,113,113);">Mất kết nối</span>';
+
+            return '<button onclick="openBlockModal(' + b.block_no + ')" ' +
+                   'class="text-left rounded-lg p-3 transition-all hover:border-slate-500" ' +
+                   'style="background:rgb(30,41,59);border:1px solid rgb(51,65,85);">' +
+                   '<div class="flex items-center justify-between mb-2">' +
+                     '<span class="text-sm font-bold text-white">Khối ' + b.block_no + '</span>' +
+                     nhan +
+                   '</div>' +
+                   '<div class="space-y-1 text-[11px] font-mono">' +
+                     '<div class="flex justify-between"><span class="text-slate-400">Sức chứa</span>' +
+                       '<span class="text-slate-100 font-semibold">' + (b.slots || 0) + ' ô</span></div>' +
+                     '<div class="flex justify-between"><span class="text-slate-400">Có xe</span>' +
+                       '<span class="font-bold" style="color:rgb(34,197,94);">' + (b.occupied || 0) + '</span></div>' +
+                     '<div class="flex justify-between"><span class="text-slate-400">Còn trống</span>' +
+                       '<span class="text-slate-100 font-semibold">' + trong + '</span></div>' +
+                     '<div class="flex justify-between"><span class="text-slate-400">Ô đọc mới</span>' +
+                       '<span class="text-slate-300">' + (b.fresh || 0) + '/' + (b.slots || 0) + '</span></div>' +
+                   '</div>' +
+                   '<div class="w-full bg-slate-800 rounded-full mt-2" style="height:4px;">' +
+                     '<div class="rounded-full" style="height:4px;width:' + pct + '%;background:rgb(37,99,235);"></div>' +
+                   '</div></button>';
+        }).join("");
+    }
+
+    function loiKhoi(thongBao) {
+        var grid = document.getElementById("blocksGrid");
+        if (grid) {
+            grid.innerHTML = '<div class="col-span-full text-center text-red-400 text-xs py-8">' +
+                             'Không đọc được danh sách khối: ' + escZ(thongBao) + '</div>';
+        }
+        // Modal khong co nhip lam moi rieng. Khong xoa thi no giu nguyen so cu
+        // vo thoi han truoc mat nguoi dung trong khi nen sau da bao mat ket noi.
+        khoiTheoSo = {};
+        var modal = document.getElementById("blockDetailModal");
+        if (modal && modal.classList.contains("active")) {
+            ["modalCapacityVal", "modalParkedVal", "modalModeVal",
+             "modalPalletCount"].forEach(function (id) {
+                var e = document.getElementById(id);
+                if (e) e.innerText = "—";
+            });
+            var g = document.getElementById("modalPalletsGrid");
+            if (g) g.innerHTML = '<div class="text-red-400 text-xs">Mất kết nối máy chủ.</div>';
+            var d2 = document.getElementById("modalDenPlc");
+            if (d2) d2.style.cssText = "background-color: rgb(71, 85, 105);";
+        }
+
+        // Xoa so chu khong giu lai: so cu trong y het so dung.
+        var tt = document.getElementById("zoneTomTat");
+        if (tt) tt.textContent = "Mất kết nối máy chủ";
+        var th = document.getElementById("zoneThanh");
+        if (th) th.style.width = "0%";
+        var pt = document.getElementById("zonePhanTram");
+        if (pt) pt.textContent = "—";
+    }
+
+    function taiKhoi() {
+        return fetch(URL_BLOCKMAP, { cache: "no-store" })
+            .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            })
+            .then(function (d) {
+                if (d && d.error) throw new Error(d.error);
+                if (!d || !Array.isArray(d.blocks)) throw new Error("thiếu dữ liệu");
+                var ds = d.blocks.filter(function (b) { return b.zone_id === ZONE_ID; })
+                                 .sort(function (a, b) { return a.block_no - b.block_no; });
+                khoiTheoSo = {};
+                ds.forEach(function (b) { khoiTheoSo[b.block_no] = b; });
+                veThongKeZone(ds);
+                veKhoi(ds);
+            })
+            .catch(function (e) { loiKhoi(e.message); });
+    }
+
+    // ------------------------------- o do trong mot khoi
+    function veODo(slots) {
+        var grid = document.getElementById("modalPalletsGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+
+        slots.forEach(function (o) {
+            var card = document.createElement("div");
+            var nen, vien, noiDung;
+
+            if (o.suspect) {
+                // The la: co ma the trong thanh ghi nhung ma do KHONG co trong
+                // danh muc. Nghia la co xe that nhung the chua dang ky, hoac
+                // thanh ghi giai ma sai. Phai hien rieng, khong gop vao "trong".
+                nen = "rgba(245,158,11,.12)"; vien = "rgba(245,158,11,.45)";
+                noiDung = '<div class="text-[10px] font-bold" style="color:rgb(251,191,36);">Thẻ lạ</div>' +
+                          '<div class="text-[10px] font-mono text-slate-300">' + escZ(o.card_code) + '</div>';
+            } else if (o.occupied) {
+                // Chi 128/613 the co bien so, nhung ca 613 deu co so the. Lui ve
+                // so the thay vi hien dau gach cho 79% truong hop.
+                var chinh = o.plate || o.card_no || o.card_code;
+                var phu = o.plate ? o.card_no : (o.vehicle_name || "");
+                nen = "rgba(37,99,235,.12)"; vien = "rgba(37,99,235,.45)";
+                noiDung = '<div class="text-[11px] font-bold text-white font-mono">' + escZ(chinh) + '</div>' +
+                          (phu ? '<div class="text-[9px] text-slate-400 font-mono">' + escZ(phu) + '</div>' : "") +
+                          (o.plate ? "" : '<div class="text-[9px] text-slate-500">chưa có biển số</div>');
+            } else {
+                nen = "rgba(15,23,42,.6)"; vien = "rgba(51,65,85,.8)";
+                noiDung = '<div class="text-[10px] text-slate-600">trống</div>';
+            }
+
+            card.className = "rounded p-2";
+            card.style.cssText = "background:" + nen + ";border:1px solid " + vien + ";";
+            card.innerHTML =
+                '<div class="flex items-center justify-between mb-1">' +
+                  '<span class="text-[10px] font-bold text-slate-300">Ô ' +
+                    (o.slot < 10 ? "0" + o.slot : o.slot) + '</span>' +
+                  '<span class="text-[9px] font-mono text-slate-600">' + escZ(o.register) + '</span>' +
+                '</div>' + noiDung +
+                '<div class="text-[9px] text-slate-600 font-mono mt-1">' +
+                  (o.read_at ? "đọc " + escZ(o.read_at) : "chưa đọc được") + '</div>';
+            grid.appendChild(card);
+        });
+    }
+
+    // Tang moi lan mo modal. Response ve muon cua khoi truoc phai bi bo,
+    // neu khong: bam khoi A (cham) roi bam ngay khoi B (nhanh) thi luoi o cua A
+    // ve sau se de len o cua B trong khi tieu de van ghi ten B — nguoi di tim xe
+    // doc bien so khoi A duoi nhan khoi B.
+    var luotMo = 0;
+
+    function openBlockModal(blockNo) {
+        var luot = ++luotMo;
+        var b = khoiTheoSo[blockNo] || {};
+        var dat = function (id, v) {
+            var e = document.getElementById(id);
+            if (e) e.innerText = v;
+        };
+
+        dat("modalBlockName", "Khối " + blockNo);
+        dat("modalZoneVal", "@zoneName");
+        dat("modalCapacityVal", (b.slots || 0) + " ô");
+        dat("modalParkedVal", String(b.occupied || 0));
+        dat("modalSuvVal", "—");
+        dat("modalSedanVal", "—");
+        dat("modalModeVal", b.online ? "Đang đọc được" : "Mất kết nối");
+
+        var den = document.getElementById("modalDenPlc");
+        if (den) {
+            den.style.cssText = b.online
+                ? "background-color: rgb(34, 197, 94); box-shadow: rgba(34, 197, 94, 0.4) 0px 0px 6px;"
+                : "background-color: rgb(220, 38, 38); box-shadow: rgba(220, 38, 38, 0.4) 0px 0px 6px;";
+        }
+        dat("modalRuntimeVal", "—");
+        dat("modalCycleVal", "—");
+        dat("modalPalletCount", "…");
+
+        var badge = document.getElementById("modalBlockStatus");
+        if (badge) {
+            badge.innerText = b.online ? "Đang đọc được" : "Mất kết nối";
+            badge.className = "px-2 py-0.5 rounded text-[10px] font-semibold border flex items-center gap-1";
+            badge.style.cssText = b.online
+                ? "border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.1);color:rgb(74,222,128);"
+                : "border-color:rgba(220,38,38,.4);background:rgba(220,38,38,.1);color:rgb(248,113,113);";
+        }
+
+        var grid = document.getElementById("modalPalletsGrid");
+        if (grid) grid.innerHTML = '<div class="text-slate-500 text-xs">Đang đọc ô đỗ…</div>';
+
+        var modal = document.getElementById("blockDetailModal");
+        if (modal) modal.classList.add("active");
+
+        fetch(URL_SLOT + "?block=" + blockNo, { cache: "no-store" })
+            .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            })
+            .then(function (d) {
+                if (luot !== luotMo) return;          // khoi khac da duoc mo
+                if (d && d.error) throw new Error(d.error);
+                if (!d || !Array.isArray(d.slots)) throw new Error("thiếu dữ liệu");
+                veODo(d.slots);
+                dat("modalPalletCount", d.occupied + "/" + d.total_slots +
+                                        (d.suspect ? "  ·  " + d.suspect + " thẻ lạ" : ""));
+            })
+            .catch(function (e) {
+                if (luot !== luotMo) return;
+                if (grid) {
+                    grid.innerHTML = '<div class="text-red-400 text-xs">Không đọc được ô đỗ: ' +
+                                     escZ(e.message) + "</div>";
+                }
+                dat("modalPalletCount", "—");
+            });
+    }
+
+    // Guard if (!timer): thieu no thi moi lan visibilitychange bao hien ma
+    // khong co lan an tuong ung se sinh them mot interval va mat handle cu.
+    var timerKhoi = null;
+
+    function batDauKhoi() {
+        if (timerKhoi) return;
+        taiKhoi();
+        timerKhoi = setInterval(taiKhoi, NHIP_KHOI_MS);
+    }
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            if (timerKhoi) { clearInterval(timerKhoi); timerKhoi = null; }
+        } else {
+            batDauKhoi();
+        }
+    });
+
+    batDauKhoi();
 
     function closeBlockModal() {
 
