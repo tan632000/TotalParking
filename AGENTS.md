@@ -71,12 +71,20 @@ All runtime behaviour is client-side JavaScript inlined in `.cshtml` files, back
 
    | Key | Written by | Read by |
    |---|---|---|
-   | `activeAlarms` | `Index`, `OperationControl` | `Index`, `OperationControl`, `Diagnostics` |
-   | `palletCycleData` | `OperationControl` | `Index` |
-   | `occBlockStates`, `occPalletOccupancy` | `OperationControl` | `OperationControl` |
-   | `occAdminOverride`, `occActiveRecovery`, `occBypassedSensors` | `OperationControl` | `OperationControl` |
+   | `activeAlarms` | `Index`, `OperationControl` | `Index`, `OperationControl`, `Diagnostics`, `Safety` |
+   | `palletCycleData` | `OperationControl`, `Reports` | `Index`, `OperationControl`, `Reports` |
+   | `occBlockStates` | `OperationControl` | `OperationControl`, `Safety` |
+   | `occPalletOccupancy` | `OperationControl` | `OperationControl` |
+   | `occAdminOverride`, `occActiveRecovery` | `OperationControl` | `OperationControl` |
+   | `occBypassedSensors` | `OperationControl`, **`Safety`** | `OperationControl`, `Safety` |
 
    Any change here must update every reader in the same task, and must say so in the summary.
+
+   Two keys have **two writers**: `palletCycleData` (`OperationControl` and `Reports`) and `occBypassedSensors` (`OperationControl` and `Safety`). Last write wins and neither side merges, so a shape change must land in both writers at once.
+
+   `Safety` is easy to miss because it reads and writes without being an "OCC" page. Verified 25/09/2026 by grepping every `localStorage.(get|set|remove)Item` call in `Views/**/*.cshtml`; re-run that grep rather than trusting this table after a view is added.
+
+   Four further keys are single-page state, not a contract: `dispatchEntryQueue`, `dispatchExitQueue`, `dispatchRejectedList` (`Queue` only) and `occBypassLogs` (`Safety` only).
 
 3. **Views declare their own layout.** `_ViewStart.cshtml` sets `_Layout.cshtml`, but all 21 SCADA views override it with `Layout = "~/Views/Shared/_ScadaLayout.cshtml"`. New SCADA pages must do the same.
 
