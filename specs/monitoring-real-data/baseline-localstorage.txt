@@ -22,21 +22,17 @@ var tho = localStorage.getItem('activeAlarms');
 localStorage.setItem('activeAlarms', JSON.stringify(giu));
 
 ## OperationControl.cshtml
-const storedBlockStates = localStorage.getItem('occBlockStates');
-const storedOccupancy = localStorage.getItem('occPalletOccupancy');
-const storedAlarms = localStorage.getItem('activeAlarms');
-localStorage.setItem('occBlockStates', JSON.stringify(blockStates));
-localStorage.setItem('occPalletOccupancy', JSON.stringify(palletOccupancy));
-localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
-const isAdminOverride = localStorage.getItem('occAdminOverride') === 'true';
-const activeRecovery = localStorage.getItem('occActiveRecovery');
-const storedCycles = localStorage.getItem('palletCycleData');
-localStorage.setItem('palletCycleData', JSON.stringify(cycleData));
-localStorage.setItem('occActiveRecovery', JSON.stringify(checklistState));
-localStorage.setItem('occActiveRecovery', JSON.stringify(checklistState));
-localStorage.removeItem('occActiveRecovery');
-const currentOverride = localStorage.getItem('occAdminOverride') === 'true';
-localStorage.setItem('occAdminOverride', newOverride ? 'true' : 'false');
-const storedBypasses = localStorage.getItem('occBypassedSensors');
-const storedBypasses = localStorage.getItem('occBypassedSensors');
-localStorage.setItem('occBypassedSensors', JSON.stringify(bypasses));
+# CAP NHAT sau dot go nut dieu khien. Trang nay tung ghi 5 khoa:
+# occBlockStates, occPalletOccupancy, occAdminOverride, occActiveRecovery,
+# occBypassedSensors — tat ca deu la trang thai cua cac nut chi doi bien
+# trong trinh duyet roi bao la da gui lenh xuong PLC. Go nut thi cac khoa
+# do khong con nguoi ghi.
+#
+# Khoa activeAlarms VAN PHAI O LAI: Safety doc chuoi chua "E-Stop" trong
+# do de dung ma tran khoa lien dong (AGENTS.md muc 2).
+#
+# Da kiem truoc khi cap nhat: Safety.cshtml doc occBlockStates vao mot bien
+# roi khong dung nua (doc chet), va no tu quan ly occBypassedSensors bang
+# giao dien rieng cua no. Hai khoa con lai chi OperationControl doc-ghi.
+var thoAlarms = localStorage.getItem("activeAlarms");
+localStorage.setItem("activeAlarms", JSON.stringify(activeAlarms));

@@ -62,25 +62,37 @@ const lsChuoiDat = dongLS.every((d, i) => d === MOC_LS[i]);
 ghi("localstorage_nguyen_van", lsSoLuongDat && lsChuoiDat,
     `${dongLS.length}/${MOC_LS.length} dong`);
 
-// ---------------------------------------- 2. nut dieu khien con nguyen
-const NUT = [
+// ---------------------------------------- 2. khong con nut dieu khien gia
+//
+// Dao chieu so voi ban cu. Truoc day phep kiem doi 17 nut phai CO MAT, de bat
+// viec vo tinh xoa mat mot nut. Nhung 16 trong so do da bi go CO CHU DICH: cac
+// ham xu ly cua chung khong co fetch nao — chung doi mot bien trong trinh duyet
+// roi hien "Da gui lenh van hanh xuong PLC ... thanh cong". Toan he thong chi co
+// 4 lenh ghi xuong PLC (PlcConnection.cs) va khong lenh nao den tu trang nay.
+//
+// Nen phep kiem gio khang dinh dieu nguoc lai: chung phai VANG MAT. No do neu
+// ai do them lai mot nut dieu khien gia.
+const NUT_CAM = [
   "btn-action-start", "btn-action-stop", "btn-action-pause", "btn-action-resume",
   "btn-action-bypass", "btn-action-disable", "btn-action-lock", "btn-action-override",
   "btn-action-unlock", "btn-action-trigger-fault",
-  "btn-mode-auto", "btn-mode-manual", "btn-mode-maintenance",
-  // btn-mode-emergency da duoc thay bang btn-bao-su-co o commit 0e8c770: nut cu
-  // gia vo dung khan cap ca bai ma khong gui lenh nao xuong thiet bi. Nut moi
-  // chi GHI NHAN su co len may chu va noi thang dieu do trong title.
-  //
-  // Doi moc thay vi giu ten cu: moc nay de bat viec vo tinh xoa mat mot nut
-  // dieu khien, khong phai de dong bang giao dien. Giu ten da co y bo thi phep
-  // kiem do vinh vien va khong ai tin no nua.
-  "btn-bao-su-co",
+  "btn-mode-auto", "btn-mode-manual", "btn-mode-maintenance", "btn-mode-emergency",
   "btn-plc-send", "btn-recovery-reset", "btn-start-recovery",
 ];
-const thieu = NUT.filter((id) => !src.includes(`id="${id}"`));
-ghi("nut_dieu_khien_con_nguyen", thieu.length === 0,
-    thieu.length ? "thieu: " + thieu.join(", ") : `du ${NUT.length} nut`);
+const quayLai = NUT_CAM.filter((id) => src.includes(`id="${id}"`));
+// Nut DUY NHAT con lai phai la nut co fetch that toi may chu.
+const coNutThat = src.includes('id="btn-bao-su-co"');
+ghi("khong_con_nut_dieu_khien_gia", quayLai.length === 0 && coNutThat,
+    quayLai.length ? `da them lai: ${quayLai.join(", ")}`
+                   : (coNutThat ? "sach 17 nut gia, con nut BAO SU CO"
+                                : "MAT ca nut BAO SU CO"));
+
+// Khong con cau khang dinh da gui lenh xuong thiet bi.
+const HUA_SUONG = ["xuống PLC của Block", "Đã khóa chốt cơ học",
+                   "runSimulationPipeline", "LỖI GIẢ LẬP"];
+const conHua = HUA_SUONG.filter((c) => src.includes(c));
+ghi("khong_con_hua_gui_lenh", conHua.length === 0,
+    conHua.length ? `con ${JSON.stringify(conHua)}` : `sach ca ${HUA_SUONG.length} moc`);
 
 // ------------------------------------------------------------------ do trinh duyet
 let browser;

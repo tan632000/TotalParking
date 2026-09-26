@@ -74,17 +74,19 @@ All runtime behaviour is client-side JavaScript inlined in `.cshtml` files, back
    | Key | Written by | Read by |
    |---|---|---|
    | `activeAlarms` | `Index`, `OperationControl` | `Index`, `OperationControl`, `Diagnostics`, `Safety` |
-   | `palletCycleData` | `OperationControl`, `Reports` | `Index`, `OperationControl`, `Reports` |
-   | `occBlockStates` | `OperationControl` | `OperationControl`, `Safety` |
-   | `occPalletOccupancy` | `OperationControl` | `OperationControl` |
-   | `occAdminOverride`, `occActiveRecovery` | `OperationControl` | `OperationControl` |
-   | `occBypassedSensors` | `OperationControl`, **`Safety`** | `OperationControl`, `Safety` |
+   | `palletCycleData` | `Reports` | `Reports` |
+   | `occBypassedSensors` | `Safety` | `Safety` |
+   | `occBlockStates` | *(không còn ai ghi)* | `Safety` — **đọc chết** |
 
    Any change here must update every reader in the same task, and must say so in the summary.
 
-   Two keys have **two writers**: `palletCycleData` (`OperationControl` and `Reports`) and `occBypassedSensors` (`OperationControl` and `Safety`). Last write wins and neither side merges, so a shape change must land in both writers at once.
+   `activeAlarms` is the only real cross-page contract left. `Safety` keys off the substring `"E-Stop"` inside it to build the interlock matrix, so any shape change there breaks a safety display silently.
 
-   `Safety` is easy to miss because it reads and writes without being an "OCC" page. Verified 25/09/2026 by grepping every `localStorage.(get|set|remove)Item` call in `Views/**/*.cshtml`; re-run that grep rather than trusting this table after a view is added.
+   `Safety` is easy to miss because it reads and writes without being an "OCC" page. `Safety:255` loads `occBlockStates` into a variable and never uses it — a dead read left over from when `OperationControl` wrote that key.
+
+   The table shrank on 26/09/2026. `OperationControl` used to write five keys (`occBlockStates`, `occPalletOccupancy`, `occAdminOverride`, `occActiveRecovery`, `occBypassedSensors`) and `palletCycleData`; all of them backed control buttons whose handlers had no `fetch` and which told the operator *"Đã gửi lệnh vận hành xuống PLC thành công"*. The whole system has exactly four PLC write sites (`PlcConnection.cs`) and none of them came from that page, so the buttons were removed. `occPalletOccupancy`, `occAdminOverride` and `occActiveRecovery` now have neither a reader nor a writer.
+
+   Verified 26/09/2026 by grepping every `localStorage.(get|set|remove)Item` call in `Views/**/*.cshtml`; re-run that grep rather than trusting this table after a view is added.
 
    Four further keys are single-page state, not a contract: `dispatchEntryQueue`, `dispatchExitQueue`, `dispatchRejectedList` (`Queue` only) and `occBypassLogs` (`Safety` only).
 
