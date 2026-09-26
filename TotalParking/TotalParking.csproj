@@ -201,6 +201,7 @@
     <Compile Include="Services\Plc\PlcAuditLog.cs" />
     <Compile Include="Services\Plc\CongVanHanhService.cs" />
     <Compile Include="Services\Plc\CanhBaoPlcService.cs" />
+    <Compile Include="Services\Plc\CanhBaoTheTrungService.cs" />
     <Compile Include="Services\Plc\PlcTrangThaiWriter.cs" />
     <Compile Include="Services\Plc\PlcRegisterLog.cs" />
     <Compile Include="Services\Plc\PlcReachabilityScanner.cs" />

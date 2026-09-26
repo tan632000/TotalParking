@@ -93,6 +93,11 @@ namespace TotalParking.Services.Plc
                         // canh bao thi do la canh bao tu du lieu cu.
                         CanhBaoPlcService.Start();
 
+                        // Canh bao khi mot ma the nam o nhieu khoi. Cung nhanh
+                        // Enabled vi no doc plc_slot_state — bang do chi duoc
+                        // cap nhat khi vong quet chay.
+                        CanhBaoTheTrungService.Start();
+
                         // Don cau tra loi con sot o D1000 tu lan chay truoc.
                         //
                         // Chay NEN, khong chan khoi dong: quet 112 PLC co the mat
@@ -131,6 +136,7 @@ namespace TotalParking.Services.Plc
                 PlcTrangThaiWriter.Stop();
                 CongVanHanhService.Stop();
                 CanhBaoPlcService.Stop();
+                CanhBaoTheTrungService.Stop();
                 if (_manager != null)
                 {
                     _manager.Dispose();

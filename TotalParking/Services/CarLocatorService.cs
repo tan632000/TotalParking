@@ -45,7 +45,18 @@ namespace TotalParking.Services
             "JOIN   block b ON b.block_id = s.block_id " +
             "{0}" +
             "WHERE  s.card_code = @code " +
-            // Mã nằm ở nhiều block = rác, loại thẳng.
+            // Mã nằm ở nhiều block thì KHÔNG trả lời.
+            //
+            // Đây là chỗ CỐ Ý khác với `v_slot_taken`, không phải bỏ sót. Từ
+            // migration 46, view đó đếm cả hai ô khi một thẻ đã đăng ký nằm ở
+            // hai block, vì mục đích của nó là đếm sức chứa: chặn cả hai ô thì
+            // không bao giờ xếp chồng xe.
+            //
+            // Ở đây mục đích khác hẳn. Trả lời "xe anh ở block nào" mà chọn
+            // nhầm một trong hai thì tài xế đi tới tầng không có xe mình, rồi
+            // quay lại quầy báo hệ thống sai. Thà nói "không tìm thấy" —
+            // người trực sẽ tra tay, và cảnh báo THE_TRUNG_BLOCK đã chỉ sẵn
+            // đúng mã thẻ cùng hai block cho họ.
             "  AND  (SELECT COUNT(DISTINCT s2.block_id) FROM plc_slot_state s2 " +
             "        WHERE s2.card_code = @code) = 1 " +
             // Giá trị quá nhỏ = rác, loại thẳng. Xem v_slot_taken (file 27):
@@ -53,8 +64,10 @@ namespace TotalParking.Services
             // '000003e8' (= 1000) — ladder khởi tạo lại, không phải xe. Nó chỉ
             // nằm ở một block nên quy tắc duy nhất ở trên KHÔNG bắt được.
             //
-            // Phải trùng khít với điều kiện trong v_slot_taken, nếu không thì số
-            // trên bảng LED và kết quả tìm xe sẽ nói hai chuyện khác nhau.
+            // RIÊNG ngưỡng giá trị này phải trùng khít với v_slot_taken, nếu
+            // không thì số trên bảng LED và kết quả tìm xe sẽ nói hai chuyện
+            // khác nhau về cùng một ô. (Luật "một block" ở trên thì ngược lại —
+            // nó cố ý khác, xem giải thích tại đó.)
             "  AND  (LENGTH(s.card_code) < 8 OR CONV(s.card_code, 16, 10) > 65535) " +
             // Ô nào vừa đổi gần đây nhất thì tin hơn.
             "ORDER  BY s.changed_at DESC, s.read_at DESC " +
