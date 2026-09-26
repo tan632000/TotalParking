@@ -814,8 +814,8 @@
             return;
         }
         if (outcome === 'no_session') {
-            container.innerHTML = finderBox('text-amber-400', 'Thẻ hợp lệ nhưng chưa gửi xe',
-                'Thẻ có trong danh sách đăng ký nhưng chưa từng có phiên gửi xe nào.');
+            container.innerHTML = finderBox('text-amber-400', 'Thẻ hợp lệ nhưng không thấy xe trong ô nào',
+                'Thẻ có trong danh sách đăng ký, nhưng vòng quét PLC không thấy mã thẻ này ở ô đỗ nào.');
             return;
         }
         if (outcome === 'db_error') {
@@ -846,8 +846,9 @@
         const blockText = v.block_no ? ('Block ' + v.block_no) : 'Chưa phân block';
         const plateText = v.plate ? v.plate : 'Chưa có biển số';
 
-        // parking_slot chưa có dữ liệu -> slot_label luôn null. Nói rõ là chưa
-        // định vị được tới ô, thay vì vẽ một lưới pallet không có thật.
+        // Từ khi VehicleFinderRepository đọc thanh ghi, slot_label mang số ô và
+        // địa chỉ thật ("Ô 01 (D400)"). Nhánh dưới giữ lại cho trường hợp máy chủ
+        // cũ hoặc dữ liệu thiếu: thà nói chưa định vị được còn hơn vẽ một ô bịa.
         const slotText = v.slot_label
             ? v.slot_label
             : (v.slot_count ? 'Chưa định vị (block có ' + v.slot_count + ' ô)' : 'Chưa định vị');

@@ -7,11 +7,27 @@ using TotalParking.Models;
 namespace TotalParking.Services
 {
     // Tra vị trí xe theo mã thẻ / số thẻ / biển số, cho ô "Tìm vị trí" ở trang
-    // Báo cáo.
+    // Báo cáo và trang Truy vết.
     //
-    // Trả về DANH SÁCH chứ không phải một kết quả: một thẻ dùng nhiều lần theo
-    // thời gian nên tra ra nhiều phiên. Sắp xếp để phiên ĐANG MỞ luôn đứng đầu —
-    // người hỏi "xe tôi đang ở đâu" cần câu trả lời đó trước, lịch sử là phụ.
+    // ===================== VÌ SAO ĐỌC THANH GHI =====================
+    // Bản trước tra bảng parking_session. Bảng đó có 0 dòng, và nó rỗng không
+    // phải vì bãi vắng: hàm duy nhất tạo phiên (CardScanService.TryOpenSession)
+    // không còn nơi nào gọi tới. Hệ quả là ô tìm xe luôn trả "thẻ hợp lệ nhưng
+    // chưa có phiên gửi xe nào" kể cả khi chiếc xe đang nằm trong khối và
+    // /SlotStatus nhìn thấy nó.
+    //
+    // Nguồn duy nhất biết xe đang ở đâu là plc_slot_state — thanh ghi do vòng
+    // quét PLC ghi về. Repository này đọc thẳng từ đó.
+    //
+    // ===================== KHÁC CarLocatorService MỘT CHỖ =====================
+    // CarLocatorService trả lời cho PLC nên phải chọn ĐÚNG MỘT khối, và nó từ
+    // chối trả lời khi một mã thẻ nằm ở nhiều khối — chỉ sai khối thì tài xế đi
+    // nhầm tầng.
+    //
+    // Ở đây người đọc là nhân viên trực, không phải cơ cấu cơ khí. Thấy cả hai
+    // vị trí và tự đi kiểm tra là việc làm được, và hữu ích hơn hẳn một câu
+    // "không tìm thấy". Nên chỗ này TRẢ VỀ TẤT CẢ, kèm cảnh báo THE_TRUNG_BLOCK
+    // mà CanhBaoTheTrungService đã sinh sẵn cho đúng tình huống đó.
     //
     // Repository này CHỈ ĐỌC. Không có đường nào từ đây ghi xuống PLC hay đổi
     // trạng thái phiên: tra cứu vị trí không được phép gây tác dụng phụ.
@@ -24,21 +40,26 @@ namespace TotalParking.Services
         // static readonly chu khong phai const: chuoi nay noi voi MaxResults (int),
         // ma noi string voi int can int.ToString() nen khong phai bieu thuc hang.
         private static readonly string SelectSql =
-            "SELECT s.session_id, s.status, s.plate, " +
-            "       c.card_code, c.card_no, " +
-            "       s.zone_id, z.code AS zone_code, z.name AS zone_name, " +
-            "       s.block_id, b.block_no, b.kind AS block_kind, b.slot_count, " +
-            "       sl.label AS slot_label, " +
-            "       s.created_at, s.parked_at, s.completed_at, " +
-            "       (s.active_card_id IS NOT NULL) AS is_active " +
-            "FROM   parking_session s " +
-            "JOIN   parking_card c ON c.card_id = s.card_id " +
-            "LEFT   JOIN zone  z  ON z.zone_id  = s.zone_id " +
-            "LEFT   JOIN block b  ON b.block_id = s.block_id " +
-            "LEFT   JOIN parking_slot sl ON sl.slot_id = s.slot_id " +
-            "WHERE  c.card_code = @q OR c.card_no = @q OR s.plate = @q " +
-            // Phiên đang mở lên đầu, rồi tới phiên mới nhất.
-            "ORDER  BY (s.active_card_id IS NOT NULL) DESC, s.created_at DESC " +
+            "SELECT s.block_id, s.slot_index, s.word_addr, s.card_code, " +
+            "       s.read_at, s.changed_at, " +
+            "       c.card_no, c.plate, " +
+            "       b.block_no, b.zone_id, b.kind AS block_kind, b.slot_count, " +
+            "       z.code AS zone_code, z.name AS zone_name " +
+            "FROM   plc_slot_state s " +
+            "JOIN   block b ON b.block_id = s.block_id " +
+            "LEFT   JOIN zone z ON z.zone_id = b.zone_id " +
+            // JOIN chu khong LEFT JOIN: chi tra ve the CO trong danh muc. Mot ma
+            // la trong thanh ghi khong tra cuu duoc bang bien so hay so the, va
+            // hien no ra day chi lam nhieu.
+            "JOIN   parking_card c ON c.card_code = s.card_code " +
+            "WHERE  s.card_code IS NOT NULL " +
+            "  AND  (c.card_code = @q OR c.card_no = @q OR c.plate = @q) " +
+            // Cung nguong loc rac voi v_slot_taken va CarLocatorService: gia tri
+            // duoi 65536 la so dem hoac thanh ghi noi bo cua ladder, khong phai
+            // ma the. Ba noi phai noi cung mot thu tieng.
+            "  AND  (LENGTH(s.card_code) < 8 OR CONV(s.card_code, 16, 10) > 65535) " +
+            // O nao vua doi gan day nhat thi tin hon.
+            "ORDER  BY s.changed_at DESC, s.read_at DESC " +
             "LIMIT  " + MaxResults;
 
         // Trả về danh sách rỗng khi không tìm thấy — KHÔNG bịa kết quả.
@@ -98,11 +119,28 @@ namespace TotalParking.Services
         // ParkingCardRepository va PlcDeviceRepository.
         private static VehicleLocation Map(IDataRecord r)
         {
+            // changed_at = lan cuoi O NAY doi ma the, tuc la luc chiec xe nay
+            // vao o. NULL nghia la dong duoc ghi lan dau va chua doi lan nao —
+            // lui ve read_at chu khong de DateTime.MinValue, neu khong thi cot
+            // "thoi gian gui" se hien mot con so hang nghin nam.
+            DateTime vaoLuc = r["changed_at"] == DBNull.Value
+                ? Convert.ToDateTime(r["read_at"])
+                : Convert.ToDateTime(r["changed_at"]);
+
+            int slotIndex = Convert.ToInt32(r["slot_index"]);
+            int wordAddr  = Convert.ToInt32(r["word_addr"]);
+
             return new VehicleLocation
             {
-                SessionId   = Convert.ToInt64(r["session_id"]),
-                Status      = Convert.ToString(r["status"]),
-                IsActive    = Convert.ToBoolean(r["is_active"]),
+                // Khong co phien gui xe nao dung sau ket qua nay — no den tu
+                // thanh ghi. Giao dien khong hien session_id, nhung de 0 thay vi
+                // bia mot so la cach trung thuc duy nhat.
+                SessionId   = 0,
+                // Chuoi nay duoc giao dien in ra sau "DANG TRONG BAI - ", nen no
+                // phai noi ro nguon tin chu khong mo ta mot trang thai phien.
+                Status      = "theo thanh ghi PLC",
+                // Chi tra ve o DANG giu ma the, nen luon la dang trong bai.
+                IsActive    = true,
                 Plate       = Str(r, "plate"),
                 CardCode    = Convert.ToString(r["card_code"]),
                 CardNo      = Str(r, "card_no"),
@@ -113,10 +151,13 @@ namespace TotalParking.Services
                 BlockNo     = Int(r, "block_no"),
                 BlockKind   = Str(r, "block_kind"),
                 SlotCount   = Int(r, "slot_count"),
-                SlotLabel   = Str(r, "slot_label"),
-                CreatedAt   = Convert.ToDateTime(r["created_at"]),
-                ParkedAt    = Date(r, "parked_at"),
-                CompletedAt = Date(r, "completed_at")
+                // Bang parking_slot rong nen khong co nhan o dat san. Nhung thanh
+                // ghi biet chinh xac o nao va dia chi nao, va do la thu nguoi di
+                // tim xe can — kem theo dia chi de ky thuat vien doi chieu duoc.
+                SlotLabel   = "Ô " + slotIndex.ToString("00") + " (D" + wordAddr + ")",
+                CreatedAt   = vaoLuc,
+                ParkedAt    = vaoLuc,
+                CompletedAt = null
             };
         }
 

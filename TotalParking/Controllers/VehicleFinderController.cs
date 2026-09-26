@@ -49,7 +49,12 @@ namespace TotalParking.Controllers
                         query   = q,
                         outcome = known ? "no_session" : "card_unknown",
                         message = known
-                            ? "The hop le nhung chua co phien gui xe nao."
+                            // "khong thay trong o nao" chu khong phai "chua gui
+                            // xe": tu khi Find doc thanh ghi, cau tra loi nay co
+                            // nghia la vong quet PLC khong thay ma the nay o bat
+                            // ky o nao — xe da ra khoi bai, hoac thanh ghi chua
+                            // kip cap nhat.
+                            ? "The hop le nhung khong thay xe o o do nao."
                             : "Khong tim thay the hoac bien so nay trong he thong.",
                         results = new object[0]
                     });
