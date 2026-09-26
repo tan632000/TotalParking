@@ -19,9 +19,9 @@
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
                 </span>
-                <span class="text-xs font-semibold uppercase tracking-wider font-mono">CẢNH BÁO: ĐANG CÓ THIẾT BỊ BỊ BYPASS HOẠT ĐỘNG TRONG HỆ THỐNG</span>
+                <span class="text-xs font-semibold uppercase tracking-wider font-mono">CÓ BYPASS ĐÃ ĐƯỢC GHI NHẬN TẠI HIỆN TRƯỜNG</span>
             </div>
-            <span class="text-[10px] font-mono text-amber-400">Chế độ cưỡng bức đang bật</span>
+            <span class="text-[10px] font-mono text-amber-400">Bản ghi trên máy này, không phải lệnh xuống thiết bị</span>
         </div>
 
         <!-- Main Layout Split -->
@@ -34,7 +34,9 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
                             Ma Trận Điều Kiện An Toàn Hệ Thống (Safety Interlock Matrix)
                         </h3>
-                        <span class="text-[10px] font-mono text-slate-500">Quét chu kỳ: 500ms</span>
+                        @* Nhan cu ghi "Quet chu ky: 500ms" trong khi trang khong goi may chu lan
+                           nao. Gio la nhip doc that, va bao ro khi khong doc duoc. *@
+                        <span id="sf-nhip" class="text-[10px] font-mono text-slate-500">đang đọc…</span>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -62,7 +64,7 @@
                 <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
                     <h3 class="text-white text-sm font-bold flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                        Tạo Lệnh Bypass Sensor mới
+                        Ghi nhận Bypass đã thực hiện tại hiện trường
                     </h3>
 
                     <div class="space-y-3">
@@ -76,11 +78,9 @@
                         </div>
                         <div>
                             <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Vị trí Block đỗ</label>
+@* Bon lua chon cu la ten khoi bia. Bai that co 118 khoi danh so. *@
                             <select id="bypassBlock" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors">
-                                <option value="Block A-01">Block A-01</option>
-                                <option value="Block B-02">Block B-02</option>
-                                <option value="Block B-03">Block B-03</option>
-                                <option value="Block B-04">Block B-04</option>
+                                <option value="">đang đọc…</option>
                             </select>
                         </div>
                         <div>
@@ -96,9 +96,16 @@
                             <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Lý do Bypass (Bắt buộc)</label>
                             <textarea id="bypassReason" class="w-full h-16 bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors resize-none" placeholder="Vd: Bảo trì cơ khí định kỳ, sensor báo lỗi giả..."></textarea>
                         </div>
-                        <button onclick="addBypass()" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-slate-900 rounded text-xs font-bold shadow transition-colors flex items-center justify-center gap-1.5">
-                            Kích hoạt Bypass
+                        @* Nut nay GHI LAI mot quyet dinh da xay ra ngoai hien truong. He thong
+                           khong co duong nao gui lenh bypass xuong thiet bi: toan bo he
+                           thong chi co 4 lenh ghi xuong PLC (PlcConnection.cs) va khong
+                           lenh nao lien quan cam bien an toan. Nhan cu ghi "Kich hoat
+                           Bypass" va bao "thanh cong" — nguoi van hanh co the tin rang
+                           cam bien da duoc vo hieu hoa that. *@
+                        <button onclick="addBypass()" title="Chỉ lưu lại trên máy này để người trực sau biết. Hệ thống không gửi lệnh bypass xuống thiết bị." class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-slate-900 rounded text-xs font-bold shadow transition-colors flex items-center justify-center gap-1.5">
+                            Ghi nhận Bypass
                         </button>
+                        <p class="text-[10px] text-slate-500 leading-relaxed">Chỉ lưu lại trên máy này. Muốn vô hiệu hoá cảm biến thật phải thao tác tại tủ điện.</p>
                     </div>
                 </div>
 
@@ -118,26 +125,129 @@
 
 <script>
     // Mock Safety Interlock Matrix Database
+    // ===================== CO NGUON HAY KHONG =====================
+    // `nguon` noi ro he thong co quan sat duoc dieu kien nay khong:
+    //
+    //   "canh_bao"  -> suy tu bang canh_bao that, doc qua /Alarm/List
+    //   null        -> KHONG co cam bien nao noi vao SCADA
+    //
+    // Truoc day ca 13 dong deu mang mot trang thai viet cung (11 dong "OK", 1
+    // "WAIT", 1 "FAIL" o mot khoi khong ton tai). Mot bang khoa lien dong bao
+    // OK vi no duoc go san chu OK la loai sai nguy hiem nhat trong ca he thong:
+    // nguoi van hanh doc bang nay TRUOC khi cho thiet bi chay.
+    //
+    // Vong quet PLC hien chi doc thanh ghi o do va trang thai ket noi. Khong co
+    // photogate, light curtain, cam bien hien dien, encoder, phanh hay VFD nao
+    // duoc dua ve SCADA — da tra information_schema, khong bang nao luu chung.
     let baseInterlocks = [
-        { id: 1, name: "E-Stop không bị nhấn", loc: "Tất cả vị trí", status: "OK", action: "Kiểm tra nút E-Stop tại các trạm", key: "estop" },
-        { id: 2, name: "Cửa an toàn đã đóng", loc: "Cổng vào/ra", status: "OK", action: "Kiểm tra cơ cấu sensor đóng cửa", key: "door" },
-        { id: 3, name: "Light curtain không bị che", loc: "Khu vực pallet", status: "OK", action: "Test & căn chỉnh tia quang photogate", key: "curtain" },
-        { id: 4, name: "Không có người trong vùng nguy hiểm", loc: "Tầng hầm B1", status: "WAIT", action: "Chờ tín hiệu clear từ sensor hiện diện", key: "person" },
-        { id: 5, name: "Xe không quá khổ", loc: "Cổng vào", status: "OK", action: "AI-VDS đo quét & duyệt chiều cao xe", key: "oversized" },
-        { id: 6, name: "Pallet đúng vị trí khóa", loc: "Block chỉ định", status: "OK", action: "Sensor vị trí Encoder/Limit Switch xác nhận", key: "pallet" },
-        { id: 7, name: "Sensor hành trình hợp lệ", loc: "Tất cả cơ cấu", status: "OK", action: "Kiểm tra tín hiệu đầu vào limit switch", key: "limit" },
-        { id: 8, name: "Khóa cơ khí đã nhả", loc: "Block B-01", status: "FAIL", action: "Kiểm tra actuator khóa cơ khí chống rơi", key: "mechlock" },
-        { id: 9, name: "Phanh motor sẵn sàng", loc: "Tất cả motor", status: "OK", action: "Brake released confirmed (cuộn hút phanh)", key: "brake" },
-        { id: 10, name: "VFD không có lỗi", loc: "Tất cả VFD", status: "OK", action: "Đọc mã lỗi trên màn hình LCD của biến tần", key: "vfd" },
-        { id: 11, name: "PLC Safety đang online", loc: "Block B-01", status: "OK", action: "Kiểm tra tín hiệu heartbeat PLC Safety", key: "plc" },
-        { id: 12, name: "Không có lệnh xung đột", loc: "Hệ thống", status: "OK", action: "Clear hàng đợi lệnh điều phối", key: "conflict" },
-        { id: 13, name: "Block liền kề không gây nguy hiểm", loc: "B02, B03", status: "OK", action: "Chờ block liền kề chạy xong chu kỳ", key: "adjacent" }
+        { id: 1,  name: "E-Stop không bị nhấn",                loc: "Tất cả vị trí",  action: "Kiểm tra nút E-Stop tại các trạm",           key: "estop",     nguon: "canh_bao" },
+        { id: 2,  name: "Cửa an toàn đã đóng",                 loc: "Cổng vào/ra",    action: "Kiểm tra cơ cấu sensor đóng cửa",            key: "door",      nguon: null },
+        { id: 3,  name: "Light curtain không bị che",          loc: "Khu vực pallet", action: "Test & căn chỉnh tia quang photogate",       key: "curtain",   nguon: null },
+        { id: 4,  name: "Không có người trong vùng nguy hiểm", loc: "Tầng hầm B1",    action: "Chờ tín hiệu clear từ sensor hiện diện",     key: "person",    nguon: null },
+        { id: 5,  name: "Xe không quá khổ",                    loc: "Cổng vào",       action: "AI-VDS đo quét & duyệt chiều cao xe",        key: "oversized", nguon: null },
+        { id: 6,  name: "Pallet đúng vị trí khóa",             loc: "Block chỉ định", action: "Sensor vị trí Encoder/Limit Switch xác nhận", key: "pallet",   nguon: null },
+        { id: 7,  name: "Sensor hành trình hợp lệ",            loc: "Tất cả cơ cấu",  action: "Kiểm tra tín hiệu đầu vào limit switch",     key: "limit",     nguon: null },
+        { id: 8,  name: "Khóa cơ khí đã nhả",                  loc: "Tất cả block",   action: "Kiểm tra actuator khóa cơ khí chống rơi",    key: "mechlock",  nguon: null },
+        { id: 9,  name: "Phanh motor sẵn sàng",                loc: "Tất cả motor",   action: "Brake released confirmed (cuộn hút phanh)",  key: "brake",     nguon: null },
+        { id: 10, name: "VFD không có lỗi",                    loc: "Tất cả VFD",     action: "Đọc mã lỗi trên màn hình LCD của biến tần",  key: "vfd",       nguon: null },
+        { id: 11, name: "PLC đang kết nối",                    loc: "Tất cả block",   action: "Kiểm tra đường truyền tới PLC của block",    key: "plc",       nguon: "canh_bao" },
+        { id: 12, name: "Không có lệnh xung đột",              loc: "Hệ thống",       action: "Clear hàng đợi lệnh điều phối",              key: "conflict",  nguon: null },
+        { id: 13, name: "Block liền kề không gây nguy hiểm",   loc: "Block liền kề",  action: "Chờ block liền kề chạy xong chu kỳ",         key: "adjacent",  nguon: null }
     ];
+
+    // ===================== NGUON DU LIEU =====================
+    var URL_ALARM = "@Url.Action("List", "Alarm")";
+    var NHIP_MS   = 15000;
+    var canhBao   = [];
+    var loiDoc    = null;
+
+    function escS(v) {
+        return String(v === null || v === undefined ? "" : v)
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
+
+    // Bypass ghi theo ten thiet bi; anh xa sang khoa dieu kien de mot ban ghi
+    // hien dung dong cua no thay vi doan theo chuoi trong tung nhanh nhu truoc.
+    const BYPASS_THEO_KHOA = {
+        SafeGuard:     "curtain",
+        LimitSwitch:   "limit",
+        MotorOverload: "vfd"
+    };
+
+    function bypassCuaKhoa(khoa) {
+        const ra = [];
+        const bp = getBypasses();
+        Object.keys(bp).forEach(function (blk) {
+            (bp[blk] || []).forEach(function (dev) {
+                if (BYPASS_THEO_KHOA[dev] === khoa) ra.push(blk);
+            });
+        });
+        return ra;
+    }
+
+    function taiCanhBao() {
+        return fetch(URL_ALARM, { cache: "no-store" })
+            .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            })
+            .then(function (d) {
+                if (d && d.error) throw new Error(d.error);
+                canhBao = (d && d.canh_bao) || [];
+                loiDoc = null;
+            })
+            .catch(function (e) {
+                // Khong doc duoc thi PHAI noi ra. Giu danh sach cu roi ve bang
+                // binh thuong la cach te nhat: trang an toan trong nhu moi thu
+                // deu on trong khi no dang mu.
+                canhBao = [];
+                loiDoc = e.message;
+            })
+            .then(function () { renderMatrix(); });
+    }
 
     document.addEventListener("DOMContentLoaded", function() {
         initBypasses();
         renderMatrix();
+        batDauDocCanhBao();
+        napDanhSachKhoi();
         setInterval(checkSystemStates, 1000);
+    });
+
+    // Danh sach khoi cho o chon bypass, lay tu /Monitor/BlockMap.
+    function napDanhSachKhoi() {
+        const sel = document.getElementById("bypassBlock");
+        if (!sel) return;
+        fetch("@Url.Action("BlockMap", "Monitor")", { cache: "no-store" })
+            .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            })
+            .then(function (d) {
+                const ds = (d && d.blocks) || [];
+                if (!ds.length) throw new Error("không có khối nào");
+                sel.innerHTML = ds.slice().sort(function (a, b) { return a.block_no - b.block_no; })
+                    .map(function (b) {
+                        return '<option value="Khối ' + b.block_no + '">Khối ' + b.block_no +
+                               ' (Z' + b.zone_id + ')</option>';
+                    }).join("");
+            })
+            .catch(function (e) {
+                sel.innerHTML = '<option value="">không đọc được danh sách khối</option>';
+            });
+    }
+
+    var timerCB = null;
+    function batDauDocCanhBao() {
+        if (timerCB) return;
+        taiCanhBao();
+        timerCB = setInterval(taiCanhBao, NHIP_MS);
+    }
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) { if (timerCB) { clearInterval(timerCB); timerCB = null; } }
+        else batDauDocCanhBao();
     });
 
     function getBypasses() {
@@ -193,7 +303,7 @@
         
         initBypasses();
         renderMatrix();
-        alert("Đã kích hoạt Bypass thành công!");
+        alert("Đã ghi nhận bypass trên máy này. Hệ thống không gửi lệnh xuống thiết bị.");
     }
 
     function removeBypass(blockKey, device) {
@@ -250,116 +360,87 @@
         const tbody = document.getElementById("interlockTableBody");
         tbody.innerHTML = "";
 
-        // Read dynamic states from local storage
+        const nhan = document.getElementById("sf-nhip");
+        if (nhan) {
+            nhan.textContent = loiDoc
+                ? ("không đọc được cảnh báo: " + loiDoc)
+                : ("đọc cảnh báo mỗi " + (NHIP_MS / 1000) + "s · " + canhBao.length + " bản ghi");
+            nhan.className = "text-[10px] font-mono " + (loiDoc ? "text-red-400" : "text-slate-500");
+        }
+
+        // Doc bypass tu localStorage cua chinh trang nay (ban ghi tai cho).
         let bypasses = getBypasses();
-        let blockStates = localStorage.getItem("occBlockStates") ? JSON.parse(localStorage.getItem("occBlockStates")) : {};
-        let alarms = localStorage.getItem("activeAlarms") ? JSON.parse(localStorage.getItem("activeAlarms")) : [];
 
-        // ===================== BA LOI DA SUA O KHOI NAY =====================
-        // Truoc day bon dong duoi day deu hong, va hong theo cach lam ca ma tran
-        // khoa lien dong KHONG DUNG DUOC — khong phai chi sai mot dong.
+        // ===================== NGUON DUY NHAT LA canh_bao =====================
+        // Ban truoc doc activeAlarms trong localStorage, tuc la phu thuoc vao
+        // viec nguoi dung da mo trang Dashboard truoc do hay chua. Mo thang
+        // trang nay dau tien thi ma tran khong co du lieu nao.
         //
-        //   1. Doc a.message, nhung noi ghi dung a.msg (Index.cshtml:1093,
-        //      OperationControl.cshtml:1318). a.message la undefined.
-        //   2. So a.type voi chuoi "operator"/"system", nhung type la SO:
-        //      1 = loi thao tac, 2 = loi he thong/thiet bi, 3 = den han bao tri.
-        //      Index.cshtml:1180-1182 so dung bang so.
-        //   3. Thu tu toan tu: `a.type === "system" && a.msg.includes(X) || a.msg.includes(Y)`
-        //      duoc hieu la `(A && B) || C`, nen ve C chay VO DIEU KIEN.
-        //
-        // Ket hop lai: moi khi localStorage co bat ky canh bao nao, dong dau tien
-        // goi undefined.includes(...) va nem TypeError, renderMatrix() dung giua
-        // chung, va toan bo ma tran an toan khong duoc dung. Nguoi van hanh nhin
-        // vao mot trang trong ma tuong la binh thuong.
-        //
-        // Doc qua chuoi() de mot canh bao thieu truong msg khong lam hong ca trang.
-        const chuoi = a => String(a && a.msg ? a.msg : "");
-        const LOI_THAO_TAC = 1, LOI_HE_THONG = 2;
-
-        let hasEStop = alarms.some(a => a.type === LOI_THAO_TAC && chuoi(a).includes("E-Stop"));
-        let hasPhotogateError = alarms.some(a => a.type === LOI_HE_THONG &&
-            (chuoi(a).includes("quang") || chuoi(a).includes("Photogate")));
-        let hasMotorError = alarms.some(a => a.type === LOI_HE_THONG &&
-            (chuoi(a).includes("motor") || chuoi(a).includes("động cơ")));
-        let hasLimitSwitchError = alarms.some(a => a.type === LOI_HE_THONG &&
-            (chuoi(a).includes("hành trình") || chuoi(a).includes("LS-T3")));
+        // Ba phep suy dan cu — photogate, motor, limit switch — do chuoi mo ta
+        // cua nhung canh bao GIA do triggerMockFault sinh ra. Ham do da bi go,
+        // va khong ma loi that nao (PLC-CONN-01, SLOT-DUP-01, SU-CO-KHAN) noi
+        // ve cam bien quang hay cong tac hanh trinh. Giu lai chi la giu ba phep
+        // kiem khong bao gio dung toi.
+        const suCo   = canhBao.filter(a => a.ma_loi === "SU-CO-KHAN"  && !a.het_luc);
+        const matPlc = canhBao.filter(a => a.ma_loi === "PLC-CONN-01" && !a.het_luc);
 
         baseInterlocks.forEach(item => {
-            let status = item.status;
-            let note = item.action;
-            let rowClass = "border-b border-slate-800/40 hover:bg-slate-800/10";
-            
-            // Map live state to interlocks
-            if (item.key === "estop") {
-                if (hasEStop) {
-                    status = "FAIL";
-                    note = "E-Stop khẩn cấp tại Block đang kích hoạt!";
-                } else if (bypasses["B-04"] && bypasses["B-04"].includes("SafeGuard")) { // Safeguard bypass
-                    status = "BYPASSED";
-                    note = "Bypass nút an toàn đang bật.";
-                }
-            }
-            if (item.key === "curtain") {
-                if (hasPhotogateError) {
-                    status = "FAIL";
-                    note = "Cảnh báo an toàn quang Photogate bị che chắn!";
-                }
-                // Check if bypassed in any block
-                for (let blk in bypasses) {
-                    if (bypasses[blk].includes("SafeGuard")) {
-                        status = "BYPASSED";
-                        note = `Cảm biến quang đang bị Bypass tại Block ${blk}`;
-                    }
-                }
-            }
-            if (item.key === "limit") {
-                if (hasLimitSwitchError) {
-                    status = "FAIL";
-                    note = "Trễ hành trình Limit Switch LS-T3!";
-                }
-                for (let blk in bypasses) {
-                    if (bypasses[blk].includes("LimitSwitch")) {
-                        status = "BYPASSED";
-                        note = `Cảm biến hành trình đang bị Bypass tại Block ${blk}`;
-                    }
-                }
-            }
-            if (item.key === "vfd") {
-                if (hasMotorError) {
-                    status = "FAIL";
-                    note = "VFD ngắt do quá dòng/quá nhiệt cuộn dây motor!";
-                }
-                for (let blk in bypasses) {
-                    if (bypasses[blk].includes("MotorOverload")) {
-                        status = "BYPASSED";
-                        note = `Bypass bảo vệ quá tải motor tại Block ${blk}`;
-                    }
+            // Mac dinh la CHUA GIAM SAT, khong phai OK. Day la thay doi quan
+            // trong nhat cua ca trang: mot dieu kien khong quan sat duoc phai
+            // noi la khong biet, chu khong duoc bao an toan.
+            let status = "CHUA_GIAM_SAT";
+            let note   = item.action;
+
+            // Khong doc duoc canh bao thi KHONG duoc bao OK. Mot trang an toan
+            // hien OK trong luc no dang mu la truong hop te nhat: nguoi truc doc
+            // bang nay TRUOC khi cho thiet bi chay, va "OK" o day nghia la
+            // "da kiem tra, khong co van de" chu khong phai "khong biet".
+            if (item.nguon === "canh_bao" && loiDoc) {
+                status = "CHUA_GIAM_SAT";
+                note = "Không đọc được cảnh báo từ máy chủ — không xác định được điều kiện này.";
+            } else if (item.nguon === "canh_bao") {
+                if (item.key === "estop") {
+                    status = suCo.length ? "FAIL" : "OK";
+                    note = suCo.length
+                        ? ("Có " + suCo.length + " sự cố khẩn chưa xử lý: " +
+                           suCo.map(a => a.thiet_bi || "?").join(", "))
+                        : "Không có sự cố khẩn nào đang mở trong cơ sở dữ liệu.";
+                } else if (item.key === "plc") {
+                    status = matPlc.length ? "FAIL" : "OK";
+                    note = matPlc.length
+                        ? (matPlc.length + " khối đang mất kết nối PLC")
+                        : "Không có cảnh báo mất kết nối PLC nào đang mở.";
                 }
             }
 
-            let statusBadge = "";
+            // Bypass la BAN GHI TAI CHO, khong phai lenh. Van hien de nguoi truc
+            // biet co nguoi da bao cao bypass, nhung khong duoc bien mot dieu
+            // kien "chua giam sat" thanh "an toan".
+            const dsBypass = bypassCuaKhoa(item.key);
+            if (dsBypass.length) {
+                status = "BYPASSED";
+                note = "Đã ghi nhận bypass tại hiện trường: " + dsBypass.join(", ");
+            }
+
+            let mau, chu;
             if (status === "OK") {
-                statusBadge = `<span class="px-2 py-0.5 rounded border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">● OK</span>`;
-            } else if (status === "WAIT") {
-                statusBadge = `<span class="px-2 py-0.5 rounded border border-amber-500/40 bg-amber-500/10 text-amber-400 text-[10px] font-bold">⚠ CHỜ</span>`;
-                rowClass += " bg-amber-950/5";
+                mau = "text-emerald-400"; chu = "\u25cf OK";
             } else if (status === "FAIL") {
-                statusBadge = `<span class="px-2 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-[10px] font-bold animate-pulse">✗ LỖI</span>`;
-                rowClass += " bg-red-950/10";
+                mau = "text-rose-400"; chu = "\u25cf FAIL";
             } else if (status === "BYPASSED") {
-                statusBadge = `<span class="px-2 py-0.5 rounded border border-yellow-500 bg-yellow-500/20 text-yellow-300 text-[10px] font-bold animate-pulse">⚡ BYPASS</span>`;
-                rowClass += " bg-yellow-950/10";
+                mau = "text-amber-400"; chu = "\u25cf BYPASS";
+            } else {
+                mau = "text-slate-500"; chu = "\u25cb chưa giám sát";
             }
 
             const tr = document.createElement("tr");
-            tr.className = rowClass;
-            tr.innerHTML = `
-                <td class="px-4 py-3 font-semibold text-slate-500">${item.id}</td>
-                <td class="px-4 py-3 font-bold text-slate-200">${item.name}</td>
-                <td class="px-4 py-3 text-slate-400 font-bold">${item.loc}</td>
-                <td class="px-4 py-3">${statusBadge}</td>
-                <td class="px-4 py-3 text-slate-400 text-[11px]">${note}</td>
-            `;
+            tr.className = "border-b border-slate-800/40 hover:bg-slate-800/10";
+            tr.innerHTML =
+                '<td class="px-4 py-2.5 text-slate-500">' + item.id + '</td>' +
+                '<td class="px-4 py-2.5 text-slate-200">' + escS(item.name) + '</td>' +
+                '<td class="px-4 py-2.5 text-slate-400">' + escS(item.loc) + '</td>' +
+                '<td class="px-4 py-2.5 font-bold ' + mau + '">' + chu + '</td>' +
+                '<td class="px-4 py-2.5 text-slate-400">' + escS(note) + '</td>';
             tbody.appendChild(tr);
         });
     }
