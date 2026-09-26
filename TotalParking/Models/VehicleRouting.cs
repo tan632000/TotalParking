@@ -52,22 +52,43 @@ namespace TotalParking.Models
         // Tổng chỗ đỗ nền — dành cho hạng THUONG.
         public int TotalGround { get; set; }
 
-        // Số phiên đang mở trong zone. Lưu ý: KHÔNG tách theo loại ô, vì phiên
-        // chỉ biết zone chứ chưa biết ô cụ thể ở giai đoạn này. Nên số chỗ trống
-        // tính ra là con số thô, đủ để cân bằng tải và để hiển thị, chưa đủ để
-        // cam kết với khách là còn đúng bao nhiêu ô loại nào.
+        // Số Ô CƠ KHÍ đang có xe, đọc từ thanh ghi PLC qua v_slot_taken
+        // (migration 47). Trước đó cột này đếm số phiên trong parking_session,
+        // mà bảng đó rỗng vì không còn nơi nào tạo phiên — nên nó luôn bằng 0.
+        //
+        // KHÔNG phải "số xe trong zone": 80 ô đỗ nền không có thanh ghi nào,
+        // nên hệ thống không quan sát được chúng.
         public int InUse { get; set; }
 
         public int FreeMechanical { get { return Math.Max(0, TotalMechanical - InUse); } }
-        public int FreeTier0      { get { return Math.Max(0, TotalTier0 - InUse); } }
-        public int FreeGround     { get { return Math.Max(0, TotalGround - InUse); } }
+
+        // Ô đỗ nền KHÔNG trừ InUse. Đây là chỗ dễ sai nhất sau migration 47:
+        // InUse đếm ô cơ khí, trừ nó vào sức chứa đỗ nền là trộn hai loại chỗ
+        // khác hẳn nhau. Zone 3 chỉ có 2 ô đỗ nền trên 102 ô cơ khí — trừ nhầm
+        // thì xe hạng THƯỜNG bị từ chối ngay khi có 2 chiếc lên pallet, dù cả
+        // hai ô nền vẫn trống. Hệ thống không quan sát được ô nền, nên câu trả
+        // lời trung thực là "còn nguyên sức chứa", không phải một số bịa.
+        public int FreeGround { get { return TotalGround; } }
+
+        // CẢNH BÁO: TotalTier0 lấy từ block.column_count, mà cột đó đang NULL ở
+        // cả 118 block nên nó luôn bằng 0 — mọi xe hạng 2600KG sẽ bị trả
+        // NoCapacity. Chưa lộ ra vì thực tế chỉ có xe 2200KG và THƯỜNG. Nếu sau
+        // này khai báo column_count thì phải sửa luôn phép trừ này: InUse là số
+        // ô cơ khí Ở MỌI TẦNG, trừ thẳng vào sức chứa riêng tầng 0 là sai.
+        public int FreeTier0 { get { return Math.Max(0, TotalTier0 - InUse); } }
+
+        // Tổng sức chứa quan sát được. Ô đỗ nền không nằm trong đây vì không có
+        // cảm biến, nên đưa vào sẽ làm mẫu số phồng lên và tỉ lệ luôn thấp giả.
+        public int TotalQuanSatDuoc { get { return TotalMechanical; } }
 
         public int Total { get { return TotalMechanical + TotalGround; } }
 
-        // Tỉ lệ đã dùng, để xếp hạng khi nhiều zone cùng khoảng cách.
+        // Tỉ lệ đã dùng, để xếp hạng khi nhiều zone cùng khoảng cách. Chia cho
+        // phần quan sát được, nếu không thì zone nhiều ô nền (zone 6 có 19) sẽ
+        // luôn trông rỗng hơn zone ít ô nền (zone 3 có 2) ở cùng mức lấp đầy.
         public double UsedRatio
         {
-            get { return Total == 0 ? 1.0 : (double)InUse / Total; }
+            get { return TotalQuanSatDuoc == 0 ? 1.0 : (double)InUse / TotalQuanSatDuoc; }
         }
     }
 }

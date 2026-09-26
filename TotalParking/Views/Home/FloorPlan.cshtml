@@ -518,8 +518,14 @@
                     // Hiện "0 chỗ trống" lúc đó là bịa ra một sự thật về bãi xe.
                     details[0].textContent = z.total === 0
                         ? "+ Chưa khai báo block" : "+ Pallet trống: " + z.free_mech;
+                    // total_tier0 = 0 nghĩa là chưa khai báo số cột của block
+                    // (block.column_count đang NULL ở cả 118 block), không phải
+                    // tầng 0 đã hết chỗ. Hai chuyện đó cùng cho free_tier0 = 0
+                    // nhưng ngược nghĩa nhau, nên phải tách ra.
                     details[1].textContent = z.total === 0
-                        ? "" : "+ Tầng dưới: " + z.free_tier0;
+                        ? ""
+                        : (z.total_tier0 ? "+ Tầng dưới: " + z.free_tier0
+                                         : "+ Tầng dưới: chưa khai báo");
                 }
 
                 var density = callout.querySelector(".callout-density");

@@ -187,8 +187,11 @@ namespace TotalParking.Controllers
                             code      = x.Code,
                             gate_rank = x.GateRank,
                             free      = FreeFor(x, wc),
-                            total     = x.Total,
-                            used_pct  = x.Total == 0 ? 0 : (int)Math.Round(x.UsedRatio * 100),
+                            // Mau so la suc chua QUAN SAT DUOC, cung goc voi UsedRatio.
+                            // Lay x.Total (co ca o do nen khong cam bien) thi phan
+                            // so hien ra va phan tram se noi hai chuyen khac nhau.
+                            total     = x.TotalQuanSatDuoc,
+                            used_pct  = x.TotalQuanSatDuoc == 0 ? 0 : (int)Math.Round(x.UsedRatio * 100),
                             eligible  = FreeFor(x, wc) > 0,
                             chosen    = decision.ZoneId.HasValue && decision.ZoneId.Value == x.ZoneId
                         }).ToArray()
@@ -247,12 +250,18 @@ namespace TotalParking.Controllers
                         zone_id    = z.ZoneId,
                         code       = z.Code,
                         gate_rank  = z.GateRank,
-                        total      = z.Total,
+                        // Xem ghi chu o Simulate: mau so bam theo phan quan sat duoc.
+                        total      = z.TotalQuanSatDuoc,
+                        total_ground = z.TotalGround,
                         in_use     = z.InUse,
                         free_mech  = z.FreeMechanical,
+                        // Phoi ca total_tier0: giao dien can phan biet "chua khai
+                        // bao so cot" voi "het cho tang 0". Ca hai deu cho free_tier0
+                        // bang 0 nhung y nghia nguoc nhau.
+                        total_tier0 = z.TotalTier0,
                         free_tier0 = z.FreeTier0,
                         free_ground = z.FreeGround,
-                        used_pct   = z.Total == 0 ? 0 : (int)Math.Round(z.UsedRatio * 100)
+                        used_pct   = z.TotalQuanSatDuoc == 0 ? 0 : (int)Math.Round(z.UsedRatio * 100)
                     }).ToArray(),
                     recent = recent.Select(v => new
                     {
