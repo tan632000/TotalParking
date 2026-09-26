@@ -9,11 +9,17 @@
 # da trim hai dau.
 
 ## Index.cshtml
-const storedAlarms = localStorage.getItem('activeAlarms');
-const storedCycles = localStorage.getItem('palletCycleData');
-localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
-localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
-localStorage.setItem('activeAlarms', JSON.stringify(activeAlarms));
+# CAP NHAT sau commit 53c56ac. Muc nay truoc do giu 5 dong cua ban TRUOC
+# task-01 -- tuc la muc tieu cua task-01 la thay doi chung. De nguyen thi phep
+# kiem buoc phai do vinh vien sau khi task-01 xong, va no da do tu do ma khong
+# ai chay lai de thay.
+#
+# Muc nay gio la trang thai DUNG hien tai, de phep kiem tiep tuc bat duoc troi
+# ngoai y muon tu DAY VE SAU. Hop dong lien trang van nguyen: chi khoa
+# activeAlarms, doc -> loc -> ghi lai cung hinh dang mang, khong co removeItem,
+# va OperationControl khong doi mot dong nao.
+var tho = localStorage.getItem('activeAlarms');
+localStorage.setItem('activeAlarms', JSON.stringify(giu));
 
 ## OperationControl.cshtml
 const storedBlockStates = localStorage.getItem('occBlockStates');

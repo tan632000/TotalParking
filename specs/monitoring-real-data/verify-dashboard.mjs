@@ -234,6 +234,97 @@ try {
     `total="${loi.total}" free="${loi.free}" trangThai="${loi.trangThai}"`
   );
   await pLoi.close();
+
+  // ---- 8: nguon khong con so khoi viet cung
+  //
+  // Bay con so nay tung nam trong HTML tinh cua luoi khoi va KHONG ham nao ghi
+  // de — do la ly do chung nguy hiem: chung dung canh so THAT (112/112 thiet
+  // bi) nen mat thuong khong phan biet duoc.
+  {
+    const src = readFileSync(SOURCE, "utf8");
+    const bia = ["16/20", "18/20", "14/20", "10/20", "13/24", "15/24", "5/16",
+                 "Block A01", "2 block l\u1ed7i/offline"];
+    const con = bia.filter((c) => src.includes(c));
+    ghi("nguon_khong_con_so_khoi_bia", con.length === 0,
+        con.length ? `con ${JSON.stringify(con)}` : `sach ca ${bia.length} moc`);
+  }
+
+  // ---- 9: tung the khoi khop /Monitor/BlockMap
+  {
+    const api = await json("http://localhost:8080/Monitor/BlockMap");
+    const khoiApi = (api.blocks || []).slice().sort((a, b) => a.block_no - b.block_no);
+
+    const pK = await browser.newPage();
+    await pK.setViewport({ width: 1700, height: 1200 });
+    await pK.goto(TRANG, { waitUntil: "networkidle2", timeout: 30000 });
+    await pK.waitForFunction(
+      `document.querySelectorAll('#dashBlocksGrid a').length > 0`, { timeout: 20000 });
+    const dom = await pK.evaluate(() =>
+      [...document.querySelectorAll("#dashBlocksGrid a")].map((a) => ({
+        chu: a.innerText.replace(/\n/g, " | "),
+        href: a.getAttribute("href"),
+      })));
+    const demLoi = await pK.evaluate(() =>
+      (document.getElementById("dashKhoiLoi") || {}).innerText || "");
+    await pK.close();
+
+    const sai = [];
+    if (dom.length !== khoiApi.length)
+      sai.push(`ve ${dom.length} the, API co ${khoiApi.length}`);
+    khoiApi.forEach((b, i) => {
+      const t = (dom[i] || {}).chu || "";
+      const pct = b.slots > 0 ? Math.round(b.occupied / b.slots * 100) : 0;
+      if (!t.startsWith("Kh\u1ed1i " + b.block_no + " |"))
+        sai.push(`vi tri ${i}: "${t.slice(0, 24)}" khong phai khoi ${b.block_no}`);
+      if (!t.includes(`${b.occupied}/${b.slots}`))
+        sai.push(`khoi ${b.block_no}: thieu ${b.occupied}/${b.slots}`);
+      if (!t.includes(pct + "%")) sai.push(`khoi ${b.block_no}: thieu ${pct}%`);
+      if ((dom[i] || {}).href !== "/Home/Zones/" + b.zone_id)
+        sai.push(`khoi ${b.block_no}: lien ket sai`);
+    });
+    // Doi chung am: bai co o co xe ma khong the nao hien so khac 0 thi phep
+    // kiem nay chi dang chung minh "moi khoi deu rong", khong chung minh gi.
+    const tongXe = khoiApi.reduce((n, b) => n + (b.occupied || 0), 0);
+    const theCoXe = dom.filter((x) => !/ 0\/\d/.test(x.chu)).length;
+    if (tongXe > 0 && theCoXe === 0)
+      sai.push(`API bao ${tongXe} o co xe nhung khong the nao hien so khac 0`);
+
+    ghi("luoi_khoi_khop_blockmap", sai.length === 0 && khoiApi.length > 0,
+        sai.length ? sai.slice(0, 3).join("; ")
+                   : `${khoiApi.length} khoi khop tung con so, dem="${demLoi}"`);
+  }
+
+  // ---- 10: chan /Monitor/BlockMap -> luoi phai SACH, khong giu the cu
+  //
+  // Tai binh thuong TRUOC roi moi chan, neu khong thi khong phan biet duoc
+  // "da xoa" voi "chua kip ve".
+  {
+    const pB = await browser.newPage();
+    await pB.setViewport({ width: 1700, height: 1200 });
+    await pB.goto(TRANG, { waitUntil: "networkidle2", timeout: 30000 });
+    await pB.waitForFunction(
+      `document.querySelectorAll('#dashBlocksGrid a').length > 0`, { timeout: 20000 });
+    const truoc = await pB.evaluate(() =>
+      document.querySelectorAll("#dashBlocksGrid a").length);
+
+    await pB.setRequestInterception(true);
+    pB.on("request", (req) => {
+      if (req.url().includes("/Monitor/BlockMap")) req.abort();
+      else req.continue();
+    });
+    await new Promise((r) => setTimeout(r, 7000));   // qua vai nhip poll 5 giay
+    const sau = await pB.evaluate(() => ({
+      the: document.querySelectorAll("#dashBlocksGrid a").length,
+      chu: (document.getElementById("dashBlocksGrid") || {}).innerText || "",
+      dem: (document.getElementById("dashKhoiLoi") || {}).innerText || "",
+    }));
+    await pB.close();
+
+    ghi("loi_thi_xoa_luoi_khoi",
+        truoc > 0 && sau.the === 0 && /kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c/i.test(sau.chu) &&
+        sau.dem.trim() === GACH,
+        `truoc ${truoc} the; sau khi chan ${sau.the} the, dem="${sau.dem.trim()}"`);
+  }
 } catch (e) {
   console.log("  LOI KHI DO: " + e.message);
   ketQua.push({ ten: "do_trinh_duyet", dat: false });
