@@ -15,8 +15,8 @@
         <!-- Controls panel -->
         <div class="flex flex-wrap gap-4 items-center bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-lg">
             <select id="trendBlock" class="bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 text-xs text-slate-350 font-mono outline-none focus:border-blue-500">
-                <option value="B-01">Block B-01 (Zone A)</option>
-                <option value="B-04">Block B-04 (Zone B)</option>
+                @* Hai lua chon cu la ten khoi bia. Bai that co 118 khoi danh so. *@
+                <option value="">đang đọc…</option>
             </select>
 
             <select id="trendMetric" onchange="changeMetric()" class="bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 text-xs text-slate-350 font-mono outline-none focus:border-blue-500">
@@ -34,7 +34,7 @@
                 <h3 id="chartTitle" class="text-white text-sm font-bold font-mono">Đồ thị Dòng điện Motor nâng (Real-time Trend)</h3>
                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-blue-500/10 text-blue-400">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping"></span>
-                    SÓNG PLC LIVE
+                    CHƯA CÓ TÍN HIỆU
                 </span>
             </div>
             
@@ -46,150 +46,87 @@
 </div>
 
 <script>
-    let canvas, ctx;
-    let dataPoints = [];
-    const maxPoints = 50;
-    let currentMetric = 'current';
-    let animationId;
+    // ===================== VI SAO TRANG NAY TRONG =====================
+    // Ban truoc SINH NGAU NHIEN ca ba duong cong bang bo sinh so ngau nhien:
+    //
+    //   dong dien   : 12-14 A binh thuong, 24-27 A khi "loi"
+    //   nhiet do    : 56-60 C binh thuong, 112-115 C khi "loi"
+    //   tan so VFD  : 48-50 Hz
+    //
+    // va dung san mot kich ban "motor qua nhiet" o mot khoi co dinh. Day la
+    // trang ky su dung de chan doan xu huong: mot duong cong bia co the dan
+    // toi ket luan co motor sap chay va cho dung thiet bi dang chay binh thuong.
+    //
+    // He thong KHONG thu thap telemetry nao. Da tra information_schema cho moi
+    // cot ten chua temp/current/freq/runtime/cycle/maint trong ca CSDL: chi ra
+    // dung `parking_slot.cycle_count`, va bang do co 0 dong. Vong quet PLC hien
+    // chi doc thanh ghi o do, trang thai ket noi va hang tai.
+    //
+    // Nen trang nay noi thang la chua co du lieu, thay vi ve mot duong cong.
+    (function () {
+        "use strict";
 
-    document.addEventListener("DOMContentLoaded", function() {
-        initChart();
-    });
-
-    function initChart() {
-        canvas = document.getElementById("trendCanvas");
-        ctx = canvas.getContext("2d");
-
-        // Resize canvas to physical pixels
-        resizeCanvas();
-        window.addEventListener("resize", resizeCanvas);
-
-        // Pre-populate mock points
-        for (let i = 0; i < maxPoints; i++) {
-            dataPoints.push(getRandomValue());
+        function dat(id, chu) {
+            var e = document.getElementById(id);
+            if (e) e.textContent = chu;
         }
 
-        // Run render loop
-        tickChart();
-    }
-
-    function resizeCanvas() {
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-    }
-
-    function changeMetric() {
-        currentMetric = document.getElementById("trendMetric").value;
-        const title = document.getElementById("chartTitle");
-        
-        if (currentMetric === 'current') {
-            title.innerText = "Đồ thị Dòng điện Motor nâng (Real-time Trend)";
-        } else if (currentMetric === 'temp') {
-            title.innerText = "Đồ thị Nhiệt độ Động cơ (Real-time Trend)";
-        } else {
-            title.innerText = "Đồ thị Tần số biến tần VFD (Real-time Trend)";
+        function veTrong() {
+            var c = document.getElementById("trendCanvas");
+            if (!c) return;
+            var khung = c.parentElement;
+            if (!khung) return;
+            khung.innerHTML =
+                '<div class="flex flex-col items-center justify-center h-full min-h-[240px] text-center px-6">' +
+                  '<div class="text-slate-400 text-sm font-bold mb-2">Chưa thu thập dữ liệu xu hướng</div>' +
+                  '<p class="text-[11px] text-slate-500 leading-relaxed max-w-md">' +
+                    'Hệ thống chưa đọc dòng điện, nhiệt độ hay tần số biến tần từ thiết bị. ' +
+                    'Vòng quét PLC hiện chỉ lấy trạng thái ô đỗ, tình trạng kết nối và hạng tải, ' +
+                    'và cơ sở dữ liệu không có bảng nào lưu các đại lượng trên.' +
+                  '</p>' +
+                  '<p class="text-[10px] text-slate-600 mt-3">' +
+                    'Muốn xem số liệu có thật, dùng trang Báo cáo &amp; thống kê hoặc Alarm &amp; Event.' +
+                  '</p>' +
+                '</div>';
         }
 
-        dataPoints = [];
-        for (let i = 0; i < maxPoints; i++) {
-            dataPoints.push(getRandomValue());
-        }
-    }
+        // Van giu o chon de nguoi dung thay he thong DU KIEN theo doi nhung dai
+        // luong nao, nhung khong ve gia tri nao.
+        window.changeMetric = function () {
+            var sel = document.getElementById("trendMetric");
+            var ten = sel ? sel.options[sel.selectedIndex].text : "";
+            dat("chartTitle", ten ? ("Đồ thị " + ten + " — chưa có dữ liệu") : "Chưa có dữ liệu");
+            dat("liveVal", "—");
+        };
 
-    function getRandomValue() {
-        const block = document.getElementById("trendBlock").value;
-        let isFaulty = block === "B-04";
-
-        if (currentMetric === 'current') {
-            // Normal is around 12-16 A. Faulty B-04 lift motor is around 25-28 A (overload)
-            return isFaulty ? (24 + Math.random() * 3) : (12 + Math.random() * 2);
-        } else if (currentMetric === 'temp') {
-            // Normal: 55-65°C. Faulty B-04 lift motor winding: 110-115°C (overheat)
-            return isFaulty ? (112 + Math.random() * 3) : (56 + Math.random() * 4);
-        } else {
-            // VFD Frequency: 45-50 Hz
-            return 48 + Math.random() * 2;
-        }
-    }
-
-    function tickChart() {
-        // Shift data
-        dataPoints.shift();
-        const newVal = getRandomValue();
-        dataPoints.push(newVal);
-
-        // Update live value label
-        const suffix = currentMetric === 'current' ? ' A' : (currentMetric === 'temp' ? ' °C' : ' Hz');
-        document.getElementById("liveVal").innerText = "Giá trị hiện tại: " + newVal.toFixed(1) + suffix;
-
-        // Draw
-        drawTrend();
-
-        setTimeout(tickChart, 500); // 500ms polling rate
-    }
-
-    function drawTrend() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const width = canvas.width;
-        const height = canvas.height;
-        const padding = 40;
-
-        // Determine min/max range based on metric
-        let minVal = 0;
-        let maxVal = 60;
-        if (currentMetric === 'temp') {
-            maxVal = 140;
+        // O chon khoi van lay danh sach THAT, du chua co so lieu nao de ve:
+        // nguoi dung can thay dung nhung khoi ma he thong biet.
+        function napKhoi() {
+            var sel = document.getElementById("trendBlock");
+            if (!sel) return;
+            fetch("@Url.Action("BlockMap", "Monitor")", { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    var ds = (d && d.blocks) || [];
+                    if (!ds.length) throw new Error("trống");
+                    sel.innerHTML = ds.slice().sort(function (a, b) { return a.block_no - b.block_no; })
+                        .map(function (b) {
+                            return '<option value="' + b.block_no + '">Khối ' + b.block_no +
+                                   ' (Zone ' + b.zone_id + ')</option>';
+                        }).join("");
+                })
+                .catch(function () {
+                    sel.innerHTML = '<option value="">không đọc được danh sách khối</option>';
+                });
         }
 
-        // Draw grid
-        ctx.strokeStyle = "rgba(51, 65, 85, 0.2)";
-        ctx.lineWidth = 1;
-        for (let i = 1; i < 5; i++) {
-            let y = padding + (height - padding * 2) * (i / 4);
-            ctx.beginPath();
-            ctx.moveTo(padding, y);
-            ctx.lineTo(width - padding, y);
-            ctx.stroke();
-
-            // Y Axis Labels
-            let val = maxVal - (maxVal - minVal) * (i / 4);
-            ctx.fillStyle = "rgb(148, 163, 184)";
-            ctx.font = "9px monospace";
-            ctx.fillText(val.toFixed(0), 10, y + 3);
-        }
-
-        // Plot line path
-        ctx.beginPath();
-        ctx.lineWidth = 2.5;
-        
-        let color = currentMetric === 'current' ? "rgb(59, 130, 246)" : (currentMetric === 'temp' ? "rgb(239, 68, 68)" : "rgb(168, 85, 247)");
-        ctx.strokeStyle = color;
-
-        const xStep = (width - padding * 2) / (maxPoints - 1);
-        
-        for (let i = 0; i < maxPoints; i++) {
-            let x = padding + i * xStep;
-            // Normalize y coordinate
-            let ratio = (dataPoints[i] - minVal) / (maxVal - minVal);
-            let y = height - padding - ratio * (height - padding * 2);
-
-            if (i === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
-        }
-        ctx.stroke();
-
-        // Fill area under curve
-        ctx.lineTo(padding + (maxPoints - 1) * xStep, height - padding);
-        ctx.lineTo(padding, height - padding);
-        ctx.closePath();
-        
-        let gradientColor = currentMetric === 'current' ? "rgba(59, 130, 246, 0.08)" : (currentMetric === 'temp' ? "rgba(239, 68, 68, 0.08)" : "rgba(168, 85, 247, 0.08)");
-        ctx.fillStyle = gradientColor;
-        ctx.fill();
-    }
+        document.addEventListener("DOMContentLoaded", function () {
+            veTrong();
+            napKhoi();
+            window.changeMetric();
+        });
+    })();
 </script>

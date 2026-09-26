@@ -31,54 +31,12 @@
                         </div>
                         
                         <!-- Zone A -->
-                        <div class="pl-4 border-l border-slate-800 space-y-1">
-                            <div onclick="toggleNode('zoneA')" class="flex items-center gap-2 cursor-pointer py-1 font-semibold text-slate-350 hover:text-slate-200">
-                                <span id="icon-zoneA">▼</span>
-                                <span>Zone A (Hầm B1)</span>
-                            </div>
-                            
-                            <div id="zoneA" class="pl-4 border-l border-slate-800 space-y-1">
-                                <!-- Block A-01 -->
-                                <div onclick="toggleNode('blockA1')" class="flex items-center gap-2 cursor-pointer py-1 text-slate-400 hover:text-slate-200">
-                                    <span id="icon-blockA1">▶</span>
-                                    <span>Block A-01</span>
-                                </div>
-                                <div id="blockA1" class="hidden pl-4 border-l border-slate-800 space-y-0.5">
-                                    <div onclick="selectDevice('MTR-LIFT-A1')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
-                                        <span>⚙ Motor Nâng Hạ</span>
-                                        <span class="text-emerald-400">● TỐT</span>
-                                    </div>
-                                    <div onclick="selectDevice('VFD-LIFT-A1')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
-                                        <span>🔌 Biến tần VFD Nâng</span>
-                                        <span class="text-slate-500">● STOP</span>
-                                    </div>
-                                    <div onclick="selectDevice('LS-T3-A1')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
-                                        <span>🚨 Cảm biến hành trình LS-T3</span>
-                                        <span class="text-emerald-400">● OK</span>
-                                    </div>
-                                </div>
-
-                                <!-- Block B-04 (Zone A/B) -->
-                                <div onclick="toggleNode('blockB4')" class="flex items-center gap-2 cursor-pointer py-1 text-slate-400 hover:text-slate-200">
-                                    <span id="icon-blockB4">▼</span>
-                                    <span>Block B-04</span>
-                                </div>
-                                <div id="blockB4" class="pl-4 border-l border-slate-800 space-y-0.5">
-                                    <div onclick="selectDevice('MTR-LIFT-B4')" class="py-1 px-2 rounded cursor-pointer bg-red-950/20 hover:bg-slate-800/40 text-[11px] text-slate-400 flex justify-between">
-                                        <span>⚙ Motor Nâng Hạ</span>
-                                        <span class="text-red-400 animate-pulse font-bold">✗ LỖI</span>
-                                    </div>
-                                    <div onclick="selectDevice('VFD-LIFT-B4')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
-                                        <span>🔌 Biến tần VFD Nâng</span>
-                                        <span class="text-slate-500">● STOP</span>
-                                    </div>
-                                    <div onclick="selectDevice('LS-T3-B4')" class="py-1 px-2 rounded cursor-pointer hover:bg-slate-800/40 text-[11px] text-slate-450 flex justify-between">
-                                        <span>🚨 Cảm biến hành trình LS-T3</span>
-                                        <span class="text-emerald-400">● OK</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            @* Cay cu co hai khoi bia trong mot zone bia. Bai that co 112 PLC
+               tren sau zone, va /PlcStatus biet dia chi, trang thai ket noi va
+               bo cuc thanh ghi cua tung cai. *@
+            <div id="assetTree" class="space-y-1 text-xs font-mono">
+                <div class="text-slate-500 py-6 text-center">Đang đọc danh sách thiết bị…</div>
+            </div>
                     </div>
                 </div>
             </div>
@@ -89,8 +47,8 @@
                 <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-6 shadow-xl space-y-6">
                     <div class="flex justify-between items-start pb-4 border-b border-slate-800">
                         <div>
-                            <h2 id="assetName" class="text-lg font-bold text-white">⚙ Động cơ Nâng hạ (Block B-04)</h2>
-                            <p id="assetCode" class="text-slate-500 text-xs font-mono mt-1">Mã thiết bị: MTR-LIFT-B4</p>
+                            <h2 id="assetName" class="text-lg font-bold text-white">Chọn một thiết bị</h2>
+                            <p id="assetCode" class="text-slate-500 text-xs font-mono mt-1">Mã thiết bị: —</p>
                         </div>
                         <span id="assetStatus" class="px-2.5 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-xs font-bold font-mono">
                             TRẠNG THÁI: LỖI
@@ -101,15 +59,15 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="bg-slate-800/20 border border-slate-800 p-4 rounded-xl">
                             <span class="text-slate-500 text-[10px] uppercase font-mono block">Runtime tích lũy</span>
-                            <span id="telemetryRuntime" class="text-lg font-mono font-bold text-slate-200 mt-1">1,240 giờ</span>
+                            <span id="telemetryRuntime" class="text-lg font-mono font-bold text-slate-200 mt-1">—</span>
                         </div>
                         <div class="bg-slate-800/20 border border-slate-800 p-4 rounded-xl">
                             <span class="text-slate-500 text-[10px] uppercase font-mono block">Số chu kỳ đỗ xe</span>
-                            <span id="telemetryCycles" class="text-lg font-mono font-bold text-slate-200 mt-1">45,120 lần</span>
+                            <span id="telemetryCycles" class="text-lg font-mono font-bold text-slate-200 mt-1">—</span>
                         </div>
                         <div class="bg-slate-800/20 border border-slate-800 p-4 rounded-xl">
                             <span class="text-slate-500 text-[10px] uppercase font-mono block">Nhiệt độ cuộn dây</span>
-                            <span id="telemetryTemp" class="text-lg font-mono font-bold text-red-400 mt-1">115°C</span>
+                            <span id="telemetryTemp" class="text-lg font-mono font-bold text-red-400 mt-1">—</span>
                         </div>
                     </div>
 
@@ -120,7 +78,7 @@
                             <div class="space-y-2 text-[11px] font-mono">
                                 <div class="flex justify-between border-b border-slate-800/50 pb-1">
                                     <span class="text-slate-550">Hãng sản xuất:</span>
-                                    <span id="specVendor" class="text-slate-350">Mitsubishi Electric</span>
+                                    <span id="specVendor" class="text-slate-350">—</span>
                                 </div>
                                 <div class="flex justify-between border-b border-slate-800/50 pb-1">
                                     <span class="text-slate-550">Model động cơ:</span>
@@ -163,155 +121,160 @@
 </div>
 
 <script>
-    // Asset Telemetry Database
-    const assetDb = {
-        'MTR-LIFT-A1': {
-            name: '⚙ Động cơ Nâng hạ (Block A-01)',
-            code: 'MTR-LIFT-A1',
-            status: 'TRẠNG THÁI: TỐT',
-            statusClass: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400',
-            runtime: '840 giờ',
-            cycles: '22,410 lần',
-            temp: '55°C',
-            tempClass: 'text-emerald-400',
-            vendor: 'Mitsubishi Electric',
-            model: 'SF-JR 7.5kW 4P',
-            serial: 'S/N: 2026-MTR-771C',
-            date: '12/03/2026',
-            maintLast: '15/06/2026',
-            maintNext: '15/09/2026',
-            parts: 'Má phanh cơ khí 7.5kW'
-        },
-        'VFD-LIFT-A1': {
-            name: '🔌 Biến tần VFD Nâng (Block A-01)',
-            code: 'VFD-LIFT-A1',
-            status: 'TRẠNG THÁI: STOP',
-            statusClass: 'border-slate-700 bg-slate-800 text-slate-400',
-            runtime: '840 giờ',
-            cycles: '22,410 lần',
-            temp: '32°C',
-            tempClass: 'text-slate-300',
-            vendor: 'Yaskawa Electric',
-            model: 'A1000 7.5kW Heavy',
-            serial: 'S/N: YAS-2026-09A',
-            date: '12/03/2026',
-            maintLast: '12/04/2026',
-            maintNext: '12/10/2026',
-            parts: 'Tụ lọc nguồn, Quạt làm mát VFD'
-        },
-        'LS-T3-A1': {
-            name: '🚨 Cảm biến hành trình LS-T3 (Block A-01)',
-            code: 'LS-T3-A1',
-            status: 'TRẠNG THÁI: OK',
-            statusClass: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400',
-            runtime: '---',
-            cycles: '44,820 lần',
-            temp: '---',
-            tempClass: 'text-slate-400',
-            vendor: 'Autonics',
-            model: 'PR12-4DN limit sensor',
-            serial: 'S/N: AUT-88902B',
-            date: '12/03/2026',
-            maintLast: '15/06/2026',
-            maintNext: '15/09/2026',
-            parts: 'Cảm biến Limit Switch Autonics'
-        },
-        'MTR-LIFT-B4': {
-            name: '⚙ Động cơ Nâng hạ (Block B-04)',
-            code: 'MTR-LIFT-B4',
-            status: 'TRẠNG THÁI: LỖI',
-            statusClass: 'border-rose-500/40 bg-rose-500/10 text-rose-400 animate-pulse',
-            runtime: '1,240 giờ',
-            cycles: '45,120 lần',
-            temp: '115°C',
-            tempClass: 'text-red-400 font-bold',
-            vendor: 'Mitsubishi Electric',
-            model: 'SF-JR 7.5kW 4P',
-            serial: 'S/N: 2026-MTR-881A',
-            date: '12/03/2026',
-            maintLast: '15/06/2026',
-            maintNext: '15/07/2026',
-            parts: 'Cuộn hút Phanh, Bôi trơn xích nâng'
-        },
-        'VFD-LIFT-B4': {
-            name: '🔌 Biến tần VFD Nâng (Block B-04)',
-            code: 'VFD-LIFT-B4',
-            status: 'TRẠNG THÁI: STOP',
-            statusClass: 'border-slate-700 bg-slate-800 text-slate-400',
-            runtime: '1,240 giờ',
-            cycles: '45,120 lần',
-            temp: '45°C',
-            tempClass: 'text-slate-300',
-            vendor: 'Yaskawa Electric',
-            model: 'A1000 7.5kW Heavy',
-            serial: 'S/N: YAS-2026-11C',
-            date: '12/03/2026',
-            maintLast: '12/04/2026',
-            maintNext: '12/10/2026',
-            parts: 'Quạt làm mát VFD'
-        },
-        'LS-T3-B4': {
-            name: '🚨 Cảm biến hành trình LS-T3 (Block B-04)',
-            code: 'LS-T3-B4',
-            status: 'TRẠNG THÁI: OK',
-            statusClass: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400',
-            runtime: '---',
-            cycles: '90,240 lần',
-            temp: '---',
-            tempClass: 'text-slate-400',
-            vendor: 'Autonics',
-            model: 'PR12-4DN limit sensor',
-            serial: 'S/N: AUT-99104A',
-            date: '12/03/2026',
-            maintLast: '15/06/2026',
-            maintNext: '15/09/2026',
-            parts: 'Cảm biến Limit Switch Autonics'
-        }
-    };
+    // ===================== CAY THIET BI THAT =====================
+    // Ban truoc dung san mot co so du lieu thiet bi bia: gio chay, so chu ky,
+    // nhiet do, ten hang, so se-ri va ngay bao tri cho vai thiet bi o hai khoi
+    // khong ton tai. Khong truong nao trong so do co nguon — CSDL khong co bang
+    // tai san, va vong quet PLC khong doc nhiet do hay gio chay.
+    //
+    // Nhung co mot cay thiet bi THAT: 112 PLC, moi cai gan voi mot khoi, co dia
+    // chi mang, trang thai ket noi, bo cuc thanh ghi va lan doc the gan nhat.
+    // Do la thu trang nay hien bay gio.
+    (function () {
+        "use strict";
 
-    function toggleNode(nodeId) {
-        const node = document.getElementById(nodeId);
-        const icon = document.getElementById('icon-' + nodeId);
-        
-        if (node.classList.contains('hidden')) {
-            node.classList.remove('hidden');
-            icon.innerText = '▼';
+        var URL_PLC   = "@Url.Action("Index", "PlcStatus")";
+        // /PlcStatus khong tra zone_id — no chi biet block_no va duong mang.
+        // Ghep them tu /Monitor/BlockMap de cay chia dung sau zone thay vi don
+        // ca 112 PLC vao mot nhom "Zone 0".
+        var URL_BLOCK = "@Url.Action("BlockMap", "Monitor")";
+        var zoneTheoKhoi = {};
+        var NHIP_MS = 20000;
+        var GACH    = "\u2014";
+
+        var theoKhoi = {};
+
+        function el(id) { return document.getElementById(id); }
+        function dat(id, v) { var e = el(id); if (e) e.textContent = v; }
+
+        function esc(v) {
+            return String(v === null || v === undefined ? "" : v)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function veCay(ds) {
+            var cay = el("assetTree");
+            if (!cay) return;
+
+            if (!ds.length) {
+                cay.innerHTML = '<div class="text-slate-500 py-6 text-center">Chưa có thiết bị nào được khai báo.</div>';
+                return;
+            }
+
+            // Gom theo zone de cay co hai tang nhu ban cu, nhung bang so that.
+            var zone = {};
+            ds.forEach(function (b) {
+                var z = b.zone_id || 0;
+                (zone[z] = zone[z] || []).push(b);
+            });
+
+            cay.innerHTML = Object.keys(zone).sort(function (a, b) { return a - b; })
+                .map(function (z) {
+                    var ds2 = zone[z].sort(function (a, b) { return a.block_no - b.block_no; });
+                    var mat = ds2.filter(function (b) { return !b.online; }).length;
+                    return '<div class="mb-2">' +
+                             '<div class="text-slate-300 font-bold py-1">' +
+                               (z === "0" || z === "null" ? "Chưa rõ zone" : "Zone " + esc(z)) +
+                               ' <span class="text-slate-600 font-normal">(' + ds2.length + ' PLC' +
+                               (mat ? ', ' + mat + ' mất kết nối' : '') + ')</span></div>' +
+                             ds2.map(function (b) {
+                                 var cham = b.online ? "rgb(34,197,94)" : "rgb(220,38,38)";
+                                 return '<button type="button" onclick="chonThietBi(' + b.block_no + ')" ' +
+                                        'class="w-full text-left pl-4 py-1 rounded hover:bg-slate-800/40 flex items-center gap-2">' +
+                                          '<span class="w-1.5 h-1.5 rounded-full" style="background:' + cham + ';"></span>' +
+                                          '<span class="text-slate-400">PLC khối ' + b.block_no + '</span>' +
+                                        '</button>';
+                             }).join("") +
+                           '</div>';
+                }).join("");
+        }
+
+        window.chonThietBi = function (blockNo) {
+            var b = theoKhoi[blockNo];
+            if (!b) return;
+
+            dat("assetName", "PLC khối " + blockNo);
+            dat("assetCode", b.endpoint || GACH);
+
+            var st = el("assetStatus");
+            if (st) {
+                st.textContent = b.online ? "TRẠNG THÁI: ĐANG KẾT NỐI" : "TRẠNG THÁI: MẤT KẾT NỐI";
+                st.className = "px-2 py-0.5 rounded text-[10px] font-bold border " + (b.online
+                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+                    : "border-rose-500/40 bg-rose-500/10 text-rose-400");
+            }
+
+            // Bon o duoi day KHONG co nguon: he thong khong doc gio chay, so chu
+            // ky hay nhiet do tu thiet bi, va khong co bang tai san nao ghi hang
+            // san xuat hay so se-ri. Noi thang thay vi dien mot con so nghe hop ly.
+            dat("telemetryRuntime", "chưa ghi nhận");
+            dat("telemetryCycles",  "chưa ghi nhận");
+            dat("telemetryTemp",    "chưa đo");
+            dat("specVendor",       "chưa ghi nhận");
+            dat("specModel",        b.layout ? ("Bố cục thanh ghi: " + b.layout) : "chưa ghi nhận");
+            dat("specSerial",       b.endpoint ? ("Địa chỉ: " + b.endpoint) : "chưa ghi nhận");
+            dat("specDate",         "chưa ghi nhận");
+            dat("specParts",        b.registers
+                                        ? ("Thanh ghi thẻ " + (b.registers.card || "?"))
+                                        : "chưa ghi nhận");
+            dat("maintLast",        b.last_ok  ? ("Bắt tay gần nhất: " + b.last_ok)  : "chưa ghi nhận");
+            dat("maintNext",        b.last_scan ? ("Quét ô gần nhất: " + b.last_scan) : "chưa ghi nhận");
+        };
+
+        function tick() {
+            // Doc zone TRUOC roi moi doc PLC: neu ve cay xong moi biet zone thi
+            // nguoi dung thay cay nhay mot lan tu "Zone 0" sang so dung.
+            fetch(URL_BLOCK, { cache: "no-store" })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (d) {
+                    ((d && d.blocks) || []).forEach(function (b) {
+                        zoneTheoKhoi[b.block_no] = b.zone_id;
+                    });
+                })
+                .catch(function () { /* thieu zone thi cay van chay, chi kem chia nhom */ })
+                .then(docPlc);
+        }
+
+        function docPlc() {
+            return fetch(URL_PLC, { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    if (d && d.error) throw new Error(d.error);
+                    var ds = (d && d.blocks) || [];
+                    theoKhoi = {};
+                    ds.forEach(function (b) {
+                        b.zone_id = zoneTheoKhoi[b.block_no] || null;
+                        theoKhoi[b.block_no] = b;
+                    });
+                    veCay(ds);
+                })
+                .catch(function (e) {
+                    var cay = el("assetTree");
+                    if (cay) {
+                        cay.innerHTML = '<div class="text-red-400 py-6 text-center">Không đọc được danh sách thiết bị: ' +
+                                        esc(e.message) + '</div>';
+                    }
+                });
+        }
+
+        window.toggleNode = function () { /* cay hien phang, khong con nut gap */ };
+
+        var timer = null;
+        function batDau() { if (timer) return; tick(); timer = setInterval(tick, NHIP_MS); }
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) { if (timer) { clearInterval(timer); timer = null; } }
+            else batDau();
+        });
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", batDau);
         } else {
-            node.classList.add('hidden');
-            icon.innerText = '▶';
+            batDau();
         }
-    }
-
-    function selectDevice(key) {
-        const item = assetDb[key];
-        if (!item) return;
-
-        // Update titles
-        document.getElementById("assetName").innerText = item.name;
-        document.getElementById("assetCode").innerText = "Mã thiết bị: " + item.code;
-        
-        // Status badge
-        const badge = document.getElementById("assetStatus");
-        badge.className = "px-2.5 py-0.5 rounded border text-xs font-bold font-mono " + item.statusClass;
-        badge.innerText = item.status;
-
-        // Telemetries
-        document.getElementById("telemetryRuntime").innerText = item.runtime;
-        document.getElementById("telemetryCycles").innerText = item.cycles;
-        
-        const tempSpan = document.getElementById("telemetryTemp");
-        tempSpan.className = "text-lg font-mono font-bold mt-1 " + item.tempClass;
-        tempSpan.innerText = item.temp;
-
-        // Specifications
-        document.getElementById("specVendor").innerText = item.vendor;
-        document.getElementById("specModel").innerText = item.model;
-        document.getElementById("specSerial").innerText = item.serial;
-        document.getElementById("specDate").innerText = item.date;
-
-        // Maintenance schedule
-        document.getElementById("maintLast").innerText = item.maintLast;
-        document.getElementById("maintNext").innerText = item.maintNext;
-        document.getElementById("specParts").innerText = item.parts;
-    }
+    })();
 </script>

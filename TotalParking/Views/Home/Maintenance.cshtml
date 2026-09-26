@@ -19,6 +19,26 @@
                 Xuất Work Order
         </div>
 
+        @* Trang nay khong co nguon du lieu nao. Da tra information_schema cho moi
+           cot ten chua maint/runtime/cycle/temp trong ca CSDL: chi ra dung
+           `parking_slot.cycle_count`, va bang do co 0 dong.
+
+           Ba nut "Reset PLC", "Bypass bao ve dong co" va "Bypass cam bien quang"
+           da bi go: chung bao da gui lenh xuong PLC trong khi khong ham nao co
+           fetch. Bypass bao ve qua tai dong co la cach lam chay motor hoac roi
+           pallet — mot nut bao "thanh cong" ma khong lam gi khien ky thuat vien
+           tin rang da vo hieu hoa bao ve va di lam tiep. *@
+        <div class="mb-4 rounded-lg border border-amber-800/40 bg-amber-950/20 px-4 py-3">
+            <div class="text-amber-400 text-xs font-bold mb-1">Chưa có dữ liệu bảo trì</div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+                Hệ thống chưa ghi nhận giờ chạy, số chu kỳ hay lịch bảo trì của thiết bị,
+                và cơ sở dữ liệu không có bảng nào lưu các số liệu đó. Mọi con số trên trang
+                này vì vậy để trống. Muốn xem sự cố có thật, dùng trang
+                <a href="@Url.Action("Diagnostics", "Home")" class="text-blue-400 underline">Chẩn đoán Từ xa</a>
+                hoặc <a href="@Url.Action("Alarms", "Home")" class="text-blue-400 underline">Alarm &amp; Event</a>.
+            </p>
+        </div>
+
         <!-- Horizontal Tabs -->
         <div class="flex border-b border-slate-800 gap-1 mt-2">
             <button id="tab-btn-schedule" onclick="switchMaintenanceTab('schedule')" class="px-4 py-2 border-b-2 font-bold text-xs tracking-wide transition-all duration-200 border-blue-500 text-blue-400 bg-transparent outline-none">
@@ -36,9 +56,7 @@
                 <div class="text-red-400 text-xs font-mono">
                     Khẩn cấp
                 </div>
-                <div class="text-red-300 text-2xl font-mono font-bold">
-                    1
-                </div>
+                <div class="text-red-300 text-2xl font-mono font-bold">—</div>
                 <div class="text-red-500 text-[10px] font-mono">
                     thiết bị
                 </div>
@@ -47,9 +65,7 @@
                 <div class="text-orange-400 text-xs font-mono">
                     Ưu tiên cao
                 </div>
-                <div class="text-orange-300 text-2xl font-mono font-bold">
-                    2
-                </div>
+                <div class="text-orange-300 text-2xl font-mono font-bold">—</div>
                 <div class="text-orange-500 text-[10px] font-mono">
                     thiết bị
                 </div>
@@ -58,9 +74,7 @@
                 <div class="text-slate-400 text-xs font-mono">
                     Tổng work order
                 </div>
-                <div class="text-slate-200 text-2xl font-mono font-bold">
-                    5
-                </div>
+                <div class="text-slate-200 text-2xl font-mono font-bold">—</div>
                 <div class="text-slate-500 text-[10px] font-mono">
                     trong 30 ngày
                 </div>
@@ -69,367 +83,18 @@
                 <div class="text-slate-400 text-xs font-mono">
                     Block đang bảo trì
                 </div>
-                <div class="text-violet-300 text-2xl font-mono font-bold">
-                    1
-                </div>
+                <div class="text-violet-300 text-2xl font-mono font-bold">—</div>
                 <div class="text-slate-500 text-[10px] font-mono">
                     block
                 </div>
             </div>
         </div>
+        @* Bieu do cu ve muoi hai cot phan tram cho cac khoi bia, kem so chu
+           ky va gio chay khong co nguon. *@
         <div class="bg-card rounded border border-slate-700/50 p-4">
-            <h3 class="text-slate-300 text-sm font-semibold mb-3">
-                Tần suất hoạt động theo Block
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B01
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone A
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 3,820
-                            </span>
-                            <span>
-                                Runtime: 1240h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 38%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                38%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B02
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone A
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 2,910
-                            </span>
-                            <span>
-                                Runtime: 980h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 29%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                29%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B03
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone A
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 4,110
-                            </span>
-                            <span>
-                                Runtime: 1540h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 41%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                41%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B04
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone A
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 5,640
-                            </span>
-                            <span>
-                                Runtime: 2100h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 56%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                56%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B05
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone B
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 2,100
-                            </span>
-                            <span>
-                                Runtime: 760h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 21%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                21%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B06
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone B
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 2,450
-                            </span>
-                            <span>
-                                Runtime: 890h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 25%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                25%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B07
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone B
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 8,900
-                            </span>
-                            <span>
-                                Runtime: 3200h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-amber-500 transition-all" style="width: 89%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-amber-400">
-                                89%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B08
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone B
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 1,780
-                            </span>
-                            <span>
-                                Runtime: 540h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 18%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                18%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B09
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone C
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 1,200
-                            </span>
-                            <span>
-                                Runtime: 420h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 12%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                12%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B10
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone C
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 1,050
-                            </span>
-                            <span>
-                                Runtime: 380h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 11%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                11%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B11
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone C
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 0
-                            </span>
-                            <span>
-                                Runtime: 0h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 0%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                0%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 rounded border border-slate-700/40">
-                    <div class="w-20 shrink-0">
-                        <div class="text-slate-200 text-xs font-mono">
-                            B12
-                        </div>
-                        <div class="text-slate-500 text-[9px] font-mono">
-                            Zone C
-                        </div>
-                    </div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between text-[9px] font-mono text-slate-500">
-                            <span>
-                                Chu kỳ: 880
-                            </span>
-                            <span>
-                                Runtime: 290h
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 transition-all" style="width: 9%;">
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-green-400">
-                                9%
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <h3 class="text-slate-300 text-sm font-semibold mb-3">Tần suất hoạt động theo Block</h3>
+            <div class="text-center text-slate-500 text-[11px] py-10">
+                Hệ thống chưa đếm số lần vận hành hay giờ chạy của từng khối.
             </div>
         </div>
         <div class="flex gap-2">
@@ -508,255 +173,12 @@
                             </th>
                         </tr>
                     </thead>
+                    @* Nam dong lich bao tri cu deu bia: ten thiet bi, so chu ky,
+                       gio chay va ngay bao tri tiep theo o nhung khoi khong ton tai. *@
                     <tbody>
-                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
-                            <td class="px-3 py-2.5 text-slate-400">
-                                A
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-300">
-                                Block A-04
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-200 font-medium">
-                                Motor Nâng Hạ
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-400">
-                                Motor lift
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-red-400">
-                                        5,640
-                                    </span>
-                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
-                                        <div class="h-full bg-red-500" style="width: 94%;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-500">
-                                6,000
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1">
-                                    <span class="text-amber-400">
-                                        2100
-                                    </span>
-                                    <span class="text-slate-600">
-                                        /2400
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1 text-red-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert">
-                                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3">
-                                        </path>
-                                        <path d="M12 9v4">
-                                        </path>
-                                        <path d="M12 17h.01">
-                                        </path>
-                                    </svg>
-                                    2026-06-15
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-red-950/70 border-red-700/60 text-red-300">
-                                    Khẩn cấp
-                                </span>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
-                            <td class="px-3 py-2.5 text-slate-400">
-                                B
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-300">
-                                Block B-01
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-200 font-medium">
-                                Motor Trượt Ngang
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-400">
-                                Motor slide
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-slate-300">
-                                        2,100
-                                    </span>
-                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
-                                        <div class="h-full bg-amber-500" style="width: 84%;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-500">
-                                2,500
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1">
-                                    <span class="text-slate-300">
-                                        760
-                                    </span>
-                                    <span class="text-slate-600">
-                                        /1000
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1 text-slate-300">
-                                    2026-06-22
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-orange-950/60 border-orange-700/50 text-orange-300">
-                                    Cao
-                                </span>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
-                            <td class="px-3 py-2.5 text-slate-400">
-                                A
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-300">
-                                Block A-03
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-200 font-medium">
-                                Xích nâng
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-400">
-                                Chain
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-slate-300">
-                                        4,110
-                                    </span>
-                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
-                                        <div class="h-full bg-amber-500" style="width: 82.2%;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-500">
-                                5,000
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1">
-                                    <span class="text-slate-300">
-                                        1540
-                                    </span>
-                                    <span class="text-slate-600">
-                                        /2000
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1 text-slate-300">
-                                    2026-06-30
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-orange-950/60 border-orange-700/50 text-orange-300">
-                                    Cao
-                                </span>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
-                            <td class="px-3 py-2.5 text-slate-400">
-                                B
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-300">
-                                Block B-03
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-200 font-medium">
-                                Dầu hộp số
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-400">
-                                Lubricant
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-slate-300">
-                                        8,900
-                                    </span>
-                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
-                                        <div class="h-full bg-amber-500" style="width: 89%;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-500">
-                                10,000
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1">
-                                    <span class="text-slate-300">
-                                        3200
-                                    </span>
-                                    <span class="text-slate-600">
-                                        /4000
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1 text-slate-300">
-                                    2026-07-10
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-amber-950/60 border-amber-700/50 text-amber-300">
-                                    Trung bình
-                                </span>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
-                            <td class="px-3 py-2.5 text-slate-400">
-                                A
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-300">
-                                Block A-02
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-200 font-medium">
-                                Cảm biến kích thước
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-400">
-                                Sensor
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-slate-300">
-                                        2,910
-                                    </span>
-                                    <div class="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
-                                        <div class="h-full bg-amber-500" style="width: 58.2%;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5 text-slate-500">
-                                5,000
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1">
-                                    <span class="text-slate-300">
-                                        980
-                                    </span>
-                                    <span class="text-slate-600">
-                                        /2000
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <div class="flex items-center gap-1 text-slate-300">
-                                    2026-07-20
-                                </div>
-                            </td>
-                            <td class="px-3 py-2.5">
-                                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium bg-sky-950/60 border-sky-700/50 text-sky-300">
-                                    Thấp
-                                </span>
-                            </td>
-                        </tr>
+                        <tr><td colspan="8" class="px-3 py-10 text-center text-slate-500 text-[11px]">
+                            Chưa có lịch bảo trì nào. Hệ thống không ghi nhận giờ chạy hay số chu kỳ của thiết bị.
+                        </td></tr>
                     </tbody>
                 </table>
             </div>
@@ -909,19 +331,10 @@
                     <!-- Remote Operation Buttons -->
                     <div class="space-y-2 pt-4 border-t border-slate-800">
                         <div class="grid grid-cols-2 gap-2">
-                            <button id="btn-diag-reset" onclick="execDiagReset()" class="px-2.5 py-1.5 bg-green-700 hover:bg-green-600 text-white text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1 shadow">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
-                                Reset PLC
-                            </button>
-                            <button id="btn-diag-bypass" onclick="execDiagBypass()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-750 text-amber-400 border border-slate-700 text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
-                                Bypass Sensor
-                            </button>
+                            
+                            
                         </div>
-                        <button onclick="createDiagWorkOrder()" class="w-full px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1 shadow-md">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
-                            Tạo lệnh bảo trì khẩn cấp (Work Order)
-                        </button>
+                        
                     </div>
                 </div>
             </div>
@@ -1008,68 +421,37 @@
         }
     }
 
-    // Diagnostics Mock Database
-    const blockDiagData = {
-        'B01': {
-            status: 'Normal',
-            motor: { status: 'OK', name: 'ĐỘNG CƠ NÂNG HẠ B01', code: 'MTR-LIFT-B01', temp: 54, current: 12.4, voltage: 382, speed: 1450, error: 'Không có lỗi', plc: { 'I:0/2 (LIFT_RUN)': 'ON', 'I:0/3 (LIFT_DIR)': 'UP', 'O:1/2 (RUN_CMD)': 'ON', 'O:1/3 (BRAKE_REL)': 'ON' } },
-            shuttle: { status: 'OK', name: 'BÀN NÂNG & DI CHUYỂN B01', code: 'SHT-RUN-B01', pos: 'Tầng 1 (Slot 03)', error: 'Không có lỗi', plc: { 'I:0/4 (SHT_POS)': 'ON', 'I:0/5 (SHT_HOME)': 'ON', 'O:1/4 (MOVE_FWD)': 'OFF', 'O:1/5 (MOVE_REV)': 'OFF' } },
-            limitSwitch: { status: 'OK', name: 'CẢM BIẾN HÀNH TRÌNH TẦNG 1', code: 'LS-L1-B01', value: 'Đã định vị chính xác', error: 'Không có lỗi', plc: { 'I:0/6 (LS_L1_ACT)': 'ON', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'OFF' } },
-            photogate: { status: 'OK', name: 'CẢM BIẾN QUANG AN TOÀN', code: 'SAFE-PH-B01', state: 'Thông suốt (Clear)', error: 'Không có lỗi', plc: { 'I:1/0 (PH_RX_OK)': 'ON', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'OFF' } }
-        },
-        'B04': {
-            status: 'Fault',
-            motor: { status: 'FAULT', name: 'ĐỘNG CƠ NÂNG HẠ B04', code: 'MTR-LIFT-B04', temp: 115, current: 45.2, voltage: 378, speed: 0, error: 'ERR-MTR-04 - Quá nhiệt cuộn dây động cơ (Thermal Overload)', plc: { 'I:0/2 (LIFT_RUN)': 'OFF', 'I:0/3 (LIFT_DIR)': 'OFF', 'O:1/2 (RUN_CMD)': 'OFF', 'O:1/3 (BRAKE_REL)': 'OFF' } },
-            shuttle: { status: 'OK', name: 'BÀN NÂNG & DI CHUYỂN B04', code: 'SHT-RUN-B04', pos: 'Tầng 2 (Lơ lửng)', error: 'Không có lỗi', plc: { 'I:0/4 (SHT_POS)': 'ON', 'I:0/5 (SHT_HOME)': 'OFF', 'O:1/4 (MOVE_FWD)': 'OFF', 'O:1/5 (MOVE_REV)': 'OFF' } },
-            limitSwitch: { status: 'OK', name: 'CẢM BIẾN HÀNH TRÌNH TẦNG 2', code: 'LS-L2-B04', value: 'Đã định vị chính xác', error: 'Không có lỗi', plc: { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'ON', 'I:0/8 (LS_L3_ACT)': 'OFF' } },
-            photogate: { status: 'OK', name: 'CẢM BIẾN QUANG AN TOÀN', code: 'SAFE-PH-B04', state: 'Thông suốt (Clear)', error: 'Không có lỗi', plc: { 'I:1/0 (PH_RX_OK)': 'ON', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'OFF' } }
-        },
-        'B02': {
-            status: 'Warning',
-            motor: { status: 'OK', name: 'ĐỘNG CƠ NÂNG HẠ B02', code: 'MTR-LIFT-B02', temp: 62, current: 13.1, voltage: 380, speed: 1445, error: 'Không có lỗi', plc: { 'I:0/2 (LIFT_RUN)': 'ON', 'I:0/3 (LIFT_DIR)': 'UP', 'O:1/2 (RUN_CMD)': 'ON', 'O:1/3 (BRAKE_REL)': 'ON' } },
-            shuttle: { status: 'OK', name: 'BÀN NÂNG & DI CHUYỂN B02', code: 'SHT-RUN-B02', pos: 'Tầng 1 (Slot 01)', error: 'Không có lỗi', plc: { 'I:0/4 (SHT_POS)': 'ON', 'I:0/5 (SHT_HOME)': 'ON', 'O:1/4 (MOVE_FWD)': 'OFF', 'O:1/5 (MOVE_REV)': 'OFF' } },
-            limitSwitch: { status: 'WARNING', name: 'CẢM BIẾN HÀNH TRÌNH TẦNG 3', code: 'LS-L3-B02', value: 'Trễ phản hồi / Lệch vị trí nhẹ', error: 'WARN-LMT-08 - Tín hiệu hành trình Tầng 3 bị trễ cơ khí (> 500ms)', plc: { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'ON/OFF (Chập chờn)' } },
-            photogate: { status: 'OK', name: 'CẢM BIẾN QUANG AN TOÀN', code: 'SAFE-PH-B02', state: 'Thông suốt (Clear)', error: 'Không có lỗi', plc: { 'I:1/0 (PH_RX_OK)': 'ON', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'OFF' } }
-        },
-        'B03': {
-            status: 'Alarm',
-            motor: { status: 'OK', name: 'ĐỘNG CƠ NÂNG HẠ B03', code: 'MTR-LIFT-B03', temp: 48, current: 0.0, voltage: 380, speed: 0, error: 'Không có lỗi', plc: { 'I:0/2 (LIFT_RUN)': 'OFF', 'I:0/3 (LIFT_DIR)': 'OFF', 'O:1/2 (RUN_CMD)': 'OFF', 'O:1/3 (BRAKE_REL)': 'OFF' } },
-            shuttle: { status: 'OK', name: 'BÀN NÂNG & DI CHUYỂN B03', code: 'SHT-RUN-B03', pos: 'Tầng 3 (Slot 09)', error: 'Không có lỗi', plc: { 'I:0/4 (SHT_POS)': 'ON', 'I:0/5 (SHT_HOME)': 'ON', 'O:1/4 (MOVE_FWD)': 'OFF', 'O:1/5 (MOVE_REV)': 'OFF' } },
-            limitSwitch: { status: 'OK', name: 'CẢM BIẾN HÀNH TRÌNH TẦNG 3', code: 'LS-L3-B03', value: 'Đã định vị chính xác', error: 'Không có lỗi', plc: { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'ON' } },
-            photogate: { status: 'FAULT', name: 'CẢM BIẾN QUANG AN TOÀN', code: 'SAFE-PH-B03', state: 'Bị vật cản / Lệch trục thu phát', error: 'ERR-SAFE-02 - Luồng quang học bị ngắt quãng tại cửa an toàn', plc: { 'I:1/0 (PH_RX_OK)': 'OFF', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'ON (Kích hoạt còi)' } }
-        }
-    };
+    // ===================== DA BO CSDL THIET BI BIA =====================
+    // Cho nay tung la mot bang du lieu thiet bi bia cho vai khoi khong ton tai:
+    // nhiet do cuon day, dong dien, dien ap, toc do vong quay va ca trang thai
+    // vao/ra cua PLC. He thong khong doc bat ky dai luong nao trong so do.
+    const blockDiagData = {};
 
     let selectedDiagDevice = 'motor';
 
+    // Danh sach khoi lay tu /Monitor/BlockMap. Ban cu sinh B01..B12 theo cong
+    // thuc, va gan san nhan "Hoat dong tot" / "Dang loi" cho vai ma trong so do.
     function updateDiagBlockOptions() {
-        const zone = document.getElementById('diag-zone').value;
-        const blockSelect = document.getElementById('diag-block');
-        blockSelect.innerHTML = '';
-        
-        let startNum = 1;
-        if (zone === 'A') startNum = 1; // B01-B03
-        else if (zone === 'B') startNum = 4; // B04-B06
-        else if (zone === 'C') startNum = 7; // B07-B09
-        else if (zone === 'D') startNum = 10; // B10-B12
-        
-        for (let i = 0; i < 3; i++) {
-            const num = startNum + i;
-            const blockId = 'B' + String(num).padStart(2, '0');
-            const opt = document.createElement('option');
-            opt.value = blockId;
-            
-            // Add label matching faults
-            if (blockId === 'B01') opt.innerText = 'Block ' + blockId + ' (Hoạt động tốt)';
-            else if (blockId === 'B04') opt.innerText = 'Block ' + blockId + ' (Lỗi Động Cơ)';
-            else if (blockId === 'B02') opt.innerText = 'Block ' + blockId + ' (Cảnh báo Cảm biến HT)';
-            else if (blockId === 'B03') opt.innerText = 'Block ' + blockId + ' (Lỗi Cửa An Toàn)';
-            else opt.innerText = 'Block ' + blockId + ' (Hoạt động tốt)';
-            
-            blockSelect.appendChild(opt);
-        }
-        
-        loadDiagBlock();
+        const sel = document.getElementById('diag-block');
+        if (!sel) return;
+        sel.innerHTML = '<option value="">\u0111ang \u0111\u1ecdc\u2026</option>';
+        fetch("@Url.Action("BlockMap", "Monitor")", { cache: "no-store" })
+            .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            })
+            .then(function (d) {
+                const ds = (d && d.blocks) || [];
+                if (!ds.length) throw new Error("tr\u1ed1ng");
+                sel.innerHTML = ds.slice().sort(function (a, b) { return a.block_no - b.block_no; })
+                    .map(function (b) {
+                        return '<option value="' + b.block_no + '">Kh\u1ed1i ' + b.block_no +
+                               ' (Zone ' + b.zone_id + ')</option>';
+                    }).join("");
+            })
+            .catch(function () {
+                sel.innerHTML = '<option value="">kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c danh s\u00e1ch kh\u1ed1i</option>';
+            });
     }
 
     function getSelectedBlockData() {
@@ -1174,11 +556,11 @@
         // Remove selection outline from all nodes
         const nodes = ['motor', 'shuttle', 'photogate'];
         nodes.forEach(n => {
-            document.getElementById('diag-device-' + n).style.outline = 'none';
+            (function(e){ if (e) e.style.outline = 'none'; })(document.getElementById('diag-device-' + n));
         });
-        document.getElementById('diag-device-limitsw-1').style.outline = 'none';
-        document.getElementById('diag-device-limitsw-2').style.outline = 'none';
-        document.getElementById('diag-device-limitsw-3').style.outline = 'none';
+        (function(e){ if (e) e.style.outline = 'none'; })(document.getElementById('diag-device-limitsw-1'));
+        (function(e){ if (e) e.style.outline = 'none'; })(document.getElementById('diag-device-limitsw-2'));
+        (function(e){ if (e) e.style.outline = 'none'; })(document.getElementById('diag-device-limitsw-3'));
         
         // Highlight active node
         if (limitLevel) {
@@ -1322,116 +704,8 @@
     }
 
     // Remote Actions simulation
-    function execDiagReset() {
-        const blockId = document.getElementById('diag-block').value;
-        const data = getSelectedBlockData();
-        
-        // Reset motor status
-        if (data.motor.status === 'FAULT') {
-            data.motor.status = 'OK';
-            data.motor.temp = 68;
-            data.motor.current = 14.1;
-            data.motor.voltage = 380;
-            data.motor.speed = 1450;
-            data.motor.error = 'Không có lỗi';
-            data.motor.plc = { 'I:0/2 (LIFT_RUN)': 'ON', 'I:0/3 (LIFT_DIR)': 'UP', 'O:1/2 (RUN_CMD)': 'ON', 'O:1/3 (BRAKE_REL)': 'ON' };
-        }
-        
-        // Reset photogate status
-        if (data.photogate.status === 'FAULT') {
-            data.photogate.status = 'OK';
-            data.photogate.state = 'Thông suốt (Clear)';
-            data.photogate.error = 'Không có lỗi';
-            data.photogate.plc = { 'I:1/0 (PH_RX_OK)': 'ON', 'I:1/1 (PH_MUTE)': 'OFF', 'O:2/0 (ALARM_SIREN)': 'OFF' };
-        }
-        
-        // Reset limit switch status
-        if (data.limitSwitch.status === 'WARNING') {
-            data.limitSwitch.status = 'OK';
-            data.limitSwitch.value = 'Đã định vị chính xác';
-            data.limitSwitch.error = 'Không có lỗi';
-            data.limitSwitch.plc = { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'ON' };
-        }
-        
-        data.status = 'Normal';
-        
-        alert('Đã gửi lệnh Reset PLC và ACK cảnh báo lỗi thành công cho ' + blockId + '! Thiết bị đang hoạt động bình thường trở lại.');
-        loadDiagBlock();
-    }
 
-    function execDiagBypass() {
-        const blockId = document.getElementById('diag-block').value;
-        const data = getSelectedBlockData();
-        
-        if (selectedDiagDevice === 'motor') {
-            alert('Đã Bypass chế độ bảo vệ động cơ cho ' + blockId + '! Vận hành khẩn cấp được kích hoạt.');
-        } else if (selectedDiagDevice === 'limitSwitch') {
-            data.limitSwitch.status = 'OK';
-            data.limitSwitch.value = 'Bypass Active (Forced)';
-            data.limitSwitch.plc = { 'I:0/6 (LS_L1_ACT)': 'OFF', 'I:0/7 (LS_L2_ACT)': 'OFF', 'I:0/8 (LS_L3_ACT)': 'ON (Forced)' };
-            alert('Đã gửi tín hiệu Bypass cảm biến hành trình T3. PLC chuyển sang chế độ cưỡng bức.');
-            loadDiagBlock();
-        } else if (selectedDiagDevice === 'photogate') {
-            data.photogate.status = 'OK';
-            data.photogate.state = 'Bypass Active (Forced)';
-            data.photogate.plc = { 'I:1/0 (PH_RX_OK)': 'ON (Forced)', 'I:1/1 (PH_MUTE)': 'ON', 'O:2/0 (ALARM_SIREN)': 'OFF' };
-            alert('Đã gửi tín hiệu Bypass cảm biến quang an toàn. PLC bỏ qua tín hiệu đứt luồng quang.');
-            loadDiagBlock();
-        }
-    }
 
-    function createDiagWorkOrder() {
-        const blockId = document.getElementById('diag-block').value;
-        const zone = document.getElementById('diag-zone').value;
-        const data = getSelectedBlockData();
-        
-        let deviceName = '';
-        let errorDesc = '';
-        let priority = 'high';
-        
-        if (selectedDiagDevice === 'motor') {
-            deviceName = 'Motor Nâng Hạ';
-            errorDesc = data.motor.error;
-            priority = 'urgent';
-        } else if (selectedDiagDevice === 'shuttle') {
-            deviceName = 'Bàn chuyển dịch / Shuttle';
-            errorDesc = 'Bảo trì định kỳ / Tra dầu xích truyền động';
-            priority = 'low';
-        } else if (selectedDiagDevice === 'limitSwitch') {
-            deviceName = 'Cảm biến hành trình';
-            errorDesc = data.limitSwitch.error;
-            priority = 'medium';
-        } else if (selectedDiagDevice === 'photogate') {
-            deviceName = 'Cảm biến an toàn';
-            errorDesc = data.photogate.error;
-            priority = 'high';
-        }
-        
-        // Pre-populate Work Order List below
-        const table = document.querySelector('table tbody');
-        const newRow = table.insertRow(0);
-        newRow.className = "border-b border-slate-800/60 hover:bg-slate-800/30";
-        newRow.innerHTML = `
-            <td class="px-3 py-2.5 text-slate-400">${zone}</td>
-            <td class="px-3 py-2.5 text-slate-300">Block ${blockId}</td>
-            <td class="px-3 py-2.5 text-slate-200 font-medium">${deviceName}</td>
-            <td class="px-3 py-2.5 text-slate-400">Chẩn đoán từ xa</td>
-            <td class="px-3 py-2.5"><span class="text-red-400">Lỗi đang hoạt động</span></td>
-            <td class="px-3 py-2.5 text-slate-500">10,000</td>
-            <td class="px-3 py-2.5"><span class="text-slate-350">Chẩn đoán</span></td>
-            <td class="px-3 py-2.5"><div class="text-slate-300">Hôm nay</div></td>
-            <td class="px-3 py-2.5">
-                <span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium ${priority === 'urgent' ? 'bg-red-950/60 border-red-700/50 text-red-300' : (priority === 'high' ? 'bg-orange-950/60 border-orange-700/50 text-orange-300' : 'bg-slate-950/60 border-slate-700/50 text-slate-300')}">
-                    ${priority === 'urgent' ? 'Khẩn cấp' : (priority === 'high' ? 'Ưu tiên cao' : 'Thấp')}
-                </span>
-            </td>
-        `;
-        
-        alert('Đã lập lệnh bảo trì khẩn cấp (Work Order) thành công cho thiết bị ' + deviceName + ' thuộc Block ' + blockId + '! Lệnh đã được đưa vào bảng theo dõi bên dưới.');
-        
-        // Switch to Schedule tab to see the new work order
-        switchMaintenanceTab('schedule');
-    }
 </script>
     </div>
 </div>

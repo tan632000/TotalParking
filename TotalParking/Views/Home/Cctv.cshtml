@@ -4,6 +4,18 @@
 
 <div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
     <div class="space-y-6">
+        @* Bon khung camera nay khong co luong video nao: khong the <video>,
+           khong dia chi RTSP, khong ham nao noi vao dau ghi. Nhan trang thai truc tiep cu
+           dung canh mot khung den, nen nguoi xem tuong camera dang chay va chi
+           bi mo. *@
+        <div class="mb-4 rounded-lg border border-amber-800/40 bg-amber-950/20 px-4 py-3">
+            <div class="text-amber-400 text-xs font-bold mb-1">Chưa tích hợp luồng camera</div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+                Hệ thống chưa nối vào đầu ghi hình. Các khung dưới đây là vị trí đã quy hoạch
+                cho từng camera, không phải hình ảnh trực tiếp.
+            </p>
+        </div>
+
         <!-- Header -->
         <div class="flex justify-between items-center pb-4 border-b border-slate-800">
             <div>
@@ -23,9 +35,9 @@
             <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-xl">
                 <div class="bg-slate-950 p-2 border-b border-slate-800 flex justify-between items-center">
                     <span class="text-xs font-mono font-bold text-slate-400">CAM-IN: Cổng Vào 1</span>
-                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-400">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                        LIVE
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                        CHƯA KẾT NỐI
                     </span>
                 </div>
                 <div class="aspect-video bg-slate-950 flex flex-col items-center justify-center relative group">
@@ -38,14 +50,14 @@
             <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-xl">
                 <div class="bg-slate-950 p-2 border-b border-slate-800 flex justify-between items-center">
                     <span class="text-xs font-mono font-bold text-slate-400">CAM-ZONE-A: Hầm B1</span>
-                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-400">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                        LIVE
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                        CHƯA KẾT NỐI
                     </span>
                 </div>
                 <div class="aspect-video bg-slate-950 flex flex-col items-center justify-center relative group">
                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-slate-700 group-hover:text-slate-500 transition-colors"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></svg>
-                    <div class="absolute bottom-2 left-2 text-[10px] font-mono text-slate-500 bg-black/60 px-2 py-0.5 rounded">Khu Vực Block B-01 - B-04</div>
+                    <div class="absolute bottom-2 left-2 text-[10px] font-mono text-slate-500 bg-black/60 px-2 py-0.5 rounded">Khu vực hầm B1</div>
                 </div>
             </div>
 
@@ -53,9 +65,9 @@
             <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-xl">
                 <div class="bg-slate-950 p-2 border-b border-slate-800 flex justify-between items-center">
                     <span class="text-xs font-mono font-bold text-slate-400">CAM-OUT: Cổng Ra 1</span>
-                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-400">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                        LIVE
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                        CHƯA KẾT NỐI
                     </span>
                 </div>
                 <div class="aspect-video bg-slate-950 flex flex-col items-center justify-center relative group">

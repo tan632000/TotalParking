@@ -10,7 +10,7 @@
                 <h1 class="text-2xl font-bold tracking-tight">Chẩn Đoán Lỗi &amp; Lịch Sử Sự Cố (Remote Diagnostics)</h1>
                 <p class="text-slate-400 text-sm mt-1">Giám sát chỉ số độ tin cậy MTBF/MTTR, tra cứu lịch sử lỗi của từng thiết bị và phân tích nguyên nhân gốc (Root Cause).</p>
             </div>
-            <button onclick="window.location.reload();" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors font-semibold">
+            <button onclick="lamMoiChanDoan()" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors font-semibold">
                 Làm mới dữ liệu
             </button>
         </div>
@@ -19,22 +19,22 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
                 <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">ĐỘ SẴN SÀNG BLOCK (AVAILABILITY)</div>
-                <div class="text-emerald-400 text-2xl font-mono font-bold mt-1">99.85%</div>
-                <div class="text-[10px] text-emerald-500 font-mono mt-1">Chuẩn OEE công nghiệp</div>
+                <div class="text-emerald-400 text-2xl font-mono font-bold mt-1" id="dg-availability">đang đọc…</div>
+                <div class="text-[10px] text-emerald-500 font-mono mt-1" id="dg-availability-phu">—</div>
             </div>
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
                 <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">CHỈ SỐ MTBF (ĐỘ TIN CẬY)</div>
-                <div class="text-blue-400 text-2xl font-mono font-bold mt-1">364 giờ</div>
+                <div class="text-blue-400 text-2xl font-mono font-bold mt-1" id="dg-mtbf">đang đọc…</div>
                 <div class="text-[10px] text-slate-500 font-mono mt-1">Thời gian trung bình giữa 2 sự cố</div>
             </div>
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
                 <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">CHỈ SỐ MTTR (THỜI GIAN SỬA)</div>
-                <div class="text-violet-400 text-2xl font-mono font-bold mt-1">18.5 phút</div>
+                <div class="text-violet-400 text-2xl font-mono font-bold mt-1" id="dg-mttr">đang đọc…</div>
                 <div class="text-[10px] text-emerald-400 font-mono mt-1">Thời gian phục hồi trung bình</div>
             </div>
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
                 <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">SỐ SỰ CỐ HOẠT ĐỘNG (ACTIVE ALARMS)</div>
-                <div class="text-red-400 text-2xl font-mono font-bold mt-1" id="activeAlarmsCount">1 sự cố</div>
+                <div class="text-red-400 text-2xl font-mono font-bold mt-1" id="activeAlarmsCount">đang đọc…</div>
                 <div class="text-[10px] text-red-500 font-mono mt-1" id="activeAlarmsWarning">Đang chờ xử lý khẩn cấp</div>
             </div>
         </div>
@@ -69,76 +69,159 @@
 </div>
 
 <script>
-    const mockFaultHistory = [
-        { time: "05/07/2026 14:10:05", dev: "Motor Nâng Hạ (Block B-04)", code: "ERR-MTR-04", root: "Nhiệt độ cuộn dây quá cao (115°C) do quá tải cơ học lâu ngày", fix: "Reset PLC, kiểm tra hệ bôi trơn xích nâng và phanh", user: "Supervisor_01", status: "Active" },
-        { time: "04/07/2026 09:22:10", dev: "Cảm biến hành trình LS-T3 (Block B-02)", code: "WARN-LMT-08", root: "Bám bụi bẩn dính dầu mỡ gây trễ phản hồi tiếp điểm cơ khí", fix: "Lau sạch bụi bẩn trên đầu sensor và kiểm tra cơ cấu lò xo tiếp điểm", user: "Operator_02", status: "Resolved" },
-        { time: "03/07/2026 18:35:15", dev: "Cảm biến quang Photogate (Block B-03)", code: "ERR-SAFE-02", root: "Vật cản cơ học che chắn vùng quang an toàn của block đỗ xe", fix: "Kiểm tra và dọn dẹp chướng ngại vật cản tia laser cảm biến quang", user: "Supervisor_01", status: "Resolved" },
-        { time: "01/07/2026 11:05:42", dev: "Biến tần VFD Nâng (Block A-01)", code: "ERR-VFD-01", root: "Sụt áp tức thời ở đường nguồn cấp cho biến tần", fix: "Ack lỗi trên VFD và reset PLC cấp nguồn điện hoạt động lại bình thường", user: "Operator_01", status: "Resolved" }
-    ];
+    // ===================== BO DU LIEU BIA =====================
+    // Cho nay tung la mot mang gia lap voi bon su co bia, ke ca
+    // ten nguoi xac nhan. Mot trong so do — ma loi motor kem nhiet do cuon day
+    // — la cung bo du lieu gia xuat hien o trang Dieu khien van hanh, Lich su
+    // va Bao tri: go o mot cho khong lam sach cac cho khac.
+    //
+    // Nay doc /Alarm/List. Hai cot "Nguyen nhan goc" va "Hanh dong khac phuc"
+    // KHONG co nguon: bang canh_bao chi co mo_ta, khong co truong nao ghi phan
+    // tich nguyen nhan hay viec da lam.
 
-    document.addEventListener("DOMContentLoaded", function() {
-        initDiagnostics();
-    });
+    // ===================== NGUON DU LIEU =====================
+    (function () {
+        "use strict";
 
-    function initDiagnostics() {
-        // Read from local storage to check if Block B-04 error has been resolved or not
-        let alarms = localStorage.getItem("activeAlarms") ? JSON.parse(localStorage.getItem("activeAlarms")) : [];
-        // Cung ba loi nhu Safety.cshtml, da sua o do voi giai thich day du:
-        // truong that la a.msg (khong phai a.message), a.type la SO (2 = loi he
-        // thong), va `A && B || C` lam ve C chay vo dieu kien nen dong nay nem
-        // TypeError moi khi localStorage co canh bao — initDiagnostics() dung
-        // giua chung va bang lich su su co ben duoi khong bao gio duoc dung.
-        const chuoi = a => String(a && a.msg ? a.msg : "");
-        let hasMotorError = alarms.some(a => a.type === 2 &&
-            (chuoi(a).includes("động cơ") || chuoi(a).includes("motor")));
+        var URL_ALARM = "@Url.Action("List", "Alarm")";
+        var NHIP_MS   = 20000;
+        var GACH      = "\u2014";
 
-        const activeCount = document.getElementById("activeAlarmsCount");
-        const activeWarning = document.getElementById("activeAlarmsWarning");
+        function el(id) { return document.getElementById(id); }
+        function dat(id, v) { var e = el(id); if (e) e.textContent = v; }
 
-        if (hasMotorError) {
-            activeCount.innerText = "1 sự cố";
-            activeCount.className = "text-red-400 text-2xl font-mono font-bold mt-1 animate-pulse";
-            activeWarning.innerText = "Đang chờ xử lý khẩn cấp";
-            activeWarning.className = "text-[10px] text-red-500 font-mono mt-1 animate-pulse";
-        } else {
-            activeCount.innerText = "0 sự cố";
-            activeCount.className = "text-emerald-400 text-2xl font-mono font-bold mt-1";
-            activeWarning.innerText = "Hệ thống vận hành an toàn";
-            activeWarning.className = "text-[10px] text-emerald-400 font-mono mt-1";
+        function esc(v) {
+            return String(v === null || v === undefined ? "" : v)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
         }
 
-        const tbody = document.getElementById("faultHistoryBody");
-        tbody.innerHTML = "";
+        // "dd-MM-yyyy HH:mm:ss" hoac "yyyy-MM-dd HH:mm:ss" -> Date.
+        // Khong dung new Date(chuoi) thang: dinh dang dd-MM bi trinh duyet hieu
+        // thanh MM-dd va moi phep tru thoi gian se sai ca thang.
+        function ngay(chuoi) {
+            if (!chuoi) return null;
+            var m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})/.exec(chuoi);
+            if (m) return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
+            m = /^(\d{2})-(\d{2})-(\d{4})[ T](\d{2}):(\d{2}):(\d{2})/.exec(chuoi);
+            if (m) return new Date(+m[3], +m[2] - 1, +m[1], +m[4], +m[5], +m[6]);
+            return null;
+        }
 
-        mockFaultHistory.forEach((item, index) => {
-            // Update active status dynamically based on localStorage
-            let currentStatus = item.status;
-            if (index === 0 && !hasMotorError) {
-                currentStatus = "Resolved";
-            }
+        function khoangChu(ms) {
+            if (!isFinite(ms) || ms <= 0) return GACH;
+            var phut = ms / 60000;
+            if (phut < 60) return phut.toFixed(1) + " phút";
+            var gio = phut / 60;
+            if (gio < 48) return gio.toFixed(1) + " giờ";
+            return (gio / 24).toFixed(1) + " ngày";
+        }
 
-            let statusBadge = "";
-            let rowClass = "border-b border-slate-800/40 hover:bg-slate-800/10";
-            if (currentStatus === "Active") {
-                statusBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/25 animate-pulse">ACTIVE</span>`;
-                rowClass += " bg-red-950/5";
+        function veKpi(ds) {
+            // MTBF = khoang thoi gian TRUNG BINH giua hai su co lien tiep. Can it
+            // nhat hai su co moi co mot khoang; mot su co thi khong tinh duoc, va
+            // in ra mot con so luc do la bia.
+            var moc = ds.map(function (a) { return ngay(a.xay_ra_luc); })
+                        .filter(Boolean).sort(function (a, b) { return a - b; });
+            if (moc.length >= 2) {
+                dat("dg-mtbf", khoangChu((moc[moc.length - 1] - moc[0]) / (moc.length - 1)));
             } else {
-                statusBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/25">RESOLVED</span>`;
+                dat("dg-mtbf", GACH);
             }
 
-            const tr = document.createElement("tr");
-            tr.className = rowClass;
-            tr.innerHTML = `
-                <td class="px-4 py-3 text-slate-400 whitespace-nowrap">${item.time}</td>
-                <td class="px-4 py-3 font-bold text-slate-200">${item.dev}</td>
-                <td class="px-4 py-3 text-red-400 font-bold">${item.code}</td>
-                <td class="px-4 py-3 text-slate-350">${item.root}</td>
-                <td class="px-4 py-3 text-slate-400">${item.fix}</td>
-                <td class="px-4 py-3 whitespace-nowrap text-slate-500">
-                    ${item.user} <span class="ml-1">${statusBadge}</span>
-                </td>
-            `;
-            tbody.appendChild(tr);
+            // MTTR = thoi gian trung binh tu luc xay ra toi luc dong. Chi tinh tren
+            // nhung su co DA DONG; su co dang mo chua co thoi gian sua.
+            var daDong = ds.filter(function (a) { return a.het_luc; })
+                           .map(function (a) {
+                               var t1 = ngay(a.xay_ra_luc), t2 = ngay(a.het_luc);
+                               return (t1 && t2) ? (t2 - t1) : null;
+                           }).filter(function (x) { return x !== null && x >= 0; });
+            if (daDong.length) {
+                var tong = daDong.reduce(function (a, b) { return a + b; }, 0);
+                dat("dg-mttr", khoangChu(tong / daDong.length));
+            } else {
+                dat("dg-mttr", GACH);
+            }
+
+            var dangMo = ds.filter(function (a) { return !a.het_luc; }).length;
+            dat("activeAlarmsCount", dangMo + " sự cố");
+
+            // DO SAN SANG khong tinh duoc: no can tong thoi gian thiet bi le ra
+            // phai chay, ma he thong khong ghi lai. Lay "100% tru ti le su co"
+            // la mot con so nghe hop ly nhung khong do duoc thu gi.
+            dat("dg-availability", GACH);
+            dat("dg-availability-phu", "hệ thống chưa ghi thời gian vận hành");
+        }
+
+        function veBang(ds) {
+            var body = el("faultHistoryBody");
+            if (!body) return;
+
+            if (!ds.length) {
+                body.innerHTML = '<tr><td colspan="7" class="px-3 py-8 text-center text-slate-500 text-[11px]">' +
+                                 'Chưa có sự cố nào được ghi nhận.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = ds.map(function (a) {
+                var dangMo = !a.het_luc;
+                var nhan = dangMo
+                    ? '<span class="text-rose-400 font-semibold bg-rose-950/20 border border-rose-800/30 px-1.5 py-0.5 rounded text-[10px]">Đang mở</span>'
+                    : '<span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Đã đóng</span>';
+                return '<tr class="border-b border-slate-850 hover:bg-slate-800/20">' +
+                         '<td class="px-3 py-2 text-slate-400">' + esc(a.xay_ra_luc) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-300">' + esc(a.thiet_bi || GACH) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-300 font-bold">' + esc(a.ma_loi) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-400">' + esc(a.mo_ta) + '</td>' +
+                         // Khong co nguon cho hai cot nay trong bang canh_bao.
+                         '<td class="px-3 py-2 text-slate-600">chưa ghi nhận</td>' +
+                         '<td class="px-3 py-2 text-slate-400">' + esc(a.xac_nhan_boi || "chưa ai xác nhận") + '</td>' +
+                         '<td class="px-3 py-2">' + nhan + '</td>' +
+                       '</tr>';
+            }).join("");
+        }
+
+        function tick() {
+            fetch(URL_ALARM, { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    if (d && d.error) throw new Error(d.error);
+                    var ds = (d && d.canh_bao) || [];
+                    veKpi(ds);
+                    veBang(ds);
+                })
+                .catch(function (e) {
+                    // Xoa het chu khong giu so cu: mot trang chan doan hien so
+                    // cu trong y het mot he thong dang on.
+                    ["dg-availability", "dg-mtbf", "dg-mttr", "activeAlarmsCount"].forEach(function (id) {
+                        dat(id, GACH);
+                    });
+                    dat("dg-availability-phu", "không đọc được");
+                    var body = el("faultHistoryBody");
+                    if (body) {
+                        body.innerHTML = '<tr><td colspan="7" class="px-3 py-8 text-center text-red-400 text-[11px]">' +
+                                         'Không đọc được nhật ký sự cố: ' + esc(e.message) + '</td></tr>';
+                    }
+                });
+        }
+
+        var timer = null;
+        function batDau() { if (timer) return; tick(); timer = setInterval(tick, NHIP_MS); }
+
+        window.lamMoiChanDoan = tick;
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) { if (timer) { clearInterval(timer); timer = null; } }
+            else batDau();
         });
-    }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", batDau);
+        } else {
+            batDau();
+        }
+    })();
 </script>
