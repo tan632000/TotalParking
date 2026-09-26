@@ -15,6 +15,19 @@
             </button>
         </div>
 
+        @* Dai bao nay danh cho nguoi mo trang bang duong dan truc tiep: muc da
+           duoc go khoi menu, nhung view van con trong cay nguon. *@
+        <div class="mb-4 rounded-lg border border-amber-800/40 bg-amber-950/20 px-4 py-3">
+            <div class="text-amber-400 text-xs font-bold mb-1">Trang này chưa nối vào nguồn dữ liệu</div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+                Hàng đợi vào/ra là khái niệm chỉ tồn tại trong bảng phiên gửi xe, mà bảng đó
+                hiện không có dòng nào — luồng vận hành hiện tại không tạo phiên. Mọi con số
+                ở dưới vì vậy đều trống. Muốn xem xe đang ở đâu, dùng trang
+                <a href="@Url.Action("Tracking", "Home")" class="text-blue-400 underline">Truy vết xe &amp; pallet</a>
+                hoặc <a href="@Url.Action("Reports", "Home")" class="text-blue-400 underline">Báo cáo &amp; thống kê</a>.
+            </p>
+        </div>
+
         <!-- Layout Grid -->
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <!-- Left 2 Columns: Active Queue Tables -->
@@ -26,7 +39,7 @@
                             <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
                             Hàng đợi xe gửi vào bãi (Entry Queue)
                         </h3>
-                        <span id="entryCount" class="text-xs text-blue-400 font-mono font-bold">3 xe đang chờ</span>
+                        <span id="entryCount" class="text-xs text-blue-400 font-mono font-bold">—</span>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -56,7 +69,7 @@
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                             Hàng đợi xe lấy ra bãi (Exit Queue)
                         </h3>
-                        <span id="exitCount" class="text-xs text-emerald-400 font-mono font-bold">2 xe đang chờ</span>
+                        <span id="exitCount" class="text-xs text-emerald-400 font-mono font-bold">—</span>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -141,16 +154,28 @@
     let activeRejectPlate = null;
     let activeRejectQueueType = null;
 
-    const mockEntryQueue = [
-        { plate: "30G-445.62", type: "Sedan", priority: "Standard", block: "A-01", status: "Queued", eta: 45 },
-        { plate: "29A-889.31", type: "SUV", priority: "VIP", block: "B-04", status: "Processing", eta: 12 },
-        { plate: "30F-122.95", type: "Sedan", priority: "Standard", block: "B-02", status: "Held", eta: 90 }
-    ];
+    // ===================== KHONG CO NGUON DU LIEU =====================
+    // Hai mang nay tung chua bay bien so khong co that, gieo thang vao
+    // localStorage nen trang trong nhu mot hang doi dang chay. Chung da bi lam
+    // rong.
+    //
+    // Khong noi vao du lieu that duoc vi khong co: hang doi vao/ra la khai niem
+    // chi ton tai trong parking_session, ma bang do co 0 dong — ham duy nhat
+    // tao phien khong con noi nao goi toi. Xem ghi chu tai
+    // VehicleFinderRepository.cs.
+    //
+    // Muc nay cung da duoc go khoi menu ngay 26/09/2026.
+    const mockEntryQueue = [];
+    const mockExitQueue  = [];
 
-    const mockExitQueue = [
-        { plate: "30K-771.84", type: "Sedan", priority: "Standard", slot: "Pallet P02 (Block A-01)", status: "Processing", eta: 24 },
-        { plate: "29H-992.15", type: "SUV", priority: "Standard", slot: "Pallet P08 (Block B-04)", status: "Queued", eta: 55 }
-    ];
+    // Don du lieu bia con sot tu lan truy cap truoc. Khong co buoc nay thi
+    // trinh duyet nao da mo trang nay mot lan se giu bay bien so do mai mai.
+    try {
+        ["dispatchEntryQueue", "dispatchExitQueue", "dispatchRejectedList"].forEach(function (k) {
+            var tho = localStorage.getItem(k);
+            if (tho && /\d{2}[A-Z]-\d{3}\.\d{2}/.test(tho)) localStorage.removeItem(k);
+        });
+    } catch (e) { /* trinh duyet chan localStorage — khong sao, mang da rong */ }
 
     document.addEventListener("DOMContentLoaded", function() {
         initQueue();
@@ -164,10 +189,7 @@
         return {
             entry: entry ? JSON.parse(entry) : mockEntryQueue,
             exit: exit ? JSON.parse(exit) : mockExitQueue,
-            rejected: rejected ? JSON.parse(rejected) : [
-                { plate: "30E-667.12", reason: "Xe quá khổ/quá tải trọng", time: "14:24" },
-                { plate: "29C-112.54", reason: "Thẻ từ bị khóa/hết hạn", time: "12:15" }
-            ]
+            rejected: rejected ? JSON.parse(rejected) : []
         };
     }
 
@@ -184,7 +206,7 @@
         localStorage.setItem("dispatchExitQueue", JSON.stringify(mockExitQueue));
         localStorage.setItem("dispatchRejectedList", JSON.stringify([]));
         renderQueue();
-        alert("Đã hoàn tác và tạo lại hàng đợi mặc định!");
+        alert("Đã xoá hàng đợi. Trang này chưa nối vào nguồn dữ liệu thật.");
     }
 
     function toggleHold(plate, queueType) {

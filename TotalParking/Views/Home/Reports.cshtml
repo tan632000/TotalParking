@@ -179,43 +179,11 @@
                         
                         <div class="space-y-4">
                             <!-- Visual Pareto Bars & Line -->
-                            <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 items-end min-h-[140px] pt-4 px-2 border-b border-slate-800">
-                                <!-- Bar 1: Motor quá tải -->
-                                <div class="text-center space-y-2">
-                                    <span class="text-[10px] font-mono text-slate-400">12 lần (30.0%)</span>
-                                    <div class="w-full bg-blue-600 rounded-t-md mx-auto" style="height: 120px; max-width: 60px;"></div>
-                                    <div class="text-[10px] font-bold text-slate-300 truncate">Motor quá tải</div>
-                                </div>
-                                <!-- Bar 2: Lỗi Cảm biến hành trình -->
-                                <div class="text-center space-y-2">
-                                    <span class="text-[10px] font-mono text-slate-400">9 lần (22.5%)</span>
-                                    <div class="w-full bg-blue-600/80 rounded-t-md mx-auto" style="height: 90px; max-width: 60px;"></div>
-                                    <div class="text-[10px] font-bold text-slate-300 truncate">Cảm biến HT</div>
-                                </div>
-                                <!-- Bar 3: Mất kết nối PLC -->
-                                <div class="text-center space-y-2">
-                                    <span class="text-[10px] font-mono text-slate-400">7 lần (17.5%)</span>
-                                    <div class="w-full bg-blue-600/70 rounded-t-md mx-auto" style="height: 70px; max-width: 60px;"></div>
-                                    <div class="text-[10px] font-bold text-slate-300 truncate">Mất kết nối</div>
-                                </div>
-                                <!-- Bar 4: Nút E-stop kích hoạt -->
-                                <div class="text-center space-y-2">
-                                    <span class="text-[10px] font-mono text-slate-400">5 lần (12.5%)</span>
-                                    <div class="w-full bg-blue-600/50 rounded-t-md mx-auto" style="height: 50px; max-width: 60px;"></div>
-                                    <div class="text-[10px] font-bold text-slate-300 truncate">Nút E-Stop</div>
-                                </div>
-                                <!-- Bar 5: Lỗi nguồn điện -->
-                                <div class="text-center space-y-2">
-                                    <span class="text-[10px] font-mono text-slate-400">4 lần (10.0%)</span>
-                                    <div class="w-full bg-blue-600/40 rounded-t-md mx-auto" style="height: 40px; max-width: 60px;"></div>
-                                    <div class="text-[10px] font-bold text-slate-300 truncate">Nguồn điện</div>
-                                </div>
-                                <!-- Bar 6: Các lỗi khác -->
-                                <div class="text-center space-y-2">
-                                    <span class="text-[10px] font-mono text-slate-400">3 lần (7.5%)</span>
-                                    <div class="w-full bg-blue-600/30 rounded-t-md mx-auto" style="height: 30px; max-width: 60px;"></div>
-                                    <div class="text-[10px] font-bold text-slate-300 truncate">Khác</div>
-                                </div>
+                            @* Sau thanh cot nay tung viet cung "12 lan (30.0%)" .. "3 lan (7.5%)"
+                               voi chieu cao px co dinh, khong ham nao cham toi. Gio ve tu
+                               /BaoCao/NguyenNhanLoi — gom canh_bao theo ma_loi. *@
+                            <div id="bc-loi-bieudo" class="grid grid-cols-1 lg:grid-cols-6 gap-4 items-end min-h-[140px] pt-4 px-2 border-b border-slate-800">
+                                <div class="col-span-full text-center text-slate-500 text-[11px] py-10">Đang đọc…</div>
                             </div>
                         </div>
 
@@ -230,44 +198,9 @@
                                         <th class="text-left text-slate-400 px-3 py-2.5 font-bold text-amber-500">Tích lũy lũy kế (%)</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
-                                        <td class="px-3 py-2 text-slate-200">Lỗi quá tải dòng Motor (Motor overload)</td>
-                                        <td class="px-3 py-2 text-slate-300 font-bold">12</td>
-                                        <td class="px-3 py-2 text-slate-400">30.0%</td>
-                                        <td class="px-3 py-2 text-amber-400 font-bold">30.0%</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
-                                        <td class="px-3 py-2 text-slate-200">Sai lệch cảm biến hành trình khay đỗ</td>
-                                        <td class="px-3 py-2 text-slate-300 font-bold">9</td>
-                                        <td class="px-3 py-2 text-slate-400">22.5%</td>
-                                        <td class="px-3 py-2 text-amber-400 font-bold">52.5%</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
-                                        <td class="px-3 py-2 text-slate-200">Mất tín hiệu kết nối Modbus TCP PLC</td>
-                                        <td class="px-3 py-2 text-slate-300 font-bold">7</td>
-                                        <td class="px-3 py-2 text-slate-400">17.5%</td>
-                                        <td class="px-3 py-2 text-amber-400 font-bold">70.0%</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
-                                        <td class="px-3 py-2 text-slate-200">Kích hoạt nút khẩn cấp E-Stop tại trạm</td>
-                                        <td class="px-3 py-2 text-slate-300 font-bold">5</td>
-                                        <td class="px-3 py-2 text-slate-400">12.5%</td>
-                                        <td class="px-3 py-2 text-amber-400 font-bold">82.5% <span class="text-[9px] text-emerald-400 font-semibold px-1 rounded bg-emerald-950/40">(Ngưỡng Pareto 80%)</span></td>
-                                    </tr>
-                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
-                                        <td class="px-3 py-2 text-slate-200">Sụt áp hoặc lỗi nguồn điện lưới đầu vào</td>
-                                        <td class="px-3 py-2 text-slate-300 font-bold">4</td>
-                                        <td class="px-3 py-2 text-slate-400">10.0%</td>
-                                        <td class="px-3 py-2 text-amber-400">92.5%</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/10">
-                                        <td class="px-3 py-2 text-slate-200">Các lỗi truyền thông phụ khác</td>
-                                        <td class="px-3 py-2 text-slate-300 font-bold">3</td>
-                                        <td class="px-3 py-2 text-slate-400">7.5%</td>
-                                        <td class="px-3 py-2 text-slate-400">100.0%</td>
-                                    </tr>
-                                </tbody>
+                            <tbody id="bc-loi-body">
+                                <tr><td colspan="5" class="px-3 py-8 text-center text-slate-500 text-[11px]">Đang đọc…</td></tr>
+                            </tbody>
                             </table>
                         </div>
                     </div>
@@ -288,28 +221,12 @@
                                         <th class="text-left text-slate-400 px-3 py-2 font-bold">Đánh giá</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr class="border-b border-slate-850">
-                                        <td class="px-3 py-2 text-slate-200">Motor Nâng hạ Block A-04</td>
-                                        <td class="px-3 py-2 text-slate-400">Thay thế cuộn dây stator</td>
-                                        <td class="px-3 py-2 text-slate-400">2026-06-10</td>
-                                        <td class="px-3 py-2 text-slate-300">Nguyễn Văn Hùng</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-semibold">Tốt · Chạy êm</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-850">
-                                        <td class="px-3 py-2 text-slate-200">Xích truyền động Block B-02</td>
-                                        <td class="px-3 py-2 text-slate-400">Tra dầu mỡ bôi trơn & Căng xích</td>
-                                        <td class="px-3 py-2 text-slate-400">2026-06-08</td>
-                                        <td class="px-3 py-2 text-slate-300">Trần Minh Tâm</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-semibold">Đạt chuẩn</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-850">
-                                        <td class="px-3 py-2 text-slate-200">Cảm biến quang học Block A-01</td>
-                                        <td class="px-3 py-2 text-slate-400">Vệ sinh bụi bẩn bề mặt thấu kính</td>
-                                        <td class="px-3 py-2 text-slate-400">2026-06-05</td>
-                                        <td class="px-3 py-2 text-slate-300">Nguyễn Văn Hùng</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-semibold">Nhận diện tốt</td>
-                                    </tr>
+                            @* Bang nay khong co nguon du lieu: CSDL khong co bang bao tri
+                               nao. Ba dong cu bia ca ten ky thuat vien. *@
+                                <tbody id="bc-baotri-body">
+                                    <tr><td colspan="5" class="px-3 py-8 text-center text-slate-500 text-[11px]">
+                                        Hệ thống chưa ghi nhận lịch sử bảo trì. Cơ sở dữ liệu không có bảng bảo trì.
+                                    </td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -410,61 +327,20 @@
                                 <thead class="border-b border-slate-700/60 bg-slate-800/30">
                                     <tr>
                                         <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thời gian</th>
-                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Mã thẻ từ</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thời gian</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Mã thẻ</th>
                                         <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Biển số xe</th>
-                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Loại xe</th>
-                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Vị trí đỗ</th>
-                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Loại hành động</th>
-                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Phí thanh toán</th>
-                                    </tr>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Xe</th>
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Khối</th>
+                                        @* "Ket qua" chu khong phai "Loai hanh dong": plc_request ghi
+                                           lai moi luot ladder hoi "the nay co duoc phep khong", no
+                                           khong phan biet duoc xe vao voi xe ra. Cot "Phi thanh toan"
+                                           bi bo han vi khong co nguon. *@
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Kết quả</th>
                                 </thead>
-                                <tbody>
-                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 08:42:10" data-card="0009124451" data-plate="30H-88877" data-action="in" data-status="parked" data-zone="B" data-block="Block B-01">
-                                        <td class="px-3 py-2 text-slate-400">16-06-2026 08:42:10</td>
-                                        <td class="px-3 py-2 text-slate-300">0009124451</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-bold">30H-88877</td>
-                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
-                                        <td class="px-3 py-2 text-blue-400 font-bold">Zone 2 (B) · Block B-01 (P03)</td>
-                                        <td class="px-3 py-2"><span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Gửi xe vào</span></td>
-                                        <td class="px-3 py-2 text-slate-300">25,000 đ</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 08:41:55" data-card="0009124458" data-plate="51G-12345" data-action="in" data-status="parked" data-zone="A" data-block="Block A-02">
-                                        <td class="px-3 py-2 text-slate-400">16-06-2026 08:41:55</td>
-                                        <td class="px-3 py-2 text-slate-300">0009124458</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-bold">51G-12345</td>
-                                        <td class="px-3 py-2 text-slate-400">SUV</td>
-                                        <td class="px-3 py-2 text-blue-400 font-bold">Zone 1 (A) · Block A-02 (P02)</td>
-                                        <td class="px-3 py-2"><span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Gửi xe vào</span></td>
-                                        <td class="px-3 py-2 text-slate-300">40,000 đ</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 08:35:12" data-card="0009121102" data-plate="29A-99999" data-action="out" data-status="retrieved" data-zone="A" data-block="Block A-01">
-                                        <td class="px-3 py-2 text-slate-400">16-06-2026 08:35:12</td>
-                                        <td class="px-3 py-2 text-slate-300">0009121102</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-bold">29A-99999</td>
-                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
-                                        <td class="px-3 py-2 text-slate-400">Zone 1 (A) · Block A-01 (P01)</td>
-                                        <td class="px-3 py-2"><span class="text-amber-400 font-semibold bg-amber-950/20 border border-amber-800/30 px-1.5 py-0.5 rounded text-[10px]">Lấy xe ra</span></td>
-                                        <td class="px-3 py-2 text-slate-300">50,000 đ</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 07:15:30" data-card="0009123388" data-plate="92B-11223" data-action="in" data-status="parked" data-zone="C" data-block="Block B-04">
-                                        <td class="px-3 py-2 text-slate-400">16-06-2026 07:15:30</td>
-                                        <td class="px-3 py-2 text-slate-300">0009123388</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-bold">92B-11223</td>
-                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
-                                        <td class="px-3 py-2 text-blue-400 font-bold">Zone 3 (C) · Block B-04 (P05)</td>
-                                        <td class="px-3 py-2"><span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Gửi xe vào</span></td>
-                                        <td class="px-3 py-2 text-slate-300">25,000 đ</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-850 hover:bg-slate-800/20" data-time="16-06-2026 06:30:11" data-card="0009129944" data-plate="79C-44556" data-action="out" data-status="retrieved" data-zone="C" data-block="Block C-02">
-                                        <td class="px-3 py-2 text-slate-400">16-06-2026 06:30:11</td>
-                                        <td class="px-3 py-2 text-slate-300">0009129944</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-bold">79C-44556</td>
-                                        <td class="px-3 py-2 text-slate-400">SUV</td>
-                                        <td class="px-3 py-2 text-slate-400">Zone 3 (C) · Block C-02 (P04)</td>
-                                        <td class="px-3 py-2"><span class="text-amber-400 font-semibold bg-amber-950/20 border border-amber-800/30 px-1.5 py-0.5 rounded text-[10px]">Lấy xe ra</span></td>
-                                        <td class="px-3 py-2 text-slate-300">80,000 đ</td>
-                                    </tr>
-                                </tbody>
+                                    <tbody id="bc-lichsu-body">
+                                        <tr><td colspan="6" class="px-3 py-8 text-center text-slate-500 text-[11px]">Đang đọc…</td></tr>
+                                    </tbody>
                             </table>
                         </div>
                     </div>
@@ -476,22 +352,22 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 shadow-md">
                             <span class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">TỔNG DOANH THU THÁNG</span>
-                            <span class="block text-lg font-bold text-yellow-400 font-mono mt-1">145,280,000 đ</span>
-                            <span class="text-[10px] text-emerald-400 font-mono mt-1 block">▲ +12% so với tháng trước</span>
+                            <span class="block text-lg font-bold text-yellow-400 font-mono mt-1">—</span>
+                            <span class="text-[10px] text-emerald-400 font-mono mt-1 block">chưa có dữ liệu thanh toán</span>
                         </div>
                         <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 shadow-md">
                             <span class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">PHÍ TRUNG BÌNH SUV</span>
-                            <span class="block text-lg font-bold text-blue-400 font-mono mt-1">40,000 đ / lượt</span>
-                            <span class="text-[10px] text-slate-400 font-mono mt-1 block">Áp dụng theo khung giờ</span>
+                            <span class="block text-lg font-bold text-blue-400 font-mono mt-1">—</span>
+                            <span class="text-[10px] text-slate-400 font-mono mt-1 block">chưa có dữ liệu thanh toán</span>
                         </div>
                         <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 shadow-md">
                             <span class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">PHÍ TRUNG BÌNH SEDAN</span>
-                            <span class="block text-lg font-bold text-emerald-400 font-mono mt-1">25,000 đ / lượt</span>
-                            <span class="text-[10px] text-slate-400 font-mono mt-1 block">Vé lượt tiêu chuẩn</span>
+                            <span class="block text-lg font-bold text-emerald-400 font-mono mt-1">—</span>
+                            <span class="text-[10px] text-slate-400 font-mono mt-1 block">chưa có dữ liệu thanh toán</span>
                         </div>
                         <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 shadow-md">
                             <span class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">TỶ LỆ QR / KHÔNG TIỀN MẶT</span>
-                            <span class="block text-lg font-bold text-indigo-400 font-mono mt-1">84.5% lượt quét</span>
+                            <span class="block text-lg font-bold text-indigo-400 font-mono mt-1">—</span>
                             <span class="text-[10px] text-emerald-400 font-mono mt-1 block">Tích hợp VNPay/Momo</span>
                         </div>
                     </div>
@@ -561,34 +437,14 @@
                                         <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thanh toán</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr class="border-b border-slate-850 hover:bg-slate-800/10">
-                                        <td class="px-3 py-2 text-slate-400">08:35:12</td>
-                                        <td class="px-3 py-2 text-slate-300">0009121102</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-bold">29A-99999</td>
-                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
-                                        <td class="px-3 py-2 text-slate-300">2 giờ 15 phút</td>
-                                        <td class="px-3 py-2 text-yellow-400 font-bold">30,000</td>
-                                        <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">QR Momo</span></td>
-                                    </tr>
-                                    <tr class="border-b border-slate-850 hover:bg-slate-800/10">
-                                        <td class="px-3 py-2 text-slate-400">08:21:40</td>
-                                        <td class="px-3 py-2 text-slate-300">0009120894</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-bold">51F-77788</td>
-                                        <td class="px-3 py-2 text-slate-400">SUV</td>
-                                        <td class="px-3 py-2 text-slate-300">5 giờ 40 phút</td>
-                                        <td class="px-3 py-2 text-yellow-400 font-bold">60,000</td>
-                                        <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 border border-blue-500/30 text-blue-400">VNPay QR</span></td>
-                                    </tr>
-                                    <tr class="border-b border-slate-850 hover:bg-slate-800/10">
-                                        <td class="px-3 py-2 text-slate-400">07:55:01</td>
-                                        <td class="px-3 py-2 text-slate-300">0009110052</td>
-                                        <td class="px-3 py-2 text-emerald-400 font-bold">34A-65432</td>
-                                        <td class="px-3 py-2 text-slate-400">Sedan</td>
-                                        <td class="px-3 py-2 text-slate-300">0 giờ 45 phút</td>
-                                        <td class="px-3 py-2 text-yellow-400 font-bold">15,000</td>
-                                        <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">Tiền mặt</span></td>
-                                    </tr>
+                                @* Bang nay khong co nguon du lieu. Da tra information_schema
+                                   cho moi cot ten chua fee/phi/amount/price trong ca CSDL va chi
+                                   ra dung cot `plate` — he thong chua co chuc nang tinh tien.
+                                   Ba dong cu la bia hoan toan, ke ca phuong thuc thanh toan. *@
+                                <tbody id="bc-doanhthu-body">
+                                    <tr><td colspan="7" class="px-3 py-8 text-center text-slate-500 text-[11px]">
+                                        Hệ thống chưa có dữ liệu thanh toán. Cơ sở dữ liệu không có bảng nào ghi phí gửi xe.
+                                    </td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -972,31 +828,10 @@
                 timerText.innerText = "Hoàn thành";
                 
                 // Add log entry to history table dynamically
-                const now = new Date();
-                const dateStr = now.getDate().toString().padStart(2, '0') + '-' + (now.getMonth() + 1).toString().padStart(2, '0') + '-' + now.getFullYear();
-                const timeStr = dateStr + " " + now.toLocaleTimeString('vi-VN', { hour12: false });
-                const table = document.getElementById('history-data-table').getElementsByTagName('tbody')[0];
-                const newRow = table.insertRow(0);
-                newRow.className = "border-b border-slate-850 hover:bg-slate-800/20";
-                
-                // Set data attributes on the newly inserted row for the advanced filters
-                newRow.setAttribute('data-time', timeStr);
-                newRow.setAttribute('data-card', 'RFID-Release');
-                newRow.setAttribute('data-plate', 'RELEASED');
-                newRow.setAttribute('data-action', 'out');
-                newRow.setAttribute('data-status', 'retrieved');
-                newRow.setAttribute('data-zone', block.includes('A-') ? 'A' : (block.includes('B-') ? 'B' : 'C'));
-                newRow.setAttribute('data-block', block.trim());
-
-                newRow.innerHTML = `
-                    <td class="px-3 py-2 text-slate-400">${timeStr}</td>
-                    <td class="px-3 py-2 text-slate-300">RFID-Release</td>
-                    <td class="px-3 py-2 text-emerald-400 font-bold">RELEASED</td>
-                    <td class="px-3 py-2 text-slate-400">Sedan/SUV</td>
-                    <td class="px-3 py-2 text-blue-400 font-bold">${block} (${slot})</td>
-                    <td class="px-3 py-2"><span class="text-amber-400 font-semibold bg-amber-950/20 border border-amber-800/30 px-1.5 py-0.5 rounded text-[10px]">Lấy xe ra</span></td>
-                    <td class="px-3 py-2 text-slate-300">0 đ (Remote)</td>
-                `;
+                // Khoi chen mot dong "RFID-Release" gia vao bang lich su da bi go.
+                // Bang do gio doc /BaoCao/LichSuQuetThe, va mot dong bia chen tu
+                // trinh duyet se dung ngay canh du lieu that ma khong phan biet
+                // duoc. Lenh nha the that su xay ra se hien o nhip doc ke tiep.
 
                 // Recalculate count
                 filterHistoryTable();
@@ -1390,4 +1225,169 @@
         initPalletFrequencyData();
         updateFreqBlockOptions();
     });
+</script>
+
+@* ===================== SO LIEU THAT =====================
+   Bon bang cua trang nay tung viet cung trong HTML. Hai bang duoi day co nguon
+   that; hai bang con lai (bao tri, doanh thu) khong co bang nao trong CSDL nen
+   giu trang thai rong thay vi noi bua vao mot nguon gan dung. *@
+<script>
+    (function () {
+        "use strict";
+
+        var URL_LICHSU = "@Url.Action("LichSuQuetThe", "BaoCao")";
+        var URL_LOI    = "@Url.Action("NguyenNhanLoi", "BaoCao")";
+        var NHIP_MS    = 20000;
+
+        function el(id) { return document.getElementById(id); }
+
+        function esc(v) {
+            return String(v === null || v === undefined ? "" : v)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function bao(id, soCot, mau, chu) {
+            var e = el(id);
+            if (e) {
+                e.innerHTML = '<tr><td colspan="' + soCot + '" class="px-3 py-8 text-center ' +
+                              mau + ' text-[11px]">' + chu + '</td></tr>';
+            }
+        }
+
+        // ------------------------------------------------ lich su quet the
+        function veLichSu(d) {
+            var body = el("bc-lichsu-body");
+            if (!body) return;
+
+            if (!d.items.length) {
+                bao("bc-lichsu-body", 6, "text-slate-500", "Chưa có lượt quẹt thẻ nào.");
+                return;
+            }
+
+            body.innerHTML = d.items.map(function (x) {
+                // Ba trang thai chu khong phai hai: cho_vao = null nghia la luot
+                // quet chua duoc tra loi, khac han voi bi tu choi.
+                var ketQua;
+                if (x.cho_vao === true) {
+                    ketQua = '<span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Cho vào</span>';
+                } else if (x.cho_vao === false) {
+                    ketQua = '<span class="text-rose-400 font-semibold bg-rose-950/20 border border-rose-800/30 px-1.5 py-0.5 rounded text-[10px]">Từ chối</span>' +
+                             (x.ly_do ? ' <span class="text-slate-500 text-[10px]">' + esc(x.ly_do) + '</span>' : '');
+                } else {
+                    ketQua = '<span class="text-slate-400 text-[10px]">chưa trả lời</span>';
+                }
+
+                // The la (khong co trong danh muc) phai nhin ra ngay: do la luc
+                // hay co chuyen, va giau no di la giau dung phan dang xem.
+                var maThe = x.ma_the
+                    ? (x.so_the ? esc(x.so_the) : '<span class="text-amber-400">' + esc(x.ma_the) + ' (thẻ lạ)</span>')
+                    : '<span class="text-slate-600">không đọc được</span>';
+
+                return '<tr class="border-b border-slate-850 hover:bg-slate-800/20">' +
+                         '<td class="px-3 py-2 text-slate-400">' + esc(x.luc) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-300">' + maThe + '</td>' +
+                         '<td class="px-3 py-2 text-slate-300 font-bold">' +
+                           (x.bien_so ? esc(x.bien_so) : '<span class="text-slate-600 font-normal">chưa có</span>') + '</td>' +
+                         '<td class="px-3 py-2 text-slate-400">' +
+                           (x.ten_xe ? esc(x.ten_xe) : '<span class="text-slate-600">—</span>') + '</td>' +
+                         '<td class="px-3 py-2 text-blue-400 font-bold">Khối ' + esc(x.block_no) +
+                           (x.zone_id ? ' <span class="text-slate-500 font-normal">(Z' + esc(x.zone_id) + ')</span>' : '') + '</td>' +
+                         '<td class="px-3 py-2">' + ketQua + '</td>' +
+                       '</tr>';
+            }).join("");
+        }
+
+        // ------------------------------------------------- nguyen nhan loi
+        function veLoi(d) {
+            var body = el("bc-loi-body");
+            var bd   = el("bc-loi-bieudo");
+
+            if (!d.items.length) {
+                bao("bc-loi-body", 5, "text-slate-500", "Chưa có cảnh báo nào được ghi nhận.");
+                if (bd) bd.innerHTML = '<div class="col-span-full text-center text-slate-500 text-[11px] py-10">Chưa có cảnh báo nào.</div>';
+                return;
+            }
+
+            if (body) {
+                body.innerHTML = d.items.map(function (x) {
+                    return '<tr class="border-b border-slate-850 hover:bg-slate-800/20">' +
+                             '<td class="px-3 py-2 text-slate-300 font-bold">' + esc(x.ma_loi) + '</td>' +
+                             '<td class="px-3 py-2 text-slate-400">' + esc(x.muc_do) + '</td>' +
+                             '<td class="px-3 py-2 text-slate-300">' + esc(x.so_lan) + '</td>' +
+                             '<td class="px-3 py-2 text-slate-400">' + esc(x.ti_le) + '%</td>' +
+                             '<td class="px-3 py-2 text-slate-400">' + esc(x.luy_ke) + '%</td>' +
+                           '</tr>';
+                }).join("");
+            }
+
+            if (bd) {
+                // Chieu cao theo TY LE so voi nguyen nhan nhieu nhat, khong phai
+                // theo con so tuyet doi: 1 lan tren tong 2 van la 50% cua bai.
+                var lonNhat = d.items[0].so_lan || 1;
+                bd.innerHTML = d.items.slice(0, 6).map(function (x) {
+                    var cao = Math.max(8, Math.round(x.so_lan / lonNhat * 120));
+                    return '<div class="text-center space-y-2">' +
+                             '<span class="text-[10px] font-mono text-slate-400">' +
+                               esc(x.so_lan) + ' lần (' + esc(x.ti_le) + '%)</span>' +
+                             '<div class="w-full bg-blue-600 rounded-t-md mx-auto" style="height:' +
+                               cao + 'px; max-width:60px;"></div>' +
+                             '<div class="text-[10px] font-bold text-slate-300 truncate" title="' +
+                               esc(x.ma_loi) + '">' + esc(x.ma_loi) + '</div>' +
+                           '</div>';
+                }).join("");
+            }
+        }
+
+        // ---------------------------------------------------------- poll
+        function tick() {
+            fetch(URL_LICHSU + "?limit=50", { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    if (d.error) throw new Error(d.error);
+                    veLichSu(d);
+                })
+                // Xoa bang chu khong giu dong cu: mot bang lich su dung yen trong
+                // y het mot bai xe khong co luot nao.
+                .catch(function (e) {
+                    bao("bc-lichsu-body", 6, "text-red-400",
+                        "Không đọc được lịch sử: " + esc(e.message));
+                });
+
+            fetch(URL_LOI, { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    if (d.error) throw new Error(d.error);
+                    veLoi(d);
+                })
+                .catch(function (e) {
+                    bao("bc-loi-body", 5, "text-red-400",
+                        "Không đọc được thống kê lỗi: " + esc(e.message));
+                    var bd = el("bc-loi-bieudo");
+                    if (bd) bd.innerHTML = '<div class="col-span-full text-center text-red-400 text-[11px] py-10">Không đọc được.</div>';
+                });
+        }
+
+        // Guard if (timer): thieu no thi moi lan visibilitychange bao hien ma
+        // khong co lan an tuong ung se sinh them mot interval va mat handle cu.
+        var timer = null;
+        function batDau() { if (timer) return; tick(); timer = setInterval(tick, NHIP_MS); }
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) { if (timer) { clearInterval(timer); timer = null; } }
+            else batDau();
+        });
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", batDau);
+        } else {
+            batDau();
+        }
+    })();
 </script>
