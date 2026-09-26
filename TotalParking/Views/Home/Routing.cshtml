@@ -160,19 +160,27 @@
                         </div>
 
                         <!-- API cho hệ kiểm soát ra vào -->
-                        <div class="p-3 bg-slate-950/60 rounded border border-slate-800">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-slate-300 font-bold">API Hệ thống kiểm soát ra vào</span>
-                                <span class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-blue-500/10 border border-blue-500/30 text-blue-400 font-bold">POST /api/v1/access-control/allow</span>
-                            </div>
-                            <div class="p-2 bg-slate-900 rounded border border-slate-850 font-mono text-[10px] text-slate-400 overflow-x-auto whitespace-nowrap">
-                                {"plate": "30H-88877", "type": "Sedan", "card_id": "RFID-09884", "recommended_zone": "Zone B", "status": "Allowed"}
-                            </div>
-                            <div class="flex items-center justify-between mt-2 text-[10px] font-mono">
-                                <span class="text-slate-500">Mã phản hồi từ server:</span>
-                                <span class="text-emerald-400 font-bold">200 OK (Allowed)</span>
-                            </div>
-                        </div>
+            @* Khung nay truoc day ghi mot duong dan API kieu /api/v1/... voi
+               body mang bien so, card_id va recommended_zone, cung mot dong
+               ma phan hoi thanh cong viet san.
+               Khong thanh phan nao co that: endpoint do khong ton tai trong ma
+               nguon, khong ten truong nao khop, va dong 200 OK la chu tinh —
+               no doc nhu trang thai thoi gian thuc trong khi khong goi gi ca.
+               Duong that la POST /vehicle (RouteConfig "ingest-vehicle"). *@
+            <div class="bg-slate-900/40 border border-slate-800 rounded-lg p-3">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-slate-300">API tiếp nhận xe từ camera</span>
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-blue-500/10 border border-blue-500/30 text-blue-400 font-bold">POST /vehicle</span>
+                </div>
+                <div class="p-2 bg-slate-900 rounded border border-slate-850 font-mono text-[10px] text-slate-400 overflow-x-auto whitespace-nowrap">
+                    {"event_id": "...", "timestamp": "...", "make": "...", "model": "...", "length_mm": 0, "width_mm": 0, "height_mm": 0, "weight_kg": 0, "category": "..."}
+                </div>
+                <div class="text-[9px] text-slate-600 mt-1">Khuôn dữ liệu, không phải một lượt có thật.</div>
+                <div class="flex items-center justify-between mt-2 text-[10px] font-mono">
+                    <span class="text-slate-500">Lượt gần nhất nhận được:</span>
+                    <span id="ingest-luot-cuoi" class="text-slate-400">đang đọc…</span>
+                </div>
+            </div>
                     </div>
                 </div>
             </div>
@@ -253,11 +261,25 @@
                                 list.innerHTML = d.recent.map(vehCard).join('');
                             }
                             stamp.textContent = 'Cập nhật ' + vehEsc(d.now) + ' · ' + d.recent.length + ' xe gần nhất';
+
+                            // Dong "luot gan nhat" lay tu CHINH du lieu nay chu
+                            // khong phai mot lan fetch rieng: mot con so hai nguon
+                            // som muon se lech nhau.
+                            const luot = document.getElementById('ingest-luot-cuoi');
+                            if (luot) {
+                                const v = d.recent[0];
+                                luot.textContent = v
+                                    ? (vehEsc(v.event_id) + ' · ' + vehEsc(v.at) +
+                                       (v.vehicle ? ' · ' + vehEsc(v.vehicle) : ''))
+                                    : 'chưa nhận lượt nào';
+                            }
                         })
                         .catch(function (e) {
                             list.innerHTML = '<div class="text-center text-rose-400 text-[11px] font-mono py-6">'
                                            + 'Không lấy được dữ liệu: ' + vehEsc(e.message) + '</div>';
                             stamp.textContent = 'lỗi';
+                            const luotLoi = document.getElementById('ingest-luot-cuoi');
+                            if (luotLoi) luotLoi.textContent = '—';
                         });
                 }
 
