@@ -67,7 +67,15 @@ const NUT = [
   "btn-action-start", "btn-action-stop", "btn-action-pause", "btn-action-resume",
   "btn-action-bypass", "btn-action-disable", "btn-action-lock", "btn-action-override",
   "btn-action-unlock", "btn-action-trigger-fault",
-  "btn-mode-auto", "btn-mode-manual", "btn-mode-maintenance", "btn-mode-emergency",
+  "btn-mode-auto", "btn-mode-manual", "btn-mode-maintenance",
+  // btn-mode-emergency da duoc thay bang btn-bao-su-co o commit 0e8c770: nut cu
+  // gia vo dung khan cap ca bai ma khong gui lenh nao xuong thiet bi. Nut moi
+  // chi GHI NHAN su co len may chu va noi thang dieu do trong title.
+  //
+  // Doi moc thay vi giu ten cu: moc nay de bat viec vo tinh xoa mat mot nut
+  // dieu khien, khong phai de dong bang giao dien. Giu ten da co y bo thi phep
+  // kiem do vinh vien va khong ai tin no nua.
+  "btn-bao-su-co",
   "btn-plc-send", "btn-recovery-reset", "btn-start-recovery",
 ];
 const thieu = NUT.filter((id) => !src.includes(`id="${id}"`));
