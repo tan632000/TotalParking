@@ -180,9 +180,25 @@
                              // ===================== XEP THEO HANG =====================
                              // Ban dau moi PLC chiem tron mot dong (w-full), nen 112 khoi
                              // thanh 112 dong va phai cuon rat dai moi nhin het mot zone.
-                             // Gio xep thanh luoi chip: zone 37 khoi chi con vai hang, va
-                             // nguoi dung thay ca zone trong mot tam nhin.
-                             '<div class="grid grid-cols-4 xl:grid-cols-6 gap-1 pl-2">' +
+                             // Gio xep thanh luoi chip: zone 37 khoi chi con vai hang.
+                             //
+                             // So cot dat bang style noi tuyen chu KHONG bang lop
+                             // grid-cols-* cua Tailwind. scada.css la ban trich xuat: no
+                             // chi co .grid-cols-1, -2, -3 o muc goc, khong co
+                             // .grid-cols-4. Mot lop khong ton tai thi khong bao loi, no
+                             // chi im lang khong lam gi, nen luoi roi ve mac dinh mot cot
+                             // — dung cai canh moi PLC mot dong ma doi bo cuc de bo di.
+                             //
+                             // Sau cot co dinh, khong dung auto-fill. Do thuc te cho thay
+                             // cot zone rong gan het trang (839px o cua so 1100, 1659px o
+                             // 1920), nen auto-fill chia ra 14 den 29 cot — mot zone 16
+                             // khoi thanh mot vach ngang dai, kho do mat theo.
+                             //
+                             // minmax(0,56px) cho cot co chieu rong toi da 56px va co
+                             // phep co lai khi cua so hep, nen sau chip van nam tron mot
+                             // hang tren man nho chu khong tran ra ngoai.
+                             '<div class="pl-2" style="display:grid;' +
+                               'grid-template-columns:repeat(6,minmax(0,56px));gap:4px;">' +
                              ds2.map(function (b) {
                                  var cham = b.online ? "rgb(34,197,94)" : "rgb(220,38,38)";
                                  var chon = b.block_no === dangChon;
