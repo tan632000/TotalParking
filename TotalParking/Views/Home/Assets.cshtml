@@ -8,7 +8,7 @@
         <div class="flex justify-between items-center pb-4 border-b border-slate-800">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight">Cây Thiết Bị &amp; Quản Lý Tài Sản (Asset Tree)</h1>
-                <p class="text-slate-400 text-sm mt-1">Giám sát cấu trúc phân cấp phần cứng SCADA, kiểm tra runtime động cơ, số chu kỳ và vật tư dự phòng liên quan.</p>
+                <p class="text-slate-400 text-sm mt-1">Cấu trúc phần cứng SCADA đọc từ vòng poll PLC: địa chỉ mạng, tình trạng kết nối và bố cục thanh ghi của từng khối.</p>
             </div>
         </div>
 
@@ -23,14 +23,11 @@
 
                 <!-- Tree View Structure -->
                 <div class="font-mono text-xs select-none">
-                    <!-- Project Root -->
                     <div class="space-y-1">
-                        <div class="flex items-center gap-2 cursor-pointer py-1 font-bold text-slate-200">
+                        <div class="flex items-center gap-2 py-1 font-bold text-slate-200">
                             <span class="text-blue-500">🏢</span>
                             <span>TotalParking SCADA</span>
                         </div>
-                        
-                        <!-- Zone A -->
             @* Cay cu co hai khoi bia trong mot zone bia. Bai that co 112 PLC
                tren sau zone, va /PlcStatus biet dia chi, trang thai ket noi va
                bo cuc thanh ghi cua tung cai. *@
@@ -50,8 +47,8 @@
                             <h2 id="assetName" class="text-lg font-bold text-white">Chọn một thiết bị</h2>
                             <p id="assetCode" class="text-slate-500 text-xs font-mono mt-1">Mã thiết bị: —</p>
                         </div>
-                        <span id="assetStatus" class="px-2.5 py-0.5 rounded border border-rose-500/40 bg-rose-500/10 text-rose-400 text-xs font-bold font-mono">
-                            TRẠNG THÁI: LỖI
+                        <span id="assetStatus" class="px-2.5 py-0.5 rounded border border-slate-700 bg-slate-800 text-slate-400 text-xs font-bold font-mono">
+                            TRẠNG THÁI: —
                         </span>
                     </div>
 
@@ -67,7 +64,7 @@
                         </div>
                         <div class="bg-slate-800/20 border border-slate-800 p-4 rounded-xl">
                             <span class="text-slate-500 text-[10px] uppercase font-mono block">Nhiệt độ cuộn dây</span>
-                            <span id="telemetryTemp" class="text-lg font-mono font-bold text-red-400 mt-1">—</span>
+                            <span id="telemetryTemp" class="text-lg font-mono font-bold text-slate-200 mt-1">—</span>
                         </div>
                     </div>
 
@@ -82,15 +79,15 @@
                                 </div>
                                 <div class="flex justify-between border-b border-slate-800/50 pb-1">
                                     <span class="text-slate-550">Model động cơ:</span>
-                                    <span id="specModel" class="text-slate-350">SF-JR 7.5kW 4P</span>
+                                    <span id="specModel" class="text-slate-350">—</span>
                                 </div>
                                 <div class="flex justify-between border-b border-slate-800/50 pb-1">
                                     <span class="text-slate-550">Số Serial:</span>
-                                    <span id="specSerial" class="text-slate-350">S/N: 2026-MTR-881A</span>
+                                    <span id="specSerial" class="text-slate-350">—</span>
                                 </div>
                                 <div class="flex justify-between pb-1">
                                     <span class="text-slate-550">Ngày lắp đặt:</span>
-                                    <span id="specDate" class="text-slate-350">12/03/2026</span>
+                                    <span id="specDate" class="text-slate-350">—</span>
                                 </div>
                             </div>
                         </div>
@@ -101,15 +98,15 @@
                             <div class="space-y-2 text-[11px] font-mono">
                                 <div class="flex justify-between border-b border-slate-800/50 pb-1">
                                     <span class="text-slate-550">Bảo trì gần nhất:</span>
-                                    <span id="maintLast" class="text-slate-350">15/06/2026</span>
+                                    <span id="maintLast" class="text-slate-350">—</span>
                                 </div>
                                 <div class="flex justify-between border-b border-slate-800/50 pb-1">
                                     <span class="text-slate-550">Dự kiến bảo trì tiếp theo:</span>
-                                    <span id="maintNext" class="text-slate-350 text-amber-400 font-bold">15/07/2026</span>
+                                    <span id="maintNext" class="text-slate-350">—</span>
                                 </div>
                                 <div class="flex justify-between pb-1">
                                     <span class="text-slate-550">Vật tư thay thế đi kèm:</span>
-                                    <span id="specParts" class="text-slate-350">Cuộn hút Phanh, Bôi trơn xích nâng</span>
+                                    <span id="specParts" class="text-slate-350">—</span>
                                 </div>
                             </div>
                         </div>
@@ -143,6 +140,7 @@
         var GACH    = "\u2014";
 
         var theoKhoi = {};
+        var dangChon = null;
 
         function el(id) { return document.getElementById(id); }
         function dat(id, v) { var e = el(id); if (e) e.textContent = v; }
@@ -174,18 +172,31 @@
                     var ds2 = zone[z].sort(function (a, b) { return a.block_no - b.block_no; });
                     var mat = ds2.filter(function (b) { return !b.online; }).length;
                     return '<div class="mb-2">' +
-                             '<div class="text-slate-300 font-bold py-1">' +
-                               (z === "0" || z === "null" ? "Chưa rõ zone" : "Zone " + esc(z)) +
-                               ' <span class="text-slate-600 font-normal">(' + ds2.length + ' PLC' +
-                               (mat ? ', ' + mat + ' mất kết nối' : '') + ')</span></div>' +
+                             '<div class="text-slate-300 font-bold py-1 flex items-center justify-between">' +
+                               '<span>' + (z === "0" || z === "null" ? "Chưa rõ zone" : "Zone " + esc(z)) + '</span>' +
+                               '<span class="text-[10px] font-normal ' + (mat ? "text-rose-400" : "text-slate-600") + '">' +
+                                 ds2.length + ' PLC' + (mat ? ' · ' + mat + ' mất kết nối' : '') + '</span>' +
+                             '</div>' +
+                             // ===================== XEP THEO HANG =====================
+                             // Ban dau moi PLC chiem tron mot dong (w-full), nen 112 khoi
+                             // thanh 112 dong va phai cuon rat dai moi nhin het mot zone.
+                             // Gio xep thanh luoi chip: zone 37 khoi chi con vai hang, va
+                             // nguoi dung thay ca zone trong mot tam nhin.
+                             '<div class="grid grid-cols-4 xl:grid-cols-6 gap-1 pl-2">' +
                              ds2.map(function (b) {
                                  var cham = b.online ? "rgb(34,197,94)" : "rgb(220,38,38)";
+                                 var chon = b.block_no === dangChon;
                                  return '<button type="button" onclick="chonThietBi(' + b.block_no + ')" ' +
-                                        'class="w-full text-left pl-4 py-1 rounded hover:bg-slate-800/40 flex items-center gap-2">' +
-                                          '<span class="w-1.5 h-1.5 rounded-full" style="background:' + cham + ';"></span>' +
-                                          '<span class="text-slate-400">PLC khối ' + b.block_no + '</span>' +
+                                        'title="PLC khối ' + b.block_no + ' — ' + esc(b.endpoint || "") +
+                                          (b.online ? " — đang kết nối" : " — mất kết nối") + '" ' +
+                                        'class="flex items-center justify-center gap-1 rounded py-1 transition-colors ' +
+                                          (chon ? "bg-blue-600/25 border border-blue-500/60 text-blue-200"
+                                                : "border border-slate-800 text-slate-400 hover:bg-slate-800/50") + '">' +
+                                          '<span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:' + cham + ';"></span>' +
+                                          '<span class="text-[11px]">' + b.block_no + '</span>' +
                                         '</button>';
                              }).join("") +
+                             '</div>' +
                            '</div>';
                 }).join("");
         }
@@ -193,6 +204,11 @@
         window.chonThietBi = function (blockNo) {
             var b = theoKhoi[blockNo];
             if (!b) return;
+
+            // Ve lai cay de chip dang chon duoc to sang. Khong lam thi nguoi dung
+            // bam xong khong biet minh dang xem khoi nao trong 112 chip giong nhau.
+            dangChon = blockNo;
+            veCay(Object.keys(theoKhoi).map(function (k) { return theoKhoi[k]; }));
 
             dat("assetName", "PLC khối " + blockNo);
             dat("assetCode", b.endpoint || GACH);
