@@ -59,6 +59,27 @@ namespace TotalParking.Services.Pgs
 
         public int DaLap { get { return Trong + CoXe + Loi; } }
 
+        // Nguyên văn 32 ký tự của từng lộ RS485, giữ lại chứ không chỉ đếm.
+        //
+        // Bản trước chỉ chạy Dem() rồi bỏ chuỗi đi, nên hệ thống biết "có 58 ô
+        // trống" mà không biết ô NÀO trống. Mọi thứ cần địa chỉ cảm biến —
+        // ghi lịch sử, tính thời gian đỗ, chia số theo zone cho bảng chỉ hướng —
+        // đều chết ngay tại chỗ đó.
+        //
+        // Bản vẽ IP_normal_parking_sensor.pdf đánh địa chỉ cảm biến theo đúng bộ
+        // ba này, dạng "Z0,2.7" = ZCU 0, lộ 2, vị trí 7. Vị trí đếm từ 1.
+        public string Lo1 { get; private set; }
+        public string Lo2 { get; private set; }
+
+        // Trạng thái một cảm biến, hoặc '\0' khi vị trí nằm ngoài khung.
+        // viTri đếm từ 1 cho khớp cách đánh số trên bản vẽ.
+        public char TrangThai(int lo, int viTri)
+        {
+            string s = lo == 1 ? Lo1 : (lo == 2 ? Lo2 : null);
+            if (s == null || viTri < 1 || viTri > s.Length) return '\0';
+            return s[viTri - 1];
+        }
+
         // CRC theo tài liệu mục 2.1: XOR mọi byte NẰM GIỮA '$' và '*'.
         public static byte TinhCrc(string than)
         {
@@ -137,6 +158,8 @@ namespace TotalParking.Services.Pgs
                 ZcuId             = x2,
                 ZcuDangKetNoi     = x3 == 1
             };
+            f.Lo1 = p[5];
+            f.Lo2 = p[6];
             f.Dem(p[5]);
             f.Dem(p[6]);
 

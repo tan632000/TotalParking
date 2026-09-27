@@ -184,7 +184,6 @@
     <Compile Include="Services\LedPanelRepository.cs" />
     <Compile Include="Services\Led\LedFrame.cs" />
     <Compile Include="Services\Led\LedSocket.cs" />
-    <Compile Include="Services\Led\StandardFreeSource.cs" />
     <Compile Include="Services\Led\LedFrameBuilder.cs" />
     <Compile Include="Models\VehicleLocation.cs" />
     <Compile Include="Services\VehicleFinderRepository.cs" />
@@ -219,6 +218,8 @@
     <Compile Include="Services\Pgs\CcuFrame.cs" />
     <Compile Include="Services\Pgs\CcuConnection.cs" />
     <Compile Include="Services\Pgs\PgsHost.cs" />
+    <Compile Include="Services\Pgs\PgsSensorStateHost.cs" />
+    <Compile Include="Services\Pgs\PgsSensorStateWriter.cs" />
     <Compile Include="Services\Plc\PlcTypes.cs" />
     <Compile Include="Services\Plc\OmronFinsClient.cs" />
     <Compile Include="Services\Plc\CardCodeDecoder.cs" />

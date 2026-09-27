@@ -114,24 +114,24 @@ namespace TotalParking.Services
                         TotalStandard  = Num(r, "total_standard"),
                         UsedUnassigned = Num(r, "used_unassigned"),
                         SlotsTotal     = Num(r, "slots_total"),
-                        SlotsFresh     = Num(r, "slots_fresh")
+                        SlotsFresh     = Num(r, "slots_fresh"),
+                        StandardSensors = Num(r, "standard_sensors"),
+                        StandardFresh   = Num(r, "standard_fresh")
                     };
 
-                    // Chỗ đỗ thường: cảm biến biết rõ hơn CSDL.
+                    // free_standard giờ đọc thẳng từ view, không ghi đè nữa.
                     //
-                    // free_standard trong view tính bằng "tổng ô - số phiên gửi
-                    // xe", mà khu đỗ thường không phát thẻ nên không có phiên
-                    // nào. Con số đó đứng yên ở tổng sức chứa trong khi cảm biến
-                    // đếm được xe đang đỗ thật.
+                    // Trước đây lớp này gọi StandardFreeSource để lấy số từ bộ
+                    // nhớ, vì view tính đỗ thường bằng "tổng ô - số phiên gửi xe"
+                    // mà khu đỗ thường không phát thẻ nên luôn ra nguyên sức
+                    // chứa. Hệ quả: bảng LED đúng còn trang Điều hướng xe sai,
+                    // hai màn hình nói hai điều về cùng một bãi.
                     //
-                    // Chỉ ghi đè khi cảm biến CÓ dữ liệu; chưa đọc được gói nào
-                    // thì giữ số cũ chứ không đẩy 0 — 0 nghĩa là "hết chỗ".
-                    //
-                    // TotalStandard giữ nguyên theo CSDL: đó là sức chứa thật của
-                    // bãi, không phải số cảm biến đã lắp.
-                    int? theoCamBien = Led.StandardFreeSource.SoOTrong();
-                    if (theoCamBien.HasValue) cap.FreeStandard = theoCamBien.Value;
-
+                    // Migration 48 cho view đọc pgs_sensor_state, nên nguồn đã
+                    // đúng ngay tại gốc. Giữ thêm đường ghi đè chỉ làm sự cố của
+                    // vòng ghi bị che đi: bảng LED vẫn đúng nhờ bộ nhớ, còn mọi
+                    // nơi khác lặng lẽ sai. StandardFresh ở trên là thứ để nhìn
+                    // thấy sự cố đó thay vì che nó.
                     return cap;
                 }
             }

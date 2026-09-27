@@ -37,6 +37,12 @@ namespace TotalParking
             // Giai đoạn này đọc, lọc nhiễu và phơi ra /PgsStatus.
             PgsHost.Initialize();
 
+            // Ghi trang thai tung cam bien do thuong xuong pgs_sensor_state.
+            // Chay SAU PgsHost vi no chup anh tu ket noi CCU o do. Truoc day
+            // khong co buoc nay, nen so lieu do thuong chi ton tai trong bo nho
+            // va mat sach moi lan khoi dong lai.
+            PgsSensorStateHost.Initialize();
+
             // Vòng quét ô đỗ: đọc D400/D202…D308 để biết ô nào đang giữ thẻ nào.
             // Công tắc riêng (plc:slotScanEnabled) vì vòng này CHỈ ĐỌC, trong khi
             // vòng poll của PlcHost có ghi D1000. Gộp chung sẽ buộc phải bật quyền

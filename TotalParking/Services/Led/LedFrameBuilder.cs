@@ -42,7 +42,7 @@ namespace TotalParking.Services.Led
             //
             // KHÔNG áp độ phủ cho dòng này. Độ phủ đo bằng số ô cơ khí vừa được
             // PLC đọc lại, mà chỗ đỗ thường không đi qua PLC — nó đến từ cảm
-            // biến PGS qua CCU (xem StandardFreeSource). Áp một thước đo của
+            // biến PGS qua CCU, ghi vào pgs_sensor_state. Áp một thước đo của
             // tầng khác vào đây thì dòng này bật vàng vĩnh viễn và cảnh báo mất
             // hết ý nghĩa.
             //

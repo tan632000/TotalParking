@@ -23,6 +23,11 @@ namespace TotalParking.Services.Pgs
         // lẽ nhỏ đi, và không còn tín hiệu nào khác để nhận ra.
         public int KhongHieu { get; set; }
 
+        // Nguyen van 32 ky tu moi lo. Giu lai de biet o NAO trong, khong chi
+        // biet CO BAO NHIEU o trong.
+        public string Lo1 { get; set; }
+        public string Lo2 { get; set; }
+
         public DateTime LanCuoiCoGoiUtc  { get; set; }
 
         // Lần cuối CCU báo ZCU này ĐANG kết nối. Khác hẳn LanCuoiCoGoiUtc: CCU
@@ -131,6 +136,8 @@ namespace TotalParking.Services.Pgs
                                 Loi              = z.Loi,
                                 KhongLap         = z.KhongLap,
                                 KhongHieu        = z.KhongHieu,
+                                Lo1              = z.Lo1,
+                                Lo2              = z.Lo2,
                                 LanCuoiCoGoiUtc  = z.LanCuoiCoGoiUtc,
                                 LanCuoiKetNoiUtc = z.LanCuoiKetNoiUtc,
                                 SoGoi            = z.SoGoi
@@ -316,6 +323,8 @@ namespace TotalParking.Services.Pgs
                 z.Loi             = f.Loi;
                 z.KhongLap        = f.KhongLap;
                 z.KhongHieu       = f.KhongHieu;
+                z.Lo1             = f.Lo1;
+                z.Lo2             = f.Lo2;
                 z.LanCuoiCoGoiUtc = DateTime.UtcNow;
                 z.SoGoi++;
 

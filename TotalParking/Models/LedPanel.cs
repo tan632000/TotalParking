@@ -87,6 +87,15 @@ namespace TotalParking.Models
         public int SlotsTotal { get; set; }
         public int SlotsFresh { get; set; }
 
+        // ĐỘ PHỦ CỦA TẦNG CẢM BIẾN, cho riêng dòng đỗ thường.
+        //
+        // Đỗ thường không đi qua PLC nên SlotsTotal/SlotsFresh ở trên không nói
+        // gì về nó. Khi vòng ghi cảm biến chết, view trả về nguyên sức chứa —
+        // trông y hệt một bãi đang trống. Hai trường này là thứ duy nhất phân
+        // biệt được "80 trống" với "không còn biết gì".
+        public int StandardSensors { get; set; }
+        public int StandardFresh   { get; set; }
+
         // -1 = không biết (không có ô cơ khí nào trong phạm vi này).
         public int CoveragePct
         {

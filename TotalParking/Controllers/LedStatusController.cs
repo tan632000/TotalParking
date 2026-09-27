@@ -65,6 +65,10 @@ namespace TotalParking.Controllers
                     free_l5m      = c.FreeL5m,      total_l5m      = c.TotalL5m,
                     free_l48m     = c.FreeL48m,     total_l48m     = c.TotalL48m,
                     free_standard = c.FreeStandard, total_standard = c.TotalStandard,
+                    // Bao nhiêu cảm biến đỗ thường còn tươi. 0 nghĩa là con số
+                    // free_standard đang là sức chứa dự phòng, không phải số đo.
+                    standard_sensors = c.StandardSensors,
+                    standard_fresh   = c.StandardFresh,
                     free_total    = c.FreeTotal,
                     // false = chua khai bao block. Publisher se XOA bang thay vi
                     // day so, xem LedPublisher.PublishPanel.
