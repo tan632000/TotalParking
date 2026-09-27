@@ -130,6 +130,82 @@ namespace TotalParking.Controllers
             }
         }
 
+        // GET /BaoCao/SucKhoeVongDoc
+        //
+        // Mot khoi co the KET NOI BINH THUONG ma thanh ghi o khong duoc cap nhat.
+        // Day la hong kieu khac voi mat ket noi, nen do rieng.
+        public ActionResult SucKhoeVongDoc()
+        {
+            try
+            {
+                var k = _repo.SucKhoeO();
+                return Json2(200, new
+                {
+                    now = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
+                    tong_o    = k.TongO,
+                    tong_khoi = k.TongKhoi,
+                    o_qua_han = k.OQuaHan,
+                    o_chua_doc = k.OChuaDoc,
+                    quet_gan_nhat = k.QuetGanNhat.HasValue
+                        ? k.QuetGanNhat.Value.ToString("dd-MM-yyyy HH:mm:ss") : null,
+                    // Bao nhieu phut truoc: mot moc thoi gian tuyet doi khong noi
+                    // ngay duoc la vong quet con song hay da chet tu lau.
+                    quet_cach_day_phut = k.QuetGanNhat.HasValue
+                        ? (int?)(DateTime.Now - k.QuetGanNhat.Value).TotalMinutes : null,
+                    khoi = k.Khoi.Select(x => new
+                    {
+                        block_no = x.BlockNo,
+                        zone_id  = x.ZoneId,
+                        so_o     = x.SoO,
+                        chua_doc = x.ChuaDoc,
+                        qua_han  = x.QuaHan,
+                        cu_nhat_phut = x.CuNhatPhut
+                    }).ToArray()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(503, new { error = ex.Message });
+            }
+        }
+
+        // GET /BaoCao/XuHuongTraCuu?ngay=14
+        public ActionResult XuHuongTraCuu(int? ngay)
+        {
+            try
+            {
+                int soNgay = ngay ?? 14;
+                var ds = _repo.XuHuongTraCuu(soNgay);
+                int tongTraCuu = ds.Sum(x => x.TraCuu);
+                int tongThay   = ds.Sum(x => x.Thay);
+
+                return Json2(200, new
+                {
+                    now = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
+                    so_ngay = soNgay,
+                    tong_tra_cuu = tongTraCuu,
+                    tong_thay    = tongThay,
+                    tong_xe_vao  = ds.Sum(x => x.XeVao),
+                    ti_le_thay   = tongTraCuu == 0 ? (double?)null
+                                                   : Math.Round((double)tongThay * 100 / tongTraCuu, 1),
+                    items = ds.Select(x => new
+                    {
+                        ngay        = x.Ngay.ToString("dd-MM"),
+                        tra_cuu     = x.TraCuu,
+                        thay        = x.Thay,
+                        khong_thay  = x.KhongThay,
+                        chua_tra_loi = x.ChuaTraLoi,
+                        xe_vao      = x.XeVao,
+                        ti_le_thay  = x.TiLeThay.HasValue ? (double?)Math.Round(x.TiLeThay.Value, 1) : null
+                    }).ToArray()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(503, new { error = ex.Message });
+            }
+        }
+
         private ActionResult Json2(int status, object payload)
         {
             Response.StatusCode = status;

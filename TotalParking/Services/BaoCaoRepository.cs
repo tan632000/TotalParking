@@ -187,6 +187,147 @@ namespace TotalParking.Services
             return ds;
         }
 
+        // ===================== SUC KHOE VONG DOC O =====================
+        // Khac han bai toan mat ket noi o tren. Mot khoi co the KET NOI BINH
+        // THUONG ma thanh ghi o cua no khong duoc cap nhat: lenh doc tra ve loi,
+        // hoac ladder dang ban. Vong quet bao "110/112 block doc duoc" luc nay va
+        // "112/112" luc khac — chap chon, nen phai do chu khong the nhin mot lan
+        // roi ket luan.
+        //
+        // read_at la thoi diem vong quet ghi dong nay. No duoc cap nhat MOI lan
+        // quet ke ca khi gia tri khong doi, nen "cu" nghia la khong doc duoc,
+        // khong phai "o khong co gi thay doi".
+        //
+        // Nguong 5 phut: cung nguong ma BlockMapRepository dung cho cot `fresh`.
+        // Nhip quet la 45 giay, nen 5 phut la da bo lo khoang sau luot lien tiep.
+        private const string SqlSucKhoeO =
+            "SELECT b.block_no, b.zone_id, COUNT(*) AS so_o, " +
+            "       SUM(s.read_at IS NULL) AS chua_doc, " +
+            "       SUM(s.read_at < NOW(3) - INTERVAL 5 MINUTE) AS qua_han, " +
+            "       TIMESTAMPDIFF(MINUTE, MIN(s.read_at), NOW(3)) AS cu_nhat_phut " +
+            "FROM   plc_slot_state s " +
+            "JOIN   block b ON b.block_id = s.block_id " +
+            "GROUP  BY b.block_no, b.zone_id " +
+            // Chi tra ve khoi CO VAN DE. Liet ke ca 112 khoi binh thuong chi lam
+            // nguoi truc phai tu loc bang mat.
+            "HAVING chua_doc > 0 OR qua_han > 0 " +
+            "ORDER  BY qua_han DESC, cu_nhat_phut DESC";
+
+        private const string SqlTongO =
+            "SELECT COUNT(*) AS tong_o, " +
+            "       COUNT(DISTINCT block_id) AS tong_khoi, " +
+            "       SUM(read_at < NOW(3) - INTERVAL 5 MINUTE) AS o_qua_han, " +
+            "       SUM(read_at IS NULL) AS o_chua_doc, " +
+            "       MAX(read_at) AS quet_gan_nhat " +
+            "FROM   plc_slot_state";
+
+        public SucKhoeVongDoc SucKhoeO()
+        {
+            var kq = new SucKhoeVongDoc { Khoi = new List<KhoiDocLoi>() };
+
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = SqlTongO;
+                    using (var r = cmd.ExecuteReader())
+                    {
+                        if (r.Read())
+                        {
+                            kq.TongO      = Convert.ToInt32(r["tong_o"]);
+                            kq.TongKhoi   = Convert.ToInt32(r["tong_khoi"]);
+                            kq.OQuaHan    = r["o_qua_han"] == DBNull.Value ? 0 : Convert.ToInt32(r["o_qua_han"]);
+                            kq.OChuaDoc   = r["o_chua_doc"] == DBNull.Value ? 0 : Convert.ToInt32(r["o_chua_doc"]);
+                            kq.QuetGanNhat = r["quet_gan_nhat"] == DBNull.Value
+                                                 ? (DateTime?)null : Convert.ToDateTime(r["quet_gan_nhat"]);
+                        }
+                    }
+                }
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = SqlSucKhoeO;
+                    using (var r = cmd.ExecuteReader())
+                    {
+                        while (r.Read())
+                        {
+                            kq.Khoi.Add(new KhoiDocLoi
+                            {
+                                BlockNo    = Convert.ToInt32(r["block_no"]),
+                                ZoneId     = Int(r, "zone_id"),
+                                SoO        = Convert.ToInt32(r["so_o"]),
+                                ChuaDoc    = Convert.ToInt32(r["chua_doc"]),
+                                QuaHan     = Convert.ToInt32(r["qua_han"]),
+                                CuNhatPhut = r["cu_nhat_phut"] == DBNull.Value ? 0 : Convert.ToInt32(r["cu_nhat_phut"])
+                            });
+                        }
+                    }
+                }
+            }
+            return kq;
+        }
+
+        // ===================== XU HUONG TRA CUU TIM XE =====================
+        // Hai chuoi tren cung mot truc ngay, vi mot minh chuoi dau KHONG doc duoc:
+        //
+        //   19/09 co 108 luot tra cuu va 0 luot tim thay.
+        //
+        // Con so do co the la he thong hong (giai ma the sai, vong quet chet),
+        // HOAC bai xe hom do trong. Khong the biet neu chi nhin mot chuoi. Nen
+        // ghep them so xe duoc dinh tuyen vao bai cung ngay tu vehicle_routing:
+        // nhieu xe vao ma khong ai tim thay la dau hieu hong; it xe vao thi ti le
+        // thap la binh thuong.
+        //
+        // He thong KHONG luu lich su suc chua theo thoi gian, nen day la thu gan
+        // nhat voi "hom do bai co xe khong" ma du lieu tra loi duoc.
+        private const string SqlXuHuong =
+            "SELECT ngay, " +
+            "       SUM(tra_cuu) AS tra_cuu, SUM(thay) AS thay, SUM(chua_tra_loi) AS chua_tra_loi, " +
+            "       SUM(xe_vao) AS xe_vao " +
+            "FROM ( " +
+            "  SELECT DATE(received_at) AS ngay, COUNT(*) AS tra_cuu, " +
+            "         SUM(result_permit = 1) AS thay, " +
+            "         SUM(result_permit IS NULL) AS chua_tra_loi, 0 AS xe_vao " +
+            "  FROM   plc_request WHERE received_at >= CURDATE() - INTERVAL @so_ngay DAY " +
+            "  GROUP  BY DATE(received_at) " +
+            "  UNION ALL " +
+            "  SELECT DATE(decided_at), 0, 0, 0, SUM(outcome = 'ROUTED') " +
+            "  FROM   vehicle_routing WHERE decided_at >= CURDATE() - INTERVAL @so_ngay DAY " +
+            "  GROUP  BY DATE(decided_at) " +
+            ") t GROUP BY ngay ORDER BY ngay";
+
+        public IList<NgayTraCuu> XuHuongTraCuu(int soNgay)
+        {
+            if (soNgay <= 0) soNgay = 14;
+            if (soNgay > 90) soNgay = 90;
+
+            var ds = new List<NgayTraCuu>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = SqlXuHuong;
+                cmd.Parameters.AddWithValue("@so_ngay", soNgay);
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        ds.Add(new NgayTraCuu
+                        {
+                            Ngay       = Convert.ToDateTime(r["ngay"]),
+                            TraCuu     = Convert.ToInt32(r["tra_cuu"]),
+                            Thay       = Convert.ToInt32(r["thay"]),
+                            ChuaTraLoi = Convert.ToInt32(r["chua_tra_loi"]),
+                            XeVao      = Convert.ToInt32(r["xe_vao"])
+                        });
+                    }
+                }
+            }
+            return ds;
+        }
+
         private static string Str(IDataRecord r, string cot)
         {
             object v = r[cot];
@@ -265,6 +406,44 @@ namespace TotalParking.Services
                         return "Mất thoáng qua, có thể là nhiễu. Theo dõi thêm.";
                 }
             }
+        }
+    }
+
+    public class SucKhoeVongDoc
+    {
+        public int  TongO    { get; set; }
+        public int  TongKhoi { get; set; }
+        public int  OQuaHan  { get; set; }
+        public int  OChuaDoc { get; set; }
+        public DateTime? QuetGanNhat { get; set; }
+        public IList<KhoiDocLoi> Khoi { get; set; }
+    }
+
+    public class KhoiDocLoi
+    {
+        public int  BlockNo    { get; set; }
+        public int? ZoneId     { get; set; }
+        public int  SoO        { get; set; }
+        public int  ChuaDoc    { get; set; }
+        public int  QuaHan     { get; set; }
+        public int  CuNhatPhut { get; set; }
+    }
+
+    public class NgayTraCuu
+    {
+        public DateTime Ngay       { get; set; }
+        public int      TraCuu     { get; set; }
+        public int      Thay       { get; set; }
+        public int      ChuaTraLoi { get; set; }
+        public int      XeVao      { get; set; }
+
+        public int KhongThay { get { return TraCuu - Thay - ChuaTraLoi; } }
+
+        // Chia cho 0 ra NaN va giao dien se hien "NaN%" — mot ngay khong ai tra
+        // cuu thi ti le khong ton tai, khong phai bang khong.
+        public double? TiLeThay
+        {
+            get { return TraCuu == 0 ? (double?)null : (double)Thay * 100 / TraCuu; }
         }
     }
 

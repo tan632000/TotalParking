@@ -91,10 +91,15 @@
         @* Bieu do cu ve muoi hai cot phan tram cho cac khoi bia, kem so chu
            ky va gio chay khong co nguon. *@
         <div class="bg-card rounded border border-slate-700/50 p-4">
-            <h3 class="text-slate-300 text-sm font-semibold mb-3">Tần suất hoạt động theo Block</h3>
-            <div class="text-center text-slate-500 text-[11px] py-10">
-                Hệ thống chưa đếm số lần vận hành hay giờ chạy của từng khối.
+            @* Khung nay truoc do de trong vi he thong khong dem so lan van hanh.
+               Nhung co mot thu do duoc va quan trong hon: vong quet CO DOC DUOC
+               thanh ghi o cua tung khoi khong. Mot khoi ket noi binh thuong ma
+               thanh ghi khong cap nhat la hong kieu khac voi mat ket noi. *@
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-slate-300 text-sm font-semibold">Sức khoẻ vòng đọc ô đỗ</h3>
+                <span id="sk-tomtat" class="text-[10px] font-mono text-slate-500">đang đọc…</span>
             </div>
+            <div id="sk-noidung" class="text-center text-slate-500 text-[11px] py-10">Đang đọc…</div>
         </div>
         <div class="flex gap-2">
             <select class="bg-slate-800/60 border border-slate-700/50 rounded px-2 py-1.5 text-xs text-slate-300 font-mono outline-none">
@@ -778,6 +783,112 @@
                     if (b) {
                         b.innerHTML = '<tr><td colspan="9" class="px-3 py-10 text-center text-red-400 text-[11px]">' +
                                       'Không đọc được: ' + esc(e.message) + '</td></tr>';
+                    }
+                });
+        }
+
+        var timer = null;
+        function batDau() { if (timer) return; tick(); timer = setInterval(tick, NHIP_MS); }
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) { if (timer) { clearInterval(timer); timer = null; } }
+            else batDau();
+        });
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", batDau);
+        } else {
+            batDau();
+        }
+    })();
+</script>
+
+@* ===================== SUC KHOE VONG DOC O =====================
+   Doc /BaoCao/SucKhoeVongDoc. Khac bai toan mat ket noi o bang tren: o day
+   khoi van ket noi duoc nhung thanh ghi o khong duoc cap nhat. *@
+<script>
+    (function () {
+        "use strict";
+
+        var URL_SK  = "@Url.Action("SucKhoeVongDoc", "BaoCao")";
+        var NHIP_MS = 30000;
+        var GACH    = "—";
+
+        function el(id) { return document.getElementById(id); }
+
+        function esc(v) {
+            return String(v === null || v === undefined ? "" : v)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function ve(d) {
+            var tt = el("sk-tomtat");
+            var nd = el("sk-noidung");
+
+            // Vong quet chet la truong hop nguy hiem nhat va de bo sot nhat: moi
+            // o van con gia tri cu, khong o nao "trong", chi co moc thoi gian la
+            // cu dan. Nen kiem rieng thay vi chi dem o qua han.
+            var quetChet = d.quet_cach_day_phut !== null && d.quet_cach_day_phut >= 5;
+
+            if (tt) {
+                tt.textContent = d.tong_o + " ô / " + d.tong_khoi + " khối · quét gần nhất " +
+                                 (d.quet_gan_nhat || GACH) +
+                                 (d.quet_cach_day_phut !== null
+                                     ? " (" + d.quet_cach_day_phut + " phút trước)" : "");
+                tt.className = "text-[10px] font-mono " + (quetChet ? "text-red-400" : "text-slate-500");
+            }
+
+            if (!nd) return;
+
+            if (quetChet) {
+                nd.innerHTML = '<div class="text-red-400 text-[11px] py-8">' +
+                               'Vòng quét chưa chạy ' + esc(d.quet_cach_day_phut) + ' phút. ' +
+                               'Mọi con số ô đỗ trên hệ thống đang là giá trị đọc được lần cuối, ' +
+                               'không phải hiện trạng.</div>';
+                return;
+            }
+
+            if (!d.khoi.length) {
+                nd.innerHTML = '<div class="text-emerald-400 text-[11px] py-8">' +
+                               'Tất cả ' + esc(d.tong_o) + ' ô ở ' + esc(d.tong_khoi) +
+                               ' khối đều đọc được trong 5 phút gần đây.</div>';
+                return;
+            }
+
+            nd.className = "text-left";
+            nd.innerHTML =
+                '<div class="text-amber-400 text-[11px] mb-2">' + d.khoi.length +
+                  ' khối có ô không đọc được:</div>' +
+                '<div class="space-y-1 font-mono text-[11px]">' +
+                d.khoi.map(function (x) {
+                    return '<div class="flex justify-between py-1 border-b border-slate-800/60">' +
+                             '<span class="text-slate-300">Khối ' + esc(x.block_no) +
+                               ' <span class="text-slate-600">(Z' + esc(x.zone_id) + ')</span></span>' +
+                             '<span class="text-slate-400">' + esc(x.qua_han + x.chua_doc) + '/' +
+                               esc(x.so_o) + ' ô · cũ nhất ' + esc(x.cu_nhat_phut) + ' phút</span>' +
+                           '</div>';
+                }).join("") +
+                '</div>';
+        }
+
+        function tick() {
+            fetch(URL_SK, { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    if (d && d.error) throw new Error(d.error);
+                    ve(d);
+                })
+                .catch(function (e) {
+                    var tt = el("sk-tomtat");
+                    if (tt) { tt.textContent = GACH; tt.className = "text-[10px] font-mono text-red-400"; }
+                    var nd = el("sk-noidung");
+                    if (nd) {
+                        nd.className = "text-center text-red-400 text-[11px] py-10";
+                        nd.textContent = "Không đọc được: " + e.message;
                     }
                 });
         }

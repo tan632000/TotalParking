@@ -8,125 +8,154 @@
         <div class="flex justify-between items-center pb-4 border-b border-slate-800">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight">Biểu Đồ Xu Hướng Kỹ Thuật (Historian &amp; Trends)</h1>
-                <p class="text-slate-400 text-sm mt-1">Giám sát đồ thị xu hướng thời gian thực của dòng điện motor, nhiệt độ cuộn dây và tần số biến tần VFD.</p>
+                <p class="text-slate-400 text-sm mt-1">Xu hướng tra cứu tìm xe theo ngày, ghép với số xe vào bãi cùng ngày để biết tỉ lệ thấp là do bãi trống hay do hệ thống hỏng.</p>
             </div>
         </div>
 
         <!-- Controls panel -->
         <div class="flex flex-wrap gap-4 items-center bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-lg">
-            <select id="trendBlock" class="bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 text-xs text-slate-350 font-mono outline-none focus:border-blue-500">
-                @* Hai lua chon cu la ten khoi bia. Bai that co 118 khoi danh so. *@
-                <option value="">đang đọc…</option>
+            <select id="hsSoNgay" onchange="doiSoNgay()" class="bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 text-xs text-slate-350 font-mono outline-none focus:border-blue-500">
+                <option value="7">7 ngày gần nhất</option>
+                <option value="14" selected>14 ngày gần nhất</option>
+                <option value="30">30 ngày gần nhất</option>
             </select>
-
-            <select id="trendMetric" onchange="changeMetric()" class="bg-slate-800/60 border border-slate-700/50 rounded px-3 py-1.5 text-xs text-slate-350 font-mono outline-none focus:border-blue-500">
-                <option value="current">Dòng điện Motor Nâng (Ampe)</option>
-                <option value="temp">Nhiệt độ Động cơ (°C)</option>
-                <option value="frequency">Tần số biến tần VFD (Hz)</option>
-            </select>
-
-            <span class="text-slate-500 text-xs font-mono ml-auto" id="liveVal">Giá trị hiện tại: --</span>
+            <span class="text-slate-500 text-xs font-mono ml-auto" id="hsTomTat">đang đọc…</span>
         </div>
 
         <!-- Trend Chart Area -->
         <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-2xl space-y-4">
             <div class="flex justify-between items-center">
-                <h3 id="chartTitle" class="text-white text-sm font-bold font-mono">Đồ thị Dòng điện Motor nâng (Real-time Trend)</h3>
+                <h3 id="chartTitle" class="text-white text-sm font-bold font-mono">Lượt tra cứu tìm xe theo ngày</h3>
                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-blue-500/10 text-blue-400">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping"></span>
                     CHƯA CÓ TÍN HIỆU
                 </span>
             </div>
             
-            <div class="relative w-full h-[320px] bg-slate-950/60 border border-slate-900 rounded-lg overflow-hidden flex items-center justify-center">
-                <canvas id="trendCanvas" class="w-full h-full block"></canvas>
-            </div>
+            <div id="hsBieuDo" class="w-full min-h-[240px]"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // ===================== VI SAO TRANG NAY TRONG =====================
-    // Ban truoc SINH NGAU NHIEN ca ba duong cong bang bo sinh so ngau nhien:
+    // ===================== MOT CHUOI KHONG DU DE KET LUAN =====================
+    // Trang nay tung sinh ngau nhien ba duong cong cam bien (dong dien, nhiet do,
+    // tan so bien tan). He thong khong thu thap telemetry nao, nen chung deu bia.
     //
-    //   dong dien   : 12-14 A binh thuong, 24-27 A khi "loi"
-    //   nhiet do    : 56-60 C binh thuong, 112-115 C khi "loi"
-    //   tan so VFD  : 48-50 Hz
+    // Nhung co MOT chuoi thoi gian that: so luot quet the de tim xe moi ngay, va
+    // bao nhieu luot trong so do tim thay. Ve rieng no thi khong doc duoc:
     //
-    // va dung san mot kich ban "motor qua nhiet" o mot khoi co dinh. Day la
-    // trang ky su dung de chan doan xu huong: mot duong cong bia co the dan
-    // toi ket luan co motor sap chay va cho dung thiet bi dang chay binh thuong.
+    //     19/09 co 108 luot tra cuu va 0 luot tim thay.
     //
-    // He thong KHONG thu thap telemetry nao. Da tra information_schema cho moi
-    // cot ten chua temp/current/freq/runtime/cycle/maint trong ca CSDL: chi ra
-    // dung `parking_slot.cycle_count`, va bang do co 0 dong. Vong quet PLC hien
-    // chi doc thanh ghi o do, trang thai ket noi va hang tai.
-    //
-    // Nen trang nay noi thang la chua co du lieu, thay vi ve mot duong cong.
+    // Con so do co the la he thong hong, hoac bai xe hom do trong. Nen ghep them
+    // so xe duoc dinh tuyen vao bai cung ngay — 88 xe vao hom 19/09. Nhieu xe vao
+    // ma khong ai tim thay la dau hieu hong; it xe vao thi ti le thap la binh
+    // thuong.
     (function () {
         "use strict";
 
-        function dat(id, chu) {
-            var e = document.getElementById(id);
-            if (e) e.textContent = chu;
+        var URL_XH = "@Url.Action("XuHuongTraCuu", "BaoCao")";
+        var GACH   = "\u2014";
+        var soNgay = 14;
+
+        function el(id) { return document.getElementById(id); }
+
+        function esc(v) {
+            return String(v === null || v === undefined ? "" : v)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
         }
 
-        function veTrong() {
-            var c = document.getElementById("trendCanvas");
-            if (!c) return;
-            var khung = c.parentElement;
+        function ve(d) {
+            var tt = el("hsTomTat");
+            if (tt) {
+                tt.textContent = d.tong_tra_cuu + " lượt tra cứu · " + d.tong_thay +
+                                 " thấy xe" + (d.ti_le_thay === null ? "" : " (" + d.ti_le_thay + "%)") +
+                                 " · " + d.tong_xe_vao + " xe vào bãi";
+            }
+
+            var khung = el("hsBieuDo");
             if (!khung) return;
+
+            if (!d.items.length) {
+                khung.innerHTML = '<div class="text-center text-slate-500 text-[11px] py-16">' +
+                                  'Chưa có lượt tra cứu nào trong ' + esc(d.so_ngay) + ' ngày qua.</div>';
+                return;
+            }
+
+            // Chieu cao theo gia tri LON NHAT cua ca hai chuoi, de hai cot canh
+            // nhau so sanh duoc. Neu moi chuoi tu chuan hoa theo dinh rieng thi
+            // mot ngay it tra cuu se trong cao bang ngay nhieu tra cuu.
+            var dinh = 1;
+            d.items.forEach(function (x) {
+                dinh = Math.max(dinh, x.tra_cuu, x.xe_vao);
+            });
+
+            var cot = d.items.map(function (x) {
+                var hTra = Math.max(2, Math.round(x.tra_cuu / dinh * 130));
+                var hThay = x.tra_cuu ? Math.round(hTra * x.thay / x.tra_cuu) : 0;
+                var hXe  = Math.max(2, Math.round(x.xe_vao / dinh * 130));
+
+                // Ngay dang ngo: co xe vao nhung khong ai tim thay.
+                var ngo = x.xe_vao > 0 && x.tra_cuu > 0 && x.thay === 0;
+
+                return '<div class="flex flex-col items-center gap-1" style="flex:1 1 0;min-width:0;" ' +
+                         'title="' + esc(x.ngay) + ': ' + x.tra_cuu + ' tra cứu, ' + x.thay +
+                         ' thấy, ' + x.xe_vao + ' xe vào">' +
+                         '<div class="flex items-end gap-0.5" style="height:130px;">' +
+                           // Cot tra cuu: phan THAY to dam nam duoi, phan khong thay nhat o tren
+                           '<div class="flex flex-col justify-end" style="width:9px;height:130px;">' +
+                             '<div style="height:' + (hTra - hThay) + 'px;background:rgba(100,116,139,.45);"></div>' +
+                             '<div style="height:' + hThay + 'px;background:rgb(52,211,153);"></div>' +
+                           '</div>' +
+                           '<div style="width:9px;height:' + hXe + 'px;align-self:flex-end;background:rgba(59,130,246,.55);"></div>' +
+                         '</div>' +
+                         '<div class="text-[9px] font-mono ' + (ngo ? "text-amber-400 font-bold" : "text-slate-500") + '">' +
+                           esc(x.ngay) + (ngo ? " !" : "") + '</div>' +
+                       '</div>';
+            }).join("");
+
             khung.innerHTML =
-                '<div class="flex flex-col items-center justify-center h-full min-h-[240px] text-center px-6">' +
-                  '<div class="text-slate-400 text-sm font-bold mb-2">Chưa thu thập dữ liệu xu hướng</div>' +
-                  '<p class="text-[11px] text-slate-500 leading-relaxed max-w-md">' +
-                    'Hệ thống chưa đọc dòng điện, nhiệt độ hay tần số biến tần từ thiết bị. ' +
-                    'Vòng quét PLC hiện chỉ lấy trạng thái ô đỗ, tình trạng kết nối và hạng tải, ' +
-                    'và cơ sở dữ liệu không có bảng nào lưu các đại lượng trên.' +
-                  '</p>' +
-                  '<p class="text-[10px] text-slate-600 mt-3">' +
-                    'Muốn xem số liệu có thật, dùng trang Báo cáo &amp; thống kê hoặc Alarm &amp; Event.' +
-                  '</p>' +
+                '<div class="flex items-end gap-1 px-2">' + cot + '</div>' +
+                '<div class="flex items-center gap-4 justify-center mt-3 text-[10px] text-slate-400">' +
+                  '<span class="flex items-center gap-1"><span style="width:10px;height:10px;background:rgb(52,211,153);display:inline-block;"></span>Tra cứu thấy xe</span>' +
+                  '<span class="flex items-center gap-1"><span style="width:10px;height:10px;background:rgba(100,116,139,.45);display:inline-block;"></span>Tra cứu không thấy</span>' +
+                  '<span class="flex items-center gap-1"><span style="width:10px;height:10px;background:rgba(59,130,246,.55);display:inline-block;"></span>Xe vào bãi</span>' +
+                  '<span class="text-amber-400">! = có xe vào nhưng không ai tìm thấy</span>' +
                 '</div>';
         }
 
-        // Van giu o chon de nguoi dung thay he thong DU KIEN theo doi nhung dai
-        // luong nao, nhung khong ve gia tri nao.
-        window.changeMetric = function () {
-            var sel = document.getElementById("trendMetric");
-            var ten = sel ? sel.options[sel.selectedIndex].text : "";
-            dat("chartTitle", ten ? ("Đồ thị " + ten + " — chưa có dữ liệu") : "Chưa có dữ liệu");
-            dat("liveVal", "—");
-        };
-
-        // O chon khoi van lay danh sach THAT, du chua co so lieu nao de ve:
-        // nguoi dung can thay dung nhung khoi ma he thong biet.
-        function napKhoi() {
-            var sel = document.getElementById("trendBlock");
-            if (!sel) return;
-            fetch("@Url.Action("BlockMap", "Monitor")", { cache: "no-store" })
+        function tai() {
+            fetch(URL_XH + "?ngay=" + soNgay, { cache: "no-store" })
                 .then(function (r) {
                     if (!r.ok) throw new Error("HTTP " + r.status);
                     return r.json();
                 })
                 .then(function (d) {
-                    var ds = (d && d.blocks) || [];
-                    if (!ds.length) throw new Error("trống");
-                    sel.innerHTML = ds.slice().sort(function (a, b) { return a.block_no - b.block_no; })
-                        .map(function (b) {
-                            return '<option value="' + b.block_no + '">Khối ' + b.block_no +
-                                   ' (Zone ' + b.zone_id + ')</option>';
-                        }).join("");
+                    if (d && d.error) throw new Error(d.error);
+                    ve(d);
                 })
-                .catch(function () {
-                    sel.innerHTML = '<option value="">không đọc được danh sách khối</option>';
+                .catch(function (e) {
+                    var tt = el("hsTomTat");
+                    if (tt) tt.textContent = GACH;
+                    var k = el("hsBieuDo");
+                    if (k) {
+                        k.innerHTML = '<div class="text-center text-red-400 text-[11px] py-16">' +
+                                      'Không đọc được xu hướng: ' + esc(e.message) + '</div>';
+                    }
                 });
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            veTrong();
-            napKhoi();
-            window.changeMetric();
-        });
+        window.doiSoNgay = function () {
+            var sel = el("hsSoNgay");
+            soNgay = sel ? parseInt(sel.value, 10) : 14;
+            tai();
+        };
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", tai);
+        } else {
+            tai();
+        }
     })();
 </script>
