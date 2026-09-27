@@ -89,6 +89,47 @@ namespace TotalParking.Controllers
             }
         }
 
+        // GET /BaoCao/DoTinCayKhoi?ngay=30
+        //
+        // Tra loi "khoi nao can di xem truoc". Xem ghi chu tai BaoCaoRepository
+        // ve vi sao tach ba con so thay vi gop thanh mot thang diem.
+        public ActionResult DoTinCayKhoi(int? ngay)
+        {
+            try
+            {
+                int soNgay = ngay ?? 30;
+                var ds = _repo.DoTinCay(soNgay);
+
+                return Json2(200, new
+                {
+                    now = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
+                    so_ngay = soNgay,
+                    // Bon con so cho bon the o dau trang.
+                    dang_mat   = ds.Count(x => x.DangMo),
+                    chap_chon  = ds.Count(x => x.Dang == "chap_chon"),
+                    so_khoi    = ds.Count,
+                    tong_gio   = Math.Round(ds.Sum(x => (double)x.TongPhut) / 60, 1),
+                    items = ds.Select(x => new
+                    {
+                        block_no     = x.BlockNo,
+                        zone_id      = x.ZoneId,
+                        ip           = x.Ip,
+                        so_lan       = x.SoLan,
+                        tong_phut    = x.TongPhut,
+                        lan_lau_nhat = x.LanLauNhat,
+                        dang_mo      = x.DangMo,
+                        gan_nhat     = x.GanNhat.ToString("dd-MM-yyyy HH:mm"),
+                        dang         = x.Dang,
+                        goi_y        = x.GoiY
+                    }).ToArray()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(503, new { error = ex.Message });
+            }
+        }
+
         private ActionResult Json2(int status, object payload)
         {
             Response.StatusCode = status;

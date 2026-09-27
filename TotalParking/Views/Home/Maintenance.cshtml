@@ -29,13 +29,12 @@
            pallet — mot nut bao "thanh cong" ma khong lam gi khien ky thuat vien
            tin rang da vo hieu hoa bao ve va di lam tiep. *@
         <div class="mb-4 rounded-lg border border-amber-800/40 bg-amber-950/20 px-4 py-3">
-            <div class="text-amber-400 text-xs font-bold mb-1">Chưa có dữ liệu bảo trì</div>
+            <div class="text-amber-400 text-xs font-bold mb-1">Bảng dưới đây xếp theo độ tin cậy kết nối PLC</div>
             <p class="text-[11px] text-slate-400 leading-relaxed">
-                Hệ thống chưa ghi nhận giờ chạy, số chu kỳ hay lịch bảo trì của thiết bị,
-                và cơ sở dữ liệu không có bảng nào lưu các số liệu đó. Mọi con số trên trang
-                này vì vậy để trống. Muốn xem sự cố có thật, dùng trang
-                <a href="@Url.Action("Diagnostics", "Home")" class="text-blue-400 underline">Chẩn đoán Từ xa</a>
-                hoặc <a href="@Url.Action("Alarms", "Home")" class="text-blue-400 underline">Alarm &amp; Event</a>.
+                Hệ thống chưa ghi giờ chạy, số chu kỳ hay lịch bảo trì định kỳ của thiết bị —
+                không có cảm biến nào đưa các số đó về. Nhưng lịch sử mất kết nối PLC thì có thật,
+                và nó trả lời được câu hỏi hằng ngày: <strong class="text-slate-300">khối nào cần đi xem trước</strong>.
+                Ba cột số tách riêng vì hai khối cùng số lần mất có thể cần hai việc sửa khác hẳn nhau.
             </p>
         </div>
 
@@ -54,38 +53,38 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div class="bg-red-950/40 border border-red-700/50 rounded p-3">
                 <div class="text-red-400 text-xs font-mono">
-                    Khẩn cấp
+                    Đang mất kết nối
                 </div>
-                <div class="text-red-300 text-2xl font-mono font-bold">—</div>
+                <div class="text-red-300 text-2xl font-mono font-bold"><span id="mt-dangmat">…</span></div>
                 <div class="text-red-500 text-[10px] font-mono">
-                    thiết bị
+                    khối đang mất kết nối
                 </div>
             </div>
             <div class="bg-orange-950/40 border border-orange-700/50 rounded p-3">
                 <div class="text-orange-400 text-xs font-mono">
-                    Ưu tiên cao
+                    Chập chờn
                 </div>
-                <div class="text-orange-300 text-2xl font-mono font-bold">—</div>
+                <div class="text-orange-300 text-2xl font-mono font-bold"><span id="mt-chapchon">…</span></div>
                 <div class="text-orange-500 text-[10px] font-mono">
-                    thiết bị
+                    khối mất nhiều lần
                 </div>
             </div>
             <div class="bg-card border border-slate-700/50 rounded p-3">
                 <div class="text-slate-400 text-xs font-mono">
-                    Tổng work order
+                    Khối có sự cố
                 </div>
-                <div class="text-slate-200 text-2xl font-mono font-bold">—</div>
+                <div class="text-slate-200 text-2xl font-mono font-bold"><span id="mt-sokhoi">…</span></div>
                 <div class="text-slate-500 text-[10px] font-mono">
-                    trong 30 ngày
+                    khối / 30 ngày qua
                 </div>
             </div>
             <div class="bg-card border border-slate-700/50 rounded p-3">
                 <div class="text-slate-400 text-xs font-mono">
-                    Block đang bảo trì
+                    Tổng thời gian mất
                 </div>
-                <div class="text-violet-300 text-2xl font-mono font-bold">—</div>
+                <div class="text-violet-300 text-2xl font-mono font-bold"><span id="mt-tonggio">…</span></div>
                 <div class="text-slate-500 text-[10px] font-mono">
-                    block
+                    cộng dồn trong 30 ngày
                 </div>
             </div>
         </div>
@@ -137,48 +136,28 @@
                     </path>
                 </svg>
                 <span class="text-slate-300 text-xs font-semibold">
-                    Danh sách Work Order đề xuất
+                    Khối cần kiểm tra, xếp theo mức độ
                 </span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-xs font-mono">
                     <thead class="border-b border-slate-700/60 bg-slate-800/50">
                         <tr>
-                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
-                                Zone
-                            </th>
-                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
-                                Block
-                            </th>
-                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
-                                Thiết bị
-                            </th>
-                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
-                                Loại
-                            </th>
-                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
-                                Chu kỳ hiện tại
-                            </th>
-                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
-                                Giới hạn
-                            </th>
-                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
-                                Runtime (h)
-                            </th>
-                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
-                                Ngày dự kiến
-                            </th>
-                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">
-                                Ưu tiên
-                            </th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Zone</th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Khối</th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Địa chỉ PLC</th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Số lần mất</th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Tổng thời gian mất</th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Lần lâu nhất</th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Gần nhất</th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Dạng hỏng</th>
+                            <th class="text-left text-slate-500 px-3 py-2.5 font-medium whitespace-nowrap">Gợi ý kiểm tra</th>
                         </tr>
                     </thead>
                     @* Nam dong lich bao tri cu deu bia: ten thiet bi, so chu ky,
                        gio chay va ngay bao tri tiep theo o nhung khoi khong ton tai. *@
-                    <tbody>
-                        <tr><td colspan="8" class="px-3 py-10 text-center text-slate-500 text-[11px]">
-                            Chưa có lịch bảo trì nào. Hệ thống không ghi nhận giờ chạy hay số chu kỳ của thiết bị.
-                        </td></tr>
+                    <tbody id="mt-body">
+                        <tr><td colspan="9" class="px-3 py-10 text-center text-slate-500 text-[11px]">Đang đọc…</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -709,3 +688,112 @@
 </script>
     </div>
 </div>
+
+@* ===================== BAI TOAN: KHOI NAO CAN DI XEM TRUOC =====================
+   Doc /BaoCao/DoTinCayKhoi — gom canh_bao PLC-CONN-01 theo khoi. *@
+<script>
+    (function () {
+        "use strict";
+
+        var URL_TC  = "@Url.Action("DoTinCayKhoi", "BaoCao")";
+        var NHIP_MS = 30000;
+        var GACH    = "\u2014";
+
+        function el(id) { return document.getElementById(id); }
+        function dat(id, v) { var e = el(id); if (e) e.textContent = v; }
+
+        function esc(v) {
+            return String(v === null || v === undefined ? "" : v)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        // Phut -> chu de doc. Mot con so 2269 khong noi len dieu gi voi nguoi truc;
+        // "1 ngay 13 gio" thi co.
+        function chuThoiGian(phut) {
+            if (!phut) return GACH;
+            if (phut < 60) return phut + " phút";
+            var gio = Math.floor(phut / 60), du = phut % 60;
+            if (gio < 24) return gio + " giờ" + (du ? " " + du + " phút" : "");
+            var ngay = Math.floor(gio / 24);
+            return ngay + " ngày" + (gio % 24 ? " " + (gio % 24) + " giờ" : "");
+        }
+
+        var MAU = {
+            dang_mat:   ["text-rose-400",    "bg-rose-950/20 border-rose-800/30",    "Đang mất"],
+            chap_chon:  ["text-amber-400",   "bg-amber-950/20 border-amber-800/30",  "Chập chờn"],
+            chet_lau:   ["text-orange-400",  "bg-orange-950/20 border-orange-800/30","Chết lâu"],
+            thoang_qua: ["text-slate-400",   "bg-slate-800 border-slate-700",        "Thoáng qua"]
+        };
+
+        function ve(d) {
+            dat("mt-dangmat",  d.dang_mat);
+            dat("mt-chapchon", d.chap_chon);
+            dat("mt-sokhoi",   d.so_khoi);
+            dat("mt-tonggio",  d.tong_gio + "h");
+
+            var body = el("mt-body");
+            if (!body) return;
+
+            if (!d.items.length) {
+                body.innerHTML = '<tr><td colspan="9" class="px-3 py-10 text-center text-slate-500 text-[11px]">' +
+                                 'Không khối nào mất kết nối trong ' + esc(d.so_ngay) + ' ngày qua.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = d.items.map(function (x) {
+                var m = MAU[x.dang] || MAU.thoang_qua;
+                return '<tr class="border-b border-slate-850 hover:bg-slate-800/20">' +
+                         '<td class="px-3 py-2 text-slate-400">Z' + esc(x.zone_id) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-200 font-bold">Khối ' + esc(x.block_no) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-500">' + esc(x.ip || GACH) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-300">' + esc(x.so_lan) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-300">' + esc(chuThoiGian(x.tong_phut)) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-400">' + esc(chuThoiGian(x.lan_lau_nhat)) + '</td>' +
+                         '<td class="px-3 py-2 text-slate-500">' + esc(x.gan_nhat) + '</td>' +
+                         '<td class="px-3 py-2"><span class="' + m[0] + ' font-semibold ' + m[1] +
+                           ' border px-1.5 py-0.5 rounded text-[10px]">' + m[2] + '</span></td>' +
+                         '<td class="px-3 py-2 text-slate-400">' + esc(x.goi_y) + '</td>' +
+                       '</tr>';
+            }).join("");
+        }
+
+        function tick() {
+            fetch(URL_TC + "?ngay=30", { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    if (d && d.error) throw new Error(d.error);
+                    ve(d);
+                })
+                .catch(function (e) {
+                    // Xoa het chu khong giu so cu: mot trang bao tri hien so cu
+                    // trong y het mot he thong khong co van de gi.
+                    ["mt-dangmat", "mt-chapchon", "mt-sokhoi", "mt-tonggio"].forEach(function (i) {
+                        dat(i, GACH);
+                    });
+                    var b = el("mt-body");
+                    if (b) {
+                        b.innerHTML = '<tr><td colspan="9" class="px-3 py-10 text-center text-red-400 text-[11px]">' +
+                                      'Không đọc được: ' + esc(e.message) + '</td></tr>';
+                    }
+                });
+        }
+
+        var timer = null;
+        function batDau() { if (timer) return; tick(); timer = setInterval(tick, NHIP_MS); }
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) { if (timer) { clearInterval(timer); timer = null; } }
+            else batDau();
+        });
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", batDau);
+        } else {
+            batDau();
+        }
+    })();
+</script>

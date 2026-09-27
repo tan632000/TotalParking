@@ -118,6 +118,75 @@ namespace TotalParking.Services
             return ds;
         }
 
+        // ===================== DO TIN CAY TUNG KHOI PLC =====================
+        // Tra loi cau hoi bao tri hoi hang ngay: KHOI NAO CAN DI XEM TRUOC?
+        //
+        // Nguon la canh_bao voi ma_loi PLC-CONN-01, do CanhBaoPlcService sinh ra
+        // khi mot khoi mat ket noi qua nguong. Moi dong mang thoi diem xay ra va
+        // thoi diem dong, nen tinh duoc ba thu khac nhau ve ban chat:
+        //
+        //   so_lan       — mat BAO NHIEU LAN  -> chap chon
+        //   tong_phut    — mat TONG BAO LAU   -> muc do anh huong
+        //   lan_lau_nhat — lan mat DAI NHAT   -> chet han hay chi thoang qua
+        //
+        // Hai khoi cung "mat ket noi 2 lan" co the can hai viec sua khac han nhau:
+        // mot cai chap chon vai giay (nghi cap hoac switch), mot cai chet 38 tieng
+        // (nghi nguon hoac thiet bi). Gop chung thanh mot con so la vut di dung
+        // phan giup ky thuat vien chon mang theo do nghe gi.
+        //
+        // COALESCE(het_luc, NOW()): su co DANG MO van dang tinh gio, nen lay moc
+        // la bay gio. Bo qua chung se lam khoi dang hong nhat trong nhu it van de
+        // nhat.
+        private const string SqlDoTinCay =
+            "SELECT c.block_no, MIN(c.zone_id) AS zone_id, MIN(d.ip_address) AS ip_address, " +
+            "       COUNT(*) AS so_lan, " +
+            "       SUM(TIMESTAMPDIFF(MINUTE, c.xay_ra_luc, COALESCE(c.het_luc, NOW(3)))) AS tong_phut, " +
+            "       MAX(TIMESTAMPDIFF(MINUTE, c.xay_ra_luc, COALESCE(c.het_luc, NOW(3)))) AS lan_lau_nhat, " +
+            "       SUM(c.het_luc IS NULL) AS dang_mo, " +
+            "       MAX(c.xay_ra_luc) AS gan_nhat " +
+            "FROM   canh_bao c " +
+            "LEFT   JOIN block b ON b.block_no = c.block_no " +
+            "LEFT   JOIN plc_device d ON d.block_id = b.block_id " +
+            "WHERE  c.ma_loi = 'PLC-CONN-01' " +
+            "  AND  c.block_no IS NOT NULL " +
+            "  AND  c.xay_ra_luc >= NOW(3) - INTERVAL @so_ngay DAY " +
+            "GROUP  BY c.block_no " +
+            // Dang mat ket noi len dau bat ke so lan: do la viec phai lam NGAY.
+            "ORDER  BY dang_mo DESC, so_lan DESC, tong_phut DESC";
+
+        public IList<DoTinCayKhoi> DoTinCay(int soNgay)
+        {
+            if (soNgay <= 0) soNgay = 30;
+            if (soNgay > 365) soNgay = 365;
+
+            var ds = new List<DoTinCayKhoi>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = SqlDoTinCay;
+                cmd.Parameters.AddWithValue("@so_ngay", soNgay);
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        ds.Add(new DoTinCayKhoi
+                        {
+                            BlockNo    = Convert.ToInt32(r["block_no"]),
+                            ZoneId     = Int(r, "zone_id"),
+                            Ip         = Str(r, "ip_address"),
+                            SoLan      = Convert.ToInt32(r["so_lan"]),
+                            TongPhut   = Convert.ToInt32(r["tong_phut"]),
+                            LanLauNhat = Convert.ToInt32(r["lan_lau_nhat"]),
+                            DangMo     = Convert.ToInt32(r["dang_mo"]) > 0,
+                            GanNhat    = Convert.ToDateTime(r["gan_nhat"])
+                        });
+                    }
+                }
+            }
+            return ds;
+        }
+
         private static string Str(IDataRecord r, string cot)
         {
             object v = r[cot];
@@ -153,6 +222,50 @@ namespace TotalParking.Services
         // Số khối trả về cho HMI. 0 khi không tìm thấy.
         public int?     BlockTraVe { get; set; }
         public string   LyDo       { get; set; }
+    }
+
+    public class DoTinCayKhoi
+    {
+        public int      BlockNo    { get; set; }
+        public int?     ZoneId     { get; set; }
+        public string   Ip         { get; set; }
+        public int      SoLan      { get; set; }
+        public int      TongPhut   { get; set; }
+        public int      LanLauNhat { get; set; }
+        public bool     DangMo     { get; set; }
+        public DateTime GanNhat    { get; set; }
+
+        // ===================== PHAN LOAI DE BIET MANG GI THEO =====================
+        // Khong phai mot thang diem — mot goi y ve DANG hong, vi hai khoi cung so
+        // lan mat co the can hai viec sua khac han nhau.
+        public string Dang
+        {
+            get
+            {
+                if (DangMo) return "dang_mat";
+                if (SoLan >= 2) return "chap_chon";
+                if (LanLauNhat >= 60) return "chet_lau";
+                return "thoang_qua";
+            }
+        }
+
+        public string GoiY
+        {
+            get
+            {
+                switch (Dang)
+                {
+                    case "dang_mat":
+                        return "Đang mất kết nối ngay lúc này — kiểm tra trước tiên.";
+                    case "chap_chon":
+                        return "Mất nhiều lần rồi tự nối lại: nghi đầu nối, dây mạng hoặc cổng switch.";
+                    case "chet_lau":
+                        return "Mất liền một mạch rồi mới nối lại: nghi mất nguồn hoặc thiết bị treo.";
+                    default:
+                        return "Mất thoáng qua, có thể là nhiễu. Theo dõi thêm.";
+                }
+            }
+        }
     }
 
     public class NguyenNhanLoi
