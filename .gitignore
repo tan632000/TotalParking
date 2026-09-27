@@ -90,6 +90,14 @@ plans/*
 *.7z
 .omp/
 
+# =========================================================================
+# Du lieu sinh ra luc chay (TotalParking)
+# =========================================================================
+# Ban do thanh ghi va anh chup trang thai o do, do cong cu trong tools/ ghi ra
+# moi lan kiem tra PLC. Chung la ket qua cua mot lan chay cu the, khong phai ma
+# nguon, va sinh them file moi sau moi lan dung.
+TotalParking/App_Data/backup/
+
 # Python (cong cu trong tools/)
 __pycache__/
 *.pyc

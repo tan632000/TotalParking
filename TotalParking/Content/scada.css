@@ -4886,7 +4886,182 @@ body {
         border-bottom-width: 1px
     }
 
+
+
+    /* ===================== LOP THEM BANG TAY =====================
+       scada.css la ban Tailwind trich xuat: no chi chua lop ma lan build
+       goc gap duoc. Cac lop duoi day duoc view dung nhung trinh trich xuat
+       bo lo, va lop khong ton tai thi CSS khong bao loi — no im lang khong
+       lam gi. Do tren 21 trang truoc khi them: 457 cho dang giu gia tri mac
+       dinh cua thuoc tinh, tuc khoang cach va kich thuoc deu sai.
+
+       Neu chay lai trinh trich xuat, khoi nay se mat. */
+
+    .gap-2\.5 {
+        gap: calc(var(--spacing)*2.5)
+    }
+
+    .gap-3\.5 {
+        gap: calc(var(--spacing)*3.5)
+    }
+
+    .gap-5 {
+        gap: calc(var(--spacing)*5)
+    }
+
+    .gap-x-2 {
+        column-gap: calc(var(--spacing)*2)
+    }
+
+    .gap-x-5 {
+        column-gap: calc(var(--spacing)*5)
+    }
+
+    .gap-y-1 {
+        row-gap: calc(var(--spacing)*1)
+    }
+
+    .col-span-2 {
+        grid-column: span 2/span 2
+    }
+
+    .col-span-full {
+        grid-column: 1/-1
+    }
+
+    .h-3 {
+        height: calc(var(--spacing)*3)
+    }
+
+    .h-4\.5 {
+        height: calc(var(--spacing)*4.5)
+    }
+
+    .h-1\/3 {
+        height: 33.333333%
+    }
+
+    .h-\[320px\] {
+        height: 320px
+    }
+
+    .h-fit {
+        height: fit-content
+    }
+
+    .w-4\.5 {
+        width: calc(var(--spacing)*4.5)
+    }
+
+    .w-32 {
+        width: calc(var(--spacing)*32)
+    }
+
+    .w-40 {
+        width: calc(var(--spacing)*40)
+    }
+
+    .w-60 {
+        width: calc(var(--spacing)*60)
+    }
+
+    .w-80 {
+        width: calc(var(--spacing)*80)
+    }
+
+    .w-2\/5 {
+        width: 40%
+    }
+
+    .w-3\/5 {
+        width: 60%
+    }
+
+    .w-\[1px\] {
+        width: 1px
+    }
+
+    .max-h-60 {
+        max-height: calc(var(--spacing)*60)
+    }
+
+    .max-w-5xl {
+        max-width: 64rem
+    }
+
+    .max-w-lg {
+        max-width: var(--container-lg)
+    }
+
+    .min-h-\[100px\] {
+        min-height: 100px
+    }
+
+    .min-h-\[140px\] {
+        min-height: 140px
+    }
+
+    .min-h-\[240px\] {
+        min-height: 240px
+    }
+
+    .min-h-\[380px\] {
+        min-height: 380px
+    }
+
+    .min-w-\[240px\] {
+        min-width: 240px
+    }
+
+    .top-0\.5 {
+        top: calc(var(--spacing)*.5)
+    }
+
+    .bottom-1\.5 {
+        bottom: calc(var(--spacing)*1.5)
+    }
+
+    .bottom-2 {
+        bottom: calc(var(--spacing)*2)
+    }
+
+    .justify-end {
+        justify-content: flex-end
+    }
+
+    .self-stretch {
+        align-self: stretch
+    }
+
+    :where(.space-y-6>:not(:last-child)) {
+        --tw-space-y-reverse: 0;
+        margin-block-start: calc(calc(var(--spacing)*6)*var(--tw-space-y-reverse));
+        margin-block-end: calc(calc(var(--spacing)*6)*calc(1 - var(--tw-space-y-reverse)))
+    }
+
+    :where(.space-y-0\.5>:not(:last-child)) {
+        --tw-space-y-reverse: 0;
+        margin-block-start: calc(calc(var(--spacing)*.5)*var(--tw-space-y-reverse));
+        margin-block-end: calc(calc(var(--spacing)*.5)*calc(1 - var(--tw-space-y-reverse)))
+    }
+
+    :where(.space-y-1\.5>:not(:last-child)) {
+        --tw-space-y-reverse: 0;
+        margin-block-start: calc(calc(var(--spacing)*1.5)*var(--tw-space-y-reverse));
+        margin-block-end: calc(calc(var(--spacing)*1.5)*calc(1 - var(--tw-space-y-reverse)))
+    }
+
+    :where(.space-x-1\.5>:not(:last-child)) {
+        --tw-space-x-reverse: 0;
+        margin-inline-start: calc(calc(var(--spacing)*1.5)*var(--tw-space-x-reverse));
+        margin-inline-end: calc(calc(var(--spacing)*1.5)*calc(1 - var(--tw-space-x-reverse)))
+    }
+
     @media (min-width: 40rem) {
+
+        .sm\:w-auto {
+            width: auto
+        }
         .sm\:block {
             display: block
         }
@@ -4949,6 +5124,22 @@ body {
     }
 
     @media (min-width: 48rem) {
+
+        .md\:flex-row {
+            flex-direction: row
+        }
+
+        .md\:items-center {
+            align-items: center
+        }
+
+        .md\:self-auto {
+            align-self: auto
+        }
+
+        .md\:justify-end {
+            justify-content: flex-end
+        }
         .md\:absolute {
             position: absolute
         }
@@ -5021,6 +5212,14 @@ body {
        tien to lg: 27 lan. Dat giua khoi 48rem va 80rem cho dung thu tu xep
        chong: rong hon thi ghi de hep hon. */
     @media (min-width: 64rem) {
+
+        .lg\:flex-row {
+            flex-direction: row
+        }
+
+        .lg\:items-center {
+            align-items: center
+        }
         .lg\:col-span-2 {
             grid-column: span 2/span 2
         }
