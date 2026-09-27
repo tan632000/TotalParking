@@ -4,6 +4,13 @@
 
 <div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
     <div class="space-y-6">
+        @* Ba den trang thai cu luon xanh ma khong kiem tra gi, va nhan cu ghi
+           sai giao thuc: he thong dung Omron FINS/TCP. *@
+        <div class="mb-4 rounded-lg border border-amber-800/40 bg-amber-950/20 px-4 py-3">
+            <div class="text-amber-400 text-xs font-bold mb-1">Chưa giám sát sức khoẻ máy chủ</div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">Hệ thống không đọc tải CPU, bộ nhớ, dung lượng ổ đĩa hay tình trạng UPS, và chưa có cơ chế sao lưu tự động nào.</p>
+        </div>
+
         <!-- Header -->
         <div class="flex justify-between items-center pb-4 border-b border-slate-800">
             <div>
@@ -11,9 +18,7 @@
                 <p class="text-slate-400 text-sm mt-1">Giám sát tải CPU server, kết nối Database, trạng thái UPS và lịch sử backup dữ liệu.</p>
             </div>
             <div class="flex gap-2">
-                <button onclick="alert('Bắt đầu backup Database khẩn cấp...')" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/50 transition-colors font-semibold shadow-md">
-                    Backup Ngay
-                </button>
+                
             </div>
         </div>
 
@@ -21,23 +26,23 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
                 <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">TẢI CPU SERVER</div>
-                <div class="text-emerald-400 text-2xl font-mono font-bold mt-1">12.5%</div>
-                <div class="text-[10px] text-slate-500 font-mono mt-1">Nhiệt độ CPU: 42°C</div>
+                <div class="text-slate-500 text-2xl font-mono font-bold mt-1">—</div>
+                <div class="text-[10px] text-slate-500 font-mono mt-1">chưa đo</div>
             </div>
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
                 <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">BỘ NHỚ RAM TIÊU THỤ</div>
-                <div class="text-emerald-400 text-2xl font-mono font-bold mt-1">4.2 GB / 16 GB</div>
-                <div class="text-[10px] text-slate-500 font-mono mt-1">Ổ cứng trống: 180 GB</div>
+                <div class="text-slate-500 text-2xl font-mono font-bold mt-1">—</div>
+                <div class="text-[10px] text-slate-500 font-mono mt-1">chưa đo</div>
             </div>
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
                 <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">TRẠNG THÁI PIN UPS</div>
-                <div class="text-emerald-400 text-2xl font-mono font-bold mt-1">100%</div>
-                <div class="text-[10px] text-emerald-500 font-mono mt-1">Thời gian dự phòng: 45 phút</div>
+                <div class="text-slate-500 text-2xl font-mono font-bold mt-1">—</div>
+                <div class="text-[10px] text-slate-500 font-mono mt-1">chưa đo</div>
             </div>
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 shadow-md">
                 <div class="text-slate-500 text-[10px] font-mono uppercase tracking-wider">SAO LƯU GẦN NHẤT</div>
-                <div class="text-blue-400 text-2xl font-mono font-bold mt-1">02:00 Hôm nay</div>
-                <div class="text-[10px] text-emerald-400 font-mono mt-1">Trạng thái: THÀNH CÔNG</div>
+                <div class="text-blue-400 text-2xl font-mono font-bold mt-1">—</div>
+                <div class="text-[10px] text-slate-500 font-mono mt-1">chưa có bản sao lưu nào</div>
             </div>
         </div>
 
@@ -51,15 +56,15 @@
                 <div class="space-y-2 text-[11px] font-mono">
                     <div class="flex justify-between">
                         <span class="text-slate-500">Database Server connection:</span>
-                        <span class="text-emerald-400">● CONNECTED</span>
+                        <span class="text-slate-500">○ chưa giám sát</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-500">Modbus TCP Heartbeat:</span>
-                        <span class="text-emerald-400">● ONLINE</span>
+                        <span class="text-slate-500">Nhịp FINS/TCP tới PLC:</span>
+                        <span class="text-slate-500">○ chưa giám sát</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-slate-500">Replication Slave:</span>
-                        <span class="text-emerald-400">● SYNCHRONIZED</span>
+                        <span class="text-slate-500">○ chưa giám sát</span>
                     </div>
                 </div>
             </div>
@@ -80,19 +85,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b border-slate-800/40">
-                                <td class="px-3 py-2 text-slate-300">05/07/2026 02:00:05</td>
-                                <td class="px-3 py-2 text-slate-400">Tự động (Daily)</td>
-                                <td class="px-3 py-2 text-slate-400">142 MB</td>
-                                <td class="px-3 py-2 text-emerald-400">Thành công</td>
-                            </tr>
-                            <tr class="border-b border-slate-800/40">
-                                <td class="px-3 py-2 text-slate-300">04/07/2026 02:00:03</td>
-                                <td class="px-3 py-2 text-slate-400">Tự động (Daily)</td>
-                                <td class="px-3 py-2 text-slate-400">141 MB</td>
-                                <td class="px-3 py-2 text-emerald-400">Thành công</td>
-                            </tr>
-                        </tbody>
+                        <tr><td colspan="4" class="px-3 py-10 text-center text-slate-500 text-[11px]">
+                            Chưa có bản sao lưu nào được ghi nhận.
+                        </td></tr>
+                    </tbody>
                     </table>
                 </div>
             </div>

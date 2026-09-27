@@ -4,6 +4,11 @@
 
 <div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
     <div class="space-y-6">
+        <div class="mb-4 rounded-lg border border-amber-800/40 bg-amber-950/20 px-4 py-3">
+            <div class="text-amber-400 text-xs font-bold mb-1">Chưa có hệ thống tài khoản</div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">Ứng dụng hiện không có lớp xác thực: không đăng nhập, không phân quyền, và không ghi lại ai đã thao tác gì. Nhật ký thật duy nhất đang có là tệp ghi thao tác PLC trong App_Data, chưa được đưa lên giao diện.</p>
+        </div>
+
         <!-- Header -->
         <div class="flex justify-between items-center pb-4 border-b border-slate-800">
             <div>
@@ -93,62 +98,15 @@
         </div>
 
         <!-- Active Users Online Section -->
-        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl">
-            <h3 class="text-white text-sm font-bold mb-4 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users text-blue-500"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                Tài khoản đang kết nối trực tuyến
-            </h3>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <!-- User 1 -->
-                <div class="bg-slate-900/80 rounded-lg border border-slate-800 p-4">
-                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[9px] font-mono font-bold bg-violet-950/60 border-violet-700/50 text-violet-300 mb-2">Giám sát</div>
-                    <div class="text-slate-100 text-sm font-bold font-mono">supervisor01</div>
-                    <div class="text-slate-500 text-[10px] font-mono mt-1">Đăng nhập: 07:00:00</div>
-                    <div class="text-slate-500 text-[10px] font-mono">Địa chỉ IP: 192.168.1.10</div>
-                    <div class="flex items-center gap-1.5 mt-2.5">
-                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        <span class="text-green-500 text-[10px] font-bold font-mono">Trực tuyến</span>
-                    </div>
-                </div>
-
-                <!-- User 2 -->
-                <div class="bg-slate-900/80 rounded-lg border border-slate-800 p-4">
-                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[9px] font-mono font-bold bg-blue-950/60 border-blue-700/50 text-blue-300 mb-2">Vận hành viên</div>
-                    <div class="text-slate-100 text-sm font-bold font-mono">operator01</div>
-                    <div class="text-slate-500 text-[10px] font-mono mt-1">Đăng nhập: 07:30:00</div>
-                    <div class="text-slate-500 text-[10px] font-mono">Địa chỉ IP: 192.168.1.11</div>
-                    <div class="flex items-center gap-1.5 mt-2.5">
-                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        <span class="text-green-500 text-[10px] font-bold font-mono">Trực tuyến</span>
-                    </div>
-                </div>
-
-                <!-- User 3 -->
-                <div class="bg-slate-900/80 rounded-lg border border-slate-800 p-4">
-                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[9px] font-mono font-bold bg-amber-950/60 border-amber-700/50 text-amber-300 mb-2">Bảo trì</div>
-                    <div class="text-slate-100 text-sm font-bold font-mono">maintenance01</div>
-                    <div class="text-slate-500 text-[10px] font-mono mt-1">Đăng nhập: 08:00:00</div>
-                    <div class="text-slate-500 text-[10px] font-mono">Địa chỉ IP: 192.168.1.15</div>
-                    <div class="flex items-center gap-1.5 mt-2.5">
-                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        <span class="text-green-500 text-[10px] font-bold font-mono">Trực tuyến</span>
-                    </div>
-                </div>
-
-                <!-- User 4 -->
-                <div class="bg-slate-900/80 rounded-lg border border-slate-800 p-4">
-                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[9px] font-mono font-bold bg-teal-950/60 border-teal-700/50 text-teal-300 mb-2">Hỗ trợ từ xa</div>
-                    <div class="text-slate-100 text-sm font-bold font-mono">remote_eng01</div>
-                    <div class="text-slate-500 text-[10px] font-mono mt-1">Đăng nhập: 07:55:00</div>
-                    <div class="text-slate-500 text-[10px] font-mono">Địa chỉ IP: 203.162.x.x</div>
-                    <div class="flex items-center gap-1.5 mt-2.5">
-                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        <span class="text-green-500 text-[10px] font-bold font-mono">Trực tuyến</span>
-                    </div>
-                </div>
-            </div>
+    @* Ba the "tai khoan dang truc tuyen" deu bia: ten nguoi dung, gio dang
+       nhap va dia chi IP. Ung dung khong co lop xac thuc nao nen khong the
+       biet ai dang mo trang. *@
+    <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl">
+        <h3 class="text-white text-sm font-bold mb-4">Tài khoản đang kết nối trực tuyến</h3>
+        <div class="text-center text-slate-500 text-[11px] py-8">
+            Hệ thống chưa có đăng nhập nên không theo dõi được phiên làm việc nào.
         </div>
+    </div>
 
         <!-- Audit Log Section -->
         <div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
@@ -181,90 +139,9 @@
                         </tr>
                     </thead>
                     <tbody id="auditTableBody">
-                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Supervisor">
-                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">08:40:22</td>
-                            <td class="px-4 py-3 text-slate-200 font-bold">supervisor01</td>
-                            <td class="px-4 py-3">
-                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-violet-950/60 border-violet-700/50 text-violet-300">Giám sát</span>
-                            </td>
-                            <td class="px-4 py-3 text-slate-400 font-bold">Block A-04</td>
-                            <td class="px-4 py-3 text-slate-300 font-bold">Reset Alarm E-0401</td>
-                            <td class="px-4 py-3">
-                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                    THÀNH CÔNG
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-slate-300">Đã xử lý xong quá nhiệt motor trượt, reset biến tần VFD chính.</td>
-                        </tr>
-
-                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Maintenance">
-                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">08:35:10</td>
-                            <td class="px-4 py-3 text-slate-200 font-bold">maintenance01</td>
-                            <td class="px-4 py-3">
-                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-amber-950/60 border-amber-700/50 text-amber-300">Bảo trì</span>
-                            </td>
-                            <td class="px-4 py-3 text-slate-400 font-bold">Block B-03</td>
-                            <td class="px-4 py-3 text-slate-300 font-bold">Chuyển Maintenance Mode</td>
-                            <td class="px-4 py-3">
-                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                    THÀNH CÔNG
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-slate-300">Bảo trì định kỳ vòng xích truyền động và tra dầu khay nâng.</td>
-                        </tr>
-
-                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Operator">
-                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">08:28:05</td>
-                            <td class="px-4 py-3 text-slate-200 font-bold">operator01</td>
-                            <td class="px-4 py-3">
-                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-blue-950/60 border-blue-700/50 text-blue-300">Vận hành viên</span>
-                            </td>
-                            <td class="px-4 py-3 text-slate-400 font-bold">Block A-03</td>
-                            <td class="px-4 py-3 text-slate-300 font-bold">Acknowledge Alarm W-0302</td>
-                            <td class="px-4 py-3">
-                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                    THÀNH CÔNG
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-slate-300">Nhân viên đã đến kiểm tra và đóng kín cửa tủ điện điều khiển ngoài.</td>
-                        </tr>
-
-                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Remote Support">
-                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">07:55:30</td>
-                            <td class="px-4 py-3 text-slate-200 font-bold">remote_eng01</td>
-                            <td class="px-4 py-3">
-                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-teal-950/60 border-teal-700/50 text-teal-300">Hỗ trợ từ xa</span>
-                            </td>
-                            <td class="px-4 py-3 text-slate-400 font-bold">Block C-03</td>
-                            <td class="px-4 py-3 text-slate-300 font-bold">Xem logs chẩn đoán kết nối</td>
-                            <td class="px-4 py-3">
-                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                    THÀNH CÔNG
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-slate-300">Đọc lịch sử truyền thông để chẩn đoán lỗi ngắt kết nối Modbus TCP.</td>
-                        </tr>
-
-                        <tr class="audit-row border-b border-slate-850 hover:bg-slate-800/10" data-role="Admin">
-                            <td class="px-4 py-3 text-slate-400 whitespace-nowrap">07:30:00</td>
-                            <td class="px-4 py-3 text-slate-200 font-bold">admin01</td>
-                            <td class="px-4 py-3">
-                                <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold bg-rose-950/60 border-rose-700/50 text-rose-300">Quản trị</span>
-                            </td>
-                            <td class="px-4 py-3 text-slate-400 font-bold">Block A-04</td>
-                            <td class="px-4 py-3 text-slate-300 font-bold">Kích hoạt Forced Mode (Cưỡng bức)</td>
-                            <td class="px-4 py-3">
-                                <span class="inline-flex items-center gap-1 text-rose-500 font-bold">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="15" x2="9" y1="9" y2="15"></line></svg>
-                                    BỊ TỪ CHỐI
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-rose-400 font-semibold">Mật khẩu xác thực cấp 2 không trùng khớp - Hủy yêu cầu.</td>
-                        </tr>
+                        <tr><td colspan="7" class="px-4 py-10 text-center text-slate-500 text-[11px]">
+                            Chưa có nhật ký thao tác. Hệ thống chưa có lớp đăng nhập nên không ghi được ai đã làm gì.
+                        </td></tr>
                     </tbody>
                 </table>
             </div>

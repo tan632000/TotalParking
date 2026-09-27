@@ -1,5 +1,54 @@
+@using System.Configuration
 @{
     Layout = "~/Views/Shared/_ScadaLayout.cshtml";
+
+    // ===================== DOC CAU HINH THAT =====================
+    // Truoc day moi o tren trang nay mang mot gia tri bia: IP 192.168.1.100,
+    // cong 502, CSDL 192.168.1.200/lumi_scada_tp, email va webhook khong ton
+    // tai, cung mot "khoa xac thuc" gia hien trong o mat khau.
+    //
+    // Khong o nao trong so do khop voi he thong dang chay, va nut "Luu cai dat"
+    // khong gui gi ca — trang nay chua bao gio doc hay ghi cau hinh.
+    //
+    // Nay doc thang Web.config. Trang o che CHI DOC: sua cau hinh van phai sua
+    // file roi khoi dong lai ung dung, va mot o nhap cho phep go vao nhung khong
+    // luu duoc la mot loi hua suong.
+    Func<string, string> cfg = k =>
+    {
+        var v = ConfigurationManager.AppSettings[k];
+        return string.IsNullOrWhiteSpace(v) ? null : v;
+    };
+
+    string chuaCauHinh = "chưa cấu hình";
+
+    // Chuoi ket noi co mat khau — CHI lay Server va Database, khong bao gio in
+    // ca chuoi ra man hinh.
+    string dbServer = chuaCauHinh;
+    string dbName = chuaCauHinh;
+    var cs = ConfigurationManager.ConnectionStrings["TotalParking"];
+    if (cs == null && ConfigurationManager.ConnectionStrings.Count > 0)
+    {
+        cs = ConfigurationManager.ConnectionStrings[ConfigurationManager.ConnectionStrings.Count - 1];
+    }
+    if (cs != null)
+    {
+        foreach (var phan in cs.ConnectionString.Split(';'))
+        {
+            var cap = phan.Split(new[] { '=' }, 2);
+            if (cap.Length == 2)
+            {
+                var ten = cap[0].Trim().ToLowerInvariant();
+                if (ten == "server" || ten == "host" || ten == "data source")
+                {
+                    dbServer = cap[1].Trim();
+                }
+                else if (ten == "database" || ten == "initial catalog")
+                {
+                    dbName = cap[1].Trim();
+                }
+            }
+        }
+    }
 }
 
 <div class="p-6 pb-12 min-h-[calc(100vh-3.5rem)] text-slate-100" style="background: rgb(15, 23, 42); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
@@ -8,17 +57,11 @@
         <div class="flex justify-between items-center pb-4 border-b border-slate-800">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight">Cấu hình hệ thống (Settings)</h1>
-                <p class="text-slate-400 text-sm mt-1">Quản lý tham số truyền thông Modbus, kết nối cơ sở dữ liệu, phân phối cảnh báo và tích hợp API ngoài.</p>
+                <p class="text-slate-400 text-sm mt-1">Tham số đang chạy, đọc từ Web.config. Trang ở chế độ chỉ đọc: sửa cấu hình phải sửa file rồi khởi động lại ứng dụng. Ghi chú cũ nói giao thức Modbus, thực tế hệ thống dùng Omron FINS/TCP. Phân phối cảnh báo và tích hợp API ngoài.</p>
             </div>
             <div class="flex gap-2">
-                <button onclick="alert('Đã khôi phục cài đặt gốc về mặc định thành công!')" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-350 border border-slate-700 transition-colors font-bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
-                    Khôi phục mặc định
-                </button>
-                <button onclick="alert('Đã lưu tất cả cấu hình hệ thống thành công!')" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/50 transition-colors font-bold shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path><path d="M7 3v4a1 1 0 0 0 1 1h7"></path></svg>
-                    Lưu cài đặt
-                </button>
+                
+                
             </div>
         </div>
 
@@ -28,24 +71,24 @@
             <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
                 <h3 class="text-white text-sm font-bold flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi text-blue-400"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg>
-                    Kết nối truyền thông PLC/HMI
+                    Kết nối truyền thông PLC (Omron FINS/TCP)
                 </h3>
                 <div class="space-y-3">
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">IP SCADA Server (Lumi SCADA)</label>
-                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="192.168.1.100">
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@(cfg("pgs:ccuHost") ?? chuaCauHinh)" readonly>
                     </div>
                     <div>
-                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Port Modbus TCP</label>
-                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="502">
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Cổng FINS/TCP của PLC</label>
+                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="9600" readonly>
                     </div>
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Chu kỳ Polling (ms)</label>
-                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="500">
+                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@(cfg("plc:slotScanMs") ?? chuaCauHinh)" readonly>
                     </div>
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Timeout kết nối (ms)</label>
-                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="3000">
+                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@(cfg("pgs:timeoutMs") ?? chuaCauHinh)" readonly>
                     </div>
                 </div>
             </div>
@@ -59,19 +102,19 @@
                 <div class="space-y-3">
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Địa chỉ máy chủ CSDL</label>
-                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="192.168.1.200">
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@dbServer" readonly>
                     </div>
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Tên CSDL</label>
-                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="lumi_scada_tp">
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@dbName" readonly>
                     </div>
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Lưu trữ cảnh báo & sự kiện (ngày)</label>
-                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="730">
+                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@chuaCauHinh" readonly>
                     </div>
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Tần suất tự động Backup (Giờ)</label>
-                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="12">
+                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@chuaCauHinh" readonly>
                     </div>
                 </div>
             </div>
@@ -85,15 +128,15 @@
                 <div class="space-y-3">
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Email nhận cảnh báo Critical</label>
-                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="admin@totalparking.vn">
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@chuaCauHinh" readonly>
                     </div>
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">SMS nhận cảnh báo quá nhiệt motor</label>
-                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="+84901234567">
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@chuaCauHinh" readonly>
                     </div>
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Ngưỡng báo động rung lắc (mm/s²)</label>
-                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="15">
+                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@chuaCauHinh" readonly>
                     </div>
                 </div>
             </div>
@@ -107,11 +150,11 @@
                 <div class="space-y-3">
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Webhook URL gửi cảnh báo lỗi</label>
-                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="https://api.totalparking.vn/v1/webhook/alarms">
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@chuaCauHinh" readonly>
                     </div>
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Khoá xác thực Webhook</label>
-                        <input type="password" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-250 font-mono outline-none focus:border-blue-500 transition-colors" value="secret_token_placeholder_scada_2026">
+                        <input type="password" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-250 font-mono outline-none focus:border-blue-500 transition-colors" value="" readonly>
                     </div>
                     <div class="flex items-center gap-2 py-1">
                         <input type="checkbox" id="chkWebHookCritical" checked class="rounded bg-slate-800 border-slate-750">
