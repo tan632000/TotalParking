@@ -11,7 +11,7 @@ namespace TotalParking.Services
     // Trang Báo cáo có bốn bảng, cả bốn từng viết cứng trong HTML. Hai bảng ở
     // đây là hai bảng DUY NHẤT có nguồn dữ liệu thật:
     //
-    //   Lịch sử quẹt thẻ  -> plc_request (572 lượt)
+    //   Lịch sử tìm xe    -> plc_request (572 lượt quẹt thẻ tìm xe)
     //   Nguyên nhân lỗi   -> canh_bao nhóm theo ma_loi
     //
     // Hai bảng còn lại — lịch sử bảo trì và doanh thu — KHÔNG có nguồn. Cơ sở
@@ -21,20 +21,29 @@ namespace TotalParking.Services
     // nối bừa vào một nguồn gần đúng.
     public class BaoCaoRepository
     {
-        // ===================== VÌ SAO KHÔNG PHẢI "VÀO / RA" =====================
-        // Bảng cũ có cột "Loại hành động" với hai giá trị Gửi xe vào / Lấy xe ra.
-        // plc_request KHÔNG phân biệt được hai chiều đó — nó ghi lại mỗi lượt
-        // ladder hỏi "thẻ này có được phép không", và câu trả lời là cho vào hay
-        // từ chối kèm lý do. Nên cột đó đổi thành KẾT QUẢ, đúng thứ dữ liệu biết.
+        // ===================== ĐÂY LÀ NHẬT KÝ TÌM XE =====================
+        // Bảng plc_request từng là nhật ký xin phép cho xe vào, nhưng ý nghĩa hai
+        // cột đã bị đổi mục đích khi chuyển sang hợp đồng mới, và chính
+        // PlcConnection.SafeLogFind ghi lại điều đó:
         //
-        // LEFT JOIN parking_card chứ không JOIN: một lượt quẹt thẻ lạ vẫn là một
-        // sự kiện có thật và người trực cần thấy nó — đó chính là lúc hay có
-        // chuyện. 19/572 lượt không đọc được mã thẻ, 53 lượt mã không có trong
-        // danh mục; giấu chúng đi là giấu đúng phần đáng xem.
+        //     result_permit = TÌM THẤY XE hay không   (không còn là "cho vào")
+        //     result_class  = SỐ BLOCK trả về          (không còn là 2200/2600)
+        //     reject_reason = INVALID_CARD khi KHÔNG TÌM THẤY
+        //
+        // Dữ liệu xác nhận: result_class mang giá trị 103, 95, 64, 96, 72 — đó là
+        // số khối, không phải hạng tải.
+        //
+        // Bản đầu của bảng này gán nhãn "Cho vào / Từ chối", khiến người trực
+        // tưởng hệ thống đang chặn thẻ khách. Thực tế 445 lượt INVALID_CARD chỉ
+        // là 445 lần quẹt thẻ tìm xe mà xe không có trong bãi — câu trả lời đúng,
+        // vì bãi đang gần như trống.
+        //
+        // LEFT JOIN parking_card chứ không JOIN: một lượt quẹt bằng thẻ lạ vẫn là
+        // một sự kiện có thật và người trực cần thấy nó.
         private const string SqlLichSu =
             "SELECT r.received_at, b.block_no, b.zone_id, " +
             "       r.card_code, c.card_no, c.plate, c.vehicle_name, " +
-            "       r.result_permit, r.reject_reason " +
+            "       r.result_permit, r.result_class, r.reject_reason " +
             "FROM   plc_request r " +
             "JOIN   block b ON b.block_id = r.block_id " +
             "LEFT   JOIN parking_card c ON c.card_code = r.card_code " +
@@ -66,8 +75,9 @@ namespace TotalParking.Services
                             SoThe       = Str(r, "card_no"),
                             BienSo      = Str(r, "plate"),
                             TenXe       = Str(r, "vehicle_name"),
-                            ChoVao      = Bool(r, "result_permit"),
-                            LyDoTuChoi  = Str(r, "reject_reason")
+                            TimThay     = Bool(r, "result_permit"),
+                            BlockTraVe  = Int(r, "result_class"),
+                            LyDo        = Str(r, "reject_reason")
                         });
                     }
                 }
@@ -138,8 +148,11 @@ namespace TotalParking.Services
         public string   SoThe      { get; set; }
         public string   BienSo     { get; set; }
         public string   TenXe      { get; set; }
-        public bool?    ChoVao     { get; set; }
-        public string   LyDoTuChoi { get; set; }
+        // null = lượt quẹt chưa được trả lời. Khác hẳn "không tìm thấy".
+        public bool?    TimThay    { get; set; }
+        // Số khối trả về cho HMI. 0 khi không tìm thấy.
+        public int?     BlockTraVe { get; set; }
+        public string   LyDo       { get; set; }
     }
 
     public class NguyenNhanLoi

@@ -23,8 +23,8 @@ namespace TotalParking.Controllers
                 {
                     now = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
                     total = ds.Count,
-                    cho_vao = ds.Count(x => x.ChoVao == true),
-                    tu_choi = ds.Count(x => x.ChoVao == false),
+                    tim_thay  = ds.Count(x => x.TimThay == true),
+                    khong_thay = ds.Count(x => x.TimThay == false),
                     items = ds.Select(x => new
                     {
                         luc      = x.Luc.ToString("dd-MM-yyyy HH:mm:ss"),
@@ -34,11 +34,12 @@ namespace TotalParking.Controllers
                         so_the   = x.SoThe,
                         bien_so  = x.BienSo,
                         ten_xe   = x.TenXe,
-                        // null = chua tra loi. Giao dien phai phan biet no voi
-                        // "bi tu choi", neu khong thi mot lenh treo se bi doc
-                        // thanh mot the bi chan.
-                        cho_vao  = x.ChoVao,
-                        ly_do    = x.LyDoTuChoi
+                        // null = chua tra loi, KHAC voi "khong tim thay". Mot
+                        // luot treo bi doc thanh "xe khong co trong bai" se lam
+                        // nguoi truc di tim mot chiec xe dang nam yen o do.
+                        tim_thay   = x.TimThay,
+                        block_tra_ve = x.BlockTraVe,
+                        ly_do      = x.LyDo
                     }).ToArray()
                 });
             }

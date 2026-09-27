@@ -290,21 +290,19 @@
                                 <input type="text" id="history-search-text" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono placeholder-slate-600 outline-none focus:border-blue-500" placeholder="VD: 30H-88877...">
                             </div>
                             <div>
-                                <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Hành động</label>
+                                <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Kết quả tra cứu</label>
                                 <select id="history-filter-action" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500">
-                                    <option value="all">Tất cả hành động</option>
-                                    <option value="in">Gửi xe vào</option>
-                                    <option value="out">Lấy xe ra</option>
+                                    @* Hai lua chon cu "Gui xe vao / Lay xe ra" khong ap dung: day la
+                                       nhat ky TIM XE, khong phan biet chieu vao ra. *@
+                                    <option value="all">Tất cả kết quả</option>
+                                    <option value="found">Thấy xe</option>
+                                    <option value="notfound">Không thấy</option>
                                 </select>
                             </div>
-                            <div>
-                                <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Trạng thái đỗ</label>
-                                <select id="history-filter-status" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500">
-                                    <option value="all">Tất cả trạng thái</option>
-                                    <option value="parked">Đang gửi (trong bãi)</option>
-                                    <option value="retrieved">Đã lấy ra (xuất bãi)</option>
-                                </select>
-                            </div>
+                            @* Bo loc "Trang thai do" da go: no loc theo data-status ma cac dong
+                               doc tu may chu khong mang thuoc tinh do, va khai niem
+                               "dang gui / da lay ra" thuoc ve bang phien gui xe — bang do rong. *@
+                            
                             <div class="flex items-end gap-2">
                                 <button onclick="filterHistoryTable()" class="flex-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition-colors font-semibold flex items-center justify-center gap-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
@@ -318,8 +316,8 @@
 
                         <!-- Results count indicator -->
                         <div class="text-[10px] font-mono text-slate-500 mb-2 flex justify-between items-center px-1">
-                            <span id="history-results-count">Tìm thấy 5 lượt gửi xe khớp với điều kiện</span>
-                            <span class="text-blue-400">● Thời gian cập nhật: Realtime</span>
+                            <span id="history-results-count">đang đọc…</span>
+                            <span class="text-blue-400">● Làm mới mỗi 20 giây</span>
                         </div>
                         
                         <div class="overflow-x-auto">
@@ -327,16 +325,15 @@
                                 <thead class="border-b border-slate-700/60 bg-slate-800/30">
                                     <tr>
                                         <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thời gian</th>
-                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Thời gian</th>
                                         <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Mã thẻ</th>
                                         <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Biển số xe</th>
                                         <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Xe</th>
-                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Khối</th>
-                                        @* "Ket qua" chu khong phai "Loai hanh dong": plc_request ghi
-                                           lai moi luot ladder hoi "the nay co duoc phep khong", no
-                                           khong phan biet duoc xe vao voi xe ra. Cot "Phi thanh toan"
-                                           bi bo han vi khong co nguon. *@
+                                        <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Quẹt tại khối</th>
+                                        @* Bang nay la nhat ky TIM XE. Cot "Ket qua" noi tim thay xe
+                                           o khoi nao hay khong, khong phai cho vao hay tu choi. Cot
+                                           "Phi thanh toan" bi bo han vi khong co nguon. *@
                                         <th class="text-left text-slate-400 px-3 py-2.5 font-bold">Kết quả</th>
+                                    </tr>
                                 </thead>
                                     <tbody id="bc-lichsu-body">
                                         <tr><td colspan="6" class="px-3 py-8 text-center text-slate-500 text-[11px]">Đang đọc…</td></tr>
@@ -855,7 +852,6 @@
         const dateTo = document.getElementById('history-date-to').value;
         const searchText = document.getElementById('history-search-text').value.toUpperCase().trim();
         const action = document.getElementById('history-filter-action').value;
-        const status = document.getElementById('history-filter-status').value;
         const zone = document.getElementById('history-filter-zone').value;
 
         const table = document.getElementById('history-data-table');
@@ -869,8 +865,11 @@
             const rowTime = tr.getAttribute('data-time') || tr.cells[0].textContent.trim();
             const rowCard = (tr.getAttribute('data-card') || tr.cells[1].textContent.trim()).toUpperCase();
             const rowPlate = (tr.getAttribute('data-plate') || tr.cells[2].textContent.trim()).toUpperCase();
-            const rowAction = tr.getAttribute('data-action') || (tr.cells[5].textContent.includes('Gửi') ? 'in' : 'out');
-            const rowStatus = tr.getAttribute('data-status') || (tr.cells[5].textContent.includes('Gửi') ? 'parked' : 'retrieved');
+            // Doc tu chinh o "Ket qua" dang hien, khong tu thuoc tinh data-*:
+            // cac dong ve tu may chu khong mang thuoc tinh do.
+            const chuKetQua = tr.cells.length > 5 ? tr.cells[5].textContent : '';
+            const rowAction = chuKetQua.includes('Thấy ở khối') ? 'found'
+                            : chuKetQua.includes('Không thấy')  ? 'notfound' : 'other';
             const locationText = tr.cells[4].textContent.toUpperCase();
             
             // Extract Zone
@@ -911,7 +910,7 @@
             if (action !== 'all' && rowAction !== action) match = false;
 
             // 5. Status
-            if (status !== 'all' && rowStatus !== status) match = false;
+
 
             // 6. Zone
             if (zone !== 'all' && rowZone !== zone) match = false;
@@ -1261,21 +1260,29 @@
             if (!body) return;
 
             if (!d.items.length) {
-                bao("bc-lichsu-body", 6, "text-slate-500", "Chưa có lượt quẹt thẻ nào.");
+                bao("bc-lichsu-body", 6, "text-slate-500", "Chưa có lượt tra cứu nào.");
+                var d0 = el("history-results-count");
+                if (d0) d0.textContent = "chưa có lượt tra cứu nào";
                 return;
             }
 
             body.innerHTML = d.items.map(function (x) {
-                // Ba trang thai chu khong phai hai: cho_vao = null nghia la luot
-                // quet chua duoc tra loi, khac han voi bi tu choi.
+                // Day la nhat ky TIM XE, khong phai cho xe vao. Ban dau bang nay
+                // gan nhan "Cho vao / Tu choi" — sai, va sai theo huong lam nguoi
+                // truc tuong he thong dang chan the khach. plc_request ghi lai moi
+                // luot tai xe quet the de hoi "xe toi o dau", va result_permit la
+                // TIM THAY hay khong. Xem ghi chu tai BaoCaoRepository.
+                //
+                // Ba trang thai chu khong phai hai: null nghia la luot quet chua
+                // duoc tra loi, khac han voi "khong thay xe".
                 var ketQua;
-                if (x.cho_vao === true) {
-                    ketQua = '<span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Cho vào</span>';
-                } else if (x.cho_vao === false) {
-                    ketQua = '<span class="text-rose-400 font-semibold bg-rose-950/20 border border-rose-800/30 px-1.5 py-0.5 rounded text-[10px]">Từ chối</span>' +
-                             (x.ly_do ? ' <span class="text-slate-500 text-[10px]">' + esc(x.ly_do) + '</span>' : '');
+                if (x.tim_thay === true) {
+                    ketQua = '<span class="text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">Thấy ở khối ' +
+                             esc(x.block_tra_ve) + '</span>';
+                } else if (x.tim_thay === false) {
+                    ketQua = '<span class="text-slate-400 font-semibold bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-[10px]">Không thấy xe</span>';
                 } else {
-                    ketQua = '<span class="text-slate-400 text-[10px]">chưa trả lời</span>';
+                    ketQua = '<span class="text-amber-400 text-[10px]">chưa trả lời</span>';
                 }
 
                 // The la (khong co trong danh muc) phai nhin ra ngay: do la luc
@@ -1291,11 +1298,17 @@
                            (x.bien_so ? esc(x.bien_so) : '<span class="text-slate-600 font-normal">chưa có</span>') + '</td>' +
                          '<td class="px-3 py-2 text-slate-400">' +
                            (x.ten_xe ? esc(x.ten_xe) : '<span class="text-slate-600">—</span>') + '</td>' +
-                         '<td class="px-3 py-2 text-blue-400 font-bold">Khối ' + esc(x.block_no) +
+                         '<td class="px-3 py-2 text-slate-400">Khối ' + esc(x.block_no) +
                            (x.zone_id ? ' <span class="text-slate-500 font-normal">(Z' + esc(x.zone_id) + ')</span>' : '') + '</td>' +
                          '<td class="px-3 py-2">' + ketQua + '</td>' +
                        '</tr>';
             }).join("");
+
+            var dem = el("history-results-count");
+            if (dem) {
+                dem.textContent = d.items.length + " lượt tra cứu gần nhất · " +
+                                  d.tim_thay + " thấy xe · " + d.khong_thay + " không thấy";
+            }
         }
 
         // ------------------------------------------------- nguyen nhan loi
@@ -1355,6 +1368,8 @@
                 .catch(function (e) {
                     bao("bc-lichsu-body", 6, "text-red-400",
                         "Không đọc được lịch sử: " + esc(e.message));
+                    var dl = el("history-results-count");
+                    if (dl) dl.textContent = "không đọc được";
                 });
 
             fetch(URL_LOI, { cache: "no-store" })
