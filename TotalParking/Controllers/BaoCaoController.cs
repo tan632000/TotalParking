@@ -206,6 +206,85 @@ namespace TotalParking.Controllers
             }
         }
 
+        // GET /BaoCao/XeVaoTheoThu?ngay=30
+        //
+        // KHÔNG phải "mật độ đỗ xe %". Hệ thống không lưu lịch sử sức chứa nên
+        // tỉ lệ lấp đầy của một ngày trong quá khứ là không tính được. Đây là
+        // số xe vào bãi, trung bình mỗi ngày của từng thứ.
+        public ActionResult XeVaoTheoThu(int? ngay)
+        {
+            try
+            {
+                int soNgay = ngay ?? 30;
+                var ds = _repo.XeVaoTheoNgayTrongTuan(soNgay);
+
+                // Cột cao nhất làm mốc 100%. Thanh ngang chỉ để so sánh các thứ
+                // với nhau, nên tỉ lệ này là tương đối — nói rõ ở nhãn giao diện
+                // để không ai đọc nhầm thành tỉ lệ lấp đầy bãi.
+                double dinh = 0;
+                foreach (var x in ds) if (x.TrungBinh > dinh) dinh = x.TrungBinh;
+
+                string[] ten = { "", "Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư",
+                                 "Thứ Năm", "Thứ Sáu", "Thứ Bảy" };
+
+                return Json2(200, new
+                {
+                    now = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
+                    so_ngay = soNgay,
+                    tong_xe = ds.Sum(x => x.TongXe),
+                    dinh = Math.Round(dinh, 1),
+                    items = ds.Select(x => new
+                    {
+                        thu      = x.Thu,
+                        ten      = x.Thu >= 1 && x.Thu <= 7 ? ten[x.Thu] : "?",
+                        so_ngay  = x.SoNgay,
+                        tong_xe  = x.TongXe,
+                        trung_binh = Math.Round(x.TrungBinh, 1),
+                        phan_tram  = dinh == 0 ? 0 : (int)Math.Round(x.TrungBinh * 100 / dinh)
+                    }).ToArray()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(503, new { error = ex.Message });
+            }
+        }
+
+        // GET /BaoCao/PhanLoaiXe?ngay=30
+        public ActionResult PhanLoaiXe(int? ngay)
+        {
+            try
+            {
+                int soNgay = ngay ?? 30;
+                var ds = _repo.PhanLoaiXe(soNgay);
+                int tong = ds.Sum(x => x.SoXe);
+
+                return Json2(200, new
+                {
+                    now = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
+                    so_ngay = soNgay,
+                    tong,
+                    // Tổng số xe bị từ chối, đếm độc lập với nhãn phân loại của
+                    // camera: camera xếp nhóm quá khổ nhiều hơn hẳn số lần bãi
+                    // thật sự từ chối.
+                    tong_tu_choi = ds.Sum(x => x.SoTuChoi),
+                    items = ds.Select(x => new
+                    {
+                        nhan       = x.Nhan,
+                        so_xe      = x.SoXe,
+                        so_tu_choi = x.SoTuChoi,
+                        ti_le      = tong == 0 ? 0 : Math.Round((double)x.SoXe * 100 / tong, 1),
+                        cao_min    = x.CaoMin,
+                        cao_max    = x.CaoMax
+                    }).ToArray()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(503, new { error = ex.Message });
+            }
+        }
+
         private ActionResult Json2(int status, object payload)
         {
             Response.StatusCode = status;

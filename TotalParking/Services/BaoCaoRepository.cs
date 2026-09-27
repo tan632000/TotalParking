@@ -328,6 +328,108 @@ namespace TotalParking.Services
             return ds;
         }
 
+        // ===================== XE VAO THEO NGAY TRONG TUAN =====================
+        // Trang nay truoc do hien "mat do do xe theo ngay trong tuan (%)". He
+        // thong KHONG luu lich su suc chua, chi biet suc chua HIEN TAI qua
+        // v_zone_capacity, nen khong the tinh duoc ti le lap day cua thu Ba
+        // tuan truoc. Cau hoi tra loi duoc bang du lieu that la: moi thu co
+        // bao nhieu xe vao bai.
+        //
+        // Chia cho so ngay thuc te gop vao, khong lay tong: cua so 30 ngay
+        // khong chia het cho 7, nen co thu gop 5 lan co thu gop 4. Lay tong
+        // thi thu nao lot them mot lan se luon trong nhu ngay dong nhat.
+        //
+        // Chi dem ROUTED. MANUAL va REJECTED la xe khong vao duoc bai, gop
+        // vao se lam con so "xe vao" to hon thuc te.
+        private const string SqlXeVaoTheoThu =
+            "SELECT DAYOFWEEK(decided_at) AS thu, " +
+            "       COUNT(DISTINCT DATE(decided_at)) AS so_ngay, " +
+            "       COUNT(*) AS tong_xe " +
+            "FROM   vehicle_routing " +
+            "WHERE  outcome = 'ROUTED' " +
+            "  AND  decided_at >= CURDATE() - INTERVAL @so_ngay DAY " +
+            "GROUP  BY thu ORDER BY thu";
+
+        public IList<XeVaoTheoThu> XeVaoTheoNgayTrongTuan(int soNgay)
+        {
+            if (soNgay <= 0)  soNgay = 30;
+            if (soNgay > 365) soNgay = 365;
+
+            var ds = new List<XeVaoTheoThu>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = SqlXeVaoTheoThu;
+                cmd.Parameters.AddWithValue("@so_ngay", soNgay);
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        ds.Add(new XeVaoTheoThu
+                        {
+                            // MySQL dem CN = 1, T7 = 7
+                            Thu    = Convert.ToInt32(r["thu"]),
+                            SoNgay = Convert.ToInt32(r["so_ngay"]),
+                            TongXe = Convert.ToInt32(r["tong_xe"])
+                        });
+                    }
+                }
+            }
+            return ds;
+        }
+
+        // ===================== PHAN LOAI PHUONG TIEN =====================
+        // Nhan phan loai lay NGUYEN VAN tu cot category do camera ghi, khong
+        // gom lai thanh SUV / Sedan / qua kho. Bo nhan that trong du lieu la
+        // "Tieu chuan/Nhe", "Qua kho", "Tieu chuan/Nang" va vai dong SUV,
+        // Sedan con sot tu dot cu; ep chung vao ba o co san la bia lai mot
+        // lan nua duoi hinh thuc khac.
+        //
+        // Dem rieng so xe BI TU CHOI. Camera xep 177 lan vao nhom qua kho
+        // nhung chi 24 lan bai that su tu choi — hai con so khac nhau, gop
+        // lam mot se lam nguoi doc tuong bai dang tu choi gap bay lan thuc te.
+        private const string SqlPhanLoaiXe =
+            "SELECT COALESCE(e.category, '(không đọc được)') AS nhan, " +
+            "       COUNT(*) AS so_xe, " +
+            "       SUM(r.outcome = 'REJECTED') AS so_tu_choi, " +
+            "       MIN(e.height_mm) AS cao_min, MAX(e.height_mm) AS cao_max " +
+            "FROM   vehicle_routing r " +
+            "JOIN   vehicle_event   e ON e.event_id = r.event_id " +
+            "WHERE  r.decided_at >= CURDATE() - INTERVAL @so_ngay DAY " +
+            "GROUP  BY nhan ORDER BY so_xe DESC";
+
+        public IList<NhomXe> PhanLoaiXe(int soNgay)
+        {
+            if (soNgay <= 0)  soNgay = 30;
+            if (soNgay > 365) soNgay = 365;
+
+            var ds = new List<NhomXe>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = SqlPhanLoaiXe;
+                cmd.Parameters.AddWithValue("@so_ngay", soNgay);
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        ds.Add(new NhomXe
+                        {
+                            Nhan     = Str(r, "nhan"),
+                            SoXe     = Convert.ToInt32(r["so_xe"]),
+                            SoTuChoi = r["so_tu_choi"] == DBNull.Value
+                                           ? 0 : Convert.ToInt32(r["so_tu_choi"]),
+                            CaoMin   = Int(r, "cao_min"),
+                            CaoMax   = Int(r, "cao_max")
+                        });
+                    }
+                }
+            }
+            return ds;
+        }
+
         private static string Str(IDataRecord r, string cot)
         {
             object v = r[cot];
@@ -347,6 +449,28 @@ namespace TotalParking.Services
             object v = r[cot];
             return v == DBNull.Value ? (bool?)null : Convert.ToInt32(v) == 1;
         }
+    }
+
+    public class XeVaoTheoThu
+    {
+        // 1 = Chu Nhat ... 7 = Thu Bay, theo quy uoc cua MySQL DAYOFWEEK
+        public int Thu    { get; set; }
+        public int SoNgay { get; set; }
+        public int TongXe { get; set; }
+
+        public double TrungBinh
+        {
+            get { return SoNgay == 0 ? 0 : (double)TongXe / SoNgay; }
+        }
+    }
+
+    public class NhomXe
+    {
+        public string Nhan     { get; set; }
+        public int    SoXe     { get; set; }
+        public int    SoTuChoi { get; set; }
+        public int?   CaoMin   { get; set; }
+        public int?   CaoMax   { get; set; }
     }
 
     public class LuotQuetThe

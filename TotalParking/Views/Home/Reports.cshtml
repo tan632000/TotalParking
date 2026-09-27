@@ -88,84 +88,31 @@
                 <div id="panel-density" class="report-panel active space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
-                            <h3 class="text-white text-sm font-bold mb-3">Mật độ đỗ xe theo ngày trong tuần (%)</h3>
-                            <div class="space-y-3 pt-2">
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1 font-mono">
-                                        <span class="text-slate-300">Thứ Hai (T2)</span>
-                                        <span class="text-blue-400 font-bold">64%</span>
-                                    </div>
-                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 64%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1 font-mono">
-                                        <span class="text-slate-300">Thứ Ba (T3)</span>
-                                        <span class="text-blue-400 font-bold">78%</span>
-                                    </div>
-                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 78%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1 font-mono">
-                                        <span class="text-slate-300">Thứ Tư (T4)</span>
-                                        <span class="text-blue-400 font-bold">70%</span>
-                                    </div>
-                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 70%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1 font-mono">
-                                        <span class="text-slate-300">Thứ Năm (T5)</span>
-                                        <span class="text-blue-400 font-bold">85%</span>
-                                    </div>
-                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 85%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1 font-mono">
-                                        <span class="text-slate-300">Thứ Sáu (T6)</span>
-                                        <span class="text-blue-400 font-bold">92%</span>
-                                    </div>
-                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 92%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1 font-mono">
-                                        <span class="text-slate-300">Thứ Bảy (T7)</span>
-                                        <span class="text-amber-500 font-bold">55%</span>
-                                    </div>
-                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-amber-500 rounded-full" style="width: 55%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1 font-mono">
-                                        <span class="text-slate-300">Chủ Nhật (CN)</span>
-                                        <span class="text-emerald-400 font-bold">40%</span>
-                                    </div>
-                                    <div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width: 40%"></div></div>
-                                </div>
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-white text-sm font-bold">Xe vào bãi theo ngày trong tuần</h3>
+                                <span id="md-tomtat" class="text-[10px] font-mono text-slate-500">đang đọc…</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 mb-3 leading-relaxed">
+                                Trung bình số xe vào mỗi ngày, gộp theo thứ trong 30 ngày qua.
+                                Thanh ngang so sánh các thứ với nhau, không phải tỉ lệ lấp đầy bãi —
+                                hệ thống không lưu lịch sử sức chứa nên tỉ lệ đó không tính được.
+                            </p>
+                            <div id="md-thu" class="space-y-3 pt-2">
+                                <div class="text-slate-500 text-[11px] text-center py-8">Đang đọc…</div>
                             </div>
                         </div>
 
                         <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
-                            <h3 class="text-white text-sm font-bold mb-3">Phân loại phương tiện đỗ thực tế</h3>
-                            <div class="flex flex-col justify-center h-full space-y-4 pt-2">
-                                <div class="flex items-center justify-between p-3 bg-slate-800/20 rounded-lg border border-slate-800">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-3 h-3 rounded bg-blue-500 inline-block"></span>
-                                        <span class="text-xs font-semibold text-slate-300">Xe SUV (Gầm cao)</span>
-                                    </div>
-                                    <span class="font-mono text-xs font-bold text-blue-400">47% (37 xe)</span>
-                                </div>
-                                <div class="flex items-center justify-between p-3 bg-slate-800/20 rounded-lg border border-slate-800">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span>
-                                        <span class="text-xs font-semibold text-slate-300">Xe Sedan / Hatchback</span>
-                                    </div>
-                                    <span class="font-mono text-xs font-bold text-emerald-400">49% (54 xe)</span>
-                                </div>
-                                <div class="flex items-center justify-between p-3 bg-slate-800/20 rounded-lg border border-slate-800">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-3 h-3 rounded bg-rose-500 inline-block"></span>
-                                        <span class="text-xs font-semibold text-slate-300">Xe quá khổ (Từ chối)</span>
-                                    </div>
-                                    <span class="font-mono text-xs font-bold text-rose-400">4% (3 xe)</span>
-                                </div>
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-white text-sm font-bold">Phân loại phương tiện theo camera</h3>
+                                <span id="md-tuchoi" class="text-[10px] font-mono text-slate-500">—</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 mb-3 leading-relaxed">
+                                Nhãn lấy nguyên văn từ camera nhận dạng. Xe bị từ chối đếm riêng:
+                                camera xếp nhóm quá khổ nhiều hơn hẳn số lần bãi thật sự từ chối.
+                            </p>
+                            <div id="md-loai" class="space-y-2 pt-2">
+                                <div class="text-slate-500 text-[11px] text-center py-8">Đang đọc…</div>
                             </div>
                         </div>
                     </div>
@@ -1398,6 +1345,142 @@
             if (document.hidden) { if (timer) { clearInterval(timer); timer = null; } }
             else batDau();
         });
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", batDau);
+        } else {
+            batDau();
+        }
+    })();
+</script>
+
+
+@* ===================== TAB MAT DO: DU LIEU THAT =====================
+   Doc /BaoCao/XeVaoTheoThu va /BaoCao/PhanLoaiXe. *@
+<script>
+    (function () {
+        "use strict";
+
+        var URL_THU  = "@Url.Action("XeVaoTheoThu", "BaoCao")";
+        var URL_LOAI = "@Url.Action("PhanLoaiXe", "BaoCao")";
+        var GACH     = "\u2014";
+
+        function el(id) { return document.getElementById(id); }
+
+        function esc(v) {
+            return String(v === null || v === undefined ? "" : v)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        // Xoa luon nhan tom tat. Thieu buoc nay thi khi API chet, o so lieu
+        // bao do con nhan phia tren van dung o "dang doc..." mai mai — nguoi
+        // dung tuong trang con dang tai chu khong phai da hong.
+        function loi(id, nhan, e) {
+            var k = el(id);
+            if (k) {
+                k.innerHTML = '<div class="text-red-400 text-[11px] text-center py-8">' +
+                              'Không đọc được: ' + esc(e.message) + '</div>';
+            }
+            var n = el(nhan);
+            if (n) n.textContent = GACH;
+        }
+
+        // ---------------------------------------- xe vao theo thu
+        function veThu(d) {
+            var tt = el("md-tomtat");
+            if (tt) tt.textContent = d.tong_xe + " xe / " + d.so_ngay + " ngày";
+
+            var k = el("md-thu");
+            if (!k) return;
+
+            if (!d.items.length) {
+                k.innerHTML = '<div class="text-slate-500 text-[11px] text-center py-8">' +
+                              'Chưa có xe nào vào bãi trong ' + esc(d.so_ngay) + ' ngày qua.</div>';
+                return;
+            }
+
+            // Xep lai T2..CN. MySQL tra ve CN = 1 nen theo thu tu goc thi Chu
+            // Nhat nhay len dau bang, nguoc voi cach doc lich cua nguoi dung.
+            var xep = d.items.slice().sort(function (a, b) {
+                return (a.thu === 1 ? 8 : a.thu) - (b.thu === 1 ? 8 : b.thu);
+            });
+
+            k.innerHTML = xep.map(function (x) {
+                // Chi to mau ngay dong nhat va vang nhat. To mau theo nguong co
+                // dinh thi phai biet truoc bai nay "bao nhieu xe la dong", ma
+                // con so do khong ai dinh nghia.
+                var mau = x.phan_tram === 100 ? "text-amber-400"
+                        : (x.phan_tram <= 45 ? "text-emerald-400" : "text-blue-400");
+                // Mau dat bang style noi tuyen. scada.css khong co bg-blue-500
+                // lan bg-emerald-500 (chi co bg-amber-500), nen dung lop thi hai
+                // mau kia ra trong suot va thanh ngang bien mat — dung loi ma
+                // ban cu mac phai: chi ngay Thu Bay to amber la nhin thay thanh.
+                var nen = x.phan_tram === 100 ? "rgb(245,158,11)"
+                        : (x.phan_tram <= 45 ? "rgb(16,185,129)" : "rgb(59,130,246)");
+                return '<div title="' + esc(x.ten) + ': ' + x.tong_xe + ' xe trong ' +
+                         x.so_ngay + ' ngày">' +
+                         '<div class="flex justify-between text-xs mb-1 font-mono">' +
+                           '<span class="text-slate-300">' + esc(x.ten) + '</span>' +
+                           '<span class="' + mau + ' font-bold">' + x.trung_binh + ' xe/ngày</span>' +
+                         '</div>' +
+                         '<div class="h-2 bg-slate-800 rounded-full overflow-hidden">' +
+                           '<div class="h-full rounded-full" style="width:' + x.phan_tram +
+                             '%;background:' + nen + ';"></div>' +
+                         '</div>' +
+                       '</div>';
+            }).join("");
+        }
+
+        // ---------------------------------------- phan loai xe
+        function veLoai(d) {
+            var tt = el("md-tuchoi");
+            if (tt) tt.textContent = d.tong + " xe · " + d.tong_tu_choi + " bị từ chối";
+
+            var k = el("md-loai");
+            if (!k) return;
+
+            if (!d.items.length) {
+                k.innerHTML = '<div class="text-slate-500 text-[11px] text-center py-8">' +
+                              'Chưa có xe nào được phân loại.</div>';
+                return;
+            }
+
+            k.innerHTML = d.items.map(function (x) {
+                var cao = (x.cao_min && x.cao_max)
+                            ? (x.cao_min === x.cao_max ? x.cao_min + "mm"
+                                                       : x.cao_min + GACH + x.cao_max + "mm")
+                            : "chưa đo được";
+                return '<div class="flex items-center justify-between p-2.5 bg-slate-800/20 rounded-lg border border-slate-800">' +
+                         '<div class="min-w-0">' +
+                           '<div class="text-xs font-semibold text-slate-300 truncate">' + esc(x.nhan) + '</div>' +
+                           '<div class="text-[10px] text-slate-500 font-mono">cao ' + esc(cao) +
+                             (x.so_tu_choi ? ' · <span class="text-rose-400">' + x.so_tu_choi +
+                                             ' bị từ chối</span>' : '') + '</div>' +
+                         '</div>' +
+                         '<span class="font-mono text-xs font-bold text-slate-300 shrink-0 pl-3">' +
+                           x.ti_le + '% (' + x.so_xe + ' xe)</span>' +
+                       '</div>';
+            }).join("");
+        }
+
+        function tai(url, ve, id, nhan) {
+            fetch(url + "?ngay=30", { cache: "no-store" })
+                .then(function (r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                })
+                .then(function (d) {
+                    if (d && d.error) throw new Error(d.error);
+                    ve(d);
+                })
+                .catch(function (e) { loi(id, nhan, e); });
+        }
+
+        function batDau() {
+            tai(URL_THU,  veThu,  "md-thu",  "md-tomtat");
+            tai(URL_LOAI, veLoai, "md-loai", "md-tuchoi");
+        }
 
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", batDau);
