@@ -39,7 +39,7 @@
             </div>
 
             <!-- Right 2 Columns: Asset Details & Telemetry -->
-            <div class="lg:col-span-2 space-y-6">
+            <div id="assetDetail" class="lg:col-span-2 space-y-6">
                 <!-- Info Display -->
                 <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-6 shadow-xl space-y-6">
                     <div class="flex justify-between items-start pb-4 border-b border-slate-800">
@@ -217,6 +217,36 @@
                 }).join("");
         }
 
+        // ===================== CUON TOI BANG CHI TIET =====================
+        // Trang nay xep mot cot, nen bang chi tiet nam duoi cay 112 chip. Bam
+        // mot chip xong ma khong cuon thi man hinh khong doi gi, va nguoi dung
+        // tuong nut hong trong khi du lieu da duoc dien san o duoi.
+        function cuonToiChiTiet() {
+            var khung = el("assetDetail");
+            var tieuDe = el("assetName");
+            if (!khung || !tieuDe) return;
+
+            // Thanh dau trang duoc ghim cung (position:fixed, cao 56px) nen no
+            // KHONG chiem cho trong luong cuon. Cuon dung bang chieu cao cua no
+            // thi tieu de bang chi tiet se nam lot sau thanh do.
+            var LE_TREN = 56 + 12;
+
+            // Tieu de da nam trong tam nhin thi thoi. Thieu kiem tra nay, bam
+            // chip thu hai se keo trang giat nguoc len mot lan nua vo co.
+            var o = tieuDe.getBoundingClientRect();
+            if (o.top >= LE_TREN && o.top <= window.innerHeight - 40) return;
+
+            var dich = khung.getBoundingClientRect().top + window.pageYOffset - LE_TREN;
+
+            // Do trinh duyet co hieu behavior:"smooth" hay khong. Trinh duyet cu
+            // khong hieu se coi ca doi tuong la toa do x va nhay ve dau trang.
+            if ("scrollBehavior" in document.documentElement.style) {
+                window.scrollTo({ top: dich, behavior: "smooth" });
+            } else {
+                window.scrollTo(0, dich);
+            }
+        }
+
         window.chonThietBi = function (blockNo) {
             var b = theoKhoi[blockNo];
             if (!b) return;
@@ -252,6 +282,10 @@
                                         : "chưa ghi nhận");
             dat("maintLast",        b.last_ok  ? ("Bắt tay gần nhất: " + b.last_ok)  : "chưa ghi nhận");
             dat("maintNext",        b.last_scan ? ("Quét ô gần nhất: " + b.last_scan) : "chưa ghi nhận");
+
+            // Cuon SAU khi da dien xong moi o. Cuon truoc thi nguoi dung nhin
+            // thay bang con mang so cua khoi vua chon truoc do.
+            cuonToiChiTiet();
         };
 
         function tick() {
