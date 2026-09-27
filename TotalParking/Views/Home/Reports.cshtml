@@ -51,35 +51,29 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote text-yellow-500"><rect width="20" height="12" x="2" y="6" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><line x1="6" x2="6" y1="12" y2="12"></line><line x1="18" x2="18" y1="12" y2="12"></line></svg>
                     Báo cáo doanh thu từ xa
                 </button>
-                <button id="btn-pallet-frequency" onclick="switchReportTab('pallet-frequency')" class="report-tab-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    Tần suất hoạt động Pallet
-                </button>
+                
             </div>
 
             <!-- Content Area -->
             <div class="xl:col-span-3 space-y-4">
                 <!-- Filter Bar -->
-                <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 flex flex-wrap gap-4 items-center shadow-lg">
+                <div id="loc-bar" class="bg-slate-900/50 rounded-xl border border-slate-800 p-4 flex flex-wrap gap-4 items-center shadow-lg">
                     <div class="flex items-center gap-2">
                         <span class="text-slate-500 text-xs font-mono">Từ ngày</span>
-                        <input type="date" class="bg-slate-800 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500" value="2026-06-01">
+                        <input id="loc-tu" type="date" class="bg-slate-800 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500">
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="text-slate-500 text-xs font-mono">Đến ngày</span>
-                        <input type="date" class="bg-slate-800 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500" value="2026-06-16">
+                        <input id="loc-den" type="date" class="bg-slate-800 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500">
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="text-slate-500 text-xs font-mono">Phân khu</span>
-                        <select class="bg-slate-800 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500">
-                            <option value="all">Tất cả các Zone</option>
-                            <option value="A">Zone A (Hầm B1)</option>
-                            <option value="B">Zone B (Hầm B2)</option>
-                            <option value="C">Zone C (Hầm B3)</option>
-                            <option value="D">Zone D (Tầng 1)</option>
+                        <select id="loc-zone" class="bg-slate-800 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono outline-none focus:border-blue-500">
+                            <option value="">Tất cả các Zone</option>
                         </select>
                     </div>
-                    <button onclick="alert('Đã cập nhật dữ liệu báo cáo mới!')" class="px-4 py-1.5 rounded text-xs bg-blue-600 hover:bg-blue-500 text-white font-bold transition-colors shadow">Tạo báo cáo</button>
+                    <button onclick="taiTabMatDo()" class="px-4 py-1.5 rounded text-xs bg-blue-600 hover:bg-blue-500 text-white font-bold transition-colors shadow">Xem lại</button>
+                    <span id="loc-trangthai" class="text-slate-500 text-[10px] font-mono ml-auto">—</span>
                 </div>
 
                 <!-- Tab Panels -->
@@ -226,11 +220,11 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4 p-4 rounded-lg bg-slate-950/60 border border-slate-800">
                             <div>
                                 <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Từ ngày</label>
-                                <input type="date" id="history-date-from" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1 text-xs text-slate-200 font-mono outline-none focus:border-blue-500" value="2026-06-01">
+                                <input type="date" id="history-date-from" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1 text-xs text-slate-200 font-mono outline-none focus:border-blue-500">
                             </div>
                             <div>
                                 <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Đến ngày</label>
-                                <input type="date" id="history-date-to" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1 text-xs text-slate-200 font-mono outline-none focus:border-blue-500" value="2026-06-16">
+                                <input type="date" id="history-date-to" class="w-full bg-slate-900 border border-slate-750 rounded px-2.5 py-1 text-xs text-slate-200 font-mono outline-none focus:border-blue-500">
                             </div>
                             <div>
                                 <label class="block text-slate-500 text-[10px] font-mono uppercase tracking-wider mb-1">Số thẻ / Biển số</label>
@@ -317,53 +311,7 @@
                     </div>
 
                     <!-- CSS-Based Revenue Bar Chart -->
-                    <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
-                        <h3 class="text-white text-sm font-bold mb-4">Lưu lượng doanh thu theo ngày gần đây (Triệu VND)</h3>
-                        <div class="grid grid-cols-7 gap-3 items-end min-h-[150px] border-b border-slate-800 px-3 pb-2 pt-6">
-                            <!-- Mon -->
-                            <div class="text-center space-y-2">
-                                <span class="text-[9px] font-mono text-slate-400">8.4M</span>
-                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 84px; max-width: 45px;"></div>
-                                <span class="text-[10px] text-slate-300 block">T2</span>
-                            </div>
-                            <!-- Tue -->
-                            <div class="text-center space-y-2">
-                                <span class="text-[9px] font-mono text-slate-400">9.5M</span>
-                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 95px; max-width: 45px;"></div>
-                                <span class="text-[10px] text-slate-300 block">T3</span>
-                            </div>
-                            <!-- Wed -->
-                            <div class="text-center space-y-2">
-                                <span class="text-[9px] font-mono text-slate-400">10.2M</span>
-                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 102px; max-width: 45px;"></div>
-                                <span class="text-[10px] text-slate-300 block">T4</span>
-                            </div>
-                            <!-- Thu -->
-                            <div class="text-center space-y-2">
-                                <span class="text-[9px] font-mono text-slate-400">12.1M</span>
-                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 121px; max-width: 45px;"></div>
-                                <span class="text-[10px] text-slate-300 block">T5</span>
-                            </div>
-                            <!-- Fri -->
-                            <div class="text-center space-y-2">
-                                <span class="text-[9px] font-mono text-slate-400">14.5M</span>
-                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 145px; max-width: 45px;"></div>
-                                <span class="text-[10px] text-slate-300 block">T6</span>
-                            </div>
-                            <!-- Sat -->
-                            <div class="text-center space-y-2">
-                                <span class="text-[9px] font-mono text-slate-400">7.2M</span>
-                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 72px; max-width: 45px;"></div>
-                                <span class="text-[10px] text-slate-300 block">T7</span>
-                            </div>
-                            <!-- Sun -->
-                            <div class="text-center space-y-2">
-                                <span class="text-[9px] font-mono text-slate-400">5.8M</span>
-                                <div class="w-full bg-gradient-to-t from-yellow-600 to-yellow-400 rounded-t-sm mx-auto" style="height: 58px; max-width: 45px;"></div>
-                                <span class="text-[10px] text-slate-300 block">CN</span>
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     <!-- Transaction List -->
                     <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-lg">
@@ -396,74 +344,7 @@
                 </div>
 
                 <!-- 6. Pallet Frequency Panel (Sơ đồ nhiệt tần suất hoạt động) -->
-                <div id="panel-pallet-frequency" class="report-panel space-y-4">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                        <!-- Heatmap Grid (Col span 2) -->
-                        <div class="lg:col-span-2 bg-slate-900/50 rounded-xl border border-slate-800 p-5 space-y-4 shadow-xl">
-                            <div class="flex flex-wrap justify-between items-center gap-3 border-b border-slate-800 pb-3">
-                                <h3 class="text-white text-sm font-bold flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                    Bản đồ tần suất hoạt động khay đỗ Pallet
-                                </h3>
-                                <div class="flex items-center gap-2">
-                                    <select id="freq-zone" onchange="updateFreqBlockOptions()" class="bg-slate-800 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-slate-200 outline-none focus:border-blue-500 font-mono">
-                                        <option value="1">Zone 1 (Hầm B1)</option>
-                                        <option value="2">Zone 2 (Hầm B2)</option>
-                                        <option value="3">Zone 3 (Hầm B3)</option>
-                                        <option value="4">Zone 4 (Tầng 1)</option>
-                                        <option value="5">Zone 5 (Hầm B4)</option>
-                                        <option value="6">Zone 6 (Tầng 2)</option>
-                                    </select>
-                                    <select id="freq-block" onchange="loadFreqBlock()" class="bg-slate-800 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-slate-200 outline-none focus:border-blue-500 font-mono">
-                                        <!-- Options generated dynamically -->
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Heatmap Legend -->
-                            <div class="flex flex-wrap justify-between items-center gap-2 text-[10px] font-mono text-slate-405 p-2.5 bg-slate-950/45 rounded-lg border border-slate-850">
-                                <div class="flex items-center gap-4">
-                                    <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-red-950/60 border border-red-700 shadow-[0_0_8px_rgba(239,68,68,0.3)] animate-pulse inline-block"></span> Cần bảo trì (&gt;100 chu kỳ)</span>
-                                    <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-amber-950/60 border border-amber-700 inline-block"></span> Trung bình (50-99 chu kỳ)</span>
-                                    <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-green-950/60 border border-green-700 inline-block"></span> Tốt (&lt;50 chu kỳ)</span>
-                                </div>
-                                <span class="text-slate-500">Mốc giới hạn: 100 chu kỳ</span>
-                            </div>
-
-                            <!-- Heatmap Grid Container -->
-                            <div id="pallet-heatmap-grid" class="grid grid-cols-4 gap-3 py-3">
-                                <!-- Rendered dynamically by javascript -->
-                            </div>
-                        </div>
-
-                        <!-- Pallet Details Panel (Col span 1) -->
-                        <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl flex flex-col justify-between min-h-[380px]">
-                            <div class="space-y-4">
-                                <div class="border-b border-slate-800 pb-3">
-                                    <h4 class="text-white text-xs font-bold uppercase tracking-wider font-mono" id="freq-panel-title">Chi tiết khay đỗ</h4>
-                                    <p class="text-slate-500 text-[10px] font-mono mt-0.5" id="freq-panel-subtitle">Vui lòng chọn một pallet trên sơ đồ</p>
-                                </div>
-
-                                <div class="space-y-3" id="freq-panel-detail-content">
-                                    <div class="text-slate-500 text-xs font-mono py-8 text-center">
-                                        Click chọn một khay đỗ Pallet trên sơ đồ nhiệt để xem thống kê chu kỳ hao mòn và thực hiện xử lý.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="pt-4 border-t border-slate-800 space-y-2 hidden" id="freq-panel-actions">
-                                <button id="btn-reset-pallet" onclick="execResetPalletCycle()" class="w-full px-3 py-2 bg-green-700 hover:bg-green-600 text-white text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1.5 shadow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
-                                    Bảo trì &amp; Reset chu kỳ chạy
-                                </button>
-                                <button onclick="createPalletWorkOrder()" class="w-full px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold rounded transition-colors font-mono flex items-center justify-center gap-1.5 shadow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
-                                    Lập lịch bảo trì (Work Order)
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
 
             </div>
         </div>
@@ -546,6 +427,12 @@
         // 3. Activate selected panel and button
         document.getElementById('panel-' + tabId).classList.add('active');
         document.getElementById('btn-' + tabId).classList.add('active');
+
+        // Thanh loc chi dieu khien tab Mat do. Cac tab khac doc nguon khac va
+        // khong nhan khoang ngay, nen de thanh loc hien o do se khien nguoi
+        // dung doi ngay roi bam Xem lai ma khong thay gi thay doi.
+        var loc = document.getElementById('loc-bar');
+        if (loc) loc.style.display = (tabId === 'density') ? '' : 'none';
     }
 
     // ----------------------------------------------------------------- Tìm xe
@@ -874,8 +761,10 @@
     }
 
     function resetHistoryFilters() {
-        document.getElementById('history-date-from').value = '2026-06-01';
-        document.getElementById('history-date-to').value = '2026-06-16';
+        // Dat lai theo hom nay chu khong theo mot moc cung. Hai gia tri cu
+        // la 01/06 va 16/06/2026, trong khi du lieu that bat dau tu thang 9 —
+        // bam Loc la bang trong sach du ben duoi dang co hang tram dong.
+        datNgayMacDinh('history-date-from', 'history-date-to');
         document.getElementById('history-search-text').value = '';
         document.getElementById('history-filter-action').value = 'all';
         document.getElementById('history-filter-status').value = 'all';
@@ -883,294 +772,6 @@
         filterHistoryTable();
     }
 
-    // =========================================================================
-    // PALLET FREQUENCY HEATMAP & MAINTENANCE LOGIC
-    // =========================================================================
-
-    // Default mock data mapping block ID to array of 12 numbers representing cycles
-    const defaultPalletCycles = {
-        // Zone 1
-        "Block A-01": [12, 115, 34, 75, 45, 88, 120, 20, 15, 60, 95, 30],
-        "Block A-02": [25, 48, 102, 12, 55, 67, 10, 92, 110, 40, 15, 8],
-        "Block A-03": [85, 30, 42, 130, 90, 22, 60, 47, 12, 105, 50, 70],
-        // Zone 2
-        "Block A-04": [115, 102, 80, 40, 95, 125, 20, 15, 60, 30, 45, 90],
-        "Block B-01": [34, 52, 110, 75, 88, 15, 42, 130, 60, 25, 95, 10],
-        "Block B-02": [45, 85, 20, 65, 12, 105, 78, 30, 90, 115, 50, 40],
-        // Zone 3
-        "Block B-03": [90, 110, 35, 60, 80, 25, 125, 45, 15, 55, 95, 30],
-        "Block B-04": [12, 48, 135, 92, 55, 70, 8, 102, 65, 30, 115, 18],
-        "Block C-01": [85, 25, 60, 105, 40, 115, 75, 22, 50, 90, 10, 125],
-        // Zone 4
-        "Block C-02": [130, 45, 20, 95, 70, 15, 110, 88, 35, 60, 102, 25],
-        "Block C-03": [40, 80, 115, 10, 55, 90, 30, 125, 65, 105, 22, 50],
-        "Block C-04": [15, 102, 75, 120, 45, 60, 88, 25, 135, 30, 95, 8],
-        // Zone 5
-        "Block D-01": [95, 115, 20, 55, 10, 85, 125, 40, 60, 30, 102, 70],
-        "Block D-02": [50, 30, 110, 75, 120, 45, 15, 90, 88, 135, 65, 22],
-        "Block D-03": [105, 12, 80, 95, 25, 115, 60, 130, 42, 50, 78, 35],
-        // Zone 6
-        "Block E-01": [35, 90, 115, 20, 125, 55, 70, 10, 102, 65, 80, 45],
-        "Block E-02": [88, 110, 40, 135, 15, 95, 30, 120, 50, 75, 22, 60],
-        "Block E-03": [12, 65, 102, 80, 45, 115, 25, 90, 130, 35, 55, 105]
-    };
-
-    const zoneBlocksMap = {
-        "1": ["Block A-01", "Block A-02", "Block A-03"],
-        "2": ["Block A-04", "Block B-01", "Block B-02"],
-        "3": ["Block B-03", "Block B-04", "Block C-01"],
-        "4": ["Block C-02", "Block C-03", "Block C-04"],
-        "5": ["Block D-01", "Block D-02", "Block D-03"],
-        "6": ["Block E-01", "Block E-02", "Block E-03"]
-    };
-
-    let palletCycleData = {};
-    let selectedBlockId = null;
-    let selectedSlotIdx = null;
-
-    // Load data from localStorage or initialize defaults
-    function initPalletFrequencyData() {
-        const stored = localStorage.getItem('palletCycleData');
-        if (stored) {
-            try {
-                palletCycleData = JSON.parse(stored);
-            } catch (e) {
-                console.error("Lỗi parse dữ liệu từ localStorage:", e);
-                palletCycleData = JSON.parse(JSON.stringify(defaultPalletCycles));
-            }
-        } else {
-            palletCycleData = JSON.parse(JSON.stringify(defaultPalletCycles));
-            localStorage.setItem('palletCycleData', JSON.stringify(palletCycleData));
-        }
-    }
-
-    // Populate blocks selection dropdown based on chosen zone
-    function updateFreqBlockOptions() {
-        const zoneId = document.getElementById('freq-zone').value;
-        const blocksList = zoneBlocksMap[zoneId] || [];
-        const blockSelect = document.getElementById('freq-block');
-        
-        blockSelect.innerHTML = '';
-        blocksList.forEach(block => {
-            const opt = document.createElement('option');
-            opt.value = block;
-            opt.textContent = block;
-            blockSelect.appendChild(opt);
-        });
-
-        loadFreqBlock();
-    }
-
-    // Handle block change
-    function loadFreqBlock() {
-        const blockId = document.getElementById('freq-block').value;
-        if (!blockId) return;
-
-        // Reset details panel selection state
-        selectedBlockId = blockId;
-        selectedSlotIdx = null;
-        
-        // Render Heatmap
-        renderPalletHeatmap(blockId);
-
-        // Reset detail panel UI
-        document.getElementById('freq-panel-title').textContent = "Chi tiết khay đỗ";
-        document.getElementById('freq-panel-subtitle').textContent = "Vui lòng chọn một pallet trên sơ đồ";
-        document.getElementById('freq-panel-detail-content').innerHTML = `
-            <div class="text-slate-500 text-xs font-mono py-8 text-center">
-                Click chọn một khay đỗ Pallet trên sơ đồ nhiệt để xem thống kê chu kỳ hao mòn và thực hiện xử lý.
-            </div>
-        `;
-        document.getElementById('freq-panel-actions').classList.add('hidden');
-    }
-
-    // Render 12-pallet grid heatmap
-    function renderPalletHeatmap(blockId) {
-        const gridContainer = document.getElementById('pallet-heatmap-grid');
-        gridContainer.innerHTML = '';
-
-        const cyclesArray = palletCycleData[blockId] || Array(12).fill(0);
-
-        // Render levels 3 down to 1
-        for (let lvl = 3; lvl >= 1; lvl--) {
-            for (let col = 1; col <= 4; col++) {
-                const slotNum = (lvl - 1) * 4 + col;
-                const slotIdx = slotNum - 1;
-                const slotId = 'P' + String(slotNum).padStart(2, '0');
-                const cycles = cyclesArray[slotIdx] || 0;
-
-                // Color coding rules:
-                // Red (>100): pallet-glow-red, Yellow (50-99), Green (<50)
-                let cellClass = "";
-                let statusBadge = "";
-                
-                if (cycles >= 100) {
-                    cellClass = "pallet-glow-red border border-red-500/80 text-red-300";
-                    statusBadge = `<span class="px-1 py-0.5 rounded text-[8px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">CẦN BẢO TRÌ</span>`;
-                } else if (cycles >= 50) {
-                    cellClass = "bg-amber-950/20 border border-amber-500/40 text-amber-300";
-                    statusBadge = `<span class="px-1 py-0.5 rounded text-[8px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">CẢNH BÁO</span>`;
-                } else {
-                    cellClass = "bg-green-950/15 border border-green-500/30 text-green-300";
-                    statusBadge = `<span class="px-1 py-0.5 rounded text-[8px] font-bold bg-green-500/20 text-green-400 border border-green-500/30">TỐT</span>`;
-                }
-
-                // Check selection outline
-                const isSelected = (selectedSlotIdx === slotIdx);
-                const selectStyle = isSelected ? "ring-2 ring-blue-500 border-transparent shadow-[0_0_15px_rgba(59,130,246,0.5)] scale-[1.02] z-10" : "";
-
-                const cellHtml = `
-                    <div onclick="clickFreqPallet('${blockId}', ${slotIdx})" 
-                         class="rounded-lg p-2.5 transition-all duration-200 cursor-pointer flex flex-col justify-between h-20 font-mono select-none ${cellClass} ${selectStyle}">
-                        <div class="flex justify-between items-start">
-                            <span class="text-[9px] font-bold text-slate-400">T${lvl}-C${col}</span>
-                            ${statusBadge}
-                        </div>
-                        <div class="mt-1.5 flex justify-between items-end">
-                            <span class="text-xs font-bold font-mono tracking-wider">${slotId}</span>
-                            <span class="text-[10px] text-right font-semibold">${cycles} c.y</span>
-                        </div>
-                    </div>
-                `;
-                
-                const wrapper = document.createElement('div');
-                wrapper.innerHTML = cellHtml;
-                gridContainer.appendChild(wrapper.firstElementChild);
-            }
-        }
-    }
-
-    // Handle click on pallet
-    function clickFreqPallet(blockId, slotIdx) {
-        selectedBlockId = blockId;
-        selectedSlotIdx = slotIdx;
-        
-        // Re-render heatmap to show selection borders
-        renderPalletHeatmap(blockId);
-
-        const cyclesArray = palletCycleData[blockId] || Array(12).fill(0);
-        const cycles = cyclesArray[slotIdx] || 0;
-        
-        const lvl = Math.floor(slotIdx / 4) + 1;
-        const col = (slotIdx % 4) + 1;
-        const palletName = `Pallet P${String(slotIdx + 1).padStart(2, '0')}`;
-        
-        // Calculate wear percentage (cycles / 100 * 100)
-        const wearRate = Math.round((cycles / 100) * 100);
-
-        // Update detail panel elements
-        document.getElementById('freq-panel-title').textContent = `${palletName}`;
-        document.getElementById('freq-panel-subtitle').textContent = `${blockId} · Vị trí: Tầng ${lvl} - Cột ${col}`;
-
-        let statusClass = "";
-        let statusText = "";
-        let descText = "";
-
-        if (cycles >= 100) {
-            statusClass = "bg-red-500/10 border-red-500/30 text-red-400";
-            statusText = "CẦN BẢO TRÌ NGAY";
-            descText = `Pallet đã vượt quá giới hạn an toàn (${cycles}/100 chu kỳ). Có nguy cơ cao mài mòn bạc đạn và giãn xích kéo pallet. Yêu cầu cử kỹ thuật viên kiểm tra thực địa lập tức.`;
-        } else if (cycles >= 50) {
-            statusClass = "bg-amber-500/10 border-amber-500/30 text-amber-400";
-            statusText = "CẢNH BÁO BẢO TRÌ";
-            descText = `Tần suất hoạt động đạt mức trung bình cao (${cycles}/100 chu kỳ). Cần theo dõi sát hoặc có thể cân nhắc bảo trì sớm để phân bổ đều tải trọng cho hệ thống.`;
-        } else {
-            statusClass = "bg-emerald-500/10 border-emerald-500/30 text-emerald-400";
-            statusText = "HOẠT ĐỘNG TỐT";
-            descText = `Khay đỗ hoạt động dưới ngưỡng cảnh báo (${cycles}/100 chu kỳ). Thiết bị cơ khí đang ở trạng thái tối ưu, không cần bảo dưỡng đột xuất.`;
-        }
-
-        const detailsHtml = `
-            <div class="space-y-4 font-mono text-xs mt-2">
-                <!-- Status Row -->
-                <div class="flex justify-between items-center p-2 rounded-lg border ${statusClass}">
-                    <span class="font-bold">Trạng thái:</span>
-                    <span class="font-bold">${statusText}</span>
-                </div>
-
-                <!-- Specs -->
-                <div class="grid grid-cols-2 gap-2 text-[11px]">
-                    <div class="bg-slate-950/60 p-2.5 rounded border border-slate-850">
-                        <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Chu kỳ đã chạy</span>
-                        <span class="text-slate-200 font-bold block mt-0.5">${cycles} / 100 chu kỳ</span>
-                    </div>
-                    <div class="bg-slate-950/60 p-2.5 rounded border border-slate-850">
-                        <span class="text-slate-500 text-[9px] uppercase tracking-wider block">Mức hao mòn cơ khí</span>
-                        <span class="font-bold block mt-0.5 ${cycles >= 100 ? 'text-red-400' : (cycles >= 50 ? 'text-amber-400' : 'text-emerald-400')}">${wearRate}%</span>
-                    </div>
-                </div>
-
-                <!-- Wear level progress bar -->
-                <div class="space-y-1">
-                    <div class="flex justify-between text-[10px] text-slate-400">
-                        <span>Hao mòn hệ thống</span>
-                        <span>${wearRate}%</span>
-                    </div>
-                    <div class="h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
-                        <div class="h-full rounded-full transition-all duration-300 ${cycles >= 100 ? 'bg-red-500' : (cycles >= 50 ? 'bg-amber-500' : 'bg-green-500')}" style="width: ${Math.min(wearRate, 100)}%;"></div>
-                    </div>
-                </div>
-
-                <!-- Diagnosis Note -->
-                <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-850 space-y-1 text-slate-400 text-[11px] leading-relaxed">
-                    <span class="text-slate-200 font-bold block uppercase text-[10px]">Đánh giá thiết bị:</span>
-                    ${descText}
-                </div>
-            </div>
-        `;
-
-        document.getElementById('freq-panel-detail-content').innerHTML = detailsHtml;
-
-        // Show action buttons
-        document.getElementById('freq-panel-actions').classList.remove('hidden');
-    }
-
-    // Reset cycles of selected pallet to 0
-    function execResetPalletCycle() {
-        if (!selectedBlockId || selectedSlotIdx === null) {
-            alert("Vui lòng chọn một pallet trên sơ đồ trước!");
-            return;
-        }
-
-        const palletName = `Pallet P${String(selectedSlotIdx + 1).padStart(2, '0')}`;
-        
-        // Confirm action
-        if (confirm(`Bạn có chắc chắn muốn xác nhận đã hoàn tất bảo trì và Reset chu kỳ chạy của ${palletName} (${selectedBlockId}) về 0?`)) {
-            // Update data
-            palletCycleData[selectedBlockId][selectedSlotIdx] = 0;
-            
-            // Save to localStorage
-            localStorage.setItem('palletCycleData', JSON.stringify(palletCycleData));
-            
-            // Alert success
-            alert(`Bảo trì thành công! Đã reset chu kỳ chạy của ${palletName} về 0. Trạng thái Pallet đã cập nhật về HOẠT ĐỘNG TỐT.`);
-            
-            // Re-render
-            renderPalletHeatmap(selectedBlockId);
-            
-            // Refresh details panel
-            clickFreqPallet(selectedBlockId, selectedSlotIdx);
-        }
-    }
-
-    // Mock create Work Order
-    function createPalletWorkOrder() {
-        if (!selectedBlockId || selectedSlotIdx === null) {
-            alert("Vui lòng chọn một pallet trên sơ đồ trước!");
-            return;
-        }
-
-        const palletName = `Pallet P${String(selectedSlotIdx + 1).padStart(2, '0')}`;
-        const woId = "WO-" + Math.floor(100000 + Math.random() * 900000);
-        
-        alert(`Đã lập lịch Work Order bảo trì thành công!\nMã số: ${woId}\nThiết bị: ${palletName} - ${selectedBlockId}\nNội dung công việc: Kiểm tra bảo dưỡng cơ khí & xích tải.\nYêu cầu đã gửi tới kỹ thuật ca trực.`);
-    }
-
-    // Initialize on page load
-    document.addEventListener("DOMContentLoaded", () => {
-        initPalletFrequencyData();
-        updateFreqBlockOptions();
-    });
 </script>
 
 @* ===================== SO LIEU THAT =====================
@@ -1363,6 +964,7 @@
 
         var URL_THU  = "@Url.Action("XeVaoTheoThu", "BaoCao")";
         var URL_LOAI = "@Url.Action("PhanLoaiXe", "BaoCao")";
+        var URL_ZONE = "@Url.Action("DanhSachZone", "BaoCao")";
         var GACH     = "\u2014";
 
         function el(id) { return document.getElementById(id); }
@@ -1384,12 +986,28 @@
             }
             var n = el(nhan);
             if (n) n.textContent = GACH;
+
+            // Ca nhan khoang ngay nua. taiTabMatDo() dat no thanh "dang doc..."
+            // truoc khi goi, va chi veThu() moi ghi de — ma veThu() khong chay
+            // khi loi. Thieu dong nay thi thanh loc dung yen o "dang doc..."
+            // mai mai trong khi hai o ben duoi da bao do.
+            var ts = el("loc-trangthai");
+            if (ts) ts.textContent = "không đọc được";
         }
 
         // ---------------------------------------- xe vao theo thu
         function veThu(d) {
             var tt = el("md-tomtat");
-            if (tt) tt.textContent = d.tong_xe + " xe / " + d.so_ngay + " ngày";
+            if (tt) tt.textContent = d.tong_xe + " xe";
+
+            // Nhac lai khoang may chu THUC SU dung. Nguoi dung go mot ngay sai
+            // dinh dang hoac chon nguoc thi may chu tu sua, va neu khong hien
+            // lai thi ho tuong minh dang xem khoang minh vua go.
+            var ts = el("loc-trangthai");
+            if (ts) {
+                ts.textContent = d.tu + " → " + d.den +
+                                 (d.zone ? " · Zone " + d.zone : " · tất cả Zone");
+            }
 
             var k = el("md-thu");
             if (!k) return;
@@ -1435,7 +1053,12 @@
         // ---------------------------------------- phan loai xe
         function veLoai(d) {
             var tt = el("md-tuchoi");
-            if (tt) tt.textContent = d.tong + " xe · " + d.tong_tu_choi + " bị từ chối";
+            if (tt) {
+                // Loc theo zone lam con so tu choi thieu di, vi phan lon xe bi
+                // tu choi khong mang zone_id. Noi ro thay vi de con so tran.
+                tt.textContent = d.tong + " xe · " + d.tong_tu_choi + " bị từ chối" +
+                                 (d.tu_choi_thieu_khi_loc_zone ? " (chỉ tính xe có zone)" : "");
+            }
 
             var k = el("md-loai");
             if (!k) return;
@@ -1464,8 +1087,10 @@
             }).join("");
         }
 
+        // url da mang san chuoi tham so, khong ghep them "?ngay=30" nhu ban
+        // truoc: ghep them dau ? thu hai se lam may chu bo qua ca cum.
         function tai(url, ve, id, nhan) {
-            fetch(url + "?ngay=30", { cache: "no-store" })
+            fetch(url, { cache: "no-store" })
                 .then(function (r) {
                     if (!r.ok) throw new Error("HTTP " + r.status);
                     return r.json();
@@ -1477,9 +1102,65 @@
                 .catch(function (e) { loi(id, nhan, e); });
         }
 
+        // ---------------------------------------- thanh loc
+        function haiSo(n) { return (n < 10 ? "0" : "") + n; }
+
+        function chuoiNgay(d) {
+            // Tu ghep yyyy-MM-dd thay vi toISOString(): toISOString doi sang UTC
+            // truoc, nen o mui gio +7 thi moi thoi diem truoc 07:00 se lui mot
+            // ngay va nguoi dung thay khoang loc thieu mat hom nay.
+            return d.getFullYear() + "-" + haiSo(d.getMonth() + 1) + "-" + haiSo(d.getDate());
+        }
+
+        window.datNgayMacDinh = function (idTu, idDen) {
+            var den = new Date();
+            var tu  = new Date();
+            tu.setDate(tu.getDate() - 29);      // 30 ngay ke ca hom nay
+            var a = el(idTu), b = el(idDen);
+            if (a) a.value = chuoiNgay(tu);
+            if (b) b.value = chuoiNgay(den);
+        };
+
+        function thamSo() {
+            var tu   = el("loc-tu"),  den = el("loc-den"), z = el("loc-zone");
+            var q    = [];
+            if (tu  && tu.value)  q.push("tu="  + encodeURIComponent(tu.value));
+            if (den && den.value) q.push("den=" + encodeURIComponent(den.value));
+            if (z   && z.value)   q.push("zone=" + encodeURIComponent(z.value));
+            return q.length ? "?" + q.join("&") : "";
+        }
+
+        // O chon phan khu truoc day liet ke Zone A den Zone D kem ten tang ham.
+        // Bai that co sau zone, doc tu bang zone.
+        function napZone() {
+            fetch(URL_ZONE, { cache: "no-store" })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (d) {
+                    var sel = el("loc-zone");
+                    if (!sel || !d || !d.items) return;
+                    d.items.forEach(function (z) {
+                        var o = document.createElement("option");
+                        o.value = z.zone_id;
+                        o.textContent = z.ten + " (" + z.ma + ")";
+                        sel.appendChild(o);
+                    });
+                })
+                .catch(function () { /* thieu danh sach zone thi van loc duoc theo ngay */ });
+        }
+
+        window.taiTabMatDo = function () {
+            var q = thamSo();
+            var tt = el("loc-trangthai");
+            if (tt) tt.textContent = "đang đọc…";
+            tai(URL_THU  + q, veThu,  "md-thu",  "md-tomtat");
+            tai(URL_LOAI + q, veLoai, "md-loai", "md-tuchoi");
+        };
+
         function batDau() {
-            tai(URL_THU,  veThu,  "md-thu",  "md-tomtat");
-            tai(URL_LOAI, veLoai, "md-loai", "md-tuchoi");
+            datNgayMacDinh("loc-tu", "loc-den");
+            datNgayMacDinh("history-date-from", "history-date-to");
+            napZone();
+            taiTabMatDo();
         }
 
         if (document.readyState === "loading") {

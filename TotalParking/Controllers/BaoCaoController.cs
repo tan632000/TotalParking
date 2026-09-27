@@ -206,21 +206,49 @@ namespace TotalParking.Controllers
             }
         }
 
-        // GET /BaoCao/XeVaoTheoThu?ngay=30
+        // Khoang ngay mac dinh: 30 ngay gan nhat, ke ca hom nay.
         //
-        // KHÔNG phải "mật độ đỗ xe %". Hệ thống không lưu lịch sử sức chứa nên
-        // tỉ lệ lấp đầy của một ngày trong quá khứ là không tính được. Đây là
-        // số xe vào bãi, trung bình mỗi ngày của từng thứ.
-        public ActionResult XeVaoTheoThu(int? ngay)
+        // Doc ngay TU CHUOI cua o <input type="date"> nen phai cot dinh dang
+        // yyyy-MM-dd va CultureInfo.InvariantCulture. De mac dinh thi may chu
+        // dung ngon ngu he thong, va mot may cai tieng Anh se doc "03-09-2026"
+        // thanh ngay 9 thang 3 — lech sau thang ma khong bao loi gi.
+        private static bool DocNgay(string v, out DateTime ra)
+        {
+            return DateTime.TryParseExact(v, "yyyy-MM-dd",
+                       System.Globalization.CultureInfo.InvariantCulture,
+                       System.Globalization.DateTimeStyles.None, out ra);
+        }
+
+        private void LayKhoang(string tu, string den, out DateTime dTu, out DateTime dDen)
+        {
+            if (!DocNgay(den, out dDen)) dDen = DateTime.Today;
+            if (!DocNgay(tu,  out dTu))  dTu  = dDen.AddDays(-29);
+
+            // Nguoi dung co the chon nguoc. Doi cho thay vi tra ve rong: mot bang
+            // trong khong noi cho ho biet ho vua lam gi sai.
+            if (dTu > dDen) { var t = dTu; dTu = dDen; dDen = t; }
+
+            // Chan cua so qua rong: gop 5 nam du lieu vao bay cot khong tra loi
+            // duoc cau hoi nao, chi lam truy van nang them.
+            if ((dDen - dTu).TotalDays > 366) dTu = dDen.AddDays(-366);
+        }
+
+        // GET /BaoCao/XeVaoTheoThu?tu=2026-08-29&den=2026-09-27&zone=3
+        //
+        // KHONG phai "mat do do xe %". He thong khong luu lich su suc chua nen ti
+        // le lap day cua mot ngay da qua la khong tinh duoc. Day la so xe vao bai,
+        // trung binh moi ngay cua tung thu.
+        public ActionResult XeVaoTheoThu(string tu, string den, int? zone)
         {
             try
             {
-                int soNgay = ngay ?? 30;
-                var ds = _repo.XeVaoTheoNgayTrongTuan(soNgay);
+                DateTime dTu, dDen;
+                LayKhoang(tu, den, out dTu, out dDen);
+                var ds = _repo.XeVaoTheoNgayTrongTuan(dTu, dDen, zone);
 
-                // Cột cao nhất làm mốc 100%. Thanh ngang chỉ để so sánh các thứ
-                // với nhau, nên tỉ lệ này là tương đối — nói rõ ở nhãn giao diện
-                // để không ai đọc nhầm thành tỉ lệ lấp đầy bãi.
+                // Cot cao nhat lam moc 100%. Thanh ngang chi de so cac thu voi
+                // nhau, nen ti le nay la tuong doi — giao dien phai noi ro de
+                // khong ai doc nham thanh ti le lap day bai.
                 double dinh = 0;
                 foreach (var x in ds) if (x.TrungBinh > dinh) dinh = x.TrungBinh;
 
@@ -230,7 +258,9 @@ namespace TotalParking.Controllers
                 return Json2(200, new
                 {
                     now = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
-                    so_ngay = soNgay,
+                    tu  = dTu.ToString("yyyy-MM-dd"),
+                    den = dDen.ToString("yyyy-MM-dd"),
+                    zone,
                     tong_xe = ds.Sum(x => x.TongXe),
                     dinh = Math.Round(dinh, 1),
                     items = ds.Select(x => new
@@ -250,24 +280,29 @@ namespace TotalParking.Controllers
             }
         }
 
-        // GET /BaoCao/PhanLoaiXe?ngay=30
-        public ActionResult PhanLoaiXe(int? ngay)
+        // GET /BaoCao/PhanLoaiXe?tu=&den=&zone=
+        public ActionResult PhanLoaiXe(string tu, string den, int? zone)
         {
             try
             {
-                int soNgay = ngay ?? 30;
-                var ds = _repo.PhanLoaiXe(soNgay);
+                DateTime dTu, dDen;
+                LayKhoang(tu, den, out dTu, out dDen);
+                var ds = _repo.PhanLoaiXe(dTu, dDen, zone);
                 int tong = ds.Sum(x => x.SoXe);
 
                 return Json2(200, new
                 {
                     now = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
-                    so_ngay = soNgay,
+                    tu  = dTu.ToString("yyyy-MM-dd"),
+                    den = dDen.ToString("yyyy-MM-dd"),
+                    zone,
                     tong,
-                    // Tổng số xe bị từ chối, đếm độc lập với nhãn phân loại của
-                    // camera: camera xếp nhóm quá khổ nhiều hơn hẳn số lần bãi
-                    // thật sự từ chối.
                     tong_tu_choi = ds.Sum(x => x.SoTuChoi),
+                    // Phan lon xe bi tu choi khong mang zone_id, nen khi loc theo
+                    // zone thi con so nay THIEU chu khong phai du. Bao cho giao
+                    // dien biet de no noi ro, thay vi de nguoi doc tuong zone do
+                    // tu choi it xe hon thuc te.
+                    tu_choi_thieu_khi_loc_zone = zone.HasValue,
                     items = ds.Select(x => new
                     {
                         nhan       = x.Nhan,
@@ -277,6 +312,25 @@ namespace TotalParking.Controllers
                         cao_min    = x.CaoMin,
                         cao_max    = x.CaoMax
                     }).ToArray()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(503, new { error = ex.Message });
+            }
+        }
+
+        // GET /BaoCao/DanhSachZone
+        public ActionResult DanhSachZone()
+        {
+            try
+            {
+                var ds = _repo.DanhSachZone();
+                return Json2(200, new
+                {
+                    now = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
+                    items = ds.Select(x => new { zone_id = x.ZoneId, ma = x.Ma, ten = x.Ten })
+                              .ToArray()
                 });
             }
             catch (Exception ex)

@@ -74,21 +74,23 @@ All runtime behaviour is client-side JavaScript inlined in `.cshtml` files, back
    | Key | Written by | Read by |
    |---|---|---|
    | `activeAlarms` | `Index`, `OperationControl` | `Index`, `OperationControl`, `Diagnostics`, `Safety` |
-   | `palletCycleData` | `Reports` | `Reports` |
    | `occBypassedSensors` | `Safety` | `Safety` |
-   | `occBlockStates` | *(không còn ai ghi)* | `Safety` — **đọc chết** |
 
    Any change here must update every reader in the same task, and must say so in the summary.
 
    `activeAlarms` is the only real cross-page contract left. `Safety` keys off the substring `"E-Stop"` inside it to build the interlock matrix, so any shape change there breaks a safety display silently.
 
-   `Safety` is easy to miss because it reads and writes without being an "OCC" page. `Safety:255` loads `occBlockStates` into a variable and never uses it — a dead read left over from when `OperationControl` wrote that key.
+   `Safety` is easy to miss because it reads and writes without being an "OCC" page.
 
    The table shrank on 26/09/2026. `OperationControl` used to write five keys (`occBlockStates`, `occPalletOccupancy`, `occAdminOverride`, `occActiveRecovery`, `occBypassedSensors`) and `palletCycleData`; all of them backed control buttons whose handlers had no `fetch` and which told the operator *"Đã gửi lệnh vận hành xuống PLC thành công"*. The whole system has exactly four PLC write sites (`PlcConnection.cs`) and none of them came from that page, so the buttons were removed. `occPalletOccupancy`, `occAdminOverride` and `occActiveRecovery` now have neither a reader nor a writer.
 
-   Verified 26/09/2026 by grepping every `localStorage.(get|set|remove)Item` call in `Views/**/*.cshtml`; re-run that grep rather than trusting this table after a view is added.
+   The table shrank again on 27/09/2026. `Reports` held a pallet wear heat map whose numbers came from a hardcoded `defaultPalletCycles` object persisted to `palletCycleData`, plus a "Bảo trì & Reset chu kỳ chạy" button that only wrote that key and a "Lập lịch bảo trì" button that invented a work-order id with `Math.random()`. No cycle counter exists anywhere in the database, so the whole tab was removed and `palletCycleData` with it. `occBlockStates` also left the table: the dead read it documented in `Safety` no longer exists.
 
-   Four further keys are single-page state, not a contract: `dispatchEntryQueue`, `dispatchExitQueue`, `dispatchRejectedList` (`Queue` only) and `occBypassLogs` (`Safety` only).
+   Verified 27/09/2026 by grepping every `localStorage.(get|set|remove)Item` call in `Views/**/*.cshtml`; re-run that grep rather than trusting this table after a view is added.
+
+   That grep only catches keys written as string literals at the call site. `_ScadaLayout` reads and writes `scadaSidebarCollapsed` through a `KEY` variable, so it never appears in those results — check for variable indirection before concluding a key is unused.
+
+   Five further keys are single-page state, not a contract: `dispatchEntryQueue`, `dispatchExitQueue`, `dispatchRejectedList` (`Queue` only), `occBypassLogs` (`Safety` only) and `scadaSidebarCollapsed` (`_ScadaLayout` only).
 
 3. **Views declare their own layout.** `_ViewStart.cshtml` sets `_Layout.cshtml`, but all 21 SCADA views override it with `Layout = "~/Views/Shared/_ScadaLayout.cshtml"`. New SCADA pages must do the same.
 

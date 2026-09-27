@@ -341,26 +341,32 @@ namespace TotalParking.Services
         //
         // Chi dem ROUTED. MANUAL va REJECTED la xe khong vao duoc bai, gop
         // vao se lam con so "xe vao" to hon thuc te.
+        // den + INTERVAL 1 DAY chu khong phai <= den: cot la DATETIME(3), nen
+        // "<= 2026-09-27" se cat mat moi xe vao sau 00:00:00.000 cua chinh ngay
+        // do — ca ngay cuoi cua khoang loc bi mat.
+        //
+        // @zone IS NULL de mot cau lenh phuc vu ca hai truong hop, khoi phai ghep
+        // chuoi SQL theo dieu kien. Ghep chuoi la cho mo cua cho SQL injection.
         private const string SqlXeVaoTheoThu =
-            "SELECT DAYOFWEEK(decided_at) AS thu, " +
-            "       COUNT(DISTINCT DATE(decided_at)) AS so_ngay, " +
+            "SELECT DAYOFWEEK(r.decided_at) AS thu, " +
+            "       COUNT(DISTINCT DATE(r.decided_at)) AS so_ngay, " +
             "       COUNT(*) AS tong_xe " +
-            "FROM   vehicle_routing " +
-            "WHERE  outcome = 'ROUTED' " +
-            "  AND  decided_at >= CURDATE() - INTERVAL @so_ngay DAY " +
+            "FROM   vehicle_routing r " +
+            "WHERE  r.outcome = 'ROUTED' " +
+            "  AND  r.decided_at >= @tu AND r.decided_at < @den + INTERVAL 1 DAY " +
+            "  AND  (@zone IS NULL OR r.zone_id = @zone) " +
             "GROUP  BY thu ORDER BY thu";
 
-        public IList<XeVaoTheoThu> XeVaoTheoNgayTrongTuan(int soNgay)
+        public IList<XeVaoTheoThu> XeVaoTheoNgayTrongTuan(DateTime tu, DateTime den, int? zoneId)
         {
-            if (soNgay <= 0)  soNgay = 30;
-            if (soNgay > 365) soNgay = 365;
-
             var ds = new List<XeVaoTheoThu>();
             using (var conn = new MySqlConnection(Db.ConnectionString))
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = SqlXeVaoTheoThu;
-                cmd.Parameters.AddWithValue("@so_ngay", soNgay);
+                cmd.Parameters.AddWithValue("@tu",   tu.Date);
+                cmd.Parameters.AddWithValue("@den",  den.Date);
+                cmd.Parameters.AddWithValue("@zone", (object)zoneId ?? DBNull.Value);
                 conn.Open();
                 using (var r = cmd.ExecuteReader())
                 {
@@ -389,6 +395,14 @@ namespace TotalParking.Services
         // Dem rieng so xe BI TU CHOI. Camera xep 177 lan vao nhom qua kho
         // nhung chi 24 lan bai that su tu choi — hai con so khac nhau, gop
         // lam mot se lam nguoi doc tuong bai dang tu choi gap bay lan thuc te.
+        // Loc theo zone lam SO XE TU CHOI thieu di, khong phai bang 0. Luoc do
+        // trong 03_vehicle_event.sql ghi zone_id NULL khi outcome khac ROUTED,
+        // nhung du lieu that khong dung han: trong 24 luot REJECTED thi 14 luot
+        // zone_id NULL va 10 luot mang zone 1. Loc theo zone se bo 14 luot kia.
+        //
+        // Vi vay khong duoc de giao dien hien con so tu choi da loc nhu the no
+        // day du. Ghi chu nay sua lai mot cau sai o ban truoc, von khang dinh xe
+        // bi tu choi khong bao gio duoc gan zone.
         private const string SqlPhanLoaiXe =
             "SELECT COALESCE(e.category, '(không đọc được)') AS nhan, " +
             "       COUNT(*) AS so_xe, " +
@@ -396,20 +410,20 @@ namespace TotalParking.Services
             "       MIN(e.height_mm) AS cao_min, MAX(e.height_mm) AS cao_max " +
             "FROM   vehicle_routing r " +
             "JOIN   vehicle_event   e ON e.event_id = r.event_id " +
-            "WHERE  r.decided_at >= CURDATE() - INTERVAL @so_ngay DAY " +
+            "WHERE  r.decided_at >= @tu AND r.decided_at < @den + INTERVAL 1 DAY " +
+            "  AND  (@zone IS NULL OR r.zone_id = @zone) " +
             "GROUP  BY nhan ORDER BY so_xe DESC";
 
-        public IList<NhomXe> PhanLoaiXe(int soNgay)
+        public IList<NhomXe> PhanLoaiXe(DateTime tu, DateTime den, int? zoneId)
         {
-            if (soNgay <= 0)  soNgay = 30;
-            if (soNgay > 365) soNgay = 365;
-
             var ds = new List<NhomXe>();
             using (var conn = new MySqlConnection(Db.ConnectionString))
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = SqlPhanLoaiXe;
-                cmd.Parameters.AddWithValue("@so_ngay", soNgay);
+                cmd.Parameters.AddWithValue("@tu",   tu.Date);
+                cmd.Parameters.AddWithValue("@den",  den.Date);
+                cmd.Parameters.AddWithValue("@zone", (object)zoneId ?? DBNull.Value);
                 conn.Open();
                 using (var r = cmd.ExecuteReader())
                 {
@@ -423,6 +437,36 @@ namespace TotalParking.Services
                                            ? 0 : Convert.ToInt32(r["so_tu_choi"]),
                             CaoMin   = Int(r, "cao_min"),
                             CaoMax   = Int(r, "cao_max")
+                        });
+                    }
+                }
+            }
+            return ds;
+        }
+
+        // ===================== DANH SACH ZONE =====================
+        // O chon phan khu truoc day liet ke "Zone A (Ham B1)" den "Zone D (Tang 1)".
+        // Bai that co sau zone, ma Z1 den Z6, va khong tang ham nao mang ten do.
+        private const string SqlZone =
+            "SELECT zone_id, code, name FROM zone WHERE is_active = 1 ORDER BY zone_id";
+
+        public IList<ZoneGon> DanhSachZone()
+        {
+            var ds = new List<ZoneGon>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = SqlZone;
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        ds.Add(new ZoneGon
+                        {
+                            ZoneId = Convert.ToInt32(r["zone_id"]),
+                            Ma     = Str(r, "code"),
+                            Ten    = Str(r, "name")
                         });
                     }
                 }
@@ -462,6 +506,13 @@ namespace TotalParking.Services
         {
             get { return SoNgay == 0 ? 0 : (double)TongXe / SoNgay; }
         }
+    }
+
+    public class ZoneGon
+    {
+        public int    ZoneId { get; set; }
+        public string Ma     { get; set; }
+        public string Ten    { get; set; }
     }
 
     public class NhomXe
