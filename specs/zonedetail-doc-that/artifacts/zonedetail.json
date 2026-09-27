@@ -1,5 +1,5 @@
 {
- "thoi_diem": "2026-09-25T17:03:28.372Z",
+ "thoi_diem": "2026-09-27T08:17:36.049Z",
  "zone": 2,
  "tinh": {
   "moc_con_lai": [],
@@ -12,7 +12,7 @@
  "luoi_khoi": {
   "so_khoi_api": 37,
   "so_khoi_dom": 37,
-  "tom_tat": "37 khối · 0/211 ô có xe · 0%",
+  "tom_tat": "37 khối · 1/211 ô có xe · 0%",
   "phan_tram": "0%",
   "sai": [],
   "mau_block": 72
@@ -23,7 +23,7 @@
   "so_the": 5,
   "o_co_xe_da_do": 1,
   "co_xe": [
-   "Ô 01 | D400 | TEST.015 | chưa có biển số | đọc 00:03:28"
+   "Ô 01 | D400 | TEST.015 | chưa có biển số | đọc 15:17:32"
   ],
   "sai": []
  },
