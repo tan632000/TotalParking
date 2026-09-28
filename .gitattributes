@@ -1,0 +1,8 @@
+# Bo kiem receipt cua CafeKit doc gia tri cuoi dong bang mau "(.*)$", ma trong
+# JavaScript dau cham KHONG khop ky tu CR. Voi core.autocrlf=true, moi lan
+# checkout bien file spec thanh CRLF, dong "Exit: 0" doc ra chuoi rong, va hook
+# Stop chan lai voi loi exit_result du receipt hoan toan dung.
+#
+# Neo LF o day thi phep kiem on dinh tren moi may, khong phu thuoc cau hinh git
+# ca nhan cua tung nguoi.
+specs/** text=auto eol=lf
