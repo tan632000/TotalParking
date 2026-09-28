@@ -161,7 +161,54 @@ namespace TotalParking.Services
                             TotalL48m     = Num(r, "total_l48m"),
                             TotalStandard = Num(r, "total_standard"),
                             SlotsTotal    = Num(r, "slots_total"),
-                            SlotsFresh    = Num(r, "slots_fresh")
+                            SlotsFresh    = Num(r, "slots_fresh"),
+                            // Cùng lý do như đường toàn bãi: 0 cảm biến tươi
+                            // nghĩa là free_standard đang là sức chứa dự phòng
+                            // chứ không phải số đo.
+                            StandardSensors = Num(r, "standard_sensors"),
+                            StandardFresh   = Num(r, "standard_fresh")
+                        };
+                    }
+                }
+            }
+            return map;
+        }
+
+        // Sức chứa theo TỪNG CỔNG, cho các cổng khai `scope = 'BLOCKS'`.
+        //
+        // Khác đường theo zone ở chỗ KHÔNG phải cộng gì trong C#: view
+        // v_led_capacity_port đã gộp sẵn theo đúng danh sách block và cảm biến
+        // của từng mũi tên. Công thức nằm một chỗ duy nhất, nên không có cửa
+        // cho hai nơi tính ra hai số khác nhau như từng xảy ra giữa bảng LED và
+        // trang Điều hướng xe.
+        public IDictionary<Tuple<int, int>, LedCapacity> GetCapacityByPort()
+        {
+            var map = new Dictionary<Tuple<int, int>, LedCapacity>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "SELECT * FROM v_led_capacity_port";
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        var key = Tuple.Create(Num(r, "panel_id"), Num(r, "port_index"));
+                        map[key] = new LedCapacity
+                        {
+                            FreeL5m       = Num(r, "free_l5m"),
+                            FreeL48m      = Num(r, "free_l48m"),
+                            FreeStandard  = Num(r, "free_standard"),
+                            TotalL5m      = Num(r, "total_l5m"),
+                            TotalL48m     = Num(r, "total_l48m"),
+                            TotalStandard = Num(r, "total_standard"),
+                            SlotsTotal    = Num(r, "slots_total"),
+                            SlotsFresh    = Num(r, "slots_fresh"),
+                            // Cùng lý do như hai đường kia: 0 cảm biến tươi nghĩa
+                            // là free_standard đang là sức chứa dự phòng chứ không
+                            // phải số đo.
+                            StandardSensors = Num(r, "standard_sensors"),
+                            StandardFresh   = Num(r, "standard_fresh")
                         };
                     }
                 }
@@ -200,6 +247,11 @@ namespace TotalParking.Services
                 // của ba tỉ lệ — zone nhỏ sẽ kéo lệch con số đó.
                 sum.SlotsTotal    += c.SlotsTotal;
                 sum.SlotsFresh    += c.SlotsFresh;
+                // Cộng luôn độ phủ của tầng cảm biến. Bỏ qua thì bảng chỉ hướng
+                // luôn báo 0 cảm biến tươi, và người vận hành không phân biệt
+                // được "zone này còn trống thật" với "vòng ghi vừa chết".
+                sum.StandardSensors += c.StandardSensors;
+                sum.StandardFresh   += c.StandardFresh;
             }
             return found > 0 ? sum : null;
         }

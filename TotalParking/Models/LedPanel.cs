@@ -15,6 +15,12 @@ namespace TotalParking.Models
     {
         public const string Total = "TOTAL";
         public const string Zones = "ZONES";
+
+        // Cổng đếm đúng danh sách block và cảm biến khách khai cho mũi tên đó
+        // (docs/LumiSlotsMatrix.xlsx, bảng led_port_block và led_port_sensor).
+        // Thay Zones ở 21 cổng chỉ hướng: không mũi tên nào phục vụ trọn vẹn
+        // một zone, nên cộng theo zone luôn cho tài xế con số sai phạm vi.
+        public const string Blocks = "BLOCKS";
     }
 
     public class LedPanel

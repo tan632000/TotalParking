@@ -160,6 +160,12 @@ namespace TotalParking.Services.Led
                 try { byZone = _repo.GetCapacityByZone(); }
                 catch (Exception) { byZone = null; }
 
+                // Suc chua theo tung CONG, cho 21 cong chi huong khai 'BLOCKS'.
+                // Cung ly do nuot loi nhu tren: bang tong van phai chay.
+                IDictionary<Tuple<int, int>, LedCapacity> byPort = null;
+                try { byPort = _repo.GetCapacityByPort(); }
+                catch (Exception) { byPort = null; }
+
                 // ĐẨY SONG SONG, KHÔNG TUẦN TỰ.
                 //
                 // Tuần tự thì một bảng chết kéo sập nhịp của tất cả bảng còn lại:
@@ -188,7 +194,7 @@ namespace TotalParking.Services.Led
                         // callback của Timer sẽ hạ cả tiến trình w3wp, tức mất luôn
                         // vòng poll PLC. PublishPanel đã tự bắt lỗi từng cổng, đây
                         // chỉ là lưới chặn cuối.
-                        try { PublishPanel(state, capacity, byZone); }
+                        try { PublishPanel(state, capacity, byZone, byPort); }
                         catch (Exception ex) { state.LastError = ex.Message; }
                     });
             }
@@ -199,7 +205,8 @@ namespace TotalParking.Services.Led
         }
 
         private void PublishPanel(LedPanelState state, LedCapacity capacity,
-                                  IDictionary<int, LedCapacity> byZone)
+                                  IDictionary<int, LedCapacity> byZone,
+                                  IDictionary<Tuple<int, int>, LedCapacity> byPort)
         {
             var ports = state.Panel.Ports.Where(p => p.IsActive).ToList();
             if (ports.Count == 0) return;
@@ -225,7 +232,21 @@ namespace TotalParking.Services.Led
                 // Cong ZONES lay so cua CAC ZONE mui ten dan toi, khong phai so
                 // toan bai. Cong TOTAL (bang tong o loi vao) moi lay toan bai.
                 LedCapacity forPort = capacity;
-                if (port.Scope == LedPortScope.Zones)
+                if (port.Scope == LedPortScope.Blocks)
+                {
+                    // Cong BLOCKS lay so cua dung danh sach block va cam bien ma
+                    // khach khai cho mui ten do (docs/LumiSlotsMatrix.xlsx). Khong
+                    // cong gi o day: view v_led_capacity_port da gop san.
+                    LedCapacity c = null;
+                    if (byPort != null)
+                    {
+                        byPort.TryGetValue(Tuple.Create(port.PanelId, port.PortIndex), out c);
+                    }
+                    // Tra khong ra -> xoa trang, KHONG roi ve so toan bai. Cung ly
+                    // do nhu nhanh ZONES ben duoi.
+                    forPort = c ?? new LedCapacity();
+                }
+                else if (port.Scope == LedPortScope.Zones)
                 {
                     forPort = LedPanelRepository.SumZones(byZone, port.ZoneList);
                     // Khai bao ZONES ma khong tra duoc zone nao -> KHONG roi ve so
