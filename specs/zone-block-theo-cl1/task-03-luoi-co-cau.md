@@ -73,7 +73,7 @@ Người dùng đã duyệt tách task này ra và hoãn (28/09/2026).
 
 ## Verification Plan
 
-- **Command:** `python tools/doi_chieu_zone_block.py --phan luoi`
+- **Command**: `python tools/doi_chieu_zone_block.py --phan luoi`
 - **Named probe:** `tools/doi_chieu_zone_block.py`, mục `LECH LUOI` và
   `TOTAL_TIER0 THEO ZONE`.
 - **Reachability:** `v_zone_capacity` cộng `b.column_count`

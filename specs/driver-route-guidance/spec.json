@@ -2,9 +2,9 @@
   "schema_version": "2.1",
   "feature_name": "driver-route-guidance",
   "created_at": "2026-09-19T16:28:34+07:00",
-  "updated_at": "2026-09-28T21:30:00+07:00",
+  "updated_at": "2026-09-28T21:45:00+07:00",
   "language": "en",
-  "status": "in_progress",
+  "status": "paused",
   "scope_lock": {
     "source": "User request: a barrier-side TV showing the parking map with a path from the ramp head to a suitable destination when Camera AI reports a vehicle, plus updating the Dieu huong xe map to derive per-block coordinates. Confirmed by three user decisions: a separate kiosk view rather than reusing the operator page, a real lane graph with Dijkstra rather than a schematic polyline, and a server-chosen destination block persisted with the routing decision.",
     "in_scope": [

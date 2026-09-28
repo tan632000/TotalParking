@@ -56,7 +56,7 @@ cần sửa mã nguồn.
 
 ## Verification Plan
 
-- **Command:** `python tools/doi_chieu_zone_block.py --phan zone`
+- **Command**: `python tools/doi_chieu_zone_block.py --phan zone`
 - **Tiền đề (công cụ tự kiểm, thoát khác 0 nếu hỏng):**
   1. Đọc được sheet `CL1` và thấy **đúng 112 dòng** có số block. Đây là lá chắn
      chống chọn nhầm sheet: `CL2` có 91 dòng.
@@ -87,14 +87,11 @@ cần sửa mã nguồn.
 
 ## Receipt
 
-**Verification: PASS**
-
-**Command:** `python tools/doi_chieu_zone_block.py --phan zone`
-
-**Exit: 0**
-
-**Base:** `16889b5f68676d83ac33659a74ac5a59f35b2c07`
-**Head:** `16889b5f68676d83ac33659a74ac5a59f35b2c07`
+Verification: PASS
+Command: python tools/doi_chieu_zone_block.py --phan zone
+Exit: 0
+Base: cd91a0b8b7df337f63d3cc96c5d2e793baff4da0
+Head: c4c53446d643872a42324d7296f9f06955880dc7328e0f525364fcf031d0fa53
 
 ```
 TIEN DE: CL1 co 112 block, tong 764 o  ->  DAT
@@ -114,7 +111,7 @@ BLOCK DO NEN (phai khong doi):
 KET QUA: SACH
 ```
 
-**AC-01 đạt:** `LECH ZONE: 0`, thoát 0. Trước khi chạy migration cùng lệnh này
+**AC-01 đạt.** `LECH ZONE: 0`, thoát 0. Trước khi chạy migration cùng lệnh này
 báo `LECH ZONE: 29` và thoát 1 — phép kiểm có đỏ trước, nên số 0 ở trên có nghĩa.
 
 **AC-02 đạt bằng phép đo mạnh hơn bản in.** Không chỉ đọc lại bảng đỗ nền, mà so
@@ -130,14 +127,14 @@ trực tiếp từng dòng với bản chụp `block_sao_luu_51` tạo trước 
 Đúng 29 block đổi, 0 block đỗ nền đổi. Nếu câu `UPDATE` quét lan sang
 `kind='Ground'` thì hai con số này đều lệch.
 
+**Người dùng xác nhận trên app đang chạy (28/09/2026):** tên zone hiển thị đúng
+theo công thức `Zone n (Hầm Bn CL1)`. Đây là phần giao diện mà phép kiểm bằng
+cơ sở dữ liệu không chạm tới được — hai danh sách trong `OperationControl.cshtml`
+và `ZoneDetail.cshtml` là chuỗi viết cứng, không đọc `zone.name`.
+
 **Bằng chứng đầy đủ:** `specs/zone-block-theo-cl1/artifacts/zone-truoc-sau.txt`
 (bảng `block_no, zone_id, kind` và bảng `zone` trước và sau).
 
-**Người dùng xác nhận trên app đang chạy (28/09/2026):** tên zone hiển thị đúng
-theo công thức `Zone n (Hầm Bn CL1)`. Đây là phần giao diện mà phép kiểm bằng
-CSDL không chạm tới được — hai danh sách trong `OperationControl.cshtml` và
-`ZoneDetail.cshtml` là chuỗi viết cứng, không đọc `zone.name`.
-
-**Giới hạn:** phép kiểm chứng minh CSDL khớp CL1, **không** chứng minh CL1 khớp
-thực địa. Giới hạn 2 và 3 trong `plan.md` vẫn nguyên — riêng block 61 và 62 nên
-hỏi đội thi công xác nhận.
+**Giới hạn:** phép kiểm chứng minh cơ sở dữ liệu khớp CL1, **không** chứng minh
+CL1 khớp thực địa. Giới hạn 2 và 3 trong `plan.md` vẫn nguyên — riêng block 61
+và 62 nên hỏi đội thi công xác nhận.

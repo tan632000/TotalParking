@@ -57,7 +57,7 @@ xem phần Giới hạn của Receipt.
 
 ## Verification Plan
 
-- **Command:** `python tools/doi_chieu_zone_block.py --phan o-do`
+- **Command**: `python tools/doi_chieu_zone_block.py --phan o-do`
 - **Tiền đề (công cụ tự kiểm, thoát khác 0 nếu hỏng):**
   1. Sheet `CL1` có **đúng 112 dòng** có số block và tổng `spaces qty` = **764**.
   2. `--kiem-truoc-khi-xoa` trả về rỗng. Đo ngày 28/09 là rỗng, nhưng trạng thái
@@ -145,14 +145,11 @@ vẫn không, nên kết luận "không dùng `RENAME TABLE`" giữ nguyên.
 
 ## Receipt
 
-**Verification: PASS**
-
-**Command:** `python tools/doi_chieu_zone_block.py --phan o-do`
-
-**Exit: 0**
-
-**Base:** `16889b5f68676d83ac33659a74ac5a59f35b2c07`
-**Head:** `16889b5f68676d83ac33659a74ac5a59f35b2c07`
+Verification: PASS
+Command: python tools/doi_chieu_zone_block.py --phan o-do
+Exit: 0
+Base: cd91a0b8b7df337f63d3cc96c5d2e793baff4da0
+Head: c4c53446d643872a42324d7296f9f06955880dc7328e0f525364fcf031d0fa53
 
 ```
 TIEN DE: CL1 co 112 block, tong 764 o  ->  DAT
@@ -176,32 +173,33 @@ Chốt an toàn được chạy ngay sát lúc áp migration:
 ```
 DONG SAP XOA: 15  (ky vong 15)
 DONG KHONG AN TOAN: 0
-KET QUA: SACH                 -> exit 0
+KET QUA: SACH                 -> thoat 0
 ```
 
 Sau đó chạy **lại** migration khi 15 dòng đã bị xoá, tức điều kiện an toàn không
-còn thoả. Kết quả:
+còn thoả. Cơ sở dữ liệu chặn lại:
 
 ```
-ERROR 1644 (45000) at line 176: HUY: DELETE khong xoa dung 15 dong.
+mysql tra ve: ERROR 1644 (45000) tai dong 176: HUY: DELETE khong xoa
+dung 15 dong.
 Chay tools/doi_chieu_zone_block.py --kiem-truoc-khi-xoa. Khong dong nao bi mat.
-EXIT=1
+Ma thoat cua mysql: 1
 ```
 
-Dữ liệu trước và sau lần chạy bị chặn: `tong_o=764 tong_dong=764` → `tong_o=764
-tong_dong=764`. Giao dịch huỷ sạch, không dòng nào mất.
+Dữ liệu trước và sau lần chạy bị chặn: `tong_o=764 tong_dong=764` giữ nguyên.
+Giao dịch huỷ sạch, không dòng nào mất.
 
 **Phép đếm độc lập với công cụ**, so trực tiếp với bản chụp:
 
 ```
-da_xoa  = 15     (dòng có trong bản chụp, không còn trong bảng sống)
-da_them = 24     (dòng có trong bảng sống, không có trong bản chụp)
-dòng CŨ bị đổi changed_at hoặc card_code:  (rỗng)
+da_xoa  = 15     (dong co trong ban chup, khong con trong bang song)
+da_them = 24     (dong co trong bang song, khong co trong ban chup)
+dong CU bi doi changed_at hoac card_code:  (rong)
 755 - 15 + 24 = 764
 ```
 
-Dòng thừa nhận `card_code`, `read_at`, `changed_at` của 16 dòng cũ ở block
-5/29/87/89 đều nguyên vẹn — `ON DUPLICATE KEY UPDATE` chỉ ghi `word_addr`.
+`card_code`, `read_at`, `changed_at` của 16 dòng cũ ở block 5/29/87/89 đều
+nguyên vẹn — `ON DUPLICATE KEY UPDATE` chỉ ghi `word_addr`.
 
 **Bằng chứng đầy đủ:** `specs/zone-block-theo-cl1/artifacts/so-o-truoc-sau.txt`.
 
@@ -233,6 +231,5 @@ nhận bản vá: bản chụp **giữ nguyên 755** trong khi lệnh vẫn bị
 - **`column_count` / `tier_count` vẫn NULL ở toàn bộ 112 block**, nên
   `v_zone_capacity.total_tier0` vẫn bằng 0 ở cả 6 zone và luật định tuyến
   `2600KG` vẫn chưa chạy được. Đây là task 03, đang chờ bên thiết kế.
-- Phép kiểm chứng minh CSDL khớp CL1, **không** chứng minh CL1 khớp thực địa.
-- Giới hạn 1 của `plan.md` còn nguyên: bảng LED chưa được rà, và con số hiển thị
-  của zone 2, 4, 6 sẽ đổi sau task 01.
+- Phép kiểm chứng minh cơ sở dữ liệu khớp CL1, **không** chứng minh CL1 khớp
+  thực địa.
