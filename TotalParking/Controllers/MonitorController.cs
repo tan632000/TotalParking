@@ -116,28 +116,15 @@ namespace TotalParking.Controllers
                 };
                 var decision = _router.Route(profile, zones);
 
-                // Bảng LED nào sẽ chỉ tài xế tới zone được chọn. Đây là thứ biến
+                // Bảng LED nào sẽ chỉ tài xế tới KHỐI được chọn. Đây là thứ biến
                 // quyết định trừu tượng thành việc nhìn thấy được ngoài hiện
                 // trường: tài xế không đọc zone_id, họ đọc mũi tên trên bảng.
+                //
+                // Tính SAU khi đã chọn khối, và tra theo khối chứ không theo zone.
+                // Bản cũ lọc `Scope == "ZONES"` trên `zone_list`; từ migration 53 thì
+                // 21 cổng chỉ hướng khai `scope = 'BLOCKS'` nên phép lọc đó luôn trả
+                // rỗng — đo trên bản đang chạy: `signs: []` ở mọi hạng tải.
                 object signs = new object[0];
-                if (decision.ZoneId.HasValue)
-                {
-                    int z = decision.ZoneId.Value;
-                    signs = _leds.GetPanels()
-                        .SelectMany(p => p.Ports
-                            .Where(pt => pt.IsActive
-                                      && pt.Scope == "ZONES"
-                                      && !string.IsNullOrWhiteSpace(pt.ZoneList)
-                                      && pt.ZoneList.Split(',').Select(s => s.Trim())
-                                           .Contains(z.ToString()))
-                            .Select(pt => new
-                            {
-                                panel = p.Code,
-                                port  = pt.PortIndex,
-                                arrow = ArrowName(pt.ArrowDirection)
-                            }))
-                        .ToArray();
-                }
 
                 // Xem truoc dung bo chon block that, khong phai mot ban chep. Neu mo
                 // phong tu chon lay thi trang nay se day nguoi van hanh mot hanh vi
@@ -161,6 +148,15 @@ namespace TotalParking.Controllers
                             simRoute = simPath.Points.Select(pt => new { x = pt.X, y = pt.Y }).ToArray();
                         else
                             simReason = simPath.Reason;
+
+                        signs = _leds.GetPortsForBlock(picked.BlockNo.Value)
+                            .Select(pt => new
+                            {
+                                panel = pt.PanelCode,
+                                port  = pt.PortIndex,
+                                arrow = ArrowName(pt.ArrowDirection)
+                            })
+                            .ToArray();
                     }
                 }
 

@@ -174,6 +174,76 @@ namespace TotalParking.Services
             return map;
         }
 
+        // Những cổng LED đang quảng bá một khối cụ thể.
+        //
+        // Thay cho phép lọc theo `zone_list` mà trang mô phỏng dùng trước đây. Từ
+        // migration 53, 21 cổng chỉ hướng khai `scope = 'BLOCKS'` và `zone_list`
+        // không còn là nguồn — phép lọc cũ vì thế luôn trả về rỗng.
+        //
+        // Tra theo KHỐI chứ không theo zone cũng đúng bản chất hơn: tài xế được chỉ
+        // tới một khối, và câu hỏi thật là "mũi tên nào dẫn tới khối đó", không phải
+        // "mũi tên nào dẫn tới zone chứa nó". Một cổng có thể phục vụ khối thuộc
+        // nhiều zone khác nhau.
+        // Kiểu riêng, nhỏ, thay vì thêm `PanelCode` vào `LedPanelPort`: model đó được
+        // dùng ở vòng đẩy LED và nhiều bề mặt khác, thêm trường chỉ vì một trang mô
+        // phỏng là mở rộng bán kính ảnh hưởng mà không cần.
+        public class PortRef
+        {
+            public string PanelCode      { get; set; }
+            public int    PortIndex      { get; set; }
+            public int    ArrowDirection { get; set; }
+        }
+
+        public IList<PortRef> GetPortsForBlock(int blockNo)
+        {
+            var ports = new List<PortRef>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                // Hai nhánh vì hai loại khối được khai bằng hai bảng khác nhau:
+                //   khối cơ khí -> led_port_block, khai thẳng theo số khối
+                //   khối đỗ nền -> led_port_sensor, khai theo cảm biến
+                // Nối cảm biến về khối đỗ nền qua `zone_id` là chính xác vì mỗi zone
+                // có đúng một khối đỗ nền (901..906) và pgs_sensor_map gắn cảm biến
+                // theo zone chứ không theo khối.
+                cmd.CommandText =
+                    "SELECT p.code, o.port_index, o.arrow_direction " +
+                    "FROM   led_panel_port o " +
+                    "JOIN   led_panel p ON p.panel_id = o.panel_id " +
+                    "WHERE  o.is_active = 1 AND p.is_active = 1 " +
+                    "  AND (EXISTS (SELECT 1 FROM led_port_block pb " +
+                    "               JOIN block b ON b.block_id = pb.block_id " +
+                    "               WHERE pb.panel_id = o.panel_id " +
+                    "                 AND pb.port_index = o.port_index " +
+                    "                 AND b.block_no = @block_no) " +
+                    "    OR EXISTS (SELECT 1 FROM led_port_sensor ps " +
+                    "               JOIN pgs_sensor_map m ON m.zcu_id = ps.zcu_id " +
+                    "                                   AND m.lo = ps.lo " +
+                    "                                   AND m.vi_tri = ps.vi_tri " +
+                    "               JOIN block g ON g.zone_id = m.zone_id " +
+                    "                           AND g.kind = 'Ground' " +
+                    "               WHERE ps.panel_id = o.panel_id " +
+                    "                 AND ps.port_index = o.port_index " +
+                    "                 AND g.block_no = @block_no)) " +
+                    "ORDER  BY CAST(p.code AS UNSIGNED), o.port_index";
+                cmd.Parameters.AddWithValue("@block_no", blockNo);
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        ports.Add(new PortRef
+                        {
+                            PanelCode      = Convert.ToString(r["code"]),
+                            PortIndex      = Convert.ToInt32(r["port_index"]),
+                            ArrowDirection = Convert.ToInt32(r["arrow_direction"])
+                        });
+                    }
+                }
+            }
+            return ports;
+        }
+
         // Sức chứa theo TỪNG CỔNG, cho các cổng khai `scope = 'BLOCKS'`.
         //
         // Khác đường theo zone ở chỗ KHÔNG phải cộng gì trong C#: view
