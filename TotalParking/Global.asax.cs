@@ -43,6 +43,15 @@ namespace TotalParking
             // va mat sach moi lan khoi dong lai.
             PgsSensorStateHost.Initialize();
 
+            // Canh bao khi mot cam bien do thuong bao loi. Chay SAU vong ghi o
+            // tren vi no doc chinh pgs_sensor_state.
+            //
+            // Vi sao can: ngay 28/09/2026 bon cam bien cua ZCU 0 lo 1 bao loi
+            // 12 va 22 tieng ma khong ai duoc bao — truoc do khong co ma loi nao
+            // cho cam bien. O loi khong duoc tinh la trong nen bang LED bao
+            // THIEU cho trong, tuc sai theo chieu an toan va khong tu lo ra.
+            CanhBaoCamBienService.Start();
+
             // Vòng quét ô đỗ: đọc D400/D202…D308 để biết ô nào đang giữ thẻ nào.
             // Công tắc riêng (plc:slotScanEnabled) vì vòng này CHỈ ĐỌC, trong khi
             // vòng poll của PlcHost có ghi D1000. Gộp chung sẽ buộc phải bật quyền

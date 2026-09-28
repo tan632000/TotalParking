@@ -138,6 +138,10 @@ namespace TotalParking.Services.Pgs
                     _timer.Dispose();
                     _timer = null;
                 }
+                // Vòng cảnh báo cảm biến đọc chính bảng mà vòng này ghi, nên nó
+                // tắt theo. Để chạy tiếp thì nó sẽ đọc số liệu đứng yên và đóng
+                // hết cảnh báo vì read_at không còn tươi.
+                CanhBaoCamBienService.Stop();
                 HostingEnvironment.UnregisterObject(this);
                 _instance = null;
             }

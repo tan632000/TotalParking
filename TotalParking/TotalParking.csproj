@@ -220,6 +220,7 @@
     <Compile Include="Services\Pgs\PgsHost.cs" />
     <Compile Include="Services\Pgs\PgsSensorStateHost.cs" />
     <Compile Include="Services\Pgs\PgsSensorStateWriter.cs" />
+    <Compile Include="Services\Pgs\CanhBaoCamBienService.cs" />
     <Compile Include="Services\Plc\PlcTypes.cs" />
     <Compile Include="Services\Plc\OmronFinsClient.cs" />
     <Compile Include="Services\Plc\CardCodeDecoder.cs" />
