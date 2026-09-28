@@ -62,13 +62,32 @@ namespace TotalParking.Models
 
         public int FreeMechanical { get { return Math.Max(0, TotalMechanical - InUse); } }
 
-        // Ô đỗ nền KHÔNG trừ InUse. Đây là chỗ dễ sai nhất sau migration 47:
-        // InUse đếm ô cơ khí, trừ nó vào sức chứa đỗ nền là trộn hai loại chỗ
-        // khác hẳn nhau. Zone 3 chỉ có 2 ô đỗ nền trên 102 ô cơ khí — trừ nhầm
-        // thì xe hạng THƯỜNG bị từ chối ngay khi có 2 chiếc lên pallet, dù cả
-        // hai ô nền vẫn trống. Hệ thống không quan sát được ô nền, nên câu trả
-        // lời trung thực là "còn nguyên sức chứa", không phải một số bịa.
-        public int FreeGround { get { return TotalGround; } }
+        // Số ô đỗ nền ĐANG CÓ XE, đếm từ cảm biến PGS qua pgs_sensor_map
+        // (migration 50). KHÁC hẳn InUse: InUse đếm ô cơ khí qua thanh ghi PLC.
+        // Trừ nhầm cái này vào cái kia là trộn hai loại chỗ khác hẳn nhau —
+        // zone 3 chỉ có 2 ô đỗ nền trên 102 ô cơ khí, trừ nhầm thì xe hạng
+        // THƯỜNG bị từ chối ngay khi có 2 chiếc lên pallet dù cả hai ô nền
+        // vẫn trống.
+        public int GroundInUse { get; set; }
+
+        // Số ô đỗ nền CÒN TRỐNG, đọc thẳng từ v_zone_capacity.ground_free — cột
+        // đó lại đọc từ v_led_capacity_zone. Một công thức duy nhất cho cả bảng
+        // LED lẫn định tuyến.
+        //
+        // KHÔNG tự tính TotalGround - GroundInUse ở đây: ô LỖI không phải ô có
+        // xe nhưng cũng không phải ô trống, nên phép trừ sẽ đếm nó là trống.
+        // Đo được lệch thật: zone 1 ra 12 theo phép trừ, 8 theo cách đếm ô báo
+        // trống. Người dùng chốt 24/09 là ô lỗi không tính.
+        public int GroundFree { get; set; }
+
+        // Bản trước trả về nguyên TotalGround kèm ghi chú "hệ thống không quan
+        // sát được ô nền nên câu trả lời trung thực là còn nguyên sức chứa".
+        // Lúc đó đúng. Migration 48 tới 50 làm tiền đề ấy sai: cảm biến PGS
+        // quan sát được từng ô, và pgs_sensor_map biết ô nào thuộc zone nào.
+        //
+        // Khi vòng ghi chết thì GroundInUse về 0, tức quay lại đúng hành vi cũ:
+        // rộng rãi hơn thực tế một chút, chứ không từ chối oan cả bãi.
+        public int FreeGround { get { return Math.Max(0, GroundFree); } }
 
         // CẢNH BÁO: TotalTier0 lấy từ block.column_count, mà cột đó đang NULL ở
         // cả 118 block nên nó luôn bằng 0 — mọi xe hạng 2600KG sẽ bị trả

@@ -116,7 +116,7 @@ namespace TotalParking.Services
             {
                 cmd.CommandText =
                     "SELECT zone_id, code, gate_rank, total_mech, total_tier0, " +
-                    "       total_ground, in_use " +
+                    "       total_ground, in_use, ground_in_use, ground_free " +
                     "FROM   v_zone_capacity ORDER BY gate_rank, zone_id";
 
                 conn.Open();
@@ -132,7 +132,9 @@ namespace TotalParking.Services
                             TotalMechanical = Num(r, "total_mech"),
                             TotalTier0      = Num(r, "total_tier0"),
                             TotalGround     = Num(r, "total_ground"),
-                            InUse           = Num(r, "in_use")
+                            InUse           = Num(r, "in_use"),
+                            GroundInUse     = Num(r, "ground_in_use"),
+                            GroundFree      = Num(r, "ground_free")
                         });
                     }
                 }
