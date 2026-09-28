@@ -150,7 +150,7 @@ namespace TotalParking.Controllers
 
                 if (decision.Outcome == RoutingOutcome.Routed && decision.ZoneId.HasValue)
                 {
-                    var picked = _blocks.Allocate(decision.ZoneId.Value, "SIM");
+                    var picked = _blocks.Allocate(decision.ZoneId.Value, "SIM", wc);
                     if (picked.HasCapacity)
                     {
                         simBlock = picked.BlockNo;

@@ -1,5 +1,6 @@
 ﻿using System;
 using MySqlConnector;
+using TotalParking.Models;
 
 namespace TotalParking.Services
 {
@@ -57,21 +58,23 @@ namespace TotalParking.Services
         // (901..906, một khối mỗi zone), và `pgs_sensor_map` gắn cảm biến theo zone
         // chứ không theo khối.
         //
-        // ===================== CỐ Ý KHÔNG ĐỤNG `fresh_reads` =====================
+        // ===================== LỌC THEO HẠNG TẢI =====================
         //
-        // Khối đỗ nền không có dòng `plc_slot_state` nào nên `fresh_reads` của chúng
-        // luôn bằng 0, và mệnh đề `(fresh_reads > 0) DESC` đẩy chúng xuống cuối bảng
-        // xếp hạng. Có thể cho chúng dùng `standard_fresh` để cạnh tranh sòng phẳng,
-        // nhưng ĐỪNG — ít nhất là chưa.
+        // Hạng tải quyết định LOẠI khối, không chỉ quyết định zone. Trước đây
+        // `Allocate` chỉ nhận `zoneId` nên nó chọn khối nào xếp hạng cao nhất trong
+        // zone, bất kể xe cần pallet cơ khí hay phải xuống nền. Hệ quả đo được ngày
+        // 28/09/2026: **523 lượt** xe hạng THƯỜNG bị chỉ vào khối cơ khí, chỉ 7 lượt
+        // vào khối đỗ nền.
         //
-        // Lý do: `Allocate` chỉ nhận `zoneId`, KHÔNG nhận hạng tải. Nó không phân
-        // biệt được xe cần pallet cơ khí với xe phải xuống nền. Thử cho khối đỗ nền
-        // cạnh tranh bằng `standard_fresh` thì zone 2 và zone 5 lập tức đổi từ khối
-        // 80 và 19 sang khối 902 và 905 — tức xe cơ khí bị chỉ xuống bãi nền.
+        // Hạng THƯỜNG nghĩa là "quá tải ở đỗ thường, không dùng pallet cơ khí" —
+        // trong 1014 hồ sơ THƯỜNG, 878 xe quá RỘNG so với khoang, 153 trong số đó
+        // vượt hơn 100 mm kể cả sau khi đã trừ biên gương. Chỉ họ tới khoang cơ khí
+        // là chỉ tới chỗ xe không lọt.
         //
-        // Giữ chúng ở cuối là lớp chắn tình cờ cho lỗ hổng đó. Sửa đúng là truyền
-        // hạng tải vào đây rồi lọc theo `kind`; việc ấy đổi chữ ký hàm và hai nơi
-        // gọi, nên để thành một thay đổi riêng có chủ đích.
+        // Vì đã lọc `kind`, khối đỗ nền không còn tranh chỗ với khối cơ khí nữa, nên
+        // `fresh_reads` của chúng được dùng `standard_fresh` cho đúng. Trước khi có
+        // bộ lọc này thì KHÔNG được: thử cho chúng cạnh tranh sòng phẳng thì zone 2
+        // và 5 lập tức đổi từ khối 80 và 19 sang 902 và 905.
         private const string PickSql =
             "SELECT c.block_no, c.free_capacity, c.fresh_reads FROM ( " +
             "  SELECT b.block_no AS block_no, " +
@@ -86,18 +89,35 @@ namespace TotalParking.Services
             "                WHERE r.block_no = b.block_no AND r.outcome = 'ROUTED' " +
             "                  AND r.decided_at > NOW(3) - INTERVAL @window SECOND " +
             "                  AND r.event_id <> @event_id) AS free_capacity, " +
-            "         (SELECT COUNT(*) FROM plc_slot_state s WHERE s.block_id = b.block_id " +
-            "            AND s.read_at >= NOW() - INTERVAL @plc_fresh MINUTE) AS fresh_reads " +
+            "         (CASE WHEN b.kind = 'Ground' " +
+            "               THEN COALESCE((SELECT g.standard_fresh FROM v_led_capacity_zone g " +
+            "                               WHERE g.zone_id = b.zone_id), 0) " +
+            "               ELSE (SELECT COUNT(*) FROM plc_slot_state s " +
+            "                      WHERE s.block_id = b.block_id " +
+            "                        AND s.read_at >= NOW() - INTERVAL @plc_fresh MINUTE) " +
+            "          END) AS fresh_reads " +
             "  FROM   block b " +
-            "  WHERE  b.zone_id = @zone_id AND b.is_active = 1 " +
+            "  WHERE  b.zone_id = @zone_id AND b.is_active = 1 AND b.kind = @kind " +
             ") c " +
             "WHERE  c.free_capacity > 0 " +
             "ORDER  BY (c.fresh_reads > 0) DESC, c.free_capacity DESC, c.block_no ASC " +
             "LIMIT  1";
 
+        // Loại khối mà một hạng tải được phép vào.
+        //
+        // Ngả về phía hạn chế nhất, cùng quy ước với `ZoneRouter.FreeFor`: hạng lạ
+        // hoặc thiếu đều xuống đỗ nền. Đưa một chiếc xe không rõ hạng lên pallet cơ
+        // khí là rủi ro thật; đưa nhầm xuống bãi nền thì chỉ là bất tiện.
+        public static string KindFor(string weightClass)
+        {
+            if (weightClass == WeightClassCode.Max2200) return "Mechanical";
+            if (weightClass == WeightClassCode.Max2600) return "Mechanical";
+            return "Ground";
+        }
+
         // eventId được loại khỏi phép trừ: một sự kiện không tự trừ suất của chính nó khi
         // camera gửi lại cùng event_id, nếu không lần gửi lại sẽ bị đẩy sang block khác.
-        public BlockAllocation Allocate(int zoneId, string eventId)
+        public BlockAllocation Allocate(int zoneId, string eventId, string weightClass)
         {
             using (var conn = new MySqlConnection(Db.ConnectionString))
             using (var cmd = conn.CreateCommand())
@@ -107,6 +127,7 @@ namespace TotalParking.Services
                 cmd.Parameters.AddWithValue("@event_id",   eventId ?? string.Empty);
                 cmd.Parameters.AddWithValue("@window",     PendingDebitWindowSeconds);
                 cmd.Parameters.AddWithValue("@plc_fresh",  PlcFreshMinutes);
+                cmd.Parameters.AddWithValue("@kind",       KindFor(weightClass));
 
                 conn.Open();
                 using (var r = cmd.ExecuteReader())

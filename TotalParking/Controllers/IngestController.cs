@@ -145,7 +145,8 @@ namespace TotalParking.Controllers
                 // duoc tu su kien tho. Nam trong CUNG khoi try vi neu phan loai
                 // that bai thi khong co ho so de chon zone — chay tiep chi de
                 // sinh ra mot quyet dinh dua tren null.
-                _routings.Save(WithDestinationBlock(_router.Route(profile, _routings.GetZoneCapacity())));
+                _routings.Save(WithDestinationBlock(
+                    _router.Route(profile, _routings.GetZoneCapacity()), profile.WeightClass));
             }
             catch (Exception ex)
             {
@@ -160,12 +161,16 @@ namespace TotalParking.Controllers
         // Chon block dich cho quyet dinh vua ra, TRUOC khi luu, de block va outcome di
         // vao cung mot lan ghi. Khong bao gio co khoanh khac nao ma nguoi doc thay
         // ROUTED ma chua co diem den.
-        private static VehicleRouting WithDestinationBlock(VehicleRouting decision)
+        // weightClass quyết định LOẠI khối, không chỉ quyết định zone: xe hạng THƯỜNG
+        // phải xuống bãi nền, xe 2200KG và 2600KG mới lên pallet cơ khí. Thiếu tham
+        // số này thì bộ chọn lấy khối nào xếp hạng cao nhất trong zone — đo ngày
+        // 28/09/2026 là 523 lượt xe THƯỜNG bị chỉ vào khối cơ khí.
+        private static VehicleRouting WithDestinationBlock(VehicleRouting decision, string weightClass)
         {
             if (decision == null) return null;
             if (decision.Outcome != RoutingOutcome.Routed || !decision.ZoneId.HasValue) return decision;
 
-            var allocation = _allocator.Allocate(decision.ZoneId.Value, decision.EventId);
+            var allocation = _allocator.Allocate(decision.ZoneId.Value, decision.EventId, weightClass);
 
             if (allocation.HasCapacity)
             {
