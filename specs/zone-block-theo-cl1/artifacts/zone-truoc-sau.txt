@@ -1,0 +1,279 @@
+===== TRUOC KHI CHAY 51 =====
+-- block_no, zone_id (toan bo)
+block_no	zone_id	kind
+1	4	Mechanical
+2	4	Mechanical
+3	4	Mechanical
+4	4	Mechanical
+5	4	Mechanical
+6	4	Mechanical
+7	4	Mechanical
+8	4	Mechanical
+9	5	Mechanical
+10	5	Mechanical
+11	5	Mechanical
+12	5	Mechanical
+13	5	Mechanical
+14	5	Mechanical
+15	5	Mechanical
+16	5	Mechanical
+17	5	Mechanical
+18	5	Mechanical
+19	5	Mechanical
+20	5	Mechanical
+21	5	Mechanical
+22	5	Mechanical
+23	5	Mechanical
+24	5	Mechanical
+25	6	Mechanical
+26	6	Mechanical
+27	6	Mechanical
+28	6	Mechanical
+29	6	Mechanical
+30	6	Mechanical
+31	6	Mechanical
+32	6	Mechanical
+33	4	Mechanical
+34	4	Mechanical
+35	4	Mechanical
+36	4	Mechanical
+37	4	Mechanical
+38	4	Mechanical
+39	3	Mechanical
+40	3	Mechanical
+41	3	Mechanical
+42	3	Mechanical
+43	3	Mechanical
+44	3	Mechanical
+45	3	Mechanical
+46	3	Mechanical
+47	3	Mechanical
+48	3	Mechanical
+49	3	Mechanical
+50	3	Mechanical
+51	4	Mechanical
+52	4	Mechanical
+53	4	Mechanical
+54	4	Mechanical
+55	4	Mechanical
+56	4	Mechanical
+57	4	Mechanical
+58	4	Mechanical
+59	4	Mechanical
+60	2	Mechanical
+61	2	Mechanical
+62	2	Mechanical
+63	2	Mechanical
+64	2	Mechanical
+65	2	Mechanical
+66	2	Mechanical
+67	2	Mechanical
+68	2	Mechanical
+69	2	Mechanical
+70	2	Mechanical
+71	2	Mechanical
+72	2	Mechanical
+73	2	Mechanical
+74	2	Mechanical
+75	2	Mechanical
+76	2	Mechanical
+77	2	Mechanical
+78	2	Mechanical
+79	2	Mechanical
+80	2	Mechanical
+81	2	Mechanical
+82	2	Mechanical
+83	2	Mechanical
+84	2	Mechanical
+85	2	Mechanical
+86	2	Mechanical
+87	2	Mechanical
+88	2	Mechanical
+89	2	Mechanical
+90	2	Mechanical
+91	2	Mechanical
+92	2	Mechanical
+93	2	Mechanical
+94	2	Mechanical
+95	2	Mechanical
+96	2	Mechanical
+97	1	Mechanical
+98	1	Mechanical
+99	1	Mechanical
+100	1	Mechanical
+101	1	Mechanical
+102	1	Mechanical
+103	1	Mechanical
+104	1	Mechanical
+105	1	Mechanical
+106	1	Mechanical
+107	1	Mechanical
+108	1	Mechanical
+109	1	Mechanical
+110	1	Mechanical
+111	1	Mechanical
+112	1	Mechanical
+901	1	Ground
+902	2	Ground
+903	3	Ground
+904	4	Ground
+905	5	Ground
+906	6	Ground
+-- zone
+zone_id	code	name
+1	Z1	Zone 1
+2	Z2	Zone 2
+3	Z3	Zone 3
+4	Z4	Zone 4
+5	Z5	Zone 5
+6	Z6	Zone 6
+
+===== SAU KHI CHAY 51 =====
+block_no	zone_id	kind
+1	4	Mechanical
+2	4	Mechanical
+3	4	Mechanical
+4	4	Mechanical
+5	4	Mechanical
+6	4	Mechanical
+7	4	Mechanical
+8	4	Mechanical
+9	5	Mechanical
+10	5	Mechanical
+11	5	Mechanical
+12	5	Mechanical
+13	5	Mechanical
+14	5	Mechanical
+15	5	Mechanical
+16	5	Mechanical
+17	5	Mechanical
+18	5	Mechanical
+19	5	Mechanical
+20	5	Mechanical
+21	6	Mechanical
+22	6	Mechanical
+23	6	Mechanical
+24	5	Mechanical
+25	6	Mechanical
+26	6	Mechanical
+27	6	Mechanical
+28	6	Mechanical
+29	5	Mechanical
+30	5	Mechanical
+31	5	Mechanical
+32	5	Mechanical
+33	4	Mechanical
+34	4	Mechanical
+35	4	Mechanical
+36	4	Mechanical
+37	4	Mechanical
+38	4	Mechanical
+39	4	Mechanical
+40	3	Mechanical
+41	3	Mechanical
+42	3	Mechanical
+43	3	Mechanical
+44	3	Mechanical
+45	3	Mechanical
+46	3	Mechanical
+47	3	Mechanical
+48	4	Mechanical
+49	4	Mechanical
+50	4	Mechanical
+51	4	Mechanical
+52	4	Mechanical
+53	4	Mechanical
+54	4	Mechanical
+55	4	Mechanical
+56	4	Mechanical
+57	4	Mechanical
+58	5	Mechanical
+59	5	Mechanical
+60	4	Mechanical
+61	5	Mechanical
+62	5	Mechanical
+63	6	Mechanical
+64	6	Mechanical
+65	6	Mechanical
+66	6	Mechanical
+67	6	Mechanical
+68	6	Mechanical
+69	6	Mechanical
+70	2	Mechanical
+71	2	Mechanical
+72	2	Mechanical
+73	2	Mechanical
+74	2	Mechanical
+75	2	Mechanical
+76	4	Mechanical
+77	4	Mechanical
+78	4	Mechanical
+79	4	Mechanical
+80	2	Mechanical
+81	2	Mechanical
+82	2	Mechanical
+83	2	Mechanical
+84	2	Mechanical
+85	2	Mechanical
+86	1	Mechanical
+87	2	Mechanical
+88	2	Mechanical
+89	2	Mechanical
+90	2	Mechanical
+91	2	Mechanical
+92	2	Mechanical
+93	2	Mechanical
+94	2	Mechanical
+95	2	Mechanical
+96	1	Mechanical
+97	1	Mechanical
+98	1	Mechanical
+99	1	Mechanical
+100	1	Mechanical
+101	1	Mechanical
+102	1	Mechanical
+103	1	Mechanical
+104	1	Mechanical
+105	1	Mechanical
+106	1	Mechanical
+107	1	Mechanical
+108	1	Mechanical
+109	1	Mechanical
+110	1	Mechanical
+111	1	Mechanical
+112	1	Mechanical
+901	1	Ground
+902	2	Ground
+903	3	Ground
+904	4	Ground
+905	5	Ground
+906	6	Ground
+-- zone
+zone_id	code	name
+1	Z1	Zone 1 (H?m B1 CL1)
+2	Z2	Zone 2 (H?m B2 CL1)
+3	Z3	Zone 3 (H?m B3 CL1)
+4	Z4	Zone 4 (H?m B4 CL1)
+5	Z5	Zone 5 (H?m B5 CL1)
+6	Z6	Zone 6 (H?m B6 CL1)
+
+-- doi chieu block do nen truoc/sau (phai rong)
+-- so block that su doi zone (phai la 29)
+29
+
+===== DAU RA LENH KIEM =====
+TIEN DE: CL1 co 112 block, tong 764 o  ->  DAT
+
+==============================================================
+LECH ZONE: 0
+
+BLOCK DO NEN (phai khong doi):
+   block 901   zone 1   14 o
+   block 902   zone 2   26 o
+   block 903   zone 3   2 o
+   block 904   zone 4   14 o
+   block 905   zone 5   11 o
+   block 906   zone 6   13 o
+
+==============================================================
+KET QUA: SACH
