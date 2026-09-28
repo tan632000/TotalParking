@@ -6,35 +6,34 @@
     // deu den tu may chu — truoc day chung la 8 dong gan cung va 18 khoi bia
     // mang ten theo khuon "Block <chu cai>-<so>", trong khi bai that co 118 khoi.
     string zoneName = "Zone " + zoneId;
-    string zoneLocation = "";
     string zoneColor = "rgb(37, 99, 235)";
     string zoneColorMuted = "rgba(37, 99, 235, 0.15)";
 
     switch (zoneId)
     {
         case 1:
-            zoneName = "Zone 1 (Zone A)"; zoneLocation = "Hầm B1";
+            zoneName = "Zone 1 (Hầm B1 CL1)";
             zoneColor = "rgb(234, 179, 8)"; zoneColorMuted = "rgba(234, 179, 8, 0.15)";
             break;
         case 2:
-            zoneName = "Zone 2 (Zone B)"; zoneLocation = "Hầm B2";
+            zoneName = "Zone 2 (Hầm B2 CL1)";
             zoneColor = "rgb(148, 163, 184)"; zoneColorMuted = "rgba(148, 163, 184, 0.15)";
             break;
         case 3:
-            zoneName = "Zone 3 (Zone C)"; zoneLocation = "Hầm B3";
+            zoneName = "Zone 3 (Hầm B3 CL1)";
             zoneColor = "rgb(249, 115, 22)"; zoneColorMuted = "rgba(249, 115, 22, 0.15)";
             break;
         case 4:
-            zoneName = "Zone 4 (Zone D)"; zoneLocation = "Tầng 1";
+            zoneName = "Zone 4 (Hầm B4 CL1)";
             zoneColor = "rgb(168, 85, 247)"; zoneColorMuted = "rgba(168, 85, 247, 0.15)";
             break;
         case 5:
-            zoneName = "Zone 5 (Zone E)"; zoneLocation = "Hầm B4";
+            zoneName = "Zone 5 (Hầm B5 CL1)";
             zoneColor = "rgb(6, 182, 212)"; zoneColorMuted = "rgba(6, 182, 212, 0.15)";
             break;
         case 6:
         default:
-            zoneName = "Zone 6 (Zone F)"; zoneLocation = "Tầng 2";
+            zoneName = "Zone 6 (Hầm B6 CL1)";
             zoneColor = "rgb(34, 197, 94)"; zoneColorMuted = "rgba(34, 197, 94, 0.15)";
             break;
     }
@@ -88,7 +87,7 @@
 
                     </svg>
 
-                    <span class="text-sm font-bold text-white shrink-0">@zoneName – @zoneLocation</span>
+                    <span class="text-sm font-bold text-white shrink-0">@zoneName</span>
 
                     <span class="text-slate-500 shrink-0">|</span>
 

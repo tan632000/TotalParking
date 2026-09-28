@@ -1,3 +1,11 @@
+-- !!! CANH BAO: FILE NAY HOAN TAC 51 VA 52 !!!
+-- File nay co `DELETE FROM block;` roi INSERT lai zone_id va slot_count VIET CUNG
+-- cho ca 118 block. Chay lai file nay se dua 29 block ve zone cu va 7 block ve
+-- so o cu, dong thoi xoa plc_request, parking_session, parking_slot, plc_device.
+-- Sau moi lan chay lai file nay, PHAI chay lai 51_zone_theo_cl1.sql roi
+-- 52_so_o_theo_cl1.sql, rot cuoc kiem bang:
+--     python tools/doi_chieu_zone_block.py --phan zone --phan o-do
+
 -- Phan bo block theo zone, lay tu docs/tong_hop_zone_blocks.md do KHACH HANG cung cap.
 -- MySQL 8.0.19+. Chay lai nhieu lan an toan. UTF-8 KHONG BOM.
 --
