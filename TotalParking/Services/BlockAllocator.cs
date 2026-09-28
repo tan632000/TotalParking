@@ -39,11 +39,49 @@ namespace TotalParking.Services
         // Chỗ trống = slot_count - số ô đang có xe - số suất đã phát đi trong cửa sổ.
         // Phần trừ cuối là để hai xe vào cách nhau vài giây không cùng bị đẩy vào một
         // block chỉ còn đúng một chỗ.
+        // ===================== KHỐI ĐỖ NỀN ĐẾM KHÁC KHỐI CƠ KHÍ =====================
+        //
+        // `v_slot_taken` đọc `plc_slot_state`, mà bảng đó CHỈ gieo cho khối cơ khí
+        // (17_plc_slot_state.sql lọc kind='Mechanical'). Với khối đỗ nền nó luôn trả
+        // 0, nên phép trừ cũ luôn cho ra "còn nguyên sức chứa" bất kể ngoài bãi có
+        // bao nhiêu xe. Đo ngày 28/09/2026: khối 906 được coi là còn 13 chỗ trong khi
+        // cảm biến đếm được 6. Đã xảy ra thật — 9 lượt bị chỉ vào khối 901 ngày 24/09.
+        //
+        // Sửa bằng cách ĐỌC THẲNG `v_led_capacity_zone`, không tự tính lại. Đó là
+        // cùng con số bảng LED đang hiện và cùng con số `v_zone_capacity.ground_free`
+        // đang dùng — một công thức, một kết quả. Tự tính lại ở đây sẽ tái lập đúng
+        // sự cố mà migration 50 vừa dọn: bảng LED đếm `trang_thai = 0` nên bỏ ô lỗi,
+        // còn phép trừ sức chứa lại coi ô lỗi là trống, và hai màn hình nói hai điều.
+        //
+        // Nối qua `zone_id` là chính xác vì mỗi zone có ĐÚNG MỘT khối đỗ nền
+        // (901..906, một khối mỗi zone), và `pgs_sensor_map` gắn cảm biến theo zone
+        // chứ không theo khối.
+        //
+        // ===================== CỐ Ý KHÔNG ĐỤNG `fresh_reads` =====================
+        //
+        // Khối đỗ nền không có dòng `plc_slot_state` nào nên `fresh_reads` của chúng
+        // luôn bằng 0, và mệnh đề `(fresh_reads > 0) DESC` đẩy chúng xuống cuối bảng
+        // xếp hạng. Có thể cho chúng dùng `standard_fresh` để cạnh tranh sòng phẳng,
+        // nhưng ĐỪNG — ít nhất là chưa.
+        //
+        // Lý do: `Allocate` chỉ nhận `zoneId`, KHÔNG nhận hạng tải. Nó không phân
+        // biệt được xe cần pallet cơ khí với xe phải xuống nền. Thử cho khối đỗ nền
+        // cạnh tranh bằng `standard_fresh` thì zone 2 và zone 5 lập tức đổi từ khối
+        // 80 và 19 sang khối 902 và 905 — tức xe cơ khí bị chỉ xuống bãi nền.
+        //
+        // Giữ chúng ở cuối là lớp chắn tình cờ cho lỗ hổng đó. Sửa đúng là truyền
+        // hạng tải vào đây rồi lọc theo `kind`; việc ấy đổi chữ ký hàm và hai nơi
+        // gọi, nên để thành một thay đổi riêng có chủ đích.
         private const string PickSql =
             "SELECT c.block_no, c.free_capacity, c.fresh_reads FROM ( " +
             "  SELECT b.block_no AS block_no, " +
-            "         b.slot_count " +
-            "           - (SELECT COUNT(*) FROM v_slot_taken t WHERE t.block_id = b.block_id) " +
+            "         (CASE WHEN b.kind = 'Ground' " +
+            "               THEN COALESCE((SELECT g.free_standard FROM v_led_capacity_zone g " +
+            "                               WHERE g.zone_id = b.zone_id), 0) " +
+            "               ELSE b.slot_count " +
+            "                    - (SELECT COUNT(*) FROM v_slot_taken t " +
+            "                        WHERE t.block_id = b.block_id) " +
+            "          END) " +
             "           - (SELECT COUNT(*) FROM vehicle_routing r " +
             "                WHERE r.block_no = b.block_no AND r.outcome = 'ROUTED' " +
             "                  AND r.decided_at > NOW(3) - INTERVAL @window SECOND " +
