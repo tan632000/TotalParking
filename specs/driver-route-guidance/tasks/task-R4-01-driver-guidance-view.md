@@ -1,5 +1,25 @@
 # Task R4-01: Driver guidance view
-**Status:** in_progress
+**Status:** paused
+
+> **Tạm dừng ngày 28/09/2026 — trạng thái quan sát được, không phải kết luận.**
+>
+> Task này nằm ở `in_progress` từ 19/09 và không có thay đổi nào trong 9 ngày.
+> Đo lại ngày 28/09:
+>
+> - **Hiện vật có đủ.** `Views/Home/DriverGuide.cshtml` (12.976 byte),
+>   `Database/verify_driver_route_state.sql` (4.856 byte), và cả
+>   `HomeController.cs`, `TotalParking.csproj`, `_ScadaLayout.cshtml` đều đã
+>   chứa `DriverGuide`. Cả 5 ô Changes đều đã tick.
+> - **Nhưng chưa có bằng chứng thực thi.** Mục Verification Plan bên dưới chỉ
+>   ghi *kế hoạch* ("Expected: ..."), không có lệnh nào đã chạy, không có đầu
+>   ra thật, không có `Exit: 0`.
+>
+> Vì vậy **không đánh dấu `done`** — làm vậy là bịa bằng chứng. Cũng **không
+> phải `blocked`**: không có gì cản việc chạy phép kiểm, chỉ là chưa ai chạy.
+>
+> Để đóng task: chạy lệnh ở Verification Plan, mở `/Home/DriverGuide` trên bản
+> đang chạy để đo bốn ca R4.1–R4.4, rồi viết Receipt với đầu ra thật.
+
 ## Outcome
 
 A driver stopped at the barrier can look at a TV showing `Home/DriverGuide`: the plan image at the routing frame, one drawn path from the ramp to the destination, and the block number in large type. The page polls the route endpoint every 2 seconds, shows a waiting state when nothing is current, and is registered in the project file so it survives Publish.

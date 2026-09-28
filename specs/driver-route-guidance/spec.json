@@ -2,7 +2,7 @@
   "schema_version": "2.1",
   "feature_name": "driver-route-guidance",
   "created_at": "2026-09-19T16:28:34+07:00",
-  "updated_at": "2026-09-19T21:30:02+07:00",
+  "updated_at": "2026-09-28T21:30:00+07:00",
   "language": "en",
   "status": "in_progress",
   "scope_lock": {
@@ -1193,14 +1193,14 @@
     "tasks/task-R4-01-driver-guidance-view.md": {
       "id": "R4-01",
       "title": "Driver guidance view",
-      "status": "in_progress",
+      "status": "paused",
       "dependencies": [
         "tasks/task-R3-01-route-service.md"
       ],
       "blocker": null,
       "started_at": "2026-09-19T21:10:46+07:00",
       "completed_at": null,
-      "last_updated_at": "2026-09-19T23:18:28+07:00"
+      "last_updated_at": "2026-09-28T21:30:00+07:00"
     },
     "tasks/task-R5-01-operator-page-alignment.md": {
       "id": "R5-01",
