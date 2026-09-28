@@ -71,6 +71,17 @@ namespace TotalParking.Services
         // vượt hơn 100 mm kể cả sau khi đã trừ biên gương. Chỉ họ tới khoang cơ khí
         // là chỉ tới chỗ xe không lọt.
         //
+        // ĐÂY KHÔNG PHẢI VẤN ĐỀ AN TOÀN, đừng đọc nhầm. Mỗi khối cơ khí có rào chắn
+        // riêng (bảng vật tư CL1 có cột "Motor hàng rào" cho từng khối), nên xe quá
+        // khổ bị chặn ở đó bất kể màn hình nói gì. Thiệt hại là thời gian và niềm
+        // tin: tài xế lái tới nơi, bị chặn, phải lùi ra rồi hỏi người trực.
+        //
+        // Một hệ quả âm thầm đáng biết: SCADA KHÔNG đọc trạng thái rào chắn, nên nó
+        // không biết lượt chỉ đường vừa rồi đã bị từ chối ngoài hiện trường. Suất đã
+        // phát vẫn bị trừ khỏi sức chứa khối đó trong 90 giây, và không dòng nào ghi
+        // lại rằng chỉ dẫn đã hỏng. Vì thế 523 lượt sai kia trôi qua hoàn toàn vô
+        // hình cho tới khi có người đi rà.
+        //
         // Vì đã lọc `kind`, khối đỗ nền không còn tranh chỗ với khối cơ khí nữa, nên
         // `fresh_reads` của chúng được dùng `standard_fresh` cho đúng. Trước khi có
         // bộ lọc này thì KHÔNG được: thử cho chúng cạnh tranh sòng phẳng thì zone 2
