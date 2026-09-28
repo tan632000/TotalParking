@@ -25,8 +25,13 @@ DICH = os.path.join(GOC, "docs", "danh_dau_cong_led_block.pdf")
 XEM = DICH.replace(".pdf", ".png")
 MYSQL = r"C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
 
-# Huong doc tu anh cat cum_1/2/3.png. Hai phep do tu dong deu that bai nen
-# day la doc bang mat — chinh vi the ban do nay CAN duoc xac nhan.
+# CHU Y: huong o day tung duoc doc bang mat tu anh cat, tu thoi diem CHUA co
+# docs/LumiSlotsMatrix.xlsx. File do KHACH cung cap sau da khai ro huong cho ca
+# 21 cong bang cot 'huong' (Tr/Th/P), va chinh do la nguon ma migration 53 dung
+# de gieo led_port_block. Doi chieu ngay 28/09/2026: 21/21 cong khop.
+#
+# Nen ban do nay chi con la CONG CU XEM LAI, khong phai nguon so lieu, va huong
+# cua no khong con la an so can ai xac nhan.
 BANG = {
     "51": (1241, 519, ["T", "P"]),
     "52": (1190, 225, ["L"]),
@@ -132,7 +137,7 @@ def main():
     p.insert_text(pymupdf.Point(78, 1246), "VONG XANH = 112 block co khi (so block in san giua vong).",
                   fontsize=16, color=XANH, fontname="helv")
     p.insert_text(pymupdf.Point(78, 1274),
-                  "L=len  X=xuong  T=trai  P=phai. Huong doc tu mui ten do - xin xac nhan luon.",
+                  "L=len  X=xuong  T=trai  P=phai. Huong lay tu LumiSlotsMatrix.xlsx, khop 21/21.",
                   fontsize=16, color=CAM, fontname="helv")
     p.insert_text(pymupdf.Point(78, 1302),
                   "Vi du cach ghi:  53-P: block 22, 23, 24, 25, 26",
