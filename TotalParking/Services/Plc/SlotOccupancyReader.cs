@@ -167,6 +167,25 @@ namespace TotalParking.Services.Plc
                                          string.Format("o {0}: {1} -> {2}", slot.SlotIndex,
                                                        slot.CardCode ?? "(trong)",
                                                        card ?? "(trong)"));
+
+                        // Nhật ký thanh ghi ở trên là để lần vết sự cố, ghi theo IP
+                        // và địa chỉ word. Dòng dưới đây là để ĐẾM theo khối, nên
+                        // vào bảng riêng có sẵn chỉ mục (block_id, occurred_at).
+                        //
+                        // Nuốt lỗi tại đây: đếm lượt là việc phụ, không được phép
+                        // làm hỏng vòng quét ô đỗ — thứ mà bảng LED và chức năng
+                        // tìm xe phụ thuộc vào.
+                        try
+                        {
+                            GhiSuKienDoiO(slot.BlockId, slot.SlotIndex, slot.WordAddr,
+                                          slot.CardCode, card);
+                        }
+                        catch (Exception ex)
+                        {
+                            PlcAuditLog.Error(conn.Device.IpAddress, conn.Device.BlockNo,
+                                              "GHI SU KIEN O",
+                                              "Khong ghi duoc parking_event: " + ex.Message);
+                        }
                     }
                     res.SlotsRead++;
 
@@ -240,6 +259,69 @@ namespace TotalParking.Services.Plc
                 cmd.Parameters.AddWithValue("@c", code);
                 conn.Open();
                 return cmd.ExecuteScalar() != null;
+            }
+        }
+
+        // Ghi một dòng nhật ký mỗi lần ô đổi trạng thái, để đếm được số lượt
+        // gửi/lấy xe theo từng khối về sau.
+        //
+        // ===================== ĐÂY KHÔNG PHẢI SỐ LẦN MOTOR CHẠY =====================
+        //
+        // Đừng dùng con số này để lập lịch bảo trì theo chu kỳ. Hệ thống là puzzle
+        // parking: lấy một xe ra thì cơ cấu phải dịch chuyển nhiều khay khác để mở
+        // đường, và những lần chạy motor đó KHÔNG làm đổi mã thẻ ô nào nên vòng quét
+        // không nhìn thấy gì. Bảng vật tư CL1 còn cho thấy mỗi khối có hai motor
+        // riêng — "Motor trượt" và "Motor hàng rào" — chạy với số lần khác nhau mà
+        // một con số gộp không tách được.
+        //
+        // Thêm một điểm mù: vòng quét chạy 45 giây một lượt (`plc:slotScanMs`), nên
+        // gửi rồi lấy trong cùng cửa sổ sẽ mất dấu hoàn toàn.
+        //
+        // Vì vậy con số này LUÔN THẤP HƠN số lần motor chạy thật, và thấp bao nhiêu
+        // thì không biết được. Muốn đếm đúng thì PLC phải tự đếm rồi phơi ra một
+        // thanh ghi — nó là bên duy nhất biết motor chạy mấy lần, và bộ đếm nằm
+        // trong PLC thì không mất khi SCADA khởi động lại.
+        //
+        // Dùng được cho: khối nào bận, phân bố tải giữa các khối, đối chiếu với bộ
+        // đếm thật khi nào có.
+        private static void GhiSuKienDoiO(int blockId, int slotIndex, int wordAddr,
+                                          string cardCu, string cardMoi)
+        {
+            bool coCu  = !string.IsNullOrEmpty(cardCu);
+            bool coMoi = !string.IsNullOrEmpty(cardMoi);
+
+            // Cả hai đều có thẻ nhưng khác nhau = một lượt lấy và một lượt gửi lọt
+            // vào cùng cửa sổ quét. Ghi riêng loại này thay vì đoán bừa một trong
+            // hai, để người đọc sau biết đó là quan sát thiếu chứ không phải sự kiện
+            // lạ của thiết bị.
+            string loai = !coCu && coMoi ? "SLOT_STORE"
+                        : coCu && !coMoi ? "SLOT_RETRIEVE"
+                        : "SLOT_SWAP";
+
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                // JSON_OBJECT thay vì tự nối chuỗi: mã thẻ đi thẳng vào JSON mà tự
+                // ghép thì một ký tự lạ là hỏng cả dòng.
+                cmd.CommandText =
+                    "INSERT INTO parking_event " +
+                    "  (session_id, block_id, actor, actor_ref, event_type, " +
+                    "   from_status, to_status, detail, occurred_at) " +
+                    "VALUES (NULL, @b, 'PLC', @ref, @loai, @tu, @den, " +
+                    "        JSON_OBJECT('slot_index', @i, 'word_addr', @w, " +
+                    "                    'from_card', @cu, 'to_card', @moi), @now)";
+                cmd.Parameters.AddWithValue("@b",    blockId);
+                cmd.Parameters.AddWithValue("@ref",  "D" + wordAddr);
+                cmd.Parameters.AddWithValue("@loai", loai);
+                cmd.Parameters.AddWithValue("@tu",   coCu  ? "OCCUPIED" : "EMPTY");
+                cmd.Parameters.AddWithValue("@den",  coMoi ? "OCCUPIED" : "EMPTY");
+                cmd.Parameters.AddWithValue("@i",    slotIndex);
+                cmd.Parameters.AddWithValue("@w",    wordAddr);
+                cmd.Parameters.AddWithValue("@cu",   (object)cardCu  ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@moi",  (object)cardMoi ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@now",  DateTime.Now);
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
         }
 
