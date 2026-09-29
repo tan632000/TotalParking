@@ -193,38 +193,62 @@ def main():
     print("cam bien co that nhung khong cong nao dung: %d %s" % (len(thieu_c), thieu_c[:12]))
     xau += len(la) + len(ngoai_y) + len(la_c)
 
-    # Đếm cổng ĐANG QUẢNG BÁ, tức có ít nhất một khối gắn vào — không đếm số
-    # dòng trong led_panel_port.
+    # So TẬP (hướng, danh sách khối) chứ không đếm số cổng.
     #
-    # Một cổng có dòng nhưng KHÔNG có khối là trạng thái cố ý: bảng 55 mất hướng
-    # phải ở bản xlsx ngày 29/09, và dòng cổng đó được giữ lại với is_active = 1
-    # để vòng đẩy gửi lệnh xoá trắng mỗi nhịp. Tắt hẳn (is_active = 0) thì bảng
-    # không nhận lệnh nữa và giữ nguyên con số cũ đứng im — một con số đóng băng
-    # trông y hệt số đang sống.
+    # Một bảng có thể có NHIỀU CỔNG VẬT LÝ cùng phản chiếu MỘT hướng: bảng 55 có
+    # hai bên, cả hai cùng chỉ thẳng và hiện cùng con số, trong khi file chỉ có
+    # một dòng cho nó. Đếm cổng thì phép kiểm đỏ vĩnh viễn vì đúng cái trạng thái
+    # nó nên chấp nhận, mà một phép kiểm lúc nào cũng đỏ thì không ai còn đọc.
     #
-    # Nếu đếm theo số dòng thì phép kiểm sẽ đỏ vĩnh viễn vì đúng cái trạng thái
-    # nó nên chấp nhận, và một phép kiểm lúc nào cũng đỏ thì không ai còn đọc.
+    # So theo tập thì vẫn bắt được cái đáng bắt — sai hướng, sai danh sách khối,
+    # thừa hoặc thiếu một hướng — mà không bắt nhầm bản sao.
+    MA_HUONG = {"thang": 0, "phai": 1, "trai": 3}
     db = {}
-    for a in tv("SELECT p.code, COUNT(DISTINCT pb.port_index) "
-                "FROM led_panel p JOIN led_port_block pb ON pb.panel_id = p.panel_id "
-                "WHERE p.kind='DIRECTIONAL' GROUP BY p.code"):
-        db[a[0]] = int(a[1])
+    for a in tv("SELECT p.code, o.arrow_direction, "
+                "       GROUP_CONCAT(b.block_no ORDER BY b.block_no) "
+                "FROM led_panel p "
+                "JOIN led_panel_port o ON o.panel_id = p.panel_id "
+                "JOIN led_port_block pb ON pb.panel_id = o.panel_id "
+                "                      AND pb.port_index = o.port_index "
+                "JOIN block b ON b.block_id = pb.block_id "
+                "WHERE p.kind='DIRECTIONAL' "
+                "GROUP BY p.code, o.port_index, o.arrow_direction"):
+        db.setdefault(a[0], set()).add(
+            (int(a[1]), frozenset(int(x) for x in a[2].split(","))))
+    kh = {}
+    for c in cong:
+        kh.setdefault(c["led"], set()).add(
+            (MA_HUONG[c["huong"]], frozenset(c["block"])))
+
+    TEN = {0: "thang", 1: "phai", 2: "xuong", 3: "trai"}
+    print("\nHUONG VA DANH SACH KHOI — bang khach so voi CSDL:")
+    for ma in sorted(set(list(db) + list(kh)), key=lambda x: int(x)):
+        a, b = kh.get(ma, set()), db.get(ma, set())
+        ok = a == b
+        xau += (not ok)
+        print("   bang %-4s khach %d huong, CSDL %d huong   %s"
+              % (ma, len(a), len(b), "OK" if ok else "LECH"))
+        for h, bl in sorted(a - b):
+            print("      chi co trong FILE : %-6s %d khoi" % (TEN.get(h, h), len(bl)))
+        for h, bl in sorted(b - a):
+            print("      chi co trong CSDL : %-6s %d khoi" % (TEN.get(h, h), len(bl)))
+
+    ban_sao = tv("SELECT p.code, GROUP_CONCAT(DISTINCT o.port_index ORDER BY o.port_index) "
+                 "FROM led_panel p JOIN led_panel_port o ON o.panel_id = p.panel_id "
+                 "JOIN led_port_block pb ON pb.panel_id = o.panel_id "
+                 "                      AND pb.port_index = o.port_index "
+                 "WHERE p.kind='DIRECTIONAL' "
+                 "GROUP BY p.code, o.arrow_direction HAVING COUNT(DISTINCT o.port_index) > 1")
+    print("\nBANG CO NHIEU CONG CUNG MOT HUONG (hai ben hien giong nhau): %d" % len(ban_sao))
+    for a in ban_sao:
+        print("   bang %-4s cong %s" % (a[0], a[1]))
+
     trong = tv("SELECT p.code, o.port_index, o.is_active FROM led_panel p "
                "JOIN led_panel_port o ON o.panel_id = p.panel_id "
                "WHERE p.kind='DIRECTIONAL' AND NOT EXISTS ("
                "  SELECT 1 FROM led_port_block pb WHERE pb.panel_id = o.panel_id "
                "    AND pb.port_index = o.port_index) "
                "ORDER BY CAST(p.code AS UNSIGNED), o.port_index")
-    dem = {}
-    for c in cong:
-        dem[c["led"]] = dem.get(c["led"], 0) + 1
-    print("\nSO CONG DANG QUANG BA — bang khach so voi CSDL:")
-    for ma in sorted(set(list(db) + list(dem))):
-        ok = db.get(ma) == dem.get(ma)
-        xau += (not ok)
-        print("   bang %-4s khach %-3s CSDL %-3s %s"
-              % (ma, dem.get(ma, "-"), db.get(ma, "-"), "OK" if ok else "LECH"))
-
     print("\nCONG KHONG CO KHOI NAO (se bi xoa trang moi nhip): %d" % len(trong))
     for a in trong:
         print("   bang %-4s cong %-3s is_active=%s" % (a[0], a[1], a[2]))
