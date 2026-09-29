@@ -193,19 +193,41 @@ def main():
     print("cam bien co that nhung khong cong nao dung: %d %s" % (len(thieu_c), thieu_c[:12]))
     xau += len(la) + len(ngoai_y) + len(la_c)
 
+    # Đếm cổng ĐANG QUẢNG BÁ, tức có ít nhất một khối gắn vào — không đếm số
+    # dòng trong led_panel_port.
+    #
+    # Một cổng có dòng nhưng KHÔNG có khối là trạng thái cố ý: bảng 55 mất hướng
+    # phải ở bản xlsx ngày 29/09, và dòng cổng đó được giữ lại với is_active = 1
+    # để vòng đẩy gửi lệnh xoá trắng mỗi nhịp. Tắt hẳn (is_active = 0) thì bảng
+    # không nhận lệnh nữa và giữ nguyên con số cũ đứng im — một con số đóng băng
+    # trông y hệt số đang sống.
+    #
+    # Nếu đếm theo số dòng thì phép kiểm sẽ đỏ vĩnh viễn vì đúng cái trạng thái
+    # nó nên chấp nhận, và một phép kiểm lúc nào cũng đỏ thì không ai còn đọc.
     db = {}
-    for a in tv("SELECT p.code, COUNT(*) FROM led_panel p JOIN led_panel_port o "
-                "ON o.panel_id=p.panel_id WHERE p.kind='DIRECTIONAL' GROUP BY p.code"):
+    for a in tv("SELECT p.code, COUNT(DISTINCT pb.port_index) "
+                "FROM led_panel p JOIN led_port_block pb ON pb.panel_id = p.panel_id "
+                "WHERE p.kind='DIRECTIONAL' GROUP BY p.code"):
         db[a[0]] = int(a[1])
+    trong = tv("SELECT p.code, o.port_index, o.is_active FROM led_panel p "
+               "JOIN led_panel_port o ON o.panel_id = p.panel_id "
+               "WHERE p.kind='DIRECTIONAL' AND NOT EXISTS ("
+               "  SELECT 1 FROM led_port_block pb WHERE pb.panel_id = o.panel_id "
+               "    AND pb.port_index = o.port_index) "
+               "ORDER BY CAST(p.code AS UNSIGNED), o.port_index")
     dem = {}
     for c in cong:
         dem[c["led"]] = dem.get(c["led"], 0) + 1
-    print("\nSO CONG MOI BANG — bang khach so voi CSDL:")
+    print("\nSO CONG DANG QUANG BA — bang khach so voi CSDL:")
     for ma in sorted(set(list(db) + list(dem))):
         ok = db.get(ma) == dem.get(ma)
         xau += (not ok)
         print("   bang %-4s khach %-3s CSDL %-3s %s"
               % (ma, dem.get(ma, "-"), db.get(ma, "-"), "OK" if ok else "LECH"))
+
+    print("\nCONG KHONG CO KHOI NAO (se bi xoa trang moi nhip): %d" % len(trong))
+    for a in trong:
+        print("   bang %-4s cong %-3s is_active=%s" % (a[0], a[1], a[2]))
 
     print("\nKET QUA: %s" % ("SACH" if xau == 0 else "CON %d DIEM CAN XEM" % xau))
     return 0 if xau == 0 else 1
