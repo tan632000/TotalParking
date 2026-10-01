@@ -98,6 +98,11 @@ plans/*
 # nguon, va sinh them file moi sau moi lan dung.
 TotalParking/App_Data/backup/
 
+# Gia tri thanh ghi chiem o TRUOC khi reset, do tools/reset_o_chiem.py ghi ra.
+# Cung ly le voi tren: ket qua cua mot lan chay cu the, va la ban hoan tac
+# cua chinh lan chay do — khong phai thu de chia cho may khac.
+tools/sao_luu_o_chiem_*.tsv
+
 # Python (cong cu trong tools/)
 __pycache__/
 *.pyc
