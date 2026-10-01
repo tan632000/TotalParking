@@ -66,6 +66,15 @@ namespace TotalParking.Services.Plc
         // x 2 lenh/giay la luu luong ghi thuong truc xuong thiet bi that.
         private int _lastBandWritten = -1;
 
+        // Ly do cua gia tri bang tai lan truoc, CHI de chong lap nhat ky.
+        //
+        // Tach khoi _lastBandWritten vi hai cai chong lap hai thu khac nhau: mot
+        // chan lenh ghi thua xuong thiet bi, mot chan dong nhat ky thua. Gop lam
+        // mot thi ca truong hop quan trong nhat cua luat "1 the = 1 block" bien
+        // mat khoi nhat ky — D1004 dang la 0 vi khong ai quet, roi co nguoi quet
+        // mot the dang ket o block khac, ket qua van la 0 nen khong ghi gi ca.
+        private string _lastBandReason;
+
         private OmronFinsClient _client;
         private int      _failStreak;
         private DateTime _nextAttemptUtc = DateTime.MinValue;
@@ -573,9 +582,36 @@ namespace TotalParking.Services.Plc
                 // Nhánh giữa cũng phải ra 3: thanh ghi khác 0 nghĩa là CÓ người
                 // quẹt thật. Không đọc được mã thì càng không dám xếp xe đó lên
                 // pallet — cùng lý lẽ với thẻ lạ.
-                int band = empty            ? WeightBandService.Unknown
-                         : card == null     ? WeightBandService.Overweight
-                                            : _bands.BandFor(card);
+                // BandFor nhan them BlockId: mot the dang nam trong block khac se
+                // nhan 0 thay vi hang tai, de khong thao tac duoc o day. Xem khoi
+                // "MOT THE CHI O MOT BLOCK" trong WeightBandService.
+                string lyDo;
+                int band;
+                if (empty)
+                {
+                    band = WeightBandService.Unknown;
+                    lyDo = "D" + Device.ScanCardWord + " trong";
+                }
+                else if (card == null)
+                {
+                    band = WeightBandService.Overweight;
+                    lyDo = "khong giai ma duoc ma the";
+                }
+                else
+                {
+                    band = _bands.BandFor(card, Device.BlockId, out lyDo);
+                }
+
+                // Nhat ky truoc, chong lap theo LY DO. Phai dat truoc chot duoi:
+                // chot duoi so sanh gia tri, ma luot quet bi tu choi vi the dang
+                // o block khac cho ra dung con so 0 dang nam san tren thanh ghi.
+                if (lyDo != _lastBandReason)
+                {
+                    _lastBandReason = lyDo;
+                    PlcRegisterLog.Track(Device.IpAddress, Device.BlockNo,
+                                         "D" + Device.WeightBandWord,
+                                         band.ToString(), lyDo);
+                }
 
                 if (band == _lastBandWritten) return;
 
@@ -586,20 +622,24 @@ namespace TotalParking.Services.Plc
                 _lastBandWritten = band;
                 MarkOk();
 
-                PlcRegisterLog.Track(Device.IpAddress, Device.BlockNo,
-                                     "D" + Device.WeightBandWord,
-                                     band.ToString(), "bang tai trong SCADA ghi xuong");
-
+                // Khong goi PlcRegisterLog.Track lai o day: chot theo ly do ben
+                // tren da ghi roi, va no bao phu ca truong hop khong ghi xuong
+                // thiet bi. Goi hai lan chi lam nhat ky lap.
                 PlcAuditLog.Write(Device.IpAddress, Device.BlockNo,
                                   "D" + Device.WeightBandWord, band, true,
-                                  "bang tai trong tu D" + Device.ScanCardWord
-                                  + " = " + CardCodeDecoder.ToRawHex(words));
+                                  lyDo + " (D" + Device.ScanCardWord
+                                  + " = " + CardCodeDecoder.ToRawHex(words) + ")");
             }
             catch (Exception ex)
             {
                 // Ghi lại _lastBandWritten về -1 để lượt sau ghi lại từ đầu: nếu
                 // không, một lệnh ghi hỏng sẽ bị nhớ nhầm là đã ghi thành công.
+                //
+                // Xoá luôn _lastBandReason: giữ lại thì lượt sau có cùng lý do sẽ
+                // không ghi nhật ký, và lần ghi THÀNH CÔNG sau một lần hỏng trở
+                // thành vô hình.
                 _lastBandWritten = -1;
+                _lastBandReason  = null;
                 PlcAuditLog.Error(Device.IpAddress, Device.BlockNo,
                                   "BANG TAI D" + Device.WeightBandWord, ex.Message);
             }
