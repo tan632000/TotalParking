@@ -91,18 +91,36 @@ namespace TotalParking.Services.Plc
             value = value ?? "(rong)";
             string key = (ip ?? "?") + "|" + register;
 
-            string previous;
+            // ===================== CHONG LAP THEO CA GIA TRI LAN GHI CHU =====================
+            // Khoa gom ca `note` chu khong chi `value`. Ly do: cung mot con so co
+            // the den tu hai nguyen nhan khac han nhau, va nguyen nhan moi la thu
+            // nguoi doc nhat ky can.
+            //
+            // Ca lam lo ra dieu nay: D1004 dang la 0 vi khong ai quet the; roi co
+            // nguoi quet mot the dang nam trong block khac, ket qua cung la 0.
+            // Chong lap theo gia tri thi luot quet bi tu choi do KHONG de lai dong
+            // nao — dung luc can nhat.
+            //
+            // Khong lam tang so dong o cac cho goi khac: bon cho con lai (D1002,
+            // D106, D1000, thanh ghi o) deu sinh `note` tu chinh `value`, nen note
+            // chi doi khi value doi.
+            string moi = value + "\u0001" + (note ?? "");
+
+            string truoc;
             bool first;
 
             lock (Sync)
             {
-                first = !Last.TryGetValue(key, out previous);
-                if (!first && previous == value) return;   // khong doi -> im lang
-                Last[key] = value;
+                first = !Last.TryGetValue(key, out truoc);
+                if (!first && truoc == moi) return;   // khong doi -> im lang
+                Last[key] = moi;
             }
 
+            // Cot "gia tri truoc" van chi hien GIA TRI, khong hien ghi chu cu:
+            // nhat ky nay doc theo chieu doc de lan vet mot thanh ghi, nen cot do
+            // phai ghep duoc voi cot gia tri cua dong tren.
             Append(ip, blockNo, register,
-                   first ? "[dau tien]" : previous,
+                   first ? "[dau tien]" : truoc.Split('\u0001')[0],
                    value, note);
         }
 
