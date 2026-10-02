@@ -256,21 +256,47 @@ namespace TotalParking.Services
 
         // ------------------------------------------------------------ hang tai
         //
-        // Cot J cua file khach co 5 gia tri. Doi chieu voi bang weight_class:
-        // THUONG co max_weight_kg NULL, nghia la khong dung duoc pallet co khi.
+        // Doi chieu voi bang weight_class: THUONG co max_weight_kg NULL, nghia la
+        // khong dung duoc pallet co khi.
         //
-        // So bang bang tren danh sach dong chu khong doc con so trong chu. Neu
-        // sau nay khach them muc moi ('Duoi 2500 kg' chang han) thi dong do roi
-        // vao nhanh mac dinh va duoc danh dau -- thay ngay, con doc so thi no se
-        // bi xep im lang vao mot hang tai co the sai.
+        // ===================== HAI CACH VIET, CUNG MOT NGHIA =====================
+        // Khach xuat file theo hai bo tu vung khac nhau:
+        //
+        //   cau chu  'Duoi 2200 kg'  '2200 - 2600 kg'  'Qua tai (>2600 kg)'
+        //   ma hang  '2200kg'        '2600kg'          'thuong'
+        //
+        // Bo thu hai chinh la cot `code` cua bang weight_class, nen no la mot
+        // cach dien dat hop le cua cung du lieu chu khong phai loi danh may.
+        //
+        // Phat hien 02/10/2026 tu docs/mau_import_the_7_da_dien.xlsx: ca 133 dong
+        // dung bo ma hang va roi het vao nhanh mac dinh. 107 dong '2200kg' tinh co
+        // RA DUNG vi mac dinh cung la 2200KG, che mat 17 dong '2600kg' va 9 dong
+        // 'thuong' bi xep sai hang.
+        //
+        // ===================== VAN SO BANG, KHONG DOC SO =====================
+        // Them ba muc vao danh sach chu KHONG chuyen sang doc con so trong chu.
+        // Neu sau nay khach them muc moi ('Duoi 2500 kg' chang han) thi dong do
+        // van roi vao nhanh mac dinh va duoc danh dau -- thay ngay. Doc so thi
+        // 'Duoi 2500 kg' se bi xep im lang vao 2600KG.
+        //
+        // Chi nhan dung cac dang da QUAN SAT DUOC. '2200 kg' (co dau cach) khong
+        // nam trong danh sach: Norm() gop nhieu khoang trang lien nhau nhung
+        // khong xoa mot dau cach don, nen no se roi vao mac dinh va bi gan co --
+        // dung thu ta muon khi gap mot cach viet chua tung thay.
         private static string MapWeightClass(string text, out bool guessed)
         {
             guessed = false;
             switch (Norm(text))
             {
-                case "duoi 2200 kg":      return "2200KG";
-                case "2200 - 2600 kg":    return "2600KG";
+                case "duoi 2200 kg":       return "2200KG";
+                case "2200 - 2600 kg":     return "2600KG";
                 case "qua tai (>2600 kg)": return "THUONG";
+
+                // Bo ma hang, giong cot weight_class.code.
+                case "2200kg":             return "2200KG";
+                case "2600kg":             return "2600KG";
+                case "thuong":             return "THUONG";
+
                 default:
                     // 'Chua xac dinh', 'Khong phai o to', o trong, hoac muc moi.
                     guessed = true;
