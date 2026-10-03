@@ -40,6 +40,71 @@ namespace TotalParking.Services
             "FROM   plc_device p " +
             "JOIN   block b ON b.block_id = p.block_id ";
 
+        // Vài con số mô tả lớp PLC, cho trang Cài đặt. KHÔNG kéo 112 dòng về chỉ
+        // để đếm.
+        public class TomTatPlc
+        {
+            public int    SoThietBi { get; set; }
+            public string IpNhoNhat { get; set; }
+            public string IpLonNhat { get; set; }
+            public string Cong      { get; set; }   // gộp các cổng khác nhau nếu có
+            public string TimeoutMs { get; set; }
+            public string Loi       { get; set; }   // khác null = không đọc được
+        }
+
+        // ===================== VI SAO NUOT LOI =====================
+        // Trang Cai dat truoc gio chi doc Web.config nen khong the hong. Them mot
+        // truy van CSDL ma de loi nem ra la bien ca trang thanh 500 moi khi CSDL
+        // chap chon -- doi mot o thong tin lay mot trang trang.
+        //
+        // Tra ve Loi khac null de o do noi "khong doc duoc", chu khong hien mot
+        // con so 0 nhin y het nhu "khong co PLC nao".
+        //
+        // ===================== VI SAO INET_ATON =====================
+        // So sanh IP theo CHUOI thi '192.169.1.99' > '192.169.1.212' vi '9' > '2'.
+        // Hien tai moi IP deu ba chu so nen chuoi tinh co ra dung, nhung them mot
+        // thiet bi .99 la bien lon nhat/nho nhat sai im lang.
+        //
+        // Dung MIN/MAX chu khong GROUP_CONCAT roi cat: 112 dia chi la ~1.5KB,
+        // vuot gioi han 1024 byte mac dinh cua GROUP_CONCAT va bi cat cut.
+        public TomTatPlc DocTomTat()
+        {
+            const string sql =
+                "SELECT COUNT(*), " +
+                "       INET_NTOA(MIN(INET_ATON(ip_address))), " +
+                "       INET_NTOA(MAX(INET_ATON(ip_address))), " +
+                "       GROUP_CONCAT(DISTINCT port ORDER BY port), " +
+                "       GROUP_CONCAT(DISTINCT timeout_ms ORDER BY timeout_ms) " +
+                "FROM   plc_device WHERE is_active = 1";
+
+            try
+            {
+                using (var conn = new MySqlConnection(Db.ConnectionString))
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    conn.Open();
+                    using (var r = cmd.ExecuteReader())
+                    {
+                        if (!r.Read()) return new TomTatPlc { Loi = "khong co dong nao" };
+
+                        return new TomTatPlc
+                        {
+                            SoThietBi = r.IsDBNull(0) ? 0 : Convert.ToInt32(r[0]),
+                            IpNhoNhat = r.IsDBNull(1) ? null : Convert.ToString(r[1]),
+                            IpLonNhat = r.IsDBNull(2) ? null : Convert.ToString(r[2]),
+                            Cong      = r.IsDBNull(3) ? null : Convert.ToString(r[3]),
+                            TimeoutMs = r.IsDBNull(4) ? null : Convert.ToString(r[4])
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new TomTatPlc { Loi = ex.Message };
+            }
+        }
+
         public IList<PlcDevice> GetAll(bool activeOnly = true)
         {
             var result = new List<PlcDevice>();

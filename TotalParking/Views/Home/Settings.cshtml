@@ -21,6 +21,28 @@
 
     string chuaCauHinh = "chưa cấu hình";
 
+    // ===================== LOP PLC KHONG CO "MOT IP" =====================
+    // Khung nay truoc day hien mot o "IP SCADA Server" lay tu `pgs:ccuHost` --
+    // tuc dia chi CCU cua CAM BIEN DO THUONG, khong phai PLC nao ca. Khach hang
+    // la nguoi phat hien ra, vi con so do trung voi CCU ho biet.
+    //
+    // Sua cho tro dung nguon thoi la chua du: he thong co 112 PLC, moi cai mot
+    // dia chi trong plc_device.ip_address. Mot o text khong bieu dien duoc dieu
+    // do, nen o IP doi thanh SO LUONG + DAI DIA CHI.
+    //
+    // Cong va timeout cung doc tu plc_device. Truoc day cong la so 9600 go
+    // THANG vao HTML: no dang dung, nhung dung do may -- doi cong trong CSDL thi
+    // o nay van hien 9600 mai mai.
+    var plcTomTat = new TotalParking.Services.PlcDeviceRepository().DocTomTat();
+
+    string plcDaiIp = plcTomTat.Loi != null || plcTomTat.SoThietBi == 0
+        ? "không đọc được từ CSDL"
+        : string.Format("{0} – {1}  ({2} thiết bị)",
+                        plcTomTat.IpNhoNhat, plcTomTat.IpLonNhat, plcTomTat.SoThietBi);
+
+    string plcCong    = string.IsNullOrWhiteSpace(plcTomTat.Cong)      ? chuaCauHinh : plcTomTat.Cong;
+    string plcTimeout = string.IsNullOrWhiteSpace(plcTomTat.TimeoutMs) ? chuaCauHinh : plcTomTat.TimeoutMs;
+
     // Chuoi ket noi co mat khau — CHI lay Server va Database, khong bao gio in
     // ca chuoi ra man hinh.
     string dbServer = chuaCauHinh;
@@ -67,7 +89,8 @@
 
         <!-- Main Layout Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <!-- 1. Modbus TCP & PLC Connections -->
+            <!-- 1. Ket noi PLC (Omron FINS/TCP). Ten cu "Modbus TCP" la di san cua ban
+                 mau React, he thong chua bao gio dung Modbus. -->
             <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
                 <h3 class="text-white text-sm font-bold flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi text-blue-400"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg>
@@ -75,19 +98,50 @@
                 </h3>
                 <div class="space-y-3">
                     <div>
-                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">IP SCADA Server (Lumi SCADA)</label>
-                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@(cfg("pgs:ccuHost") ?? chuaCauHinh)" readonly>
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Dải địa chỉ PLC</label>
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@plcDaiIp" readonly>
                     </div>
                     <div>
                         <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Cổng FINS/TCP của PLC</label>
-                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="9600" readonly>
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@plcCong" readonly>
                     </div>
                     <div>
-                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Chu kỳ Polling (ms)</label>
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Chu kỳ quét ô (ms)</label>
                         <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@(cfg("plc:slotScanMs") ?? chuaCauHinh)" readonly>
                     </div>
                     <div>
-                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Timeout kết nối (ms)</label>
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Timeout kết nối PLC (ms)</label>
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@plcTimeout" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1b. CCU cam bien do thuong (PGS)
+                 Tach rieng khoi khung PLC. Dia chi nay truoc day bi hien trong
+                 khung PLC voi nhan "IP SCADA Server", lam khach hang tuong he
+                 thong dang tro PLC vao CCU. Hai he hoan toan khac nhau: PLC noi
+                 bang Omron FINS/TCP toi 112 thiet bi, con CCU la MOT dau doc
+                 cam bien do thuong voi giao thuc rieng. -->
+            <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
+                <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-radio text-emerald-400"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"></path><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"></path><circle cx="12" cy="12" r="2"></circle><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"></path><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"></path></svg>
+                    Cảm biến đỗ thường (CCU / PGS)
+                </h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Địa chỉ CCU</label>
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@(cfg("pgs:ccuHost") ?? chuaCauHinh)" readonly>
+                    </div>
+                    <div>
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Cổng CCU</label>
+                        <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@(cfg("pgs:ccuPort") ?? chuaCauHinh)" readonly>
+                    </div>
+                    <div>
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Chu kỳ đọc cảm biến (ms)</label>
+                        <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@(cfg("pgs:liveIntervalMs") ?? chuaCauHinh)" readonly>
+                    </div>
+                    <div>
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Timeout kết nối CCU (ms)</label>
                         <input type="number" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@(cfg("pgs:timeoutMs") ?? chuaCauHinh)" readonly>
                     </div>
                 </div>
