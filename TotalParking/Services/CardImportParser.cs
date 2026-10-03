@@ -264,6 +264,7 @@ namespace TotalParking.Services
         //
         //   cau chu  'Duoi 2200 kg'  '2200 - 2600 kg'  'Qua tai (>2600 kg)'
         //   ma hang  '2200kg'        '2600kg'          'thuong'
+        //   so tran   2200            2600             'thuong'
         //
         // Bo thu hai chinh la cot `code` cua bang weight_class, nen no la mot
         // cach dien dat hop le cua cung du lieu chu khong phai loi danh may.
@@ -286,7 +287,32 @@ namespace TotalParking.Services
         private static string MapWeightClass(string text, out bool guessed)
         {
             guessed = false;
-            switch (Norm(text))
+            string n = Norm(text);
+
+            // ----- dang so tran: o chi chua 2200 hoac 2600 -----
+            //
+            // Excel luu o so la SO, nen nguoi dien go 2200 thi den day co the la
+            // "2200" hoac "2200.0". Mot nhanh so rieng xu ly duoc ca hai ma khong
+            // phai liet ke tung bien the dau phay.
+            //
+            // VAN KHONG PHAI LA DOC SO TRONG CHU. Dieu kien la CA O parse duoc
+            // thanh mot so nguyen -- 'Duoi 2500 kg' khong parse duoc nen roi
+            // xuong bang tra chu ben duoi va bi gan co nhu truoc. Danh sach so
+            // cung chi co dung 2200 va 2600: go 2500 van bi gan co.
+            //
+            // NumberStyles.Float chu khong phai Number: Number cho phep dau phan
+            // cach hang nghin, ma '2.200' kieu Viet Nam se bi InvariantCulture
+            // doc thanh 2,2 -- sai im lang. Voi Float thi '2.200' ra 2,2, khong
+            // phai so nguyen, nen roi vao nhanh gan co. Tu choi on hon doan.
+            decimal so;
+            if (decimal.TryParse(n, NumberStyles.Float, CultureInfo.InvariantCulture, out so)
+                && so == Math.Truncate(so))
+            {
+                if (so == 2200m) return "2200KG";
+                if (so == 2600m) return "2600KG";
+            }
+
+            switch (n)
             {
                 case "duoi 2200 kg":       return "2200KG";
                 case "2200 - 2600 kg":     return "2600KG";
