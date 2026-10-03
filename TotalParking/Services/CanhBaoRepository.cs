@@ -149,18 +149,49 @@ namespace TotalParking.Services
             }
         }
 
+        // Tên ghi vào xac_nhan_boi khi chính hệ thống tự xác nhận, không phải người.
+        public const string NguoiXacNhanTuDong = "System";
+
         // Đánh dấu sự cố đã qua. KHÔNG xoá dòng — lịch sử sự cố là thứ cần nhất
         // khi điều tra về sau. Xoá khoá chống trùng để lần sự cố tiếp theo trên
         // cùng khối vẫn sinh được cảnh báo mới.
-        public int DongTheoKhoa(string khoaChongTrung)
+        //
+        // ===================== TU XAC NHAN =====================
+        // `nguoiXacNhan` khac null thi dong cung la XAC NHAN luon. Dung cho loai
+        // su co ma chinh he thong quan sat duoc ca luc hong lan luc hoi phuc --
+        // PLC mat ket noi roi noi lai chang han. Khong ai can bam xac nhan mot
+        // su co da tu het, va de no nam mai trong o "chua xac nhan" thi con so
+        // do mat y nghia, roi nguoi van hanh bo qua ca nhung cai that su can nhin.
+        //
+        // KHONG ghi de ban ghi cua NGUOI. Dieu kien `xac_nhan_luc IS NULL` trong
+        // tung IF() giu nguyen ten nguoi da bam truoc do: neu ky thuat vien xac
+        // nhan luc 10:00 roi PLC noi lai luc 10:05, dong do phai van mang ten ho.
+        // Day la so sach, khong phai cai de tien tay ghi lai.
+        //
+        // Thu tu gan quan trong: MySQL gan trai sang phai va cac ve sau NHIN THAY
+        // gia tri moi. `xac_nhan_luc` phai la ve CUOI, neu khong thi ve truoc no
+        // da doc phai NOW(3) vua gan va dieu kien IS NULL thanh sai het.
+        //
+        // xac_nhan_ip de nguyen: mot cai dong tu dong khong di ra tu dia chi nao,
+        // va neu xac_nhan_luc dang NULL thi cot do cung dang NULL san roi.
+        public int DongTheoKhoa(string khoaChongTrung, string nguoiXacNhan = null)
         {
+            bool tuXacNhan = !string.IsNullOrWhiteSpace(nguoiXacNhan);
+
             using (var conn = new MySqlConnection(Db.ConnectionString))
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText =
-                    "UPDATE canh_bao SET het_luc = NOW(3), khoa_chong_trung = NULL " +
-                    "WHERE khoa_chong_trung = @khoa";
+                    "UPDATE canh_bao SET het_luc = NOW(3), khoa_chong_trung = NULL" +
+                    (tuXacNhan
+                        ? ", xac_nhan_boi = IF(xac_nhan_luc IS NULL, @nguoi, xac_nhan_boi)" +
+                          ", xac_nhan_luc = IF(xac_nhan_luc IS NULL, NOW(3), xac_nhan_luc)"
+                        : "") +
+                    " WHERE khoa_chong_trung = @khoa";
+
                 cmd.Parameters.AddWithValue("@khoa", khoaChongTrung);
+                if (tuXacNhan) cmd.Parameters.AddWithValue("@nguoi", nguoiXacNhan.Trim());
+
                 conn.Open();
                 return cmd.ExecuteNonQuery();
             }

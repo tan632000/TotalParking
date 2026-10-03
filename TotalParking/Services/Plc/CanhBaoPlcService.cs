@@ -213,7 +213,11 @@ namespace TotalParking.Services.Plc
                     continue;
                 if (!daNoiLai.Contains(blockNo)) continue;
 
-                if (Repo.DongTheoKhoa(khoa) > 0)
+                // Tu xac nhan luon: ca luc mat ket noi lan luc noi lai deu do he
+                // thong quan sat duoc, khong ai can bam xac nhan mot su co da tu
+                // het. Nguoi xac nhan ghi la "System" de so sach phan biet duoc
+                // voi mot ky thuat vien da that su nhin vao no.
+                if (Repo.DongTheoKhoa(khoa, CanhBaoRepository.NguoiXacNhanTuDong) > 0)
                 {
                     SoLanDong++;
                     PlcAuditLog.Recovered(null, blockNo, "CANH BAO PLC");
