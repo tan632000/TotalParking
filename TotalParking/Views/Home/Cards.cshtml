@@ -313,7 +313,8 @@ function render() {
              '</td>' +
              // Nhan la "Ngung dung" chu khong phai "Xoa": dong van o lai trong
              // bang. Goi no la xoa thi nguoi van hanh tin the da bien mat roi
-             // ngac nhien khi van thay no.
+             // ngac nhien khi van thay no. Nut "Xoa" that chi hien SAU khi the
+             // da ngung dung, de xoa luon la buoc thu hai.
              '<td class="px-4 py-2.5 text-center whitespace-nowrap">' +
              '<button onclick="moSua(' + c.card_id + ')" ' +
              'class="px-2 py-1 rounded border border-slate-600 text-slate-300 hover:border-blue-500 ' +
@@ -324,7 +325,10 @@ function render() {
                   'hover:bg-slate-700 text-[10px] font-bold">Ngừng dùng</button>'
                 : '<button onclick="doiTrangThai(' + c.card_id + ', 1)" ' +
                   'class="px-2 py-1 rounded border border-green-700/50 text-green-300 ' +
-                  'hover:bg-slate-700 text-[10px] font-bold">Dùng lại</button>') +
+                  'hover:bg-slate-700 text-[10px] font-bold">Dùng lại</button> ' +
+                  '<button onclick="xoaThe(' + c.card_id + ')" ' +
+                  'class="px-2 py-1 rounded border border-red-800 text-red-400 ' +
+                  'hover:bg-slate-700 text-[10px] font-bold">Xoá</button>') +
              '</td></tr>';
     });
     if (!h) h = '<tr><td colspan="12" class="text-center text-slate-600 py-10">Không có thẻ nào khớp bộ lọc</td></tr>';
@@ -484,6 +488,43 @@ function doiTrangThai(cardId, bat) {
                 return;
             }
             thongBao('Thẻ ' + kq.d.card_code + (bat ? ' đã dùng lại.' : ' đã ngừng dùng.'), false);
+            loadCards();
+        })
+        .catch(function (e) { thongBao('Không gọi được máy chủ: ' + e.message, true); });
+}
+
+// Xoa han dong the. May chu tu chan the dang bat va the con gan voi xe; phien
+// gui xe cu duoc giu lai nhung go lien ket. Giao dien chi hoi xac nhan va hien
+// dung ly do tra ve.
+function xoaThe(cardId) {
+    var c = allCards.filter(function (x) { return x.card_id === cardId; })[0];
+    if (!c) return;
+
+    var hoi = 'XOÁ HẲN thẻ ' + c.card_code +
+              ' (số thẻ ' + c.card_no + ', biển số ' + (c.plate || '—') + ')?\n\n' +
+              'Không hoàn tác được. Muốn dùng lại phải nhập lại từ file Excel.\n' +
+              'Lịch sử gửi xe cũ vẫn được giữ nhưng không còn gắn với thẻ này.';
+    if (!confirm(hoi)) return;
+
+    var nguoi = prompt('Tên người thao tác:');
+    if (!nguoi || !nguoi.trim()) return;
+
+    var fd = new URLSearchParams();
+    fd.append('card_id', cardId);
+    fd.append('nguoi', nguoi.trim());
+
+    fetch('/Cards/Delete', { method: 'POST', body: fd })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (kq) {
+            if (!kq.ok) {
+                thongBao((kq.d && kq.d.error) ? kq.d.error : 'Không xoá được thẻ.', true);
+                loadCards();
+                return;
+            }
+            thongBao('Đã xoá thẻ ' + kq.d.card_code + '.' +
+                     (kq.d.phien_go_lien_ket > 0
+                        ? ' ' + kq.d.phien_go_lien_ket + ' phiên gửi xe cũ được giữ lại.'
+                        : ''), false);
             loadCards();
         })
         .catch(function (e) { thongBao('Không gọi được máy chủ: ' + e.message, true); });

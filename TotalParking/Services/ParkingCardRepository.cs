@@ -312,6 +312,130 @@ namespace TotalParking.Services
             }
         }
 
+        public enum KetQuaXoa
+        {
+            Ok, KhongThay, ChuaNgungDung, DangTrongODo, CoPhienDangMo, VuaQuet,
+            // Vẫn còn bảng khác tham chiếu tới thẻ (lỗi khoá ngoại 1451). Phiên
+            // gửi xe đã được gỡ trước khi xoá, nên tới đây là một ràng buộc mới
+            // chưa ai tính tới — dừng lại chứ không xoá mạnh tay.
+            CoLichSu,
+            KhongXoaDuoc
+        }
+
+        // Xoá hẳn một thẻ, kể cả thẻ đã có lịch sử gửi xe.
+        //
+        // ===================== GỠ LIÊN KẾT, KHÔNG XOÁ LỊCH SỬ =====================
+        // fk_session_card không có ON DELETE, nên thẻ còn phiên trỏ tới thì CSDL
+        // chặn xoá. Không xoá phiên: đó là lịch sử gửi xe của bãi. Thay vào đó đặt
+        // card_id = NULL cho các phiên ĐÃ ĐÓNG — phiên vẫn còn biển số, ô đỗ và
+        // giờ vào ra, chỉ mất liên kết tới thẻ. card_id NULL là trạng thái hợp lệ
+        // sẵn có (phiên từ camera). Hồ sơ thẻ được ghi lại ở card_admin.log.
+        //
+        // Gỡ và xoá nằm trong MỘT giao dịch: nếu câu DELETE bị chặn thì rollback,
+        // nếu không thì một thẻ còn sống sẽ mất liên kết lịch sử mà không bị xoá.
+        // Phiên đang mở KHÔNG bị gỡ, nên nó vẫn chặn được câu DELETE bên dưới.
+        //
+        // ===================== PHẢI NGỪNG DÙNG TRƯỚC =====================
+        // Bắt buộc is_active = 0 để xoá là bước thứ hai, không phải cú bấm đầu
+        // tiên. Thẻ đang bật mà bị xoá thì tài xế cầm thẻ bị từ chối ở cổng ngay,
+        // không có bước nào cho người vận hành dừng lại nghĩ.
+        //
+        // Ba lớp chặn của DatTrangThai được lặp lại trong chính câu DELETE vì
+        // cùng lý do: kiểm trước rồi xoá sau để hở cửa sổ cho vòng quét ô đỗ.
+        // Dù thẻ đã tắt, mã của nó vẫn có thể còn nằm trong thanh ghi ô đỗ.
+        public KetQuaXoa Xoa(int cardId, out int soPhienDaGo)
+        {
+            soPhienDaGo = 0;
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            {
+                conn.Open();
+
+                int n;
+                using (var tx = conn.BeginTransaction())
+                {
+                    int go;
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.Transaction = tx;
+                        cmd.CommandText =
+                            "UPDATE parking_session SET card_id = NULL " +
+                            "WHERE card_id = @id AND active_card_id IS NULL";
+                        cmd.Parameters.AddWithValue("@id", cardId);
+                        go = cmd.ExecuteNonQuery();
+                    }
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.Transaction = tx;
+                        cmd.CommandText =
+                            "DELETE c FROM parking_card c " +
+                            "LEFT JOIN plc_slot_state s ON s.card_code = c.card_code " +
+                            "LEFT JOIN parking_session p ON p.card_id = c.card_id " +
+                            "                          AND p.active_card_id IS NOT NULL " +
+                            "LEFT JOIN plc_request r ON r.card_code = c.card_code " +
+                            "                       AND r.received_at > NOW() - INTERVAL 24 HOUR " +
+                            "WHERE c.card_id = @id " +
+                            "  AND c.is_active = 0 " +
+                            "  AND s.card_code IS NULL " +
+                            "  AND p.card_id  IS NULL " +
+                            "  AND r.card_code IS NULL";
+                        cmd.Parameters.AddWithValue("@id", cardId);
+                        try
+                        {
+                            n = cmd.ExecuteNonQuery();
+                        }
+                        catch (MySqlException ex) when (ex.Number == 1451)
+                        {
+                            tx.Rollback();
+                            return KetQuaXoa.CoLichSu;
+                        }
+                    }
+
+                    if (n > 0)
+                    {
+                        tx.Commit();
+                        soPhienDaGo = go;
+                        return KetQuaXoa.Ok;
+                    }
+
+                    // Bị chặn: trả lại liên kết lịch sử cho thẻ vẫn còn đó.
+                    tx.Rollback();
+                }
+
+                return LyDoKhongXoa(conn, cardId);
+            }
+        }
+
+        // Chỉ dựng thông báo; quyết định đã nằm trong câu DELETE ở trên.
+        private static KetQuaXoa LyDoKhongXoa(MySqlConnection conn, int cardId)
+        {
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText =
+                    "SELECT " +
+                    "  c.is_active, " +
+                    "  EXISTS(SELECT 1 FROM plc_slot_state s WHERE s.card_code = c.card_code), " +
+                    "  EXISTS(SELECT 1 FROM parking_session p WHERE p.card_id = c.card_id " +
+                    "                                         AND p.active_card_id IS NOT NULL), " +
+                    "  EXISTS(SELECT 1 FROM plc_request r WHERE r.card_code = c.card_code " +
+                    "                                     AND r.received_at > NOW() - INTERVAL 24 HOUR) " +
+                    "FROM parking_card c WHERE c.card_id = @id";
+                cmd.Parameters.AddWithValue("@id", cardId);
+
+                using (var r = cmd.ExecuteReader())
+                {
+                    // Dòng không còn: có thể một lần bấm khác vừa xoá nó. Vẫn báo
+                    // KhongThay chứ không báo Ok — lần bấm NÀY không xoá gì cả.
+                    if (!r.Read()) return KetQuaXoa.KhongThay;
+                    if (Convert.ToBoolean(r[0]))      return KetQuaXoa.ChuaNgungDung;
+                    if (Convert.ToInt32(r[1]) == 1)   return KetQuaXoa.DangTrongODo;
+                    if (Convert.ToInt32(r[2]) == 1)   return KetQuaXoa.CoPhienDangMo;
+                    if (Convert.ToInt32(r[3]) == 1)   return KetQuaXoa.VuaQuet;
+                    return KetQuaXoa.KhongXoaDuoc;
+                }
+            }
+        }
+
         // Một dòng thẻ theo card_id, dùng để dựng nhật ký giá trị cũ.
         public CardRow DocTheoId(int cardId)
         {

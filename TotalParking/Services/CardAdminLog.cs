@@ -6,7 +6,7 @@ using System.Web.Hosting;
 
 namespace TotalParking.Services
 {
-    // Nhật ký thao tác quản trị thẻ: sửa thông tin, tắt và bật lại.
+    // Nhật ký thao tác quản trị thẻ: sửa thông tin, tắt, bật lại và xoá.
     //
     // ===================== VÌ SAO KHÔNG DÙNG CHUNG plc_audit.log =====================
     // PlcAuditLog xoay file ở 8 MB và giữ đúng một bản cũ, trong khi vòng quét ô

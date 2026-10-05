@@ -466,6 +466,74 @@ namespace TotalParking.Controllers
             }
         }
 
+        // POST /Cards/Delete   card_id, nguoi
+        //
+        // Xoá hẳn dòng thẻ. Chỉ được khi thẻ đã ngừng dùng; phiên gửi xe cũ được
+        // giữ lại nhưng gỡ liên kết — xem ParkingCardRepository.Xoa.
+        [HttpPost]
+        public ActionResult Delete(int card_id, string nguoi)
+        {
+            if (string.IsNullOrWhiteSpace(nguoi))
+                return Json2(400, new { error = "Thiếu tên người thao tác." });
+
+            // Đọc TRƯỚC khi xoá: sau đó không còn gì để ghi vào nhật ký.
+            var cu = _repo.DocTheoId(card_id);
+            if (cu == null) return Json2(404, new { error = "Không tìm thấy thẻ." });
+
+            // Ghi đủ hồ sơ vào nhật ký vì đây là bản ghi duy nhất còn lại của thẻ.
+            string hoSo = string.Format("so_the {0}; bien_so {1}; khach {2}; lo {3}",
+                cu.CardNo, cu.Plate ?? "-", cu.CustomerName ?? "-", cu.SourceLabel ?? "-");
+
+            try
+            {
+                int soPhien;
+                var kq = _repo.Xoa(card_id, out soPhien);
+                if (kq == ParkingCardRepository.KetQuaXoa.Ok)
+                {
+                    // Số phiên bị gỡ liên kết phải vào nhật ký: đó là cách duy nhất
+                    // để sau này biết các phiên card_id NULL đó từng thuộc thẻ nào.
+                    CardAdminLog.Ghi("XOA", card_id, cu.CardCode, nguoi,
+                                     Request.UserHostAddress, "OK",
+                                     hoSo + "; phien_go_lien_ket " + soPhien);
+                    return Json2(200, new { card_id, card_code = cu.CardCode, da_xoa = true,
+                                            phien_go_lien_ket = soPhien });
+                }
+
+                string cau = LyDoXoa(kq);
+                CardAdminLog.Ghi("XOA", card_id, cu.CardCode, nguoi,
+                                 Request.UserHostAddress, "TU_CHOI", cau + " | " + hoSo);
+                return Json2(409, new { error = cau, ly_do = kq.ToString() });
+            }
+            catch (Exception ex)
+            {
+                CardAdminLog.Ghi("XOA", card_id, cu.CardCode, nguoi,
+                                 Request.UserHostAddress, "LOI", ex.Message);
+                return Json2(503, new { error = "Không xoá được: " + ex.Message });
+            }
+        }
+
+        private static string LyDoXoa(ParkingCardRepository.KetQuaXoa kq)
+        {
+            switch (kq)
+            {
+                case ParkingCardRepository.KetQuaXoa.ChuaNgungDung:
+                    return "Thẻ đang bật. Bấm \"Ngừng dùng\" trước rồi mới xoá.";
+                case ParkingCardRepository.KetQuaXoa.DangTrongODo:
+                    return "Mã thẻ này vẫn đang nằm trong thanh ghi một ô đỗ.";
+                case ParkingCardRepository.KetQuaXoa.CoPhienDangMo:
+                    return "Thẻ này đang có phiên gửi xe chưa kết thúc.";
+                case ParkingCardRepository.KetQuaXoa.VuaQuet:
+                    return "Thẻ này vừa được quẹt trong 24 giờ qua.";
+                case ParkingCardRepository.KetQuaXoa.CoLichSu:
+                    return "Thẻ vẫn còn được dữ liệu khác tham chiếu tới nên chưa xoá được. " +
+                           "Thẻ vẫn ở trạng thái ngừng dùng và bị từ chối ở cổng.";
+                case ParkingCardRepository.KetQuaXoa.KhongThay:
+                    return "Không tìm thấy thẻ (có thể vừa bị xoá bởi thao tác khác).";
+                default:
+                    return "Không xoá được thẻ. Tải lại danh sách rồi thử lại.";
+            }
+        }
+
         private ActionResult Json2(int status, object body)
         {
             Response.StatusCode = status;
