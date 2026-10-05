@@ -223,6 +223,8 @@
     <Compile Include="Services\Pgs\CanhBaoCamBienService.cs" />
     <Compile Include="Services\Plc\PlcTypes.cs" />
     <Compile Include="Services\Plc\OmronFinsClient.cs" />
+    <Compile Include="Services\Plc\IFinsClient.cs" />
+    <Compile Include="Services\Plc\OmronFinsUdpClient.cs" />
     <Compile Include="Services\Plc\CardCodeDecoder.cs" />
     <Compile Include="Services\Plc\PlcConnection.cs" />
     <Compile Include="Services\Plc\PlcConnectionManager.cs" />

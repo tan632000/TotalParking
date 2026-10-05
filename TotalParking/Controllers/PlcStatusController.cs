@@ -65,6 +65,9 @@ namespace TotalParking.Controllers
                     {
                         block_no  = c.Device.BlockNo,
                         endpoint  = c.Device.Endpoint,
+                        // "tcp" | "udp" theo plc:udpBlocks — để thấy block nào
+                        // đang thí điểm FINS/UDP.
+                        transport = c.Transport,
                         online    = c.IsOnline,
                         last_ok   = ToLocal(c.LastOkUtc),
                         last_scan = ToLocal(c.LastScanUtc),

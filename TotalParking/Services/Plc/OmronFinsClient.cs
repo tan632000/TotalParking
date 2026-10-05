@@ -29,7 +29,7 @@ namespace TotalParking.Services.Plc
     //
     // Lớp này KHÔNG tự đồng bộ hoá: một khung FINS là một cặp ghi-rồi-đọc không thể
     // xen kẽ. Việc khoá do PlcConnection lo.
-    public class OmronFinsClient : IDisposable
+    public class OmronFinsClient : IFinsClient
     {
         private const int TcpHeaderLength   = 16;
         private const int HandshakeReqLength = 20;
@@ -45,6 +45,8 @@ namespace TotalParking.Services.Plc
         {
             get { return _tcpClient != null && _tcpClient.Connected && _stream != null; }
         }
+
+        public string Transport { get { return "tcp"; } }
 
         public byte PcNode  { get { return _pcNode; } }
         public byte PlcNode { get { return _plcNode; } }
@@ -343,7 +345,8 @@ namespace TotalParking.Services.Plc
             }
         }
 
-        private static void ParseBitAddress(string bitAddress, out ushort word, out byte bit)
+        // internal: OmronFinsUdpClient dùng chung — khung lệnh hai transport giống hệt.
+        internal static void ParseBitAddress(string bitAddress, out ushort word, out byte bit)
         {
             if (string.IsNullOrWhiteSpace(bitAddress))
                 throw new ArgumentException("Dia chi bit rong.", "bitAddress");
@@ -361,7 +364,7 @@ namespace TotalParking.Services.Plc
         }
 
         // Mã vùng nhớ khi truy cập theo WORD.
-        private static byte WordAreaCode(PlcMemoryArea area)
+        internal static byte WordAreaCode(PlcMemoryArea area)
         {
             switch (area)
             {
@@ -375,7 +378,7 @@ namespace TotalParking.Services.Plc
         }
 
         // Mã vùng nhớ khi truy cập theo BIT — khác hẳn mã word của cùng vùng.
-        private static byte BitAreaCode(PlcMemoryArea area)
+        internal static byte BitAreaCode(PlcMemoryArea area)
         {
             switch (area)
             {

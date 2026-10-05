@@ -165,6 +165,19 @@ Nếu vẫn không nối được → nguyên nhân nằm chỗ khác, chúng t�
 Việc này **chỉ ngừng đốt tài nguyên và giảm tranh chấp**, không giải phóng khe.
 Nguyên nhân gốc vẫn cần câu trả lời ở mục 5.
 
+### Cập nhật 04–05/10: nguyên nhân phía SCADA và hướng FINS/UDP
+
+- **04/10:** máy chủ SCADA bị khởi động lại 4 lần trong khoảng 1 giờ (10:50 → 11:48).
+  Số block báo `0x20` tăng theo từng lần, lên tới 86/112. Mỗi lần restart máy
+  nhiều khả năng để lại một phiên bỏ rơi trên mọi PLC (suy luận). Reset PLC thì
+  giải phóng khe ngay. Recycle app pool thì an toàn vì app đóng kết nối đàng hoàng.
+- **05/10:** đo được FINS/UDP chạy trên 112/112 PLC mà không cần cấu hình thêm.
+  DA1 lấy theo octet cuối IP PLC, SA1 theo octet cuối IP máy chủ (`.4`). UDP
+  không có phiên nên không có khe nào để kẹt.
+- **Thí điểm:** khoá `plc:udpBlocks` trong Web.config bản deploy chọn block nào
+  chạy UDP. Từ 05/10 23:37, block 1 và 2 chạy UDP; đã đọc, ghi và online được.
+  Quay về TCP bằng cách xoá khoá đó. Thiết kế và bằng chứng nằm ở `specs/fins-udp/`.
+
 ---
 
 ## 8. Liên hệ

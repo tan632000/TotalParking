@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TotalParking.Models;
@@ -75,7 +76,7 @@ namespace TotalParking.Services.Plc
         // mot the dang ket o block khac, ket qua van la 0 nen khong ghi gi ca.
         private string _lastBandReason;
 
-        private OmronFinsClient _client;
+        private IFinsClient _client;
         private int      _failStreak;
         private DateTime _nextAttemptUtc = DateTime.MinValue;
 
@@ -132,6 +133,44 @@ namespace TotalParking.Services.Plc
 
         public PlcDevice Device { get; private set; }
 
+        // "udp" khi block nằm trong plc:udpBlocks, ngược lại "tcp". Chốt lúc dựng
+        // đối tượng: đổi Web.config đã tự khởi động lại ứng dụng.
+        public string Transport { get; private set; }
+
+        // ===================== plc:udpBlocks =====================
+        // Danh sách số block dùng FINS/UDP, cách nhau dấu phẩy, hoặc "*" = mọi
+        // block. Vắng hoặc rỗng = mọi block dùng TCP như trước — bản deploy chưa
+        // thêm khoá thì hành vi không đổi.
+        //
+        // Đọc MỘT lần. Gõ sai thì phần sai bị bỏ qua (block đó ở lại TCP) chứ
+        // KHÔNG ném lỗi: hàm này chạy trong constructor, và constructor chạy cho
+        // cả 112 block trong PlcConnectionManager.Load — một lỗi ở đây là mất
+        // poll toàn bãi chỉ vì một dấu chấm phẩy.
+        private static readonly Lazy<KeyValuePair<HashSet<int>, bool>> UdpConfig =
+            new Lazy<KeyValuePair<HashSet<int>, bool>>(() =>
+            {
+                bool all;
+                var set = ParseUdpBlocks(
+                    System.Configuration.ConfigurationManager.AppSettings["plc:udpBlocks"], out all);
+                return new KeyValuePair<HashSet<int>, bool>(set, all);
+            });
+
+        public static HashSet<int> ParseUdpBlocks(string raw, out bool all)
+        {
+            all = false;
+            var set = new HashSet<int>();
+            if (string.IsNullOrWhiteSpace(raw)) return set;
+
+            foreach (string phan in raw.Split(','))
+            {
+                string p = phan.Trim();
+                if (p == "*") { all = true; continue; }
+                int so;
+                if (int.TryParse(p, out so)) set.Add(so);
+            }
+            return set;
+        }
+
         public bool      IsOnline    { get; private set; }
         public DateTime? LastOkUtc   { get; private set; }
         public string    LastError   { get; private set; }
@@ -146,6 +185,9 @@ namespace TotalParking.Services.Plc
         {
             Device = device;
             Layout = ParseLayout(device.CardLayout);
+
+            var cfg = UdpConfig.Value;
+            Transport = cfg.Value || cfg.Key.Contains(device.BlockNo) ? "udp" : "tcp";
         }
 
         // Một nhịp poll. Không bao giờ ném lỗi ra ngoài: lỗi của một PLC là việc
@@ -336,7 +378,11 @@ namespace TotalParking.Services.Plc
             try
             {
                 if (_client != null) _client.Dispose();
-                _client = new OmronFinsClient(Device.PcNode, Device.PlcNode);
+                // UDP lấy node từ IP (xem OmronFinsUdpClient); PcNode/PlcNode của DB
+                // chỉ có nghĩa với bắt tay TCP.
+                _client = Transport == "udp"
+                    ? (IFinsClient)new OmronFinsUdpClient()
+                    : new OmronFinsClient(Device.PcNode, Device.PlcNode);
                 await _client.ConnectAsync(Device.IpAddress, Device.Port, Device.TimeoutMs)
                              .ConfigureAwait(false);
 
