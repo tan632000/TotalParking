@@ -83,3 +83,19 @@ Specs-Contract: process-first-ready-v1
 - Closure round 2 (fresh reviewer, có chạy thật): R7 PASS (dummy script PS 5.1: không tham số → exit 0; `-UdpBlocks "1,2"` → chuỗi `1,2`, exit 0); AC-04 PASS (`/PlcStatus` trả đúng 112 block). R4 FAIL: đo log deploy 05/10 — lượt ghi khởi động ở ≈ +5 s, biên +15 s loại mất nó.
 - Round 3 (bằng chứng runtime, theo B4): R4 → bỏ biên, MỐC = max(LastWriteTime); replay trên chính số đo closure round 2: MỐC 22:45:17 < lượt ghi `.101`/`.102` 22:45:22 → nằm trong cửa sổ → PASS. Replay do tác giả packet làm trên số đo của reviewer, không phải reviewer độc lập — nêu ở handoff.
 - Sweep cuối: 4 file đọc lại / R4, R7, AC-04 / 0 tham chiếu cũ ("+ 15 s" chỉ còn trong review log) / 0 mâu thuẫn còn lại.
+
+## Completion (C3 — 2026-10-07)
+- User decision: ACCEPT — feature hoàn thành.
+- Bằng chứng live sau receipt:
+  - Block 1: gửi xe và lấy xe thật qua UDP (06/10 16:50–16:53).
+  - Block 2: tìm xe thật, trả đúng `D1000 <- 1` (06/10 17:02).
+  - Chuyển toàn bãi `"*"` (06/10 17:13): 112 UDP, 110/112 online.
+- Sự cố 07/10: một lần publish (06/10 17:17) ghi đè Web.config bản deploy làm mất
+  khoá, cả bãi về TCP; 3 lần restart máy chủ sáng 07/10 làm 104/112 block báo
+  `0x20`. Bật lại `"*"` lúc 10:37:38 → 110/112 online trong ~11 s, 0 socket TCP.
+  Đây là bằng chứng thực tế cho mục tiêu của feature.
+- Khắc phục: khoá `plc:udpBlocks = "*"` thêm vào `TotalParking/Web.config` (source)
+  để publish không xoá nữa.
+- Còn mở (ngoài scope, không do UDP): block 97, 98 mất mạng vật lý từ 06/10 09:17;
+  block 53 D106 kẹt nửa mã `0000 A0BB` nên không ghi D1004 lúc khởi động; ~104 dòng
+  `semaphore has been disposed` mỗi lần recycle (`PlcConnection.Dispose` ngoài `_gate`).
