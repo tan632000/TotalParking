@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,19 +15,16 @@ namespace TotalParking.Services.Plc
     // Thực tế đã xảy ra: 29 PLC đang chạy mà SCADA mù hoàn toàn, và chỉ phát hiện
     // ra khi phải quét mạng bằng tay để truy một sự cố.
     //
-    // ===================== CHỈ DÒ TCP, KHÔNG BẮT TAY FINS =====================
-    // Mở TCP rồi đóng ngay, không gửi khung FINS nào.
+    // ===================== DÒ BẰNG FINS/UDP =====================
+    // Đọc một word D0 qua FINS/UDP (OmronFinsUdpClient.ProbeAsync) — chỉ đọc,
+    // không có phiên nên không chiếm khe nào của PLC. Không còn gói TCP nào tới
+    // cổng 9600: từ 07/10 toàn hệ thống chỉ nói chuyện với PLC qua UDP.
     //
-    // PLC Omron chỉ cấp được một số ít node FINS/TCP cùng lúc; hết thì trả lỗi
-    // 0x00000020 và mọi kết nối mới đều hỏng. Bắt tay FINS chỉ để hỏi "còn sống
-    // không" là tiêu một khe mà vòng poll đang cần. Dò TCP trả lời đủ câu hỏi này
-    // mà không đụng vào hạn mức đó.
-    //
-    // Đổi lại: TCP mở không chứng minh ladder đang chạy. Đây là chỉ báo "có mặt
-    // trên mạng", không phải "sẵn sàng vận hành" — và đó đúng là điều cần báo.
+    // "Sống" ở đây nghĩa là PLC trả lời FINS thật, chặt hơn cách cũ (chỉ thấy cổng
+    // TCP mở) — nhưng vẫn không có nghĩa khối đỗ đã sẵn sàng vận hành.
     //
     // ===================== CHỈ BÁO CÁO, KHÔNG TỰ BẬT =====================
-    // Lớp này KHÔNG đổi is_active. Cổng 9600 mở không có nghĩa khối đỗ đã nghiệm
+    // Lớp này KHÔNG đổi is_active. PLC trả lời FINS không có nghĩa khối đỗ đã nghiệm
     // thu xong; dữ liệu ô đỗ còn sót của nó sẽ chảy thẳng vào sức chứa zone, số
     // chỗ trống trên bảng LED và kết quả BlockAllocator. Máy quan sát, người quyết.
     public static class PlcReachabilityScanner
@@ -46,7 +42,7 @@ namespace TotalParking.Services.Plc
             public int      BlockNo  { get; set; }
             public string   Endpoint { get; set; }
             public bool     InPoll   { get; set; }   // is_active = 1
-            public bool     Alive    { get; set; }   // TCP 9600 mở
+            public bool     Alive    { get; set; }   // PLC trả lời FINS/UDP
             public DateTime? LastSeen { get; set; }
         }
 
@@ -170,26 +166,10 @@ namespace TotalParking.Services.Plc
             lock (Sync) { _ketQua = moi; _quetLuc = DateTime.Now; }
         }
 
-        // Mở TCP rồi đóng. Không gửi byte nào.
-        private static async Task<bool> ProbeAsync(string ip, int port)
+        // Đọc một word D0 qua FINS/UDP rồi đóng. Không có gói TCP nào.
+        private static Task<bool> ProbeAsync(string ip, int port)
         {
-            var client = new TcpClient();
-            try
-            {
-                var noi = client.ConnectAsync(ip, port);
-                var xong = await Task.WhenAny(noi, Task.Delay(TimeoutMs)).ConfigureAwait(false);
-                if (xong != noi) return false;
-                await noi.ConfigureAwait(false);   // để lỗi nổi lên nếu có
-                return client.Connected;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                try { client.Close(); } catch (Exception) { }
-            }
+            return OmronFinsUdpClient.ProbeAsync(ip, port, TimeoutMs);
         }
     }
 }

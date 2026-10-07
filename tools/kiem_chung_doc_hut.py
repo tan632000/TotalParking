@@ -20,9 +20,9 @@ VI SAO GHI THANG VAO D106
     phai duong vong; hang rao do danh cho vung o do.
 
 DIEU KIEN HOP LE
-    tools/plc_register.py:38-40 canh bao khong chay vao block dang trong vong
-    poll vi hai ket noi FINS co the lam lech khung tin. O day KHONG tranh duoc:
-    phai co vong poll chay thi D1004 moi duoc ghi. Bu lai bang kiem tra cuoi:
+    Qua FINS/UDP, script va vong poll dung hai socket khac cong nen khong lam
+    lech khung tin cua nhau (xem docstring tools/plc_register.py). Van can vong
+    poll chay thi D1004 moi duoc ghi, va van kiem tra cuoi cho chac:
     neu plc_audit.log co dong loi FINS nao cho IP block thu trong cua so chay
     thi HUY luot do, khong duoc dien giai ket qua.
 """

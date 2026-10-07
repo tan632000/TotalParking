@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TotalParking.Models;
@@ -8,7 +7,7 @@ namespace TotalParking.Services.Plc
 {
     // Một kết nối tới một PLC, kèm vòng trao đổi của block đó.
     //
-    // Ba việc lớp này giải quyết mà OmronFinsClient không lo:
+    // Ba việc lớp này giải quyết mà OmronFinsUdpClient không lo:
     //
     //   1. TUẦN TỰ HOÁ. Một khung FINS là một cặp ghi-rồi-đọc không thể xen kẽ.
     //      Vòng poll và luồng ghi trả lời chạy song song trên cùng một socket sẽ
@@ -26,31 +25,6 @@ namespace TotalParking.Services.Plc
     {
         private const int ReconnectBaseMs = 1000;
         private const int ReconnectMaxMs  = 30000;
-
-        // Trần thử lại riêng cho lỗi HẾT KHE KẾT NỐI (FINS 0x20).
-        //
-        // ===================== VÌ SAO PHẢI TÁCH RIÊNG =====================
-        // Hai loại hỏng khác hẳn nhau, không dùng chung chính sách được:
-        //
-        //   mạng chập / PLC vừa khởi động  -> hồi phục trong vài giây.
-        //                                     Thử lại dày là ĐÚNG.
-        //   PLC hết khe (0x20)             -> khe chỉ trống khi bên đang giữ nó
-        //                                     nhả ra. Đo thực tế: một block kẹt
-        //                                     từ 12:28 tới 23:19 mới tự khỏi.
-        //                                     Thử lại dày KHÔNG rút ngắn được.
-        //
-        // ===================== GIÁ CỦA VIỆC THỬ DÀY =====================
-        // Mỗi lần thử để lại một socket TIME_WAIT sống vài phút. Với trần 30 giây
-        // và 60 block cùng hỏng, đo được 278 socket TIME_WAIT trên máy chủ —
-        // trong khi chỉ 28 kết nối thật sự đang dùng.
-        //
-        // Tệ hơn: mỗi lần thử là một lần MỞ TCP tới PLC. Nếu khe vừa được nhả ra
-        // đúng lúc một client khác cũng đang xin, bão thử lại của ta chỉ làm tăng
-        // tranh chấp chứ không tăng cơ hội.
-        //
-        // 5 phút là đủ nhanh để bắt được khe trong vòng vài phút sau khi nó trống,
-        // mà giảm số lần thử đi mười lần.
-        private const int SlotBusyMaxMs = 300000;
 
         private readonly SemaphoreSlim _gate = new SemaphoreSlim(1, 1);
         // CardScanService thuoc hop dong cu (quyet dinh permit/hang tai). Luong moi
@@ -76,7 +50,7 @@ namespace TotalParking.Services.Plc
         // mot the dang ket o block khac, ket qua van la 0 nen khong ghi gi ca.
         private string _lastBandReason;
 
-        private IFinsClient _client;
+        private OmronFinsUdpClient _client;
         private int      _failStreak;
         private DateTime _nextAttemptUtc = DateTime.MinValue;
 
@@ -133,43 +107,15 @@ namespace TotalParking.Services.Plc
 
         public PlcDevice Device { get; private set; }
 
-        // "udp" khi block nằm trong plc:udpBlocks, ngược lại "tcp". Chốt lúc dựng
-        // đối tượng: đổi Web.config đã tự khởi động lại ứng dụng.
-        public string Transport { get; private set; }
-
-        // ===================== plc:udpBlocks =====================
-        // Danh sách số block dùng FINS/UDP, cách nhau dấu phẩy, hoặc "*" = mọi
-        // block. Vắng hoặc rỗng = mọi block dùng TCP như trước — bản deploy chưa
-        // thêm khoá thì hành vi không đổi.
+        // ===================== CHỈ FINS/UDP, KHÔNG CÓ TCP =====================
+        // FINS/TCP mỗi PLC chỉ có 3 khe, và mỗi lần máy chủ restart có thể để lại
+        // phiên bỏ rơi chiếm khe hàng giờ (0x00000020). Ngày 06/10 một lần publish
+        // xoá mất khoá cấu hình chọn UDP, cả bãi rơi về TCP, và 3 lần restart sáng
+        // 07/10 làm 104/112 block hết khe. Vì vậy đường TCP bị bỏ hẳn: không còn
+        // cấu hình nào đưa vòng poll về TCP được nữa. Xem specs/fins-udp/.
         //
-        // Đọc MỘT lần. Gõ sai thì phần sai bị bỏ qua (block đó ở lại TCP) chứ
-        // KHÔNG ném lỗi: hàm này chạy trong constructor, và constructor chạy cho
-        // cả 112 block trong PlcConnectionManager.Load — một lỗi ở đây là mất
-        // poll toàn bãi chỉ vì một dấu chấm phẩy.
-        private static readonly Lazy<KeyValuePair<HashSet<int>, bool>> UdpConfig =
-            new Lazy<KeyValuePair<HashSet<int>, bool>>(() =>
-            {
-                bool all;
-                var set = ParseUdpBlocks(
-                    System.Configuration.ConfigurationManager.AppSettings["plc:udpBlocks"], out all);
-                return new KeyValuePair<HashSet<int>, bool>(set, all);
-            });
-
-        public static HashSet<int> ParseUdpBlocks(string raw, out bool all)
-        {
-            all = false;
-            var set = new HashSet<int>();
-            if (string.IsNullOrWhiteSpace(raw)) return set;
-
-            foreach (string phan in raw.Split(','))
-            {
-                string p = phan.Trim();
-                if (p == "*") { all = true; continue; }
-                int so;
-                if (int.TryParse(p, out so)) set.Add(so);
-            }
-            return set;
-        }
+        // Giữ thuộc tính này để /PlcStatus vẫn báo transport cho từng block.
+        public string Transport { get { return "udp"; } }
 
         public bool      IsOnline    { get; private set; }
         public DateTime? LastOkUtc   { get; private set; }
@@ -185,9 +131,6 @@ namespace TotalParking.Services.Plc
         {
             Device = device;
             Layout = ParseLayout(device.CardLayout);
-
-            var cfg = UdpConfig.Value;
-            Transport = cfg.Value || cfg.Key.Contains(device.BlockNo) ? "udp" : "tcp";
         }
 
         // Một nhịp poll. Không bao giờ ném lỗi ra ngoài: lỗi của một PLC là việc
@@ -378,11 +321,9 @@ namespace TotalParking.Services.Plc
             try
             {
                 if (_client != null) _client.Dispose();
-                // UDP lấy node từ IP (xem OmronFinsUdpClient); PcNode/PlcNode của DB
-                // chỉ có nghĩa với bắt tay TCP.
-                _client = Transport == "udp"
-                    ? (IFinsClient)new OmronFinsUdpClient()
-                    : new OmronFinsClient(Device.PcNode, Device.PlcNode);
+                // Node FINS suy từ IP (xem OmronFinsUdpClient); plc_node/pc_node
+                // của DB là giá trị thời TCP và không dùng nữa.
+                _client = new OmronFinsUdpClient();
                 await _client.ConnectAsync(Device.IpAddress, Device.Port, Device.TimeoutMs)
                              .ConfigureAwait(false);
 
@@ -401,17 +342,8 @@ namespace TotalParking.Services.Plc
             }
             catch (Exception ex)
             {
-                // PLC hết khe kết nối là một loại hỏng riêng: thiết bị vẫn sống,
-                // mạng vẫn thông, chỉ là không còn chỗ cho ta. Thử lại dày không
-                // rút ngắn được thời gian chờ mà còn đốt cổng tạm — xem chú thích
-                // ở SlotBusyMaxMs.
-                var khung = ex as FinsFramingException;
-                bool hetKhe = khung != null && khung.HetKheKetNoi;
-
-                PlcAuditLog.Error(Device.IpAddress, Device.BlockNo, "KET NOI",
-                                  hetKhe ? ex.Message + " (het khe, gian nhip thu lai)"
-                                         : ex.Message);
-                Fail(ex.Message, dropConnection: true, hetKhe: hetKhe);
+                PlcAuditLog.Error(Device.IpAddress, Device.BlockNo, "KET NOI", ex.Message);
+                Fail(ex.Message, dropConnection: true);
                 return false;
             }
         }
@@ -821,12 +753,6 @@ namespace TotalParking.Services.Plc
 
         private void Fail(string message, bool dropConnection)
         {
-            Fail(message, dropConnection, false);
-        }
-
-        // hetKhe = true khi PLC trả FINS 0x20. Xem chú thích ở SlotBusyMaxMs.
-        private void Fail(string message, bool dropConnection, bool hetKhe)
-        {
             IsOnline  = false;
             LastError = message;
 
@@ -836,22 +762,6 @@ namespace TotalParking.Services.Plc
             }
 
             _failStreak++;
-
-            if (hetKhe)
-            {
-                // Đi THẲNG tới nhịp thưa, không leo dần theo cấp số nhân.
-                //
-                // Lần thử đầu đã cho biết khe đang bị chiếm, và khe không tự trống
-                // trong vài giây — đo thực tế có block kẹt 11 tiếng. Leo dần chỉ
-                // tốn thêm mấy chục lần thử vô ích trước khi tới được nhịp thưa.
-                //
-                // Bản sửa đầu tiên viết sai chỗ này: chỉ nâng TRẦN lên 300 giây
-                // trong khi delay tính theo cấp số nhân không bao giờ vượt 32 giây,
-                // nên Math.Min luôn lấy 32. Đo lại thấy vẫn 2 lần/phút mỗi block,
-                // đúng bằng trước khi sửa.
-                _nextAttemptUtc = DateTime.UtcNow.AddMilliseconds(SlotBusyMaxMs);
-                return;
-            }
 
             int delay = ReconnectBaseMs * (1 << Math.Min(_failStreak - 1, 5));
             _nextAttemptUtc = DateTime.UtcNow.AddMilliseconds(Math.Min(delay, ReconnectMaxMs));

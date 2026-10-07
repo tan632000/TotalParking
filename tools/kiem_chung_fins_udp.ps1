@@ -1,6 +1,6 @@
 # Kiem chung OmronFinsUdpClient (specs/fins-udp/task-01-client-udp.md).
 #
-# 8 ca, moi ca in PASS/FAIL. Thoat 0 chi khi DEM DU 8 PASS va khong ca nao FAIL.
+# 10 ca, moi ca in PASS/FAIL. Thoat 0 chi khi DEM DU 10 PASS va khong ca nao FAIL.
 #   live_*      doc PLC THAT (chi DOC, khong ghi gi xuong PLC that)
 #   loopback_*  dung mot "PLC gia" tren 127.0.0.1 de tao nhung tinh huong mang
 #               that hiem khi tao ra: mat goi, goi SID cu, khong tra loi lenh ghi.
@@ -117,7 +117,7 @@ $Framing = [TotalParking.Services.Plc.FinsFramingException]
 $EndCode = [TotalParking.Services.Plc.FinsException]
 $script:failed = 0
 $script:passed = 0
-$SoCa = 8
+$SoCa = 10
 
 function Ket-Qua([string]$ten, [bool]$ok, [string]$chiTiet) {
     if ($ok) { Write-Output ("PASS  {0,-34} {1}" -f $ten, $chiTiet); $script:passed++ }
@@ -160,6 +160,15 @@ $sauDo = $null
 try { $sauDo = Cho ($plc.ReadWordsAsync($DM, 1000, 1, 3000)) } catch { }
 Ket-Qua 'live_dia_chi_ngoai_dai' (($loi -is $EndCode) -and $conNoi -and $sauDo -ne $null) ("loi={0} IsConnected={1} doc_tiep={2}" -f $(if ($loi) { $loi.GetType().Name + ' ' + $loi.Message } else { 'khong' }), $conNoi, ($sauDo -ne $null))
 $plc.Dispose()
+
+# ProbeAsync: bo do kha dung va trang Settings dung ham nay thay cho TCP connect.
+$UdpClientType = [TotalParking.Services.Plc.OmronFinsUdpClient]
+$song = Cho ($UdpClientType::ProbeAsync('192.169.1.101', 9600, 2000))
+Ket-Qua 'live_probe_block1' ($song -eq $true) ("ProbeAsync(.101)={0}" -f $song)
+$sw = [Diagnostics.Stopwatch]::StartNew()
+$chet = Cho ($UdpClientType::ProbeAsync('192.169.1.250', 9600, 2000))
+$sw.Stop()
+Ket-Qua 'live_probe_ip_khong_ton_tai' ($chet -eq $false -and $sw.Elapsed.TotalSeconds -le 3.5) ("ProbeAsync(.250)={0} sau {1:N2}s" -f $chet, $sw.Elapsed.TotalSeconds)
 
 # ---------------------------------------------------------------- loopback
 function Voi-Plc-Gia([string]$tenCa, [string]$kichBan, [scriptblock]$khoi) {

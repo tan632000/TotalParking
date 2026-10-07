@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace TotalParking.Services.Plc
 {
-    // Client FINS/UDP cho PLC Omron. Cùng khung lệnh với OmronFinsClient (TCP),
-    // khác ở chỗ KHÔNG có phiên.
+    // Client FINS/UDP cho PLC Omron — đường giao tiếp DUY NHẤT với PLC. Client
+    // FINS/TCP cũ đã bị bỏ hẳn từ 07/10 (xem PlcConnection.Transport).
     //
     // ===================== VÌ SAO CÓ BẢN UDP =====================
     // FINS/TCP mỗi PLC chỉ có 3 khe. Mỗi lần máy chủ restart có thể để lại một
@@ -35,7 +35,7 @@ namespace TotalParking.Services.Plc
     //
     // Lớp này KHÔNG tự đồng bộ hoá: PlcConnection._gate bảo đảm mỗi lúc chỉ một
     // lệnh đang bay, giống với client TCP.
-    public class OmronFinsUdpClient : IFinsClient
+    public class OmronFinsUdpClient : IDisposable
     {
         private const int MinAttemptMs = 500;
 
@@ -97,7 +97,7 @@ namespace TotalParking.Services.Plc
 
             var cmd = new byte[8];
             cmd[0] = 0x01; cmd[1] = 0x01;           // Memory Area Read
-            cmd[2] = OmronFinsClient.WordAreaCode(area);
+            cmd[2] = WordAreaCode(area);
             cmd[3] = (byte)(startAddress >> 8);
             cmd[4] = (byte)(startAddress & 0xFF);
             cmd[5] = 0x00;
@@ -135,7 +135,7 @@ namespace TotalParking.Services.Plc
             var count = (ushort)data.Length;
             var cmd = new byte[8 + count * 2];
             cmd[0] = 0x01; cmd[1] = 0x02;           // Memory Area Write
-            cmd[2] = OmronFinsClient.WordAreaCode(area);
+            cmd[2] = WordAreaCode(area);
             cmd[3] = (byte)(startAddress >> 8);
             cmd[4] = (byte)(startAddress & 0xFF);
             cmd[5] = 0x00;
@@ -156,11 +156,11 @@ namespace TotalParking.Services.Plc
 
             ushort word;
             byte bit;
-            OmronFinsClient.ParseBitAddress(bitAddress, out word, out bit);
+            ParseBitAddress(bitAddress, out word, out bit);
 
             var cmd = new byte[8];
             cmd[0] = 0x01; cmd[1] = 0x01;
-            cmd[2] = OmronFinsClient.BitAreaCode(area);
+            cmd[2] = BitAreaCode(area);
             cmd[3] = (byte)(word >> 8);
             cmd[4] = (byte)(word & 0xFF);
             cmd[5] = bit;
@@ -182,11 +182,11 @@ namespace TotalParking.Services.Plc
 
             ushort word;
             byte bit;
-            OmronFinsClient.ParseBitAddress(bitAddress, out word, out bit);
+            ParseBitAddress(bitAddress, out word, out bit);
 
             var cmd = new byte[9];
             cmd[0] = 0x01; cmd[1] = 0x02;
-            cmd[2] = OmronFinsClient.BitAreaCode(area);
+            cmd[2] = BitAreaCode(area);
             cmd[3] = (byte)(word >> 8);
             cmd[4] = (byte)(word & 0xFF);
             cmd[5] = bit;
@@ -337,7 +337,7 @@ namespace TotalParking.Services.Plc
             return frame;
         }
 
-        // Bỏ qua 0, giống client TCP.
+        // Bỏ qua 0 để giá trị mặc định của một mảng mới không trùng SID hợp lệ.
         private byte NextSid()
         {
             _sid = (byte)(_sid == 255 ? 1 : _sid + 1);
@@ -347,6 +347,74 @@ namespace TotalParking.Services.Plc
         private void EnsureConnected()
         {
             if (!IsConnected) throw new InvalidOperationException("Chua ket noi toi PLC.");
+        }
+
+        // Dò "PLC có đang trả lời FINS không" cho bộ dò khả dụng và trang Settings.
+        //
+        // Chỉ ĐỌC một word D0 (chính là bước ConnectAsync làm), rồi đóng. Thay cho
+        // cách cũ mở TCP tới 9600: không còn gói TCP nào tới PLC, và kết quả "sống"
+        // giờ nghĩa là PLC trả lời FINS thật chứ không chỉ là cổng đang mở.
+        public static async Task<bool> ProbeAsync(string ipAddress, int port, int timeoutMs)
+        {
+            var client = new OmronFinsUdpClient();
+            try
+            {
+                await client.ConnectAsync(ipAddress, port, timeoutMs).ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                client.Dispose();
+            }
+        }
+
+        private static void ParseBitAddress(string bitAddress, out ushort word, out byte bit)
+        {
+            if (string.IsNullOrWhiteSpace(bitAddress))
+                throw new ArgumentException("Dia chi bit rong.", "bitAddress");
+
+            string[] parts = bitAddress.Trim().Split('.');
+            if (!ushort.TryParse(parts[0], out word))
+                throw new ArgumentException("Dia chi bit khong hop le: " + bitAddress, "bitAddress");
+
+            bit = 0;
+            if (parts.Length > 1 && !byte.TryParse(parts[1], out bit))
+                throw new ArgumentException("Dia chi bit khong hop le: " + bitAddress, "bitAddress");
+
+            if (bit > 15)
+                throw new ArgumentException("Chi so bit phai trong 0..15: " + bitAddress, "bitAddress");
+        }
+
+        // Mã vùng nhớ khi truy cập theo WORD.
+        private static byte WordAreaCode(PlcMemoryArea area)
+        {
+            switch (area)
+            {
+                case PlcMemoryArea.DM:  return 0x82;
+                case PlcMemoryArea.CIO: return 0xB0;
+                case PlcMemoryArea.WR:  return 0xB1;
+                case PlcMemoryArea.HR:  return 0xB2;
+                case PlcMemoryArea.AR:  return 0xB3;
+                default: throw new ArgumentOutOfRangeException("area");
+            }
+        }
+
+        // Mã vùng nhớ khi truy cập theo BIT — khác hẳn mã word của cùng vùng.
+        private static byte BitAreaCode(PlcMemoryArea area)
+        {
+            switch (area)
+            {
+                case PlcMemoryArea.DM:  return 0x02;
+                case PlcMemoryArea.CIO: return 0x30;
+                case PlcMemoryArea.WR:  return 0x31;
+                case PlcMemoryArea.HR:  return 0x32;
+                case PlcMemoryArea.AR:  return 0x33;
+                default: throw new ArgumentOutOfRangeException("area");
+            }
         }
 
         public void Close()

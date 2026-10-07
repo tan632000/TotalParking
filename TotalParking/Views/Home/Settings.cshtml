@@ -79,7 +79,7 @@
         <div class="flex justify-between items-center pb-4 border-b border-slate-800">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight">Cấu hình hệ thống (Settings)</h1>
-                <p class="text-slate-400 text-sm mt-1">Tham số đang chạy, đọc từ Web.config. Trang ở chế độ chỉ đọc: sửa cấu hình phải sửa file rồi khởi động lại ứng dụng. Ghi chú cũ nói giao thức Modbus, thực tế hệ thống dùng Omron FINS/TCP. Phân phối cảnh báo và tích hợp API ngoài.</p>
+                <p class="text-slate-400 text-sm mt-1">Tham số đang chạy, đọc từ Web.config. Trang ở chế độ chỉ đọc: sửa cấu hình phải sửa file rồi khởi động lại ứng dụng. Ghi chú cũ nói giao thức Modbus, thực tế hệ thống dùng Omron FINS/UDP. Phân phối cảnh báo và tích hợp API ngoài.</p>
             </div>
             <div class="flex gap-2">
                 
@@ -89,12 +89,13 @@
 
         <!-- Main Layout Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <!-- 1. Ket noi PLC (Omron FINS/TCP). Ten cu "Modbus TCP" la di san cua ban
-                 mau React, he thong chua bao gio dung Modbus. -->
+            <!-- 1. Ket noi PLC (Omron FINS/UDP; FINS/TCP da bo tu 07/10). Ten cu
+                 "Modbus TCP" la di san cua ban mau React, he thong chua bao gio
+                 dung Modbus. -->
             <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
                 <h3 class="text-white text-sm font-bold flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi text-blue-400"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg>
-                    Kết nối truyền thông PLC (Omron FINS/TCP)
+                    Kết nối truyền thông PLC (Omron FINS/UDP)
                 </h3>
                 <div class="space-y-3">
                     <div>
@@ -102,7 +103,7 @@
                         <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@plcDaiIp" readonly>
                     </div>
                     <div>
-                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Cổng FINS/TCP của PLC</label>
+                        <label class="text-slate-500 text-[10px] font-mono uppercase block mb-1">Cổng FINS/UDP của PLC</label>
                         <input type="text" class="w-full bg-slate-800/60 border border-slate-700/50 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono outline-none focus:border-blue-500 transition-colors" value="@plcCong" readonly>
                     </div>
                     <div>
@@ -120,7 +121,7 @@
                  Tach rieng khoi khung PLC. Dia chi nay truoc day bi hien trong
                  khung PLC voi nhan "IP SCADA Server", lam khach hang tuong he
                  thong dang tro PLC vao CCU. Hai he hoan toan khac nhau: PLC noi
-                 bang Omron FINS/TCP toi 112 thiet bi, con CCU la MOT dau doc
+                 bang Omron FINS/UDP toi 112 thiet bi, con CCU la MOT dau doc
                  cam bien do thuong voi giao thuc rieng. -->
             <div class="bg-slate-900/50 rounded-xl border border-slate-800 p-5 shadow-xl space-y-4">
                 <h3 class="text-white text-sm font-bold flex items-center gap-2">

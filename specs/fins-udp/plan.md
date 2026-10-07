@@ -96,6 +96,19 @@ Specs-Contract: process-first-ready-v1
   Đây là bằng chứng thực tế cho mục tiêu của feature.
 - Khắc phục: khoá `plc:udpBlocks = "*"` thêm vào `TotalParking/Web.config` (source)
   để publish không xoá nữa.
+- Amendment (2026-10-07, sau C3, theo quyết định user "không giao tiếp TCP với PLC"):
+  bỏ hẳn FINS/TCP. Xoá `OmronFinsClient` và `IFinsClient`; `PlcConnection` luôn dùng
+  `OmronFinsUdpClient`; khoá `plc:udpBlocks`, `ParseUdpBlocks` và nhánh xử lý `0x20`
+  không còn. Vì vậy AC-04, AC-05 và AC-10 (chọn TCP/UDP theo block) không còn áp
+  dụng với code hiện tại, và lệnh trong Verification Plan của task-02/03 (tham số
+  `-UdpBlocks`) không chạy lại được. Receipt cũ giữ nguyên làm lịch sử của build lúc
+  đó. Kiểm chứng hiện hành:
+  - `tools/kiem_chung_fins_udp.ps1` (10 ca, thêm `ProbeAsync`);
+  - `tools/kiem_chung_transport.ps1` (không tham số; kiểm DLL deploy không còn
+    `OmronFinsClient`, cả 112 block UDP, không có TCP tới 9600).
+  Bộ dò khả dụng và trang Settings dò PLC bằng một lệnh đọc FINS/UDP, nên "sống"
+  giờ nghĩa là PLC trả lời FINS (chặt hơn "cổng 9600 mở"). Tool Python trong
+  `tools/` vẫn dùng FINS/TCP (công cụ test) — xem quyết định ở commit.
 - Còn mở (ngoài scope, không do UDP): block 97, 98 mất mạng vật lý từ 06/10 09:17;
   block 53 D106 kẹt nửa mã `0000 A0BB` nên không ghi D1004 lúc khởi động; ~104 dòng
   `semaphore has been disposed` mỗi lần recycle (`PlcConnection.Dispose` ngoài `_gate`).

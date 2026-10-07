@@ -1,17 +1,15 @@
-# Kiem chung chon transport TCP/UDP theo block (specs/fins-udp/task-02, task-03).
+# Kiem chung giao tiep PLC chi qua FINS/UDP (specs/fins-udp).
 #
-#   -UdpBlocks  gia tri ky vong cua plc:udpBlocks trong Web.config BAN DEPLOY.
-#               Bo tham so = ky vong moi block dung TCP.
-#               (PowerShell 5.1 bo doi so rong khi goi qua -File, nen dung truyen
-#               -UdpBlocks "" — cu bo han tham so.)
+# Tu 07/10 he thong KHONG con duong FINS/TCP: vong poll, bo do kha dung va trang
+# Settings deu noi chuyen voi PLC qua UDP. Script nay kiem tren ban deploy dang
+# chay: ca 112 block bao transport "udp", online, ghi duoc qua UDP, va tien trinh
+# w3wp khong giu ket noi TCP nao toi cong 9600 cua PLC.
 #
-# Chay tu thu muc goc repo, sau khi build va deploy:
+# Chay tu thu muc goc repo, sau khi deploy va cho >= 30 giay:
 #   powershell -NoProfile -ExecutionPolicy Bypass -File tools\kiem_chung_transport.ps1
-#   powershell -NoProfile -ExecutionPolicy Bypass -File tools\kiem_chung_transport.ps1 -UdpBlocks "1,2"
 #
-# Thoat 0 chi khi moi kiem tra PASS.
-
-param([string]$UdpBlocks = "")
+# Thoat 0 chi khi moi kiem tra PASS. Block mat mang vat ly se FAIL o phan online
+# va ghi — do la dung, script bao thiet bi nao can ra hien truong.
 
 $ErrorActionPreference = 'Stop'
 $script:failed = 0
@@ -22,44 +20,22 @@ function Ket-Qua([string]$ten, [bool]$ok, [string]$chiTiet) {
     else     { Write-Output ("FAIL  {0,-28} {1}" -f $ten, $chiTiet); $script:failed++ }
 }
 
-$dll = Join-Path $PSScriptRoot '..\TotalParking\bin\TotalParking.dll'
-[void][Reflection.Assembly]::LoadFrom((Resolve-Path $dll))
-$Conn = [TotalParking.Services.Plc.PlcConnection]
-
-# KHONG khai bao [string]$raw: PowerShell se ep $null thanh "" va ca <null> chi
-# con la ca "" lap lai. [NullString]::Value moi truyen null that xuong .NET.
-function Tach($raw) {
-    $all = $false
-    $doiSo = if ($raw -eq $null) { [NullString]::Value } else { [string]$raw }
-    $set = $Conn::ParseUdpBlocks($doiSo, [ref]$all)
-    return @{ Set = @($set | Sort-Object); All = $all }
-}
-
-# ---------------------------------------------------------------- parse (offline)
-# Moi ca: gia tri cau hinh -> tap ky vong + all ky vong. Ca rac phai bi bo qua
-# chu khong nem loi: ham nay chay trong constructor cua ca 112 block.
-$caParse = @(
-    @{ Raw = $null;      Set = @();     All = $false },
-    @{ Raw = '';         Set = @();     All = $false },
-    @{ Raw = '1,2';      Set = @(1, 2); All = $false },
-    @{ Raw = ' 1 , 2 ';  Set = @(1, 2); All = $false },
-    @{ Raw = '1;2';      Set = @();     All = $false },
-    @{ Raw = 'b1,3';     Set = @(3);    All = $false },
-    @{ Raw = '*';        Set = @();     All = $true  }
-)
-foreach ($ca in $caParse) {
-    $ten = 'parse ' + $(if ($ca.Raw -eq $null) { '<null>' } else { '"' + $ca.Raw + '"' })
-    try {
-        $kq = Tach $ca.Raw
-        $ok = (($kq.Set -join ',') -eq ($ca.Set -join ',')) -and ($kq.All -eq $ca.All)
-        Ket-Qua $ten $ok ("tap={{{0}}} all={1}" -f ($kq.Set -join ','), $kq.All)
-    } catch {
-        Ket-Qua $ten $false ("nem loi: " + $_.Exception.InnerException.Message)
-    }
+# ---------------------------------------------------------------- build dang chay
+# Ban deploy phai la build KHONG con client FINS/TCP. Truong "transport" tren
+# /PlcStatus gio la hang so "udp" nen khong chung minh duoc gi — kiem thang DLL.
+# ReflectionOnly: chi doc metadata, khong nap phu thuoc MVC/MySqlConnector.
+$deploy = 'C:\Users\Admin\Documents\Web\totalParking'
+try {
+    $asm = [Reflection.Assembly]::ReflectionOnlyLoadFrom("$deploy\bin\TotalParking.dll")
+    $conTcp = $asm.GetType('TotalParking.Services.Plc.OmronFinsClient', $false) -ne $null
+    $coUdp  = $asm.GetType('TotalParking.Services.Plc.OmronFinsUdpClient', $false) -ne $null
+    Ket-Qua 'deploy khong con client TCP' ((-not $conTcp) -and $coUdp) ("OmronFinsClient={0} OmronFinsUdpClient={1}" -f $conTcp, $coUdp)
+} catch {
+    Ket-Qua 'deploy khong con client TCP' $false ("khong doc duoc DLL ban deploy: " + $_.Exception.Message)
 }
 
 # ---------------------------------------------------------------- transport (live)
-$ky = Tach $UdpBlocks
+# Moi block deu phai la UDP — khong con cau hinh nao chon TCP.
 try {
     $j = Invoke-RestMethod http://localhost:8080/PlcStatus -TimeoutSec 30
 } catch {
@@ -73,28 +49,27 @@ if ($j -ne $null) {
     $sai    = @()
     $soUdp  = 0
     foreach ($b in $blocks) {
-        $mong = if ($ky.All -or ($ky.Set -contains [int]$b.block_no)) { 'udp' } else { 'tcp' }
+        $mong = 'udp'
         if ($b.transport -eq 'udp') { $soUdp++ }
         if ($b.transport -ne $mong) { $sai += ("{0}:{1}(mong {2})" -f $b.block_no, $b.transport, $mong) }
     }
     # 112 block la so PLC dang van hanh; nap thieu block cung phai FAIL.
     Ket-Qua 'transport co trong JSON' ($blocks.Count -eq 112 -and $thieu.Count -eq 0) ("{0}/112 block, thieu truong transport: {1}" -f $blocks.Count, $thieu.Count)
-    Ket-Qua 'transport dung cau hinh' ($blocks.Count -gt 0 -and $sai.Count -eq 0) ("ky_vong udpBlocks='{0}' -> udp={1} tcp={2}; sai: {3}" -f $UdpBlocks, $soUdp, ($blocks.Count - $soUdp), $(if ($sai.Count) { "$($sai.Count) block: " + (($sai | Select-Object -First 10) -join ' ') } else { 'khong' }))
+    Ket-Qua 'moi block la UDP' ($blocks.Count -gt 0 -and $sai.Count -eq 0) ("udp={0} tcp={1}; sai: {2}" -f $soUdp, ($blocks.Count - $soUdp), $(if ($sai.Count) { "$($sai.Count) block: " + (($sai | Select-Object -First 10) -join ' ') } else { 'khong' }))
 }
 
 # ---------------------------------------------------------------- thi diem (task 03)
-# Chi chay khi co block ky vong dung UDP. Doc tu ban deploy, khong ghi gi.
-$deploy = 'C:\Users\Admin\Documents\Web\totalParking'
-# Lay theo block KY VONG chay UDP, khong theo block DANG bao "udp": neu cau hinh
-# khong duoc ap dung thi danh sach sau se rong va moi kiem tra ben duoi PASS rong.
+# Doc tu ban deploy, khong ghi gi. Lay theo block KY VONG (ca 112), khong theo
+# block DANG bao "udp": neu vi ly do nao do co block khong chay UDP thi danh sach
+# van du va kiem tra ben duoi khong PASS rong.
 $blockThiDiem = @()
-if ($j -ne $null) { $blockThiDiem = @($j.blocks | ? { $ky.All -or ($ky.Set -contains [int]$_.block_no) }) }
+if ($j -ne $null) { $blockThiDiem = @($j.blocks) }
 
-if (($ky.All -or $ky.Set.Count -gt 0) -and $j -ne $null) {
+if ($j -ne $null) {
     $ips = @($blockThiDiem | % { ($_.endpoint -split ':')[0] })
     # Block ky vong ma vang mat trong JSON thi moi vong kiem duoi day chay 0 lan
     # va PASS rong — phai FAIL o day.
-    Ket-Qua 'block thi diem co trong JSON' ($blockThiDiem.Count -gt 0 -and ($ky.All -or $blockThiDiem.Count -eq $ky.Set.Count)) ("ky_vong={0} thay={1}" -f $(if ($ky.All) { '*' } else { $ky.Set.Count }), $blockThiDiem.Count)
+    Ket-Qua 'du 112 block' ($blockThiDiem.Count -eq 112) ("thay={0}/112" -f $blockThiDiem.Count)
 
     # MOC = lan cuoi Web.config hoac DLL ban deploy doi = luc AppDomain hien tai
     # khoi dong (w3wp KHONG khoi dong lai khi deploy). Khong cong bien: AppDomain
@@ -111,18 +86,18 @@ if (($ky.All -or $ky.Set.Count -gt 0) -and $j -ne $null) {
         Ket-Qua ("online block {0}" -f $b.block_no) ($b.online -and $moi) ("online={0} last_ok={1} loi={2}" -f $b.online, $b.last_ok, $b.error)
     }
 
-    # Socket: tien trinh w3wp KHONG con giu TCP ESTABLISHED toi PLC dang chay UDP.
-    # PlcReachabilityScanner mo-roi-dong TCP moi 5 phut, nen chi FAIL khi CA 3
-    # mau (cach 5 s) deu thay.
+    # Socket: tien trinh w3wp KHONG mo bat ky ket noi TCP nao toi cong 9600 cua
+    # PLC. Tu 07/10 ca bo do kha dung cung da sang UDP, nen chi can MOT mau thay
+    # TCP la FAIL (truoc day bo do mo-roi-dong TCP moi 5 phut nen phai cho 3 mau).
     $w3 = @(Get-CimInstance Win32_Process -Filter "Name='w3wp.exe'" | % { [int]$_.ProcessId })
     $thay = 0
     for ($i = 0; $i -lt 3; $i++) {
         if ($i -gt 0) { Start-Sleep -Seconds 5 }
-        $c = @(Get-NetTCPConnection -RemotePort 9600 -State Established -ErrorAction SilentlyContinue |
-               ? { ($w3 -contains [int]$_.OwningProcess) -and ($ips -contains $_.RemoteAddress) })
+        $c = @(Get-NetTCPConnection -RemotePort 9600 -ErrorAction SilentlyContinue |
+               ? { ($w3 -contains [int]$_.OwningProcess) -and ($ips -contains $_.RemoteAddress) -and $_.State -ne 'TimeWait' })
         if ($c.Count -gt 0) { $thay++ }
     }
-    Ket-Qua 'khong con TCP toi block UDP' ($w3.Count -gt 0 -and $thay -lt 3) ("w3wp={0} mau_thay_TCP={1}/3 ip={2}" -f ($w3 -join ','), $thay, ($ips -join ','))
+    Ket-Qua 'khong co TCP toi PLC' ($w3.Count -gt 0 -and $thay -eq 0) ("w3wp={0} mau_thay_TCP={1}/3 so_ip={2}" -f ($w3 -join ','), $thay, $ips.Count)
 
     # Ghi qua UDP: plc_audit.log co WRITE ... OK cho tung IP sau MOC, va khong
     # co ERROR nao cho IP do sau MOC. Khong co dong WRITE = CHUA CHUNG MINH.

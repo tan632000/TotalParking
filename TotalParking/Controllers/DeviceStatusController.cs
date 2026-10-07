@@ -10,7 +10,7 @@ namespace TotalParking.Controllers
     // Trạng thái sống của thiết bị ngoại vi, cho khối "Trạng thái truyền thông"
     // ở trang Điều hướng.
     //
-    // Chỉ đọc và chỉ mở TCP rồi đóng — xem DeviceProbeService.
+    // Chỉ đọc: PLC dò bằng một lệnh đọc FINS/UDP, LED mở TCP rồi đóng — xem DeviceProbeService.
     public class DeviceStatusController : Controller
     {
         private static readonly DeviceProbeService _probe = new DeviceProbeService();

@@ -16,8 +16,8 @@ namespace TotalParking.Models
         public string IpAddress { get; set; }
         public int    Port      { get; set; }
 
-        // Giá trị đề nghị. Bắt tay FINS/TCP trả về node được cấp phát và client
-        // ghi đè lại, nên hai số này không phải sự thật cuối cùng.
+        // Giá trị thời FINS/TCP, KHÔNG còn dùng: FINS/UDP suy node từ IP (octet
+        // cuối IP PLC / IP máy chủ) — xem OmronFinsUdpClient. Giữ cột cho khớp DB.
         public byte PlcNode { get; set; }
         public byte PcNode  { get; set; }
 

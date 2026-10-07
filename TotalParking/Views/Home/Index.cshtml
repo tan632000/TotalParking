@@ -540,9 +540,10 @@
                 </div>
                 <div class="flex items-center justify-between py-1.5 border-b last:border-0" style="border-color: rgb(51, 65, 85);">
                     @* "phản hồi mạng" chứ không phải "online": DeviceStatus/Summary
-                       chỉ dò TCP tới host (DeviceProbeService), còn PlcStatus/Index
-                       mới là bắt tay FINS thật. Hai số lệch nhau rất xa — đo lúc lập
-                       kế hoạch là 82/86 so với 25/86. *@
+                       dò bằng một lệnh đọc FINS/UDP (DeviceProbeService), còn
+                       PlcStatus/Index là vòng poll thật. Từ 07/10 cả hai đều đi UDP
+                       nên hai số thường gần nhau; thời FINS/TCP từng lệch 82/86 so
+                       với 25/86 vì hết khe. *@
                     <span style="color: rgb(203, 213, 225); font-size: 12px;">
                         PLC — phản hồi mạng
                     </span>

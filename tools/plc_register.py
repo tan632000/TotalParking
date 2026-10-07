@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CONG CU TEST — doc/ghi thanh ghi DM cua PLC Omron qua FINS/TCP.
+"""CONG CU TEST — doc/ghi thanh ghi DM cua PLC Omron qua FINS/UDP.
 
 DAY KHONG PHAI MOT DUONG VAN HANH.
 
@@ -23,8 +23,9 @@ vong poll (is_active co the = 0). Chi dung thu vien chuan cua Python.
     python tools/plc_register.py --block 95 --write D1000 --value 103
     python tools/plc_register.py --ip 192.169.1.195 --read D100 --count 4
 
-Khung tin duoc chuyen the tu TotalParking/Services/Plc/OmronFinsClient.cs —
-ban da chay that tren toan bo 112 PLC, khong phai suy dien tu tai lieu.
+Khung tin chuyen the tu TotalParking/Services/Plc/OmronFinsUdpClient.cs — ban
+da chay that tren toan bo 112 PLC. Tu 07/10 he thong KHONG noi FINS/TCP voi PLC
+nua (TCP chi co 3 khe/PLC, phien bo roi lam PLC bao 0x20); script nay cung vay.
 
 AN TOAN
     Mac dinh chi cho ghi D1000 (so block tra loi tim xe). Moi thanh ghi khac
@@ -35,9 +36,10 @@ AN TOAN
     co the xep xe khac vao — VA CHAM XE THAT. Chi ghi khi co nguoi ra tan noi
     xac nhan o trong.
 
-KHONG tu dong hoa script nay trong vong lap. Mot khung FINS la mot cap
-ghi-roi-doc khong the xen ke; neu block dang nam trong vong poll cua site thi
-hai ket noi se lam lech khung tin cua nhau.
+KHONG tu dong hoa script nay trong vong lap. Qua UDP, script va vong poll cua
+site dung hai socket khac cong nen khong lam lech khung tin cua nhau (do 05/10:
+hai nguon cung SA1, 100/100 dung) — nhung ghi tay van co the dam vao gia tri
+ma vong poll dang quan ly.
 """
 
 import argparse
@@ -58,7 +60,7 @@ AUDIT_LOG = os.path.join(REPO_ROOT, "TotalParking", "App_Data", "plc_manual_writ
 DM_AREA_WORD = 0x82          # ma vung nho DM khi truy cap theo WORD
 
 # Ma vung nho khi truy cap theo WORD. Khac han ma khi truy cap theo BIT.
-# Chuyen the tu OmronFinsClient.WordAreaCode.
+# Chuyen the tu OmronFinsUdpClient.WordAreaCode.
 AREA_WORD = {"D": 0x82, "DM": 0x82, "CIO": 0xB0, "W": 0xB1, "WR": 0xB1,
              "H": 0xB2, "HR": 0xB2, "A": 0xB3, "AR": 0xB3}
 
@@ -71,7 +73,7 @@ DANGER_RANGES = [(200, 211), (300, 311), (400, 411)]
 
 
 # --------------------------------------------------------------------------
-# FINS/TCP
+# FINS/UDP
 # --------------------------------------------------------------------------
 
 class FinsError(Exception):
@@ -79,14 +81,22 @@ class FinsError(Exception):
 
 
 class FinsClient:
-    """Mot ket noi FINS/TCP toi mot PLC. Dung nhu context manager."""
+    """Mot socket FINS/UDP toi mot PLC. Dung nhu context manager.
+
+    Khong co phien, khong co bat tay, nen khong chiem khe nao cua PLC — script
+    bi kill giua chung cung khong de lai gi tren PLC.
+
+    Node FINS suy tu IP, KHONG tu tham so (do tren CP2E tai bai): DA1 = octet
+    cuoi IP PLC, SA1 = octet cuoi IP may gui. pc_node / plc_node van nhan de cac
+    script cu goi khong phai sua, nhung bi bo qua — gia tri DB la cua thoi TCP va
+    PLC tu choi neu dung (End Code 9005 / 2108)."""
 
     def __init__(self, ip, port=9600, pc_node=0, plc_node=1, timeout_ms=3000,
                  retries=4):
         self.ip = ip
         self.port = port
-        self.pc_node = pc_node
-        self.plc_node = plc_node
+        self.pc_node = 0
+        self.plc_node = 0
         self.timeout = timeout_ms / 1000.0
         self.retries = retries
         self.sock = None
@@ -97,9 +107,7 @@ class FinsClient:
         return self
 
     def connect_with_retry(self):
-        """PLC Omron chi nhan mot so it ket noi FINS/TCP cung luc. Khe cua lan
-        truoc can vai giay moi duoc giai phong, nen connect timeout KHONG co
-        nghia la PLC chet — thu lai thuong an ngay."""
+        """Thu lai khi PLC chua tra loi (vua khoi dong, mang chap chon)."""
         last = None
         for attempt in range(1, self.retries + 1):
             try:
@@ -118,23 +126,22 @@ class FinsClient:
         self.close()
 
     def connect(self):
-        self.sock = socket.create_connection((self.ip, self.port), self.timeout)
+        """UDP khong co ket noi that: connect() chi co dinh dia chi dich de socket
+        loc goi tu may khac. Doc thu D0 de biet PLC co tra loi."""
+        ip = socket.gethostbyname(self.ip)
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.settimeout(self.timeout)
+        # Cong nguon tam do he dieu hanh cap — KHONG bind 9600. PLC tra loi ve
+        # dung cong nguon cua tung goi.
+        self.sock.connect((ip, self.port))
 
-        # Bat tay: 20 byte xin cap node, nhan 24 byte tra loi.
-        req = b"FINS" + struct.pack(">IIII", 12, 0, 0, self.pc_node)
-        self.sock.sendall(req)
-        res = self._read_exact(24, "bat tay")
+        self.plc_node = int(ip.rsplit(".", 1)[1])
+        self.pc_node = int(self.sock.getsockname()[0].rsplit(".", 1)[1])
+        if not 1 <= self.pc_node <= 254:
+            raise FinsError("Octet cuoi IP may nay (%s) khong dung lam node FINS."
+                            % self.sock.getsockname()[0])
 
-        err = struct.unpack(">I", res[12:16])[0]
-        if err != 0:
-            raise FinsError("PLC tu choi bat tay FINS/TCP, ma loi 0x%08X." % err)
-
-        # PLC co quyen cap node khac node ta de nghi — lay theo PLC.
-        if res[19] > 0:
-            self.pc_node = res[19]
-        if res[23] > 0:
-            self.plc_node = res[23]
+        self.read_words(0, 1)
 
     def close(self):
         if self.sock:
@@ -146,9 +153,9 @@ class FinsClient:
     def read_words(self, start, count, area="D"):
         """Doc `count` word lien tiep tu <area><start>. Tra list[int] 0..65535."""
         ma_vung = AREA_WORD[area.upper()]
-        frame = self._header(0x01, 0x01) + struct.pack(
-            ">BHBH", ma_vung, start, 0x00, count)
-        body = self._transact(frame)
+        body = self._transact(0x01, 0x01,
+                              struct.pack(">BHBH", ma_vung, start, 0x00, count),
+                              resend=True)
 
         # Du lieu bat dau sau 10 byte header + 2 byte MRC/SRC + 2 byte End Code.
         data = body[14:]
@@ -162,7 +169,7 @@ class FinsClient:
         Tra loi cau hoi "ladder co dang chay khong". Day la lenh cua tang truyen
         thong trong CPU, hoat dong doc lap voi chuong trinh — nen doc duoc ca khi
         ladder da dung. Do chinh la luc can no nhat."""
-        body = self._transact(self._header(0x06, 0x01))
+        body = self._transact(0x06, 0x01, b"", resend=True)
         if len(body) < 16:
             raise FinsError("Phan hoi trang thai CPU thieu byte (%d)." % len(body))
 
@@ -180,10 +187,12 @@ class FinsClient:
     def write_words(self, start, values):
         """Ghi list[int] vao D<start> tro di."""
         count = len(values)
-        frame = (self._header(0x01, 0x02)
-                 + struct.pack(">BHBH", DM_AREA_WORD, start, 0x00, count)
-                 + struct.pack(">%dH" % count, *values))
-        self._transact(frame)
+        # Lenh GHI gui dung MOT lan (resend=False): bit yeu cau va D1002 cung do
+        # ladder ghi, gui lai co the xoa mat mot luot quet moi.
+        self._transact(0x01, 0x02,
+                       struct.pack(">BHBH", DM_AREA_WORD, start, 0x00, count)
+                       + struct.pack(">%dH" % count, *values),
+                       resend=False)
 
     # -- noi bo ------------------------------------------------------------
 
@@ -204,51 +213,63 @@ class FinsClient:
             mrc, src,
         ])
 
-    def _transact(self, fins_frame):
-        sid = fins_frame[9]
-        packet = b"FINS" + struct.pack(">III", 8 + len(fins_frame), 2, 0) + fins_frame
-        self.sock.sendall(packet)
+    def _transact(self, mrc, src, params, resend):
+        """Gui mot lenh FINS/UDP, tra ve ca khung phan hoi.
 
-        header = self._read_exact(16, "TCP header")
-        if header[:4] != b"FINS":
-            raise FinsError("Phan hoi khong bat dau bang 'FINS'.")
+        resend=True chi cho lenh DOC: toi da 2 lan gui, moi lan mot SID moi va
+        cho mot nua thoi han. Lenh GHI gui mot lan, cho tron thoi han."""
+        attempts = 2 if resend else 1
+        wait = max(0.5, self.timeout / 2) if resend else self.timeout
 
-        tcp_err = struct.unpack(">I", header[12:16])[0]
-        if tcp_err != 0:
-            raise FinsError("FINS/TCP header bao loi 0x%08X." % tcp_err)
+        # Loi ICMP (vd 10054) toi giua hai lenh nam cho trong socket. Bao loi
+        # TRUOC khi gui — gui roi moi phat hien thi mot lenh ghi da toi PLC lai
+        # bi bao hong (giong OmronFinsUdpClient). Goi cu con sot cung bo luon.
+        self.sock.setblocking(False)
+        try:
+            while True:
+                self.sock.recv(4096)
+        except BlockingIOError:
+            pass
+        except OSError as e:
+            raise FinsError("Loi nhan FINS/UDP tu truoc: %s" % e)
+        finally:
+            self.sock.setblocking(True)
 
-        # Length dem tu byte thu 8 cua goi, nen phan con lai = Length - 8.
-        remaining = struct.unpack(">I", header[4:8])[0] - 8
-        if not (14 <= remaining <= 4096):
-            raise FinsError("Do dai phan hoi FINS khong hop le: %d." % (remaining + 8))
-
-        body = self._read_exact(remaining, "FINS body")
-
-        # SID lech nghia la dang doc phai phan hoi cua luot truoc — ket noi da
-        # lech pha, khong dung tiep duoc.
-        if body[9] != sid:
-            raise FinsError("SID phan hoi (%d) khac SID yeu cau (%d)." % (body[9], sid))
-
-        main, sub = body[12], body[13]
-        if main != 0 or sub != 0:
-            raise FinsError("PLC tra ve End Code 0x%02X%02X." % (main, sub))
-        return body
-
-    def _read_exact(self, count, what):
-        """Doc du `count` byte hoac nem loi. Tra ve phan doc do la cach chac
-        chan nhat de lam hong ket noi lau dai."""
-        buf = b""
-        while len(buf) < count:
+        for _ in range(attempts):
+            frame = self._header(mrc, src) + params
+            sid = frame[9]
             try:
-                chunk = self.sock.recv(count - len(buf))
-            except socket.timeout:
-                raise FinsError("Qua thoi gian khi doc %s (%d/%d byte)."
-                                % (what, len(buf), count))
-            if not chunk:
-                raise FinsError("PLC dong ket noi khi dang doc %s (%d/%d byte)."
-                                % (what, len(buf), count))
-            buf += chunk
-        return buf
+                self.sock.send(frame)
+            except OSError as e:
+                raise FinsError("Loi gui FINS/UDP: %s" % e)
+
+            deadline = time.monotonic() + wait
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    break
+                self.sock.settimeout(remaining)
+                try:
+                    data = self.sock.recv(4096)
+                except socket.timeout:
+                    break
+                except OSError as e:
+                    # Vi du 10054: Windows bao ICMP port unreachable.
+                    raise FinsError("Loi nhan FINS/UDP: %s" % e)
+
+                if len(data) < 14:
+                    raise FinsError("Phan hoi FINS/UDP qua ngan: %d byte." % len(data))
+                # SID khac = phan hoi tre cua lan gui truoc — bo qua, cho tiep.
+                if data[9] != sid:
+                    continue
+
+                main, sub = data[12], data[13]
+                if main != 0 or sub != 0:
+                    raise FinsError("PLC tra ve End Code 0x%02X%02X." % (main, sub))
+                return data
+
+        raise FinsError("PLC khong tra loi qua FINS/UDP sau %d lan gui (%.1fs moi lan)."
+                        % (attempts, wait))
 
 
 # --------------------------------------------------------------------------
@@ -372,7 +393,7 @@ def write_audit(ip, block_no, addr, before, after, ok, note):
 
 def main():
     p = argparse.ArgumentParser(
-        description="Doc/ghi thanh ghi DM cua PLC Omron qua FINS/TCP.",
+        description="Doc/ghi thanh ghi DM cua PLC Omron qua FINS/UDP.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__)
 
@@ -385,7 +406,7 @@ def main():
     p.add_argument("--pc-node", type=int, default=0)
     p.add_argument("--timeout-ms", type=int, default=3000)
     p.add_argument("--retries", type=int, default=4,
-                   help="So lan thu ket noi lai (PLC gioi han so ket noi dong thoi)")
+                   help="So lan thu doc tham do D0 khi PLC chua tra loi (vua khoi dong, mang chap chon)")
 
     act = p.add_mutually_exclusive_group(required=True)
     act.add_argument("--read", type=parse_register, metavar="D1000")
@@ -411,7 +432,7 @@ def main():
             print("Luu y: block %d dang is_active = 0 (khong nam trong vong poll "
                   "cua site). Ghi truc tiep van duoc." % args.block)
         # timeout_ms tren dong lenh de cao hon DB: co PLC cham toi vai giay moi
-        # nhan TCP, ma gia tri trong DB duoc chinh cho vong poll 500ms.
+        # tra loi, ma gia tri trong DB duoc chinh cho vong poll 500ms.
         if args.timeout_ms != p.get_default("timeout_ms"):
             cfg["timeout_ms"] = args.timeout_ms
         block_label = str(args.block)

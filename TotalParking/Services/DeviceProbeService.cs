@@ -16,9 +16,9 @@ namespace TotalParking.Services
     // thiết bị đều báo offline dù đang sống. Một bảng giám sát báo sai vì cờ cấu
     // hình còn tệ hơn là không có bảng giám sát.
     //
-    // Chỉ mở TCP rồi đóng ngay, KHÔNG bắt tay FINS. Bắt tay sẽ xin cấp node và
-    // PLC chỉ có vài node — thăm dò kiểu đó vài lần là PLC hết node, từ chối cả
-    // kết nối thật. Đã dính đúng lỗi này một lần khi dò thủ công.
+    // PLC dò bằng một lệnh đọc FINS/UDP (OmronFinsUdpClient.ProbeAsync): không có
+    // phiên nên không chiếm khe nào của PLC, và từ 07/10 hệ thống không còn gửi
+    // gói TCP nào tới PLC. Bảng LED vẫn dò bằng cách mở TCP rồi đóng ngay.
     public class DeviceProbeService
     {
         // Cache để mở nhiều tab hoặc poll dày không biến thành tràn ngập kết nối
@@ -77,8 +77,9 @@ namespace TotalParking.Services
             var result = new List<DeviceGroupStatus>();
 
             result.Add(CameraGroup());
-            result.Add(ProbeGroup("plc", "PLC khối đỗ", PlcEndpoints()));
-            result.Add(ProbeGroup("led", "Bảng LED", LedEndpoints()));
+            result.Add(ProbeGroup("plc", "PLC khối đỗ", PlcEndpoints(),
+                ep => Plc.OmronFinsUdpClient.ProbeAsync(ep.Host, ep.Port, ProbeTimeoutMs)));
+            result.Add(ProbeGroup("led", "Bảng LED", LedEndpoints(), TcpProbeAsync));
             result.Add(PgsGroup());
 
             // Máy phát thẻ: không có bảng, không có IP, không có giao thức nào đã
@@ -212,8 +213,9 @@ namespace TotalParking.Services
             return g;
         }
 
-        // ------------------------------------------------------------- tham do TCP
-        private DeviceGroupStatus ProbeGroup(string key, string name, IList<Endpoint> endpoints)
+        // ------------------------------------------------------------- tham do
+        private DeviceGroupStatus ProbeGroup(string key, string name, IList<Endpoint> endpoints,
+                                             Func<Endpoint, Task<bool>> probe)
         {
             var g = new DeviceGroupStatus { Key = key, Name = name };
 
@@ -233,7 +235,7 @@ namespace TotalParking.Services
                 return g;
             }
 
-            var results = ProbeAll(endpoints);
+            var results = ProbeAll(endpoints, probe);
 
             g.Online   = results.Count(r => r.Value);
             g.LastSeen = DateTime.Now;
@@ -244,7 +246,8 @@ namespace TotalParking.Services
             return g;
         }
 
-        private IDictionary<Endpoint, bool> ProbeAll(IList<Endpoint> endpoints)
+        private IDictionary<Endpoint, bool> ProbeAll(IList<Endpoint> endpoints,
+                                                     Func<Endpoint, Task<bool>> probe)
         {
             var map = new Dictionary<Endpoint, bool>();
             using (var gate = new System.Threading.SemaphoreSlim(MaxParallel))
@@ -252,7 +255,7 @@ namespace TotalParking.Services
                 var tasks = endpoints.Select(async ep =>
                 {
                     await gate.WaitAsync().ConfigureAwait(false);
-                    try { return new { ep, ok = await ProbeAsync(ep).ConfigureAwait(false) }; }
+                    try { return new { ep, ok = await probe(ep).ConfigureAwait(false) }; }
                     finally { gate.Release(); }
                 }).ToArray();
 
@@ -265,7 +268,8 @@ namespace TotalParking.Services
             return map;
         }
 
-        private static async Task<bool> ProbeAsync(Endpoint ep)
+        // Chỉ dùng cho bảng LED: mở TCP rồi đóng ngay.
+        private static async Task<bool> TcpProbeAsync(Endpoint ep)
         {
             var client = new TcpClient();
             try
@@ -278,7 +282,7 @@ namespace TotalParking.Services
             catch { return false; }
             finally
             {
-                // Đóng ngay. Không gửi byte nào, không bắt tay — xem ghi chú đầu lớp.
+                // Đóng ngay. Không gửi byte nào.
                 try { client.Close(); } catch { }
             }
         }

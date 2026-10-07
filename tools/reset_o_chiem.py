@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Reset thanh ghi chiem o cua block co khi ve 0 (FINS/TCP, Omron).
+"""Reset thanh ghi chiem o cua block co khi ve 0 (FINS/UDP, Omron).
 
 VIEC NAY LAM GI
 ---------------
@@ -167,164 +167,53 @@ def nap_ban_do(db, loc_block):
 
 
 # --------------------------------------------------------------------------
-# FINS/TCP. Chuyen the tu TotalParking/Services/Plc/OmronFinsClient.cs.
+# FINS/UDP — dung chung client cua plc_register.py (ban da chay that tren 112
+# PLC). Tu 07/10 he thong KHONG noi FINS/TCP voi PLC nua: TCP chi co 3 khe moi
+# PLC va phien bo roi lam PLC bao 0x20. UDP khong co phien, nen script bi kill
+# giua chung cung khong de lai gi tren PLC, va chay song song voi vong poll cua
+# ung dung khong can dung poll.
 # --------------------------------------------------------------------------
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from plc_register import FinsClient, FinsError   # noqa: E402
+
+
 class LoiFins(Exception):
     pass
 
 
-class FinsTcp(object):
-    """Client FINS/TCP toi thieu: bat tay, doc word, ghi word.
+class PlcFins(object):
+    """Doc/ghi word DM qua FINS/UDP. Giu ten ham cu (doc_word, ghi_word) de
+    phan xu ly ben duoi khong phai sua.
 
-    KHONG dung lai cho vong poll. Day la cong cu mot lan, moi lan chay mo va
-    dong ket noi rieng.
-    """
-
-    DAI_HEADER_TCP = 16
-
-    # Ma loi cua buoc xin cap node (FINS/TCP Node Address Response).
-    #
-    # 0x20 la ma hay gap nhat o he nay va RAT de hieu nham thanh trung node:
-    # no co nghia PLC HET CHO KET NOI. CP2E chi cho vai ket noi FINS/TCP dong
-    # thoi, ma vong poll cua ung dung (plc:enabled) giu san mot cai. Doi
-    # pc_node KHONG chua duoc - phai giai phong ket noi kia truoc.
-    GIAI_MA_BAT_TAY = {
-        0x01: "header khong phai 'FINS'",
-        0x02: "do dai du lieu qua lon",
-        0x03: "lenh khong duoc ho tro",
-        0x20: "PLC HET CHO KET NOI - vong poll ung dung dang giu, phai dung poll truoc",
-        0x21: "node nay da ket noi roi",
-        0x22: "node khong duoc phep truy cap",
-        0x23: "node client ngoai khoang cho phep",
-        0x24: "client va server trung node",
-        0x25: "het node de cap phat",
-    }
+    pc_node / plc_node duoc nhan nhung bo qua: FINS/UDP suy node tu IP."""
 
     def __init__(self, ip, cong, pc_node, plc_node, timeout_ms):
-        self.ip = ip
-        self.cong = cong
-        self.pc_node = pc_node
-        self.plc_node = plc_node
-        self.timeout = max(timeout_ms, 1000) / 1000.0
-        self.sock = None
-        self._sid = 0
+        self._c = FinsClient(ip, cong, timeout_ms=max(timeout_ms, 1000), retries=1)
 
     def __enter__(self):
-        self.ket_noi()
+        try:
+            self._c.connect()
+        except (FinsError, OSError) as ex:
+            self._c.close()
+            raise LoiFins(str(ex))
         return self
 
     def __exit__(self, *_):
-        self.dong()
-
-    def ket_noi(self):
-        self.sock = socket.create_connection((self.ip, self.cong), self.timeout)
-        self.sock.settimeout(self.timeout)
-
-        # Bat tay: 20 byte xin cap node, nhan 24 byte tra loi.
-        req = b"FINS" + struct.pack(">III", 12, 0, 0) + struct.pack(">I", self.pc_node)
-        self.sock.sendall(req)
-        res = self._doc_du(24)
-
-        ma_loi = struct.unpack(">I", res[12:16])[0]
-        if ma_loi != 0:
-            raise LoiFins("PLC tu choi bat tay, ma loi 0x%08X (%s)"
-                          % (ma_loi, self.GIAI_MA_BAT_TAY.get(
-                              ma_loi, "khong ro y nghia")))
-
-        # PLC co quyen cap node khac node ta de nghi -> lay theo PLC tra ve.
-        if res[19]:
-            self.pc_node = res[19]
-        if res[23]:
-            self.plc_node = res[23]
-
-    def dong(self):
-        if self.sock:
-            try:
-                self.sock.close()
-            finally:
-                self.sock = None
-
-    def _doc_du(self, so_byte):
-        """Doc du so_byte hoac nem loi.
-
-        KHONG tra ve phan doc do: byte con lai nam lai trong stream va lam
-        lech moi lan doc sau. Day dung la loi #1 ma ban C# ghi chu la da sua.
-        """
-        dem = b""
-        while len(dem) < so_byte:
-            phan = self.sock.recv(so_byte - len(dem))
-            if not phan:
-                raise LoiFins("PLC dong ket noi giua chung (doc %d/%d byte)"
-                              % (len(dem), so_byte))
-            dem += phan
-        return dem
-
-    def _khung_fins(self, mrc, src):
-        # SID bo qua 0 de gia tri mac dinh khong trung SID hop le.
-        self._sid = 1 if self._sid >= 255 else self._sid + 1
-        khung = bytearray(12)
-        khung[0] = 0x80          # ICF: lenh, can phan hoi
-        khung[1] = 0x00          # RSV
-        khung[2] = 0x02          # GCT
-        khung[3] = 0x00          # DNA: mang noi bo
-        khung[4] = self.plc_node
-        khung[5] = 0x00
-        khung[6] = 0x00
-        khung[7] = self.pc_node
-        khung[8] = 0x00
-        khung[9] = self._sid
-        khung[10] = mrc
-        khung[11] = src
-        return khung, self._sid
-
-    def _gui_nhan(self, khung_fins, sid):
-        goi = (b"FINS"
-               + struct.pack(">III", 8 + len(khung_fins), 2, 0)
-               + bytes(khung_fins))
-        self.sock.sendall(goi)
-
-        header = self._doc_du(self.DAI_HEADER_TCP)
-        if header[:4] != b"FINS":
-            raise LoiFins("Phan hoi khong bat dau bang 'FINS'")
-        loi_tcp = struct.unpack(">I", header[12:16])[0]
-        if loi_tcp != 0:
-            raise LoiFins("FINS/TCP header bao loi 0x%08X" % loi_tcp)
-
-        do_dai = struct.unpack(">I", header[4:8])[0]
-        con_lai = do_dai - 8
-        if not 14 <= con_lai <= 4096:
-            raise LoiFins("Do dai phan hoi khong hop le: %d" % do_dai)
-
-        than = self._doc_du(con_lai)
-
-        # SID lech = dang doc phai phan hoi cua luot truoc, ket noi lech pha.
-        if than[9] != sid:
-            raise LoiFins("SID phan hoi (%d) khac SID yeu cau (%d)" % (than[9], sid))
-
-        ma_chinh, ma_phu = than[12], than[13]
-        if ma_chinh or ma_phu:
-            raise LoiFins("PLC tra ve End Code 0x%02X%02X" % (ma_chinh, ma_phu))
-        return than
+        self._c.close()
 
     def doc_word(self, dia_chi, so_luong):
-        khung, sid = self._khung_fins(0x01, 0x01)
-        khung += struct.pack(">BHBH", VUNG_DM, dia_chi, 0x00, so_luong)
-        than = self._gui_nhan(khung, sid)
-
-        # Du lieu bat dau ngay sau End Code: 10 header + 2 MRC/SRC + 2 End Code.
-        bat_dau = 14
-        can = bat_dau + so_luong * 2
-        if len(than) < can:
-            raise LoiFins("PLC tra %d byte, can it nhat %d" % (len(than), can))
-        return list(struct.unpack(">%dH" % so_luong, than[bat_dau:can]))
+        try:
+            return self._c.read_words(dia_chi, so_luong)
+        except FinsError as ex:
+            raise LoiFins(str(ex))
 
     def ghi_word(self, dia_chi, gia_tri):
         if not gia_tri:
             return
-        khung, sid = self._khung_fins(0x01, 0x02)
-        khung += struct.pack(">BHBH", VUNG_DM, dia_chi, 0x00, len(gia_tri))
-        khung += struct.pack(">%dH" % len(gia_tri), *gia_tri)
-        self._gui_nhan(khung, sid)
+        try:
+            self._c.write_words(dia_chi, list(gia_tri))
+        except FinsError as ex:
+            raise LoiFins(str(ex))
 
 
 # --------------------------------------------------------------------------
@@ -344,9 +233,8 @@ def xu_ly_block(block_no, cau_hinh, so_word, ghi_that, ghi_tat_ca, sao_luu, pc_n
           "o_da_ghi": 0, "o_that_bai": 0, "loi": None, "chi_tiet": []}
 
     try:
-        # pc_node 0 = de PLC tu cap node con trong. Dung chung node voi vong
-        # poll cua ung dung thi PLC tu choi bat tay (ma loi 0x00000020).
-        with FinsTcp(cau_hinh["ip"], cau_hinh["port"], pc_node,
+        # FINS/UDP: khong bat tay, khong chiem khe; pc_node bi bo qua.
+        with PlcFins(cau_hinh["ip"], cau_hinh["port"], pc_node,
                      cau_hinh["plc_node"], cau_hinh["timeout_ms"]) as plc:
             for o in cau_hinh["o"]:
                 tk["o_xet"] += 1
@@ -411,9 +299,8 @@ def main():
                         help="Ghi 0 ca nhung o dang la 0. Mac dinh chi ghi o co the.")
     bo_doc.add_argument("--sao-luu", help="Duong dan file sao luu gia tri cu.")
     bo_doc.add_argument("--pc-node", type=int, default=0,
-                        help="Node FINS cua may nay. 0 = de PLC tu cap (mac dinh). "
-                             "Dung pc_node trong CSDL se dung do voi vong poll cua "
-                             "ung dung va bi tu choi bat tay, ma loi 0x00000020.")
+                        help="BO QUA — giu lai de lenh cu khong loi. FINS/UDP suy "
+                             "node tu IP (octet cuoi IP may nay).")
     tham_so = bo_doc.parse_args()
 
     loc_block = None
