@@ -13,6 +13,7 @@ namespace TotalParking.Controllers
     //
     //   List      danh sách thẻ thật trong CSDL
     //   Template  tải file Excel mẫu
+    //   Export    xuất toàn bộ thẻ hiện có ra Excel
     //   Preview   đọc file, lọc, BÁO TRƯỚC — chưa ghi gì
     //   Import    ghi thật, cả lô trong một giao dịch
     //
@@ -119,6 +120,47 @@ namespace TotalParking.Controllers
             return File(XlsxWriter.Build("Phương tiện trong hệ thống", rows),
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                         "mau_import_the.xlsx");
+        }
+
+        // GET /Cards/Export
+        //
+        // Xuất TOÀN BỘ thẻ đang có trong CSDL, không theo bộ lọc trên trang: bộ lọc
+        // chạy ở trình duyệt, còn file này đọc thẳng từ CSDL để người nhận chắc
+        // chắn đó là danh sách đầy đủ tại thời điểm tải.
+        public ActionResult Export()
+        {
+            try
+            {
+                var rows = new List<IEnumerable<string>>
+                {
+                    new[]
+                    {
+                        "Mã thẻ", "Số thẻ", "Biển số", "Tên phương tiện", "Tên khách hàng",
+                        "Hạng tải", "Tải trọng (chữ)", "Hết hạn", "Loại khách", "Lô nhập",
+                        "Ngày tạo", "Trạng thái"
+                    }
+                };
+                foreach (var r in _repo.GetAllRows())
+                {
+                    rows.Add(new[]
+                    {
+                        r.CardCode, r.CardNo, r.Plate, r.VehicleName, r.CustomerName,
+                        r.WeightClass, r.WeightText,
+                        r.ExpiryDate.HasValue ? r.ExpiryDate.Value.ToString("dd/MM/yyyy") : "",
+                        r.CustomerType, r.SourceLabel,
+                        r.CreatedAt.ToString("dd/MM/yyyy"),
+                        r.IsActive ? "bật" : "tắt"
+                    });
+                }
+
+                return File(XlsxWriter.Build("Danh sách thẻ", rows),
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            "danh_sach_the_" + DateTime.Now.ToString("yyyyMMdd_HHmm") + ".xlsx");
+            }
+            catch (Exception ex)
+            {
+                return Json2(500, new { error = ex.Message });
+            }
         }
 
         // POST /Cards/Preview   (multipart, field "file")
