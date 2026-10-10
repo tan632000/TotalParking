@@ -8,9 +8,12 @@
     // khong doi, rat mat cong tim.
     //
     // Lay theo LAN SUA CUOI cua file chu khong theo DateTime.Now nhu scada.css:
-    // anh nang gan 2 MB, dung Now thi moi lan tai trang deu phai tai lai tu dau.
+    // anh nang gan 8 MB, dung Now thi moi lan tai trang deu phai tai lai tu dau.
     // Theo mtime thi chi tai lai dung khi anh that su doi.
-    var mapPath = Server.MapPath("~/Images/plan_map.jpg");
+    //
+    // Nen la anh cua man Mat bang he thong: dai vang tren anh la loi xe, va mang
+    // duong di cua man nay (App_Data/driver_lanes.json) duoc so hoa theo chinh no.
+    var mapPath = Server.MapPath("~/Images/zones_map.jpeg");
     var mapVer  = System.IO.File.Exists(mapPath)
                 ? System.IO.File.GetLastWriteTimeUtc(mapPath).Ticks
                 : 0L;
@@ -27,8 +30,9 @@
     tài xế đang tin vào màn hình.
 
     Cả `viewBox` cũng lấy từ `view_w`/`view_h` trong phản hồi chứ không ghi cứng:
-    khung toạ độ được khai báo đúng một chỗ, trong BlockMapRepository. Nhờ vậy lần
-    cắt lại ảnh nền vừa rồi không phải sửa một dòng nào trong tệp này.
+    khung toạ độ được khai báo đúng một chỗ, trong DriverLaneMap. Độ dày nét, bán
+    kính vòng và cỡ chữ cũng tính theo `view_w`, nên đổi ảnh nền khác khung không
+    làm nét vẽ to hay nhỏ đi.
 *@
 
 <div class="p-2 text-slate-100"
@@ -84,7 +88,7 @@
             nhat di dung luc tai xe dang phai doc no tu trong xe.
         *@
         <div id="dg-stage" class="relative w-full">
-            <img src="@Url.Content("~/Images/plan_map.jpg")?v=@mapVer" alt="Sơ đồ bãi xe"
+            <img src="@Url.Content("~/Images/zones_map.jpeg")?v=@mapVer" alt="Sơ đồ bãi xe"
                  style="display: block; width: 100%; height: auto;" />
             <svg id="dg-map" class="absolute inset-0 w-full h-full"
                  preserveAspectRatio="xMidYMid meet"
@@ -102,33 +106,13 @@
     // mà không cần kênh đẩy; toàn bộ hệ thống hiện tại đều làm theo kiểu này.
     var POLL_MS  = 2000;
 
-    // Khung ten cua ban ve CAD nam san trong plan_map.jpg o goc duoi-trai: ten
-    // cong ty, logo, bang thong ke model. Voi tai xe dang tim cho do thi do la
-    // nhieu. Che bang mot hinh chu nhat VE TRONG CHINH SVG, nen no dung chung
-    // he toa do voi anh va khop tuyet doi o moi kich thuoc man hinh.
+    // ===================== VE SO BLOCK DE LEN SO DO =====================
+    // Anh nen in san so block, nhung vai so in SAI (block 17 in "9", 18 in "10",
+    // 10 in "18", 32 in "20"). Tai xe tin so in tren anh se toi nham cho. Vi vay
+    // trang tu ve so block DUNG (payload.block_no) canh vong khoanh dich.
     //
-    // Vung nay da duoc doi chieu voi du lieu that truoc khi che: 0 block co toa
-    // do, 0 nut lan, va 0 canh lan di qua no. Khong the co doan duong nao bi
-    // giau mat ben duoi. Doi anh nen thi phai do lai vung nay.
-    // ===================== KHONG VE SO BLOCK LEN SO DO =====================
-    // Ban ve da in san so cua tung block ngay trong anh. Truoc day trang nay ve
-    // them mot lop so thu hai lay toa do tu /Monitor/BlockMap.
-    //
-    // Lop do bi bo vi hai ly do, ly do thu hai moi la ly do chinh:
-    //
-    // 1. Luc do no dang lech, vi `block.map_x/map_y` con o khung cu 1200x1139
-    //    trong khi `viewBox` da la 1594x1300. Dieu do DA DUOC SUA: do lai ngay
-    //    2026-09-20 thi toa do chay 179..1320 / 63..1137, dung trong khung hien
-    //    tai. Nen day khong con la ly do nua — ly do 2 moi la ly do that.
-    //
-    // 2. Ngay ca khi chinh lai toa do cho khop, lop so nay van la mot NGUON SAI
-    //    DOC LAP: no co the dung bang so in tren ban ve, khong bao gio dung hon,
-    //    va bat cu lan doi anh nen nao cung co the lam no lech lai. So in tren
-    //    ban ve thi khong the lech, vi no la mot phan cua chinh buc anh.
-    //
-    // Luu y: /Monitor/BlockMap van con phuc vu trang "Dieu huong xe", va o do
-    // cac cham block dung CHINH bo toa do nay. Chung dang khop: toa do da duoc
-    // canh ve TAM hinh hoc cua tung block, khong con lay cho ban ve in so.
+    // Vi tri vong va so la diem cuoi cua route = vi tri block trong
+    // driver_lanes.json, da duoc nguoi dung xac nhan tren anh phu khi so hoa.
 
     var svg    = document.getElementById('dg-map');
     var kicker = document.getElementById('dg-kicker');
@@ -138,11 +122,6 @@
     var nowEl  = document.getElementById('dg-now');
 
     // Khung toa do lay tu phan hoi chu khong ghi cung, theo I1.
-    //
-    // Truoc day cho nay con ve mot hinh chu nhat che khung ten cua ban ve o goc
-    // duoi-trai. Da bo: khung ten duoc xoa khoi CHINH file plan_map.jpg, tuc sua
-    // o dung nguon. Che bang lop phu la cach vong, va lop phu do phai do lai moi
-    // lan anh nen doi khung.
     function ensureFrame(payload) {
         svg.setAttribute('viewBox', '0 0 ' + payload.view_w + ' ' + payload.view_h);
     }
@@ -154,7 +133,7 @@
     // theo sẽ lái theo đường của chiếc xe trước.
     //
     function clearRoute() {
-        ['dg-path', 'dg-dot'].forEach(function (id) {
+        ['dg-path', 'dg-dot', 'dg-num'].forEach(function (id) {
             var e = document.getElementById(id);
             if (e && e.parentNode) e.parentNode.removeChild(e);
         });
@@ -163,6 +142,18 @@
     function drawRoute(payload) {
         clearRoute();
         ensureFrame(payload);
+
+        // Moi kich thuoc tinh theo be ngang khung, khong ghi cung so pixel: cung
+        // mot con so 14 thi day tren khung 1594 nhung manh tren khung 4800.
+        // Vong dich phai NHO hon khoang cach giua hai block: tren zones_map hai
+        // tam block gan nhau nhat cach ~95 px (khung 4800), trung vi ~138 px. Vong
+        // to hon se khoanh ca block ben canh. Mep ngoai = ringR + ringW/2 ~ 77 px.
+        var w       = payload.view_w;
+        var strokeW = Math.round(w * 0.0088);
+        var ringR   = Math.round(w * 0.014);
+        var ringW   = Math.round(w * 0.004);
+        var fontPx  = Math.round(w * 0.03);
+        var shadow  = 'filter: drop-shadow(0 0 ' + Math.round(w * 0.0044) + 'px rgba(15,23,42,.95));';
 
         var d = '';
         for (var i = 0; i < payload.route.length; i++) {
@@ -178,30 +169,44 @@
         path.setAttribute('d', d);
         path.setAttribute('fill', 'none');
         path.setAttribute('stroke', '#22c55e');
-        path.setAttribute('stroke-width', '14');
+        path.setAttribute('stroke-width', strokeW);
         path.setAttribute('stroke-linecap', 'round');
         path.setAttribute('stroke-linejoin', 'round');
-        path.setAttribute('style', 'filter: drop-shadow(0 0 7px rgba(15,23,42,.95));');
+        path.setAttribute('style', shadow);
         svg.appendChild(path);
 
         var last = payload.route[payload.route.length - 1];
 
-        // VONG TRON RONG, khong phai dia dac. Dia dac che mat dung con so in tren
-        // ban ve o ngay diem den — tuc che mat thu duy nhat con lai xac nhan tai
-        // xe da toi dung block. Vong tron khoanh lay no thay vi dan len tren.
-        //
-        // Cung vi vay khong ve so block o day nua: so block da nam san trong anh
-        // ben trong vong tron, va nam mot lan nua o bang chu lon ben phai.
+        // VONG TRON RONG, khong phai dia dac: dia dac che mat chinh block dich
+        // tren anh nen. Vong tron khoanh lay no thay vi dan len tren.
         var ring = document.createElementNS(NS, 'circle');
         ring.setAttribute('id', 'dg-dot');
         ring.setAttribute('cx', last.x);
         ring.setAttribute('cy', last.y);
-        ring.setAttribute('r', '40');
+        ring.setAttribute('r', ringR);
         ring.setAttribute('fill', 'none');
         ring.setAttribute('stroke', '#22c55e');
-        ring.setAttribute('stroke-width', '12');
-        ring.setAttribute('style', 'filter: drop-shadow(0 0 7px rgba(15,23,42,.95));');
+        ring.setAttribute('stroke-width', ringW);
+        ring.setAttribute('style', shadow);
         svg.appendChild(ring);
+
+        // So block DUNG, dat ngay tren vong (hoac duoi vong neu sat mep tren).
+        // Vien toi ve truoc phan chu (paint-order) de doc duoc tren nen ban ve.
+        var numY = last.y - ringR - ringW;
+        if (numY - fontPx < 0) numY = last.y + ringR + ringW + fontPx;
+        var num = document.createElementNS(NS, 'text');
+        num.setAttribute('id', 'dg-num');
+        num.setAttribute('x', last.x);
+        num.setAttribute('y', numY);
+        num.setAttribute('text-anchor', 'middle');
+        num.setAttribute('font-size', fontPx);
+        num.setAttribute('font-weight', '800');
+        num.setAttribute('fill', '#22c55e');
+        num.setAttribute('stroke', 'rgb(15,23,42)');
+        num.setAttribute('stroke-width', Math.round(fontPx * 0.18));
+        num.setAttribute('paint-order', 'stroke');
+        num.textContent = payload.block_no;
+        svg.appendChild(num);
     }
 
     function render(payload) {

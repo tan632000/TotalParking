@@ -30,6 +30,8 @@ namespace TotalParking.Controllers
         private static readonly BlockMapRepository  _map    = new BlockMapRepository();
         private static readonly BlockAllocator      _blocks = new BlockAllocator();
         private static readonly LaneNetwork         _lanes  = new LaneNetwork();
+        // Màn tài xế đi trên mạng dải vàng của zones_map, không phải mạng plan_map ở trên.
+        private static readonly DriverLaneMap       _driverLanes = DriverLaneMap.ForSite();
 
         // GET /Monitor/BlockMap
         //
@@ -316,7 +318,7 @@ namespace TotalParking.Controllers
                 if (decision.Outcome != RoutingOutcome.Routed || !decision.BlockNo.HasValue)
                     return Json2(200, Message(now, decision, decision.Reason));
 
-                var route = _lanes.RouteToBlock(decision.BlockNo.Value);
+                var route = _driverLanes.RouteToBlock(decision.BlockNo.Value);
 
                 // Một điểm không phải là đường đi. Khi chỉ có đúng chừng đó, màn hình
                 // phải nói bằng chữ chứ không vẽ một chấm rồi để tài xế tự hiểu.
@@ -326,8 +328,8 @@ namespace TotalParking.Controllers
                 return Json2(200, new
                 {
                     now,
-                    view_w             = BlockMapRepository.ViewW,
-                    view_h             = BlockMapRepository.ViewH,
+                    view_w             = DriverLaneMap.FrameW,
+                    view_h             = DriverLaneMap.FrameH,
                     state              = "ROUTE",
                     event_id           = decision.EventId,
                     outcome            = decision.Outcome,
@@ -356,8 +358,8 @@ namespace TotalParking.Controllers
             return new
             {
                 now,
-                view_w             = BlockMapRepository.ViewW,
-                view_h             = BlockMapRepository.ViewH,
+                view_w             = DriverLaneMap.FrameW,
+                view_h             = DriverLaneMap.FrameH,
                 state              = "WAITING",
                 event_id           = (string)null,
                 outcome            = (string)null,
@@ -376,8 +378,8 @@ namespace TotalParking.Controllers
             return new
             {
                 now,
-                view_w             = BlockMapRepository.ViewW,
-                view_h             = BlockMapRepository.ViewH,
+                view_w             = DriverLaneMap.FrameW,
+                view_h             = DriverLaneMap.FrameH,
                 state              = "MESSAGE",
                 event_id           = decision.EventId,
                 outcome            = decision.Outcome,

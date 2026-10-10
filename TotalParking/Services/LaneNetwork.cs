@@ -120,7 +120,8 @@ namespace TotalParking.Services
         // tường minh: rẻ hơn thì thắng, hoà thì `node_id` nhỏ hơn thắng. Nhờ vậy
         // hai lần gọi liên tiếp trên cùng dữ liệu luôn cho ra ĐÚNG một dãy điểm,
         // kể cả khi có nhiều đường cùng độ dài — tài xế không thấy đường nhảy.
-        private static RouteResult Search(int entry, int target,
+        // internal: DriverLaneMap dùng lại đúng Dijkstra này trên mạng zones_map.
+        internal static RouteResult Search(int entry, int target,
                                           Dictionary<int, int> x, Dictionary<int, int> y,
                                           Dictionary<int, List<int>> adj, int blockNo)
         {

@@ -177,6 +177,7 @@
     <Compile Include="Services\BaoCaoRepository.cs" />
     <Compile Include="Services\BlockAllocator.cs" />
     <Compile Include="Services\LaneNetwork.cs" />
+    <Compile Include="Services\DriverLaneMap.cs" />
     <Compile Include="Services\VehicleRoutingRepository.cs" />
     <Compile Include="Controllers\MonitorController.cs" />
     <Compile Include="Controllers\LedStatusController.cs" />
@@ -308,6 +309,7 @@
     <Content Include="Images\LM-CL1-BAS-NTC-CP-SHD-0001-01-Mechanical Parking System Drawing_page-0007.jpg" />
     <Content Include="Images\hmi_flow.jpg" />
     <Content Include="Images\zones_map.jpeg" />
+    <Content Include="App_Data\driver_lanes.json" />
     <Content Include="Images\plan_map.jpg" />
     <Content Include="Content\scada.css" />
   </ItemGroup>
