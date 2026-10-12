@@ -85,6 +85,100 @@ namespace TotalParking.Services
             return ds;
         }
 
+        // ===================== LỊCH SỬ ĐỖ XE: GIỜ GỬI / GIỜ LẤY =====================
+        // parking_session rỗng nên không có phiên gửi xe nào để đọc. Nguồn thật là
+        // parking_event do SlotOccupancyReader ghi mỗi khi một ô đổi mã thẻ:
+        //   SLOT_STORE    ô trống -> có thẻ          (to_card = thẻ vừa gửi)
+        //   SLOT_RETRIEVE ô có thẻ -> trống          (from_card = thẻ vừa lấy)
+        //   SLOT_SWAP     thẻ cũ ra, thẻ mới vào trong cùng một lượt quét
+        //
+        // Một lượt đỗ = một sự kiện có to_card, ghép với sự kiện KẾ TIẾP của cùng
+        // ô (LEAD theo block_id + slot_index). Sự kiện kế tiếp lấy đúng thẻ đó ra
+        // thì đó là giờ lấy. Không có sự kiện kế tiếp thì xe vẫn đang trong ô.
+        // Có sự kiện kế tiếp nhưng from_card là thẻ khác thì một lượt lấy đã lọt
+        // giữa hai lần quét — ghi MAT_DAU thay vì bịa ra giờ lấy.
+        //
+        // Giờ gửi/lấy là lúc VÒNG QUÉT NHÌN THẤY thay đổi, không phải lúc xe vào
+        // thật: sai lệch tới một nhịp quét (plc:slotScanMs, 45 giây).
+        //
+        // JSON null qua JSON_UNQUOTE thành chuỗi 'null', không phải SQL NULL —
+        // nên phải loại cả hai.
+        //
+        // Lọc theo khoảng GIAO NHAU chứ không theo giờ gửi: xe gửi hôm trước và lấy
+        // trong khoảng lọc vẫn là một lượt đỗ người tra cứu cần thấy.
+        private const string SqlLichSuDoXe =
+            "WITH ev AS ( " +
+            "  SELECT e.occurred_at, e.block_id, " +
+            "         CAST(JSON_EXTRACT(e.detail, '$.slot_index') AS UNSIGNED) AS slot_index, " +
+            "         JSON_UNQUOTE(JSON_EXTRACT(e.detail, '$.to_card'))   AS to_card, " +
+            "         JSON_UNQUOTE(JSON_EXTRACT(e.detail, '$.from_card')) AS from_card " +
+            "  FROM   parking_event e " +
+            "  WHERE  e.event_type IN ('SLOT_STORE', 'SLOT_RETRIEVE', 'SLOT_SWAP') " +
+            "), seq AS ( " +
+            "  SELECT ev.*, LEAD(occurred_at) OVER w AS next_at, LEAD(from_card) OVER w AS next_from " +
+            "  FROM   ev WINDOW w AS (PARTITION BY block_id, slot_index ORDER BY occurred_at) " +
+            "), luot AS ( " +
+            "  SELECT s.block_id, s.slot_index, s.to_card, s.occurred_at AS gui_luc, " +
+            "         CASE WHEN s.next_from = s.to_card THEN s.next_at END AS lay_luc, " +
+            "         CASE WHEN s.next_at IS NULL THEN 'DANG_GUI' " +
+            "              WHEN s.next_from = s.to_card THEN 'DA_LAY' ELSE 'MAT_DAU' END AS trang_thai " +
+            "  FROM   seq s " +
+            "  WHERE  s.to_card IS NOT NULL AND s.to_card <> 'null' " +
+            ") " +
+            "SELECT l.gui_luc, l.lay_luc, l.trang_thai, l.slot_index, l.to_card, " +
+            "       b.block_no, b.zone_id, c.card_no, c.plate, c.vehicle_name " +
+            "FROM   luot l " +
+            "JOIN   block b ON b.block_id = l.block_id " +
+            // LEFT JOIN: thẻ lạ đã nằm trong ô là chuyện có thật, phải hiện ra.
+            "LEFT   JOIN parking_card c ON c.card_code = l.to_card " +
+            "WHERE  l.gui_luc < @den + INTERVAL 1 DAY " +
+            "  AND  (l.lay_luc >= @tu OR l.trang_thai = 'DANG_GUI' " +
+            "        OR (l.trang_thai = 'MAT_DAU' AND l.gui_luc >= @tu)) " +
+            "  AND  (@q IS NULL OR l.to_card = @q OR c.card_no = @q " +
+            "        OR c.plate LIKE CONCAT('%', @q, '%')) " +
+            "ORDER  BY l.gui_luc DESC " +
+            "LIMIT  @gioi_han";
+
+        public IList<LuotDoXe> LichSuDoXe(DateTime tu, DateTime den, string q, int gioiHan)
+        {
+            if (gioiHan <= 0) gioiHan = 200;
+            if (gioiHan > 1000) gioiHan = 1000;
+            q = string.IsNullOrWhiteSpace(q) ? null : q.Trim();
+
+            var ds = new List<LuotDoXe>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = SqlLichSuDoXe;
+                cmd.Parameters.AddWithValue("@tu",  tu.Date);
+                cmd.Parameters.AddWithValue("@den", den.Date);
+                cmd.Parameters.AddWithValue("@q",   (object)q ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@gioi_han", gioiHan);
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        ds.Add(new LuotDoXe
+                        {
+                            GuiLuc    = Convert.ToDateTime(r["gui_luc"]),
+                            LayLuc    = r["lay_luc"] == DBNull.Value
+                                            ? (DateTime?)null : Convert.ToDateTime(r["lay_luc"]),
+                            TrangThai = Str(r, "trang_thai"),
+                            BlockNo   = Convert.ToInt32(r["block_no"]),
+                            ZoneId    = Int(r, "zone_id"),
+                            SlotIndex = Convert.ToInt32(r["slot_index"]),
+                            MaThe     = Str(r, "to_card"),
+                            SoThe     = Str(r, "card_no"),
+                            BienSo    = Str(r, "plate"),
+                            TenXe     = Str(r, "vehicle_name")
+                        });
+                    }
+                }
+            }
+            return ds;
+        }
+
         // Pareto nguyên nhân lỗi. Gom theo ma_loi vì đó là thứ lặp lại được;
         // mo_ta có kèm số khối nên mỗi dòng một khác và không gom được.
         private const string SqlLoi =
@@ -538,6 +632,22 @@ namespace TotalParking.Services
         // Số khối trả về cho HMI. 0 khi không tìm thấy.
         public int?     BlockTraVe { get; set; }
         public string   LyDo       { get; set; }
+    }
+
+    public class LuotDoXe
+    {
+        public DateTime  GuiLuc    { get; set; }
+        // null khi xe còn trong ô hoặc mất dấu lượt lấy — xem TrangThai.
+        public DateTime? LayLuc    { get; set; }
+        // DANG_GUI | DA_LAY | MAT_DAU
+        public string    TrangThai { get; set; }
+        public int       BlockNo   { get; set; }
+        public int?      ZoneId    { get; set; }
+        public int       SlotIndex { get; set; }
+        public string    MaThe     { get; set; }
+        public string    SoThe     { get; set; }
+        public string    BienSo    { get; set; }
+        public string    TenXe     { get; set; }
     }
 
     public class DoTinCayKhoi

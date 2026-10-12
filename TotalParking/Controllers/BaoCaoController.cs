@@ -320,6 +320,57 @@ namespace TotalParking.Controllers
             }
         }
 
+        // GET /BaoCao/LichSuDoXe?tu=2026-10-01&den=2026-10-12&q=30H18028
+        //
+        // Mỗi dòng là một lượt đỗ: giờ gửi, giờ lấy, thời gian đỗ. Ghép từ
+        // parking_event — xem ghi chú tại BaoCaoRepository.LichSuDoXe.
+        public ActionResult LichSuDoXe(string tu, string den, string q, int? limit)
+        {
+            try
+            {
+                DateTime dTu, dDen;
+                LayKhoang(tu, den, out dTu, out dDen);
+                // Mac dinh 3 ngay ke ca hom nay, khop voi giao dien — khong phai
+                // 30 ngay chung cua LayKhoang.
+                DateTime bo;
+                if (!DocNgay(tu, out bo)) dTu = dDen.AddDays(-2);
+                var ds  = _repo.LichSuDoXe(dTu, dDen, q, limit ?? 200);
+                var bay = DateTime.Now;
+
+                return Json2(200, new
+                {
+                    now = bay.ToString("dd-MM-yyyy HH:mm:ss"),
+                    tu  = dTu.ToString("yyyy-MM-dd"),
+                    den = dDen.ToString("yyyy-MM-dd"),
+                    total    = ds.Count,
+                    dang_gui = ds.Count(x => x.TrangThai == "DANG_GUI"),
+                    da_lay   = ds.Count(x => x.TrangThai == "DA_LAY"),
+                    items = ds.Select(x => new
+                    {
+                        gui_luc    = x.GuiLuc.ToString("dd-MM-yyyy HH:mm:ss"),
+                        lay_luc    = x.LayLuc.HasValue ? x.LayLuc.Value.ToString("dd-MM-yyyy HH:mm:ss") : null,
+                        trang_thai = x.TrangThai,
+                        // Xe đang gửi thì tính tới bây giờ. Mất dấu thì không có
+                        // con số nào đúng, để null thay vì đoán.
+                        phut_do    = x.LayLuc.HasValue ? (int?)(x.LayLuc.Value - x.GuiLuc).TotalMinutes
+                                   : x.TrangThai == "DANG_GUI" ? (int?)(bay - x.GuiLuc).TotalMinutes
+                                   : null,
+                        block_no   = x.BlockNo,
+                        zone_id    = x.ZoneId,
+                        o          = x.SlotIndex,
+                        ma_the     = x.MaThe,
+                        so_the     = x.SoThe,
+                        bien_so    = x.BienSo,
+                        ten_xe     = x.TenXe
+                    }).ToArray()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json2(503, new { error = ex.Message });
+            }
+        }
+
         // GET /BaoCao/DanhSachZone
         public ActionResult DanhSachZone()
         {
