@@ -182,7 +182,40 @@ namespace TotalParking.Services
             return new RouteResult { Found = true, Points = points, Reason = null };
         }
 
-        private static double Distance(int x1, int y1, int x2, int y2)
+        // Khoảng cách theo làn từ `entry` tới MỌI nút đi tới được. Search ở trên dừng
+        // ngay khi gặp đích nên không dùng được để so nhiều đích với nhau. Nút không
+        // nối được với entry thì không có mặt trong kết quả.
+        internal static Dictionary<int, double> AllDistances(int entry,
+                                                            Dictionary<int, int> x, Dictionary<int, int> y,
+                                                            Dictionary<int, List<int>> adj)
+        {
+            var dist  = new Dictionary<int, double> { { entry, 0 } };
+            var doneN = new HashSet<int>();
+
+            while (true)
+            {
+                int cur = -1;
+                double best = double.PositiveInfinity;
+                foreach (var kv in dist)
+                {
+                    if (doneN.Contains(kv.Key)) continue;
+                    if (kv.Value < best) { best = kv.Value; cur = kv.Key; }
+                }
+                if (cur < 0) break;
+
+                doneN.Add(cur);
+                foreach (var next in adj[cur])
+                {
+                    if (doneN.Contains(next)) continue;
+                    double alt = best + Distance(x[cur], y[cur], x[next], y[next]);
+                    double old;
+                    if (!dist.TryGetValue(next, out old) || alt < old) dist[next] = alt;
+                }
+            }
+            return dist;
+        }
+
+        internal static double Distance(int x1, int y1, int x2, int y2)
         {
             double dx = x1 - x2, dy = y1 - y2;
             return Math.Sqrt(dx * dx + dy * dy);

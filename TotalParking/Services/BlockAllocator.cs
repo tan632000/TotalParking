@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using MySqlConnector;
 using TotalParking.Models;
 
 namespace TotalParking.Services
 {
-    // Chọn block đích trong zone mà ZoneRouter đã chọn.
+    // Chọn block đích: block gần ram dốc 1 nhất, đúng loại, còn chỗ, trên toàn bãi.
+    // ZoneRouter chỉ còn quyết định xe có được điều hướng hay không.
     //
     // ===================== CHỌN Ở SERVER, KHÔNG CHỌN Ở TRÌNH DUYỆT =====================
     // Trước lớp này, Routing.cshtml tự lọc và tự chọn block trong JavaScript ở mỗi lần
@@ -32,10 +35,7 @@ namespace TotalParking.Services
         // Cùng ngưỡng mà BlockMapRepository đang dùng cho cột `fresh`.
         private const int PlcFreshMinutes = 5;
 
-        // Xếp hạng ứng viên:
-        //   1. block được PLC báo cáo gần đây đứng trước block không được báo cáo
-        //   2. còn nhiều chỗ hơn đứng trước
-        //   3. hoà nhau thì block_no nhỏ hơn thắng, để kết quả luôn xác định
+        // Thứ tự xếp hạng: xem mục "GẦN RAM DỐC 1 NHẤT" ngay trên PickSql.
         //
         // Chỗ trống = slot_count - số ô đang có xe - số suất đã phát đi trong cửa sổ.
         // Phần trừ cuối là để hai xe vào cách nhau vài giây không cùng bị đẩy vào một
@@ -86,9 +86,28 @@ namespace TotalParking.Services
         // `fresh_reads` của chúng được dùng `standard_fresh` cho đúng. Trước khi có
         // bộ lọc này thì KHÔNG được: thử cho chúng cạnh tranh sòng phẳng thì zone 2
         // và 5 lập tức đổi từ khối 80 và 19 sang 902 và 905.
+        //
+        // ===================== GẦN RAM DỐC 1 NHẤT, TRÊN TOÀN BÃI =====================
+        //
+        // Trước đây ZoneRouter chọn zone theo `zone.gate_rank` rồi lớp này chọn khối
+        // TRONG zone đó theo "còn nhiều chỗ nhất, số nhỏ nhất". gate_rank đặt theo
+        // cổng cũ, nên Z1 luôn đứng đầu: 3 ngày tới 12/10/2026 mọi lượt THƯỜNG vào
+        // 901 và mọi lượt 2200KG vào 98/99/100, trong khi từ ram dốc 1 thì 902 và
+        // các khối 64..68 của Z6 gần hơn nhiều.
+        //
+        // Giờ lấy ứng viên trên toàn bãi và xếp theo độ dài đường đi trên chính bản
+        // đồ màn tài xế (DriverLaneMap). Màn hình vẽ đường nào thì quyết định đo theo
+        // đường đó. Thứ tự:
+        //   1. khối PLC/cảm biến vừa báo cáo đứng trước khối không được báo cáo
+        //   2. khối có trên bản đồ tài xế đứng trước khối không có
+        //   3. gần ram dốc hơn
+        //   4. còn nhiều chỗ hơn, rồi block_no nhỏ hơn — để kết quả luôn xác định
+        //
+        // Bản đồ không nạp được thì lùi về chọn trong zone ZoneRouter đưa ra, như cũ:
+        // xếp toàn bãi mà không có khoảng cách thì chỉ còn "số nhỏ nhất", tệ hơn.
         private const string PickSql =
-            "SELECT c.block_no, c.free_capacity, c.fresh_reads FROM ( " +
-            "  SELECT b.block_no AS block_no, " +
+            "SELECT c.block_no, c.zone_id, c.free_capacity, c.fresh_reads FROM ( " +
+            "  SELECT b.block_no AS block_no, b.zone_id AS zone_id, " +
             "         (CASE WHEN b.kind = 'Ground' " +
             "               THEN COALESCE((SELECT g.free_standard FROM v_led_capacity_zone g " +
             "                               WHERE g.zone_id = b.zone_id), 0) " +
@@ -108,11 +127,10 @@ namespace TotalParking.Services
             "                        AND s.read_at >= NOW() - INTERVAL @plc_fresh MINUTE) " +
             "          END) AS fresh_reads " +
             "  FROM   block b " +
-            "  WHERE  b.zone_id = @zone_id AND b.is_active = 1 AND b.kind = @kind " +
+            "  WHERE  (@zone_id IS NULL OR b.zone_id = @zone_id) " +
+            "    AND  b.is_active = 1 AND b.kind = @kind " +
             ") c " +
-            "WHERE  c.free_capacity > 0 " +
-            "ORDER  BY (c.fresh_reads > 0) DESC, c.free_capacity DESC, c.block_no ASC " +
-            "LIMIT  1";
+            "WHERE  c.free_capacity > 0";
 
         // Loại khối mà một hạng tải được phép vào.
         //
@@ -128,13 +146,18 @@ namespace TotalParking.Services
 
         // eventId được loại khỏi phép trừ: một sự kiện không tự trừ suất của chính nó khi
         // camera gửi lại cùng event_id, nếu không lần gửi lại sẽ bị đẩy sang block khác.
-        public BlockAllocation Allocate(int zoneId, string eventId, string weightClass)
+        // fallbackZoneId: zone ZoneRouter đã chọn, CHỈ dùng khi distances null.
+        // distances: DriverLaneMap.BlockDistances() — block_no -> độ dài đường đi.
+        public BlockAllocation Allocate(string eventId, string weightClass,
+                                        IDictionary<int, double> distances, int fallbackZoneId)
         {
+            var ungVien = new List<UngVien>();
             using (var conn = new MySqlConnection(Db.ConnectionString))
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = PickSql;
-                cmd.Parameters.AddWithValue("@zone_id",    zoneId);
+                cmd.Parameters.AddWithValue("@zone_id",
+                    distances == null ? (object)fallbackZoneId : DBNull.Value);
                 cmd.Parameters.AddWithValue("@event_id",   eventId ?? string.Empty);
                 cmd.Parameters.AddWithValue("@window",     PendingDebitWindowSeconds);
                 cmd.Parameters.AddWithValue("@plc_fresh",  PlcFreshMinutes);
@@ -143,17 +166,49 @@ namespace TotalParking.Services
                 conn.Open();
                 using (var r = cmd.ExecuteReader())
                 {
-                    // Không dòng nào = không block nào trong zone còn chỗ. Trả về "hết chỗ"
-                    // chứ KHÔNG trả về một block bừa: gửi tài xế tới chỗ đã đầy còn tệ hơn
-                    // là nói thẳng rằng bãi đã hết chỗ.
-                    if (!r.Read()) return BlockAllocation.NoCapacity();
-
-                    return BlockAllocation.At(
-                        Convert.ToInt32(r["block_no"]),
-                        // Nhãn này đi theo quyết định, không tính lại lúc đọc.
-                        Convert.ToInt32(r["fresh_reads"]) > 0);
+                    while (r.Read())
+                    {
+                        int no = Convert.ToInt32(r["block_no"]);
+                        double d;
+                        bool coTrenBanDo = distances != null && distances.TryGetValue(no, out d);
+                        ungVien.Add(new UngVien
+                        {
+                            BlockNo  = no,
+                            ZoneId   = Convert.ToInt32(r["zone_id"]),
+                            Free     = Convert.ToInt32(r["free_capacity"]),
+                            Fresh    = Convert.ToInt32(r["fresh_reads"]) > 0,
+                            CoTrenBanDo = coTrenBanDo,
+                            KhoangCach  = coTrenBanDo ? distances[no] : double.MaxValue
+                        });
+                    }
                 }
             }
+
+            // Không ứng viên nào = không block nào còn chỗ. Trả về "hết chỗ" chứ KHÔNG
+            // trả về một block bừa: gửi tài xế tới chỗ đã đầy còn tệ hơn là nói thẳng
+            // rằng bãi đã hết chỗ.
+            var chon = ungVien
+                .OrderByDescending(u => u.Fresh)
+                .ThenByDescending(u => u.CoTrenBanDo)
+                .ThenBy(u => u.KhoangCach)
+                .ThenByDescending(u => u.Free)
+                .ThenBy(u => u.BlockNo)
+                .FirstOrDefault();
+
+            if (chon == null) return BlockAllocation.NoCapacity();
+
+            // Nhãn Fresh đi theo quyết định, không tính lại lúc đọc.
+            return BlockAllocation.At(chon.BlockNo, chon.ZoneId, chon.Fresh);
+        }
+
+        private sealed class UngVien
+        {
+            public int    BlockNo;
+            public int    ZoneId;
+            public int    Free;
+            public bool   Fresh;
+            public bool   CoTrenBanDo;
+            public double KhoangCach;
         }
     }
 
@@ -161,13 +216,16 @@ namespace TotalParking.Services
     public class BlockAllocation
     {
         public int?  BlockNo           { get; private set; }
+        // Zone của block được chọn. Có thể khác zone ZoneRouter đưa ra, vì block
+        // được chọn trên toàn bãi theo khoảng cách.
+        public int?  ZoneId            { get; private set; }
         public bool  OccupancyVerified { get; private set; }
 
         public bool HasCapacity { get { return BlockNo.HasValue; } }
 
-        public static BlockAllocation At(int blockNo, bool occupancyVerified)
+        public static BlockAllocation At(int blockNo, int zoneId, bool occupancyVerified)
         {
-            return new BlockAllocation { BlockNo = blockNo, OccupancyVerified = occupancyVerified };
+            return new BlockAllocation { BlockNo = blockNo, ZoneId = zoneId, OccupancyVerified = occupancyVerified };
         }
 
         public static BlockAllocation NoCapacity()

@@ -43,6 +43,9 @@ namespace TotalParking.Controllers
         private static readonly VehicleRoutingRepository _routings   = new VehicleRoutingRepository();
         private static readonly ZoneRouter               _router     = new ZoneRouter();
         private static readonly BlockAllocator           _allocator  = new BlockAllocator();
+        // Cùng file driver_lanes.json mà màn tài xế vẽ đường, để khối được chọn là
+        // khối gần nhất theo đúng con đường tài xế sẽ thấy.
+        private static readonly DriverLaneMap            _driverLanes = DriverLaneMap.ForSite();
 
         public static DateTime? LastHealthUtc;
         public static DateTime? LastVehicleUtc;
@@ -170,10 +173,14 @@ namespace TotalParking.Controllers
             if (decision == null) return null;
             if (decision.Outcome != RoutingOutcome.Routed || !decision.ZoneId.HasValue) return decision;
 
-            var allocation = _allocator.Allocate(decision.ZoneId.Value, decision.EventId, weightClass);
+            var allocation = _allocator.Allocate(decision.EventId, weightClass,
+                                                 _driverLanes.BlockDistances(), decision.ZoneId.Value);
 
             if (allocation.HasCapacity)
             {
+                // Zone theo block được chọn, không theo gate_rank của ZoneRouter:
+                // zone_id và block_no trong vehicle_routing phải nói cùng một chỗ.
+                decision.ZoneId  = allocation.ZoneId;
                 decision.BlockNo = allocation.BlockNo;
                 decision.OccupancyVerified = allocation.OccupancyVerified;
                 return decision;

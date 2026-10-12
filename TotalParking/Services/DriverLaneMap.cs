@@ -37,6 +37,9 @@ namespace TotalParking.Services
             public Dictionary<int, int> Y = new Dictionary<int, int>();
             public Dictionary<int, List<int>> Adj = new Dictionary<int, List<int>>();
             public Dictionary<int, int[]> Blocks = new Dictionary<int, int[]>(); // block_no -> {x, y, node}
+            // block_no -> độ dài đường đi từ ram dốc, cùng đơn vị pixel với khung ảnh.
+            // Tính một lần lúc nạp vì mạng không đổi giữa hai lần sửa file.
+            public Dictionary<int, double> BlockDist = new Dictionary<int, double>();
         }
 
         private readonly Func<string> _resolvePath;
@@ -81,6 +84,23 @@ namespace TotalParking.Services
             catch (Exception ex)
             {
                 return LaneNetwork.RouteResult.No("Loi ban do lan duong tai xe: " + ex.Message);
+            }
+        }
+
+        // Khoảng cách từ ram dốc 1 tới từng block, để chọn block gần nhất. Trả về
+        // null khi bản đồ không nạp được — người gọi phải tự lùi về cách chọn cũ,
+        // không được coi null là "mọi block xa như nhau".
+        public IDictionary<int, double> BlockDistances()
+        {
+            try
+            {
+                string error;
+                var snap = Load(out error);
+                return snap == null ? null : snap.BlockDist;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
@@ -174,6 +194,17 @@ namespace TotalParking.Services
                         return null;
                     }
                     s.Blocks[no] = new[] { (int)p.Value["x"], (int)p.Value["y"], node };
+                }
+
+                // Cùng cách đo với đường vẽ trên màn hình: làn tới nút đến, cộng chặng
+                // cuối từ nút đó vào vị trí block. Block không nối được thì bỏ qua.
+                var nodeDist = LaneNetwork.AllDistances(s.Entry, s.X, s.Y, s.Adj);
+                foreach (var b in s.Blocks)
+                {
+                    double d;
+                    if (!nodeDist.TryGetValue(b.Value[2], out d)) continue;
+                    s.BlockDist[b.Key] = d + LaneNetwork.Distance(s.X[b.Value[2]], s.Y[b.Value[2]],
+                                                                  b.Value[0], b.Value[1]);
                 }
 
                 return s;
