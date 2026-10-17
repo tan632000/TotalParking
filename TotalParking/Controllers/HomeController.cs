@@ -111,16 +111,6 @@ namespace TotalParking.Controllers
             return View();
         }
 
-        public ActionResult Cctv()
-        {
-            return View();
-        }
-
-        public ActionResult Energy()
-        {
-            return View();
-        }
-
         public ActionResult Backup()
         {
             return View();

@@ -86,6 +86,62 @@ namespace TotalParking.Services
             return ra;
         }
 
+        // ===================== THEO KHỐI — TRANG BẢO TRÌ =====================
+        // Số cảnh báo đang mở của từng khối, để tô thẻ khối trên bản đồ. Mọi nguồn
+        // (D3, mất kết nối, thẻ trùng...) chứ không riêng D3: người đi bảo trì cần
+        // biết khối nào đang có chuyện, bất kể chuyện gì.
+        public IDictionary<int, int> DemDangMoTheoKhoi()
+        {
+            var ra = new Dictionary<int, int>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText =
+                    "SELECT block_no, COUNT(*) FROM canh_bao " +
+                    "WHERE het_luc IS NULL AND block_no IS NOT NULL GROUP BY block_no";
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read()) ra[Convert.ToInt32(r[0])] = Convert.ToInt32(r[1]);
+                }
+            }
+            return ra;
+        }
+
+        // Cảnh báo đang mở của một khối, mới nhất trước.
+        public IList<CanhBao> DangMoTheoKhoi(int blockNo)
+        {
+            return DocTheoKhoi(
+                "SELECT " + CotChung + "FROM canh_bao WHERE block_no = @b AND het_luc IS NULL " +
+                "ORDER BY xay_ra_luc DESC", blockNo, null);
+        }
+
+        // `gioiHan` cảnh báo gần nhất của một khối, kể cả đã đóng, mới nhất trước.
+        public IList<CanhBao> GanNhatTheoKhoi(int blockNo, int gioiHan)
+        {
+            return DocTheoKhoi(
+                "SELECT " + CotChung + "FROM canh_bao WHERE block_no = @b " +
+                "ORDER BY xay_ra_luc DESC, canh_bao_id DESC LIMIT @n", blockNo, gioiHan);
+        }
+
+        private IList<CanhBao> DocTheoKhoi(string sql, int blockNo, int? gioiHan)
+        {
+            var ra = new List<CanhBao>();
+            using (var conn = new MySqlConnection(Db.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("@b", blockNo);
+                if (gioiHan.HasValue) cmd.Parameters.AddWithValue("@n", gioiHan.Value);
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read()) ra.Add(Map(r));
+                }
+            }
+            return ra;
+        }
+
         // Ghi một cảnh báo. Trả về id, hoặc 0 khi bị khoá chống trùng chặn lại.
         //
         // Lỗi 1062 (trùng khoá) KHÔNG phải sự cố: nó nghĩa là khối đó đã có một

@@ -199,6 +199,63 @@ namespace TotalParking.Services.Plc
             }
         }
 
+        // ===================== ĐỌC D3 VÀ ĐẦU RA CIO 100..102 =====================
+        // Cho PlcIoPoller: D3 là mã lỗi của khối, CIO 100..102 là các contactor và
+        // động cơ (docs/NOTE FINAL.xlsx). Chỉ đọc.
+        //
+        // Giữ phần thiệt về phía mình khi tranh gate với vòng quẹt thẻ:
+        //   - WaitAsync(0): gate bận thì trả null (bỏ nhịp IO) thay vì chờ.
+        //     Hai vòng NGANG HÀNG chứ không phải ưu tiên tuyệt đối: PollAsync cũng
+        //     lấy gate bằng WaitAsync(0), nên khi nhịp IO đang giữ gate thì nhịp
+        //     quẹt thẻ đó bị bỏ (trả lời tìm xe chậm thêm tối đa một nhịp 500ms;
+        //     tới ~3 nhịp nếu CIO timeout). Chấp nhận được vì IO chỉ giữ gate
+        //     khoảng hai lần đọc mỗi giây; ưu tiên thật cần một cờ "đang có lượt
+        //     quẹt chờ", chưa làm.
+        //   - Không kết nối lại: một PLC chết đang thử lại kết nối có thể mất cả
+        //     Device.TimeoutMs, và kéo dài nhịp IO của cả 112 khối. Việc kết nối
+        //     lại để vòng quẹt thẻ lo.
+        //   - Lỗi đọc không gọi Fail(): ngắt kết nối hay đổi IsOnline từ đây sẽ áp
+        //     backoff lên chính kết nối mà vòng quẹt thẻ đang dùng.
+        //
+        // D3 đọc trước. CIO đọc hỏng (ví dụ End Code lỗi) vẫn trả D3 với Cio null,
+        // để một khối không đọc được vùng đầu ra vẫn báo được lỗi.
+        public async Task<IoSnapshot> ReadIoAsync(int timeoutMs)
+        {
+            if (!await _gate.WaitAsync(0).ConfigureAwait(false)) return null;
+            try
+            {
+                if (_client == null || !_client.IsConnected) return null;
+
+                ushort[] d3;
+                try
+                {
+                    d3 = await _client.ReadWordsAsync(PlcMemoryArea.DM, 3, 1, timeoutMs)
+                                      .ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+
+                ushort[] cio = null;
+                try
+                {
+                    cio = await _client.ReadWordsAsync(PlcMemoryArea.CIO, 100, 3, timeoutMs)
+                                       .ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    // Giữ D3: xem ghi chú ở đầu hàm.
+                }
+
+                return new IoSnapshot { D3 = d3[0], Cio = cio, ReadAtUtc = DateTime.UtcNow };
+            }
+            finally
+            {
+                _gate.Release();
+            }
+        }
+
         // Ghi thẳng số block xuống D1000, bỏ qua bước tra thẻ. Dùng để nghiệm thu
         // tại hiện trường: xác nhận HMI của block nào phản ứng.
         public async Task WriteFindAnswerAsync(int blockNo)
@@ -792,5 +849,14 @@ namespace TotalParking.Services.Plc
             if (_client != null) _client.Dispose();
             _gate.Dispose();
         }
+    }
+
+    // Một lần đọc của PlcConnection.ReadIoAsync.
+    public class IoSnapshot
+    {
+        public ushort   D3        { get; set; }
+        // CIO 100, 101, 102. Null khi đọc vùng đầu ra hỏng nhưng D3 đọc được.
+        public ushort[] Cio       { get; set; }
+        public DateTime ReadAtUtc { get; set; }
     }
 }

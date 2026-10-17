@@ -203,6 +203,11 @@
     <Compile Include="Services\Plc\PlcAuditLog.cs" />
     <Compile Include="Services\Plc\CongVanHanhService.cs" />
     <Compile Include="Services\Plc\CanhBaoPlcService.cs" />
+    <Compile Include="Services\Plc\LoiD3Service.cs" />
+    <Compile Include="Services\Plc\PlcIoPoller.cs" />
+    <Compile Include="Services\Plc\DongCoDetector.cs" />
+    <Compile Include="Services\MotorRunRepository.cs" />
+    <Compile Include="Controllers\BaoTriController.cs" />
     <Compile Include="Services\Plc\CanhBaoTheTrungService.cs" />
     <Compile Include="Services\Plc\PlcTrangThaiWriter.cs" />
     <Compile Include="Services\Plc\PlcRegisterLog.cs" />
@@ -292,9 +297,7 @@
     <Content Include="Views\Home\Remote.cshtml" />
     <Content Include="Views\Home\Assets.cshtml" />
     <Content Include="Views\Home\Backup.cshtml" />
-    <Content Include="Views\Home\Cctv.cshtml" />
     <Content Include="Views\Home\Diagnostics.cshtml" />
-    <Content Include="Views\Home\Energy.cshtml" />
     <Content Include="Views\Home\Historian.cshtml" />
     <Content Include="Views\Home\OperationControl.cshtml" />
     <Content Include="Views\Home\Queue.cshtml" />
