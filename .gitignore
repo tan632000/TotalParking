@@ -115,3 +115,6 @@ __pycache__/
 tools/license/keys/
 # License tao tay cho may dev (han dai), de rebuild sau ngay khoa khong bi kho.
 TotalParking/App_Data/license/*.dev.lic
+# Moc chong-lui-dong-ho: state runtime per-may, KHONG commit (commit nham moc
+# tuong lai co the lam may khac khoa sai). license.lic van duoc track binh thuong.
+TotalParking/App_Data/license/clock-highwater.dat
