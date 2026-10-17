@@ -35,7 +35,10 @@ namespace TotalParking.Services.License
         private readonly string _dataDir;
         private readonly string _licensePath;
         private readonly string _highWaterPath;
-        private readonly object _ioLock = new object();
+        // STATIC: layout va gate filter moi cai tao mot LicenseService rieng, nen
+        // lock phai dung chung toan process de serialize ghi file (khong thi
+        // File.Replace dua nhau fail va bo lai file .tmp rac).
+        private static readonly object _ioLock = new object();
 
         // Dung trong app: doc Web.config + App_Data.
         public LicenseService()
@@ -239,11 +242,35 @@ namespace TotalParking.Services.License
         {
             var dir = Path.GetDirectoryName(path);
             var tmp = Path.Combine(dir, Path.GetFileName(path) + "." + Guid.NewGuid().ToString("N") + ".tmp");
-            File.WriteAllText(tmp, content, new UTF8Encoding(false));
-            if (File.Exists(path))
-                File.Replace(tmp, path, null);   // nguyen tu tren NTFS
-            else
-                File.Move(tmp, path);
+            try
+            {
+                File.WriteAllText(tmp, content, new UTF8Encoding(false));
+                if (!File.Exists(path))
+                {
+                    File.Move(tmp, path);
+                    return;
+                }
+                try
+                {
+                    File.Replace(tmp, path, null);   // nguyen tu tren NTFS
+                }
+                catch (IOException)
+                {
+                    File.Copy(tmp, path, true);       // du phong khi Replace bi khoa
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    File.Copy(tmp, path, true);
+                }
+            }
+            finally
+            {
+                // Khong bao gio bo lai .tmp rac, du Replace/Move co that bai.
+                if (File.Exists(tmp))
+                {
+                    try { File.Delete(tmp); } catch { }
+                }
+            }
         }
 
         private static string Normalize(string text)

@@ -118,3 +118,5 @@ TotalParking/App_Data/license/*.dev.lic
 # Moc chong-lui-dong-ho: state runtime per-may, KHONG commit (commit nham moc
 # tuong lai co the lam may khac khoa sai). license.lic van duoc track binh thuong.
 TotalParking/App_Data/license/clock-highwater.dat
+# File tam cua ghi nguyen tu (neu Replace bi khoa roi cleanup khong kip).
+TotalParking/App_Data/license/*.tmp
