@@ -1,0 +1,76 @@
+@{
+    Layout = null;
+    var expiry = ViewBag.Expiry as DateTime?;
+    var error = ViewBag.Error as string;
+    var locked = ViewBag.Locked != null && (bool)ViewBag.Locked;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kích hoạt phần mềm — TotalParking SCADA</title>
+    @* Man nay tu chua, Layout = null: KHONG dung _ScadaLayout vi header do poll
+       /Alarm/Summary — thu se bi gate tra 403 khi dang khoa. *@
+    <style>
+        html, body { height: 100%; margin: 0; }
+        body {
+            background: #0F172A; color: #F8FAFC;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            display: flex; align-items: center; justify-content: center; padding: 16px;
+        }
+        .card {
+            width: 100%; max-width: 560px;
+            background: rgba(20, 14, 4, .96);
+            border: 1px solid #b45309; border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .55);
+            padding: 28px 32px;
+        }
+        .ico { color: #f59e0b; margin-bottom: 8px; }
+        h1 { color: #fbbf24; font-size: 20px; margin: 0 0 10px; }
+        p { color: #fde68a; font-size: 14px; line-height: 1.6; margin: 0 0 14px; }
+        .meta { color: #fcd34d; font-size: 12px; font-family: monospace; }
+        .err {
+            background: rgba(127, 29, 29, .5); border: 1px solid #b91c1c;
+            color: #fecaca; font-size: 13px; padding: 10px 12px;
+            border-radius: 8px; margin: 0 0 14px;
+        }
+        textarea {
+            width: 100%; box-sizing: border-box; min-height: 120px; resize: vertical;
+            background: #0b1220; color: #e2e8f0; border: 1px solid #334155;
+            border-radius: 8px; padding: 10px 12px; font-family: monospace; font-size: 12px;
+        }
+        button {
+            margin-top: 12px; width: 100%; padding: 10px;
+            background: linear-gradient(135deg, #d97706, #b45309); color: #fff;
+            border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+        }
+        button:hover { filter: brightness(1.08); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="ico">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+        </div>
+        <h1>@(locked ? "Phần mềm chưa được kích hoạt" : "Gia hạn giấy phép")</h1>
+        <p>
+            @(locked
+                ? "Phần mềm SCADA cần được kích hoạt để tiếp tục sử dụng. Vui lòng liên hệ nhà cung cấp để nhận license, sau đó dán nội dung license vào ô bên dưới và bấm Kích hoạt."
+                : "Giấy phép đang còn hiệu lực. Bạn có thể dán license mới để gia hạn sớm, tránh gián đoạn khi tới hạn.")
+        </p>
+        @if (expiry != null)
+        {
+            <p class="meta">@(locked ? "Hạn giấy phép:" : "Còn hạn đến:") @expiry.Value.ToString("dd/MM/yyyy")</p>
+        }
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <div class="err">@error</div>
+        }
+        <form method="post" action="@Url.Action("Index", "Activation")">
+            <textarea name="licenseText" placeholder="Dán nội dung license tại đây..."></textarea>
+            <button type="submit">Kích hoạt</button>
+        </form>
+    </div>
+</body>
+</html>

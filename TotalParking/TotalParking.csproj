@@ -153,7 +153,9 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="Filters\LicenseGateFilter.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ActivationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IngestController.cs" />
     <Compile Include="Controllers\PlcStatusController.cs" />
@@ -161,6 +163,8 @@
     <Compile Include="Models\VehicleEvent.cs" />
     <Compile Include="Models\VehicleProfile.cs" />
     <Compile Include="Services\Db.cs" />
+    <Compile Include="Services\License\License.cs" />
+    <Compile Include="Services\License\LicenseService.cs" />
     <Compile Include="Services\ClassifierOptions.cs" />
     <Compile Include="Services\VehicleClassifier.cs" />
     <Compile Include="Services\VehicleProfileRepository.cs" />
@@ -282,6 +286,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Activation\Index.cshtml" />
     <Content Include="Views\Shared\_ScadaLayout.cshtml" />
     <Content Include="Views\Home\FloorPlan.cshtml" />
     <Content Include="Views\Home\Zones.cshtml" />
@@ -313,6 +318,7 @@
     <Content Include="Images\hmi_flow.jpg" />
     <Content Include="Images\zones_map.jpeg" />
     <Content Include="App_Data\driver_lanes.json" />
+    <Content Include="App_Data\license\license.lic" />
     <Content Include="Images\plan_map.jpg" />
     <Content Include="Content\scada.css" />
   </ItemGroup>

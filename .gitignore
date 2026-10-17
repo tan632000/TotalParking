@@ -106,3 +106,12 @@ tools/sao_luu_o_chiem_*.tsv
 # Python (cong cu trong tools/)
 __pycache__/
 *.pyc
+
+# =========================================================================
+# License / kich hoat ban quyen
+# =========================================================================
+# Private key RSA ky license. KHONG BAO GIO commit: ai co no deu phat hanh
+# duoc license. Giu offline, sao luu rieng; mat no = khong gia han duoc.
+tools/license/keys/
+# License tao tay cho may dev (han dai), de rebuild sau ngay khoa khong bi kho.
+TotalParking/App_Data/license/*.dev.lic
