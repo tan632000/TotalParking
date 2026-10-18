@@ -291,6 +291,142 @@
             </div>
         </div>
     </div>
+
+    @* =====================  THONG BAO CHUA KICH HOAT (LICENSE)  =====================
+       Dat o layout dung chung nen hien tren MOI trang SCADA (ca man hinh van hanh
+       lan TV treo tuong, vi TV cung chi load cac trang nay). Yeu cau: canh giua
+       man hinh, tam giac canh bao nhap nhay, noi dung bao phan mem chua kich hoat.
+
+       Ba lua chon co chu dich cho moi truong OT co alarm/E-Stop:
+       1) pointer-events:none tren ca lop phu va the thong bao -> click XUYEN QUA.
+          Van hanh vien van bam duoc alarm/nut dieu khien nam ngay duoi. Chi nut
+          "An tam" nhan click (pointer-events:auto). Day la co che an toan chinh:
+          thong bao khong bao gio nhot thao tac cua van hanh vien.
+       2) KHONG co lop nen toi phu toan man hinh. Mot lop den se che mat panel
+          alarm phia sau; o day chi co the thong bao noi len, khong giau alarm.
+       3) SVG tam giac viet thang vao HTML, KHONG goi lucide: CDN khong ghim co the
+          that bai tren mang OT co lap, luc do thong bao van phai hien day du.
+
+       scada.css la ban Tailwind trich xuat san nen class moi vo tac dung -> mau va
+       animation viet thang o <style>. @@keyframes phai la @@ vi day la file Razor. *@
+    <style>
+        @@keyframes tp-lic-blink {
+            0%, 100% { opacity: 1; }
+            50%      { opacity: .2; }
+        }
+        #tp-license-overlay {
+            position: fixed;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            pointer-events: none; /* click xuyen qua — khong bao gio chan van hanh */
+        }
+        #tp-license-card {
+            pointer-events: none;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            width: 100%;
+            max-width: 560px;
+            padding: 20px 24px;
+            background: rgba(20, 14, 4, .96);
+            border: 1px solid #b45309;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .55);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+        #tp-license-card .tp-lic-ico {
+            flex-shrink: 0;
+            color: #f59e0b;
+            animation: tp-lic-blink 1s ease-in-out infinite;
+        }
+        #tp-license-card .tp-lic-title {
+            margin: 0 0 4px;
+            color: #fbbf24;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        #tp-license-card .tp-lic-body {
+            margin: 0;
+            color: #fde68a;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        #tp-license-card .tp-lic-hide {
+            pointer-events: auto; /* nut duy nhat nhan click */
+            margin-top: 10px;
+            padding: 4px 10px;
+            background: transparent;
+            border: 1px solid rgba(180, 83, 9, .6);
+            border-radius: 6px;
+            color: #fcd34d;
+            font-size: 11px;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            cursor: pointer;
+        }
+        #tp-license-card .tp-lic-hide:hover { border-color: #f59e0b; color: #fde68a; }
+    </style>
+    @{
+        // Banner canh bao license: CHI hien khi giay phep CON HAN nhung SAP HET
+        // (trong cua so license:warningDays). Gia han thanh cong -> han day ra xa
+        // -> dieu kien sai -> banner TU TAT. Khi het han han thi gate da redirect
+        // sang /Activation nen trang SCADA khong render toi day.
+        //
+        // Goi LicenseService truc tiep (mot lan verify moi lan render trang SCADA);
+        // tai cua HMI nay thap nen chap nhan duoc.
+        var tpLic = new TotalParking.Services.License.LicenseService().GetStatus();
+        int tpWarnDays;
+        if (!int.TryParse(System.Configuration.ConfigurationManager.AppSettings["license:warningDays"], out tpWarnDays) || tpWarnDays <= 0)
+        {
+            tpWarnDays = 30;
+        }
+        var tpShowLicenseBanner = tpLic != null
+            && tpLic.State == TotalParking.Services.License.LicenseState.Valid
+            && tpLic.ExpiryUtc.HasValue
+            && (tpLic.ExpiryUtc.Value - DateTime.UtcNow).TotalDays <= tpWarnDays;
+        var tpExpiryStr = (tpLic != null && tpLic.ExpiryUtc.HasValue)
+            ? tpLic.ExpiryUtc.Value.ToString("dd/MM/yyyy")
+            : "";
+    }
+    @if (tpShowLicenseBanner)
+    {
+    <div id="tp-license-overlay" role="alert" aria-live="assertive">
+        <div id="tp-license-card">
+            <span class="tp-lic-ico">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+            </span>
+            <div>
+                <p class="tp-lic-title">Giấy phép sắp hết hạn</p>
+                <p class="tp-lic-body">Giấy phép phần mềm SCADA sẽ hết hạn vào <b>@tpExpiryStr</b>. Vui lòng liên hệ nhà cung cấp để gia hạn, tránh gián đoạn vận hành.</p>
+                <button type="button" class="tp-lic-hide" id="tp-license-hide">Ẩn tạm (hiện lại sau 30 giây)</button>
+            </div>
+        </div>
+    </div>
+    }
+    <script>
+    // An tam thong bao license. KHONG luu localStorage/sessionStorage: moi lan tai
+    // trang thong bao hien lai, va tren TV treo tuong (khong ai bam) no luon hien.
+    //
+    // "An tam" chi de phong truong hop the che mat thong tin van hanh dung luc can
+    // nhin — an 30 giay roi tu hien lai, nen khong the bi tat vinh vien.
+    (function () {
+        'use strict';
+        var overlay = document.getElementById('tp-license-overlay');
+        var btn = document.getElementById('tp-license-hide');
+        if (!overlay || !btn) return;
+
+        var timer = null;
+        btn.addEventListener('click', function () {
+            overlay.style.display = 'none';
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(function () { overlay.style.display = 'flex'; }, 30000);
+        });
+    })();
+    </script>
+
     <!-- Initialize Lucide Icons -->
     <script>
         lucide.createIcons();
